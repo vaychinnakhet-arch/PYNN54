@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบติดตามความคืบหน้างาน (Supabase)</title>
+    <title>PYNN NGAMWONGWAN 54</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 
@@ -1459,7 +1459,10 @@
                 }
                 
                 renderSplashScreen();
-                splashLoadingText.textContent = `ข้อมูลล่าสุด ณ ${new Date().toLocaleTimeString('th-TH')}`;
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString('th-TH');
+                splashLoadingText.textContent = `อัพเดทข้อมูลล่าสุด วันที่ ${dateStr} เวลา ${timeStr}`;
 
 
                 if (realtimeChannel) {
@@ -1483,6 +1486,10 @@
                                 renderQuickUpdateTaskList(); // Also update quick update mode if it's active
                             }
                             renderSplashScreen();
+                            const updateNow = new Date();
+                            const updateDateStr = updateNow.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+                            const updateTimeStr = updateNow.toLocaleTimeString('th-TH');
+                            document.getElementById('splash-loading-text').textContent = `อัพเดทข้อมูลล่าสุด วันที่ ${updateDateStr} เวลา ${updateTimeStr}`;
                             showToast("ข้อมูลถูกอัพเดทโดยผู้ใช้อื่น", 2500);
                         }
                     )
@@ -1491,7 +1498,10 @@
                              splashLoadingText.textContent = `เชื่อมต่อ Real-time สำเร็จ!`;
                              setTimeout(() => {
                                  if (document.getElementById('main-app-container').classList.contains('hidden') && document.getElementById('quick-update-mode-container').classList.contains('hidden')) {
-                                     splashLoadingText.textContent = `ข้อมูลล่าสุด ณ ${new Date().toLocaleTimeString('th-TH')}`;
+                                     const subNow = new Date();
+                                     const subDateStr = subNow.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+                                     const subTimeStr = subNow.toLocaleTimeString('th-TH');
+                                     splashLoadingText.textContent = `อัพเดทข้อมูลล่าสุด วันที่ ${subDateStr} เวลา ${subTimeStr}`;
                                  }
                              }, 2000);
                         }
