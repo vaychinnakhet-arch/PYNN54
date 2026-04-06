@@ -1475,7 +1475,15 @@
                         { event: 'UPDATE', schema: 'public', table: CONFIG.DB_TABLE_NAME, filter: `id=eq.${CONFIG.DB_ROW_ID}` },
                         (payload) => {
                             console.log('Realtime update received!', payload);
-                            const oldData = JSON.parse(JSON.stringify(projectData)); // Deep copy
+                            const oldDataStr = JSON.stringify(projectData);
+                            const newDataStr = JSON.stringify(payload.new.data);
+                            
+                            // Ignore if the data is exactly the same (e.g. we just updated it ourselves)
+                            if (oldDataStr === newDataStr) {
+                                return;
+                            }
+
+                            const oldData = JSON.parse(oldDataStr); // Deep copy
                             projectData = payload.new.data;
                             
                             // If main app is open, render it. If not, just update splash
@@ -5243,6 +5251,8 @@
                         .update({ data: projectData })
                         .eq('id', CONFIG.DB_ROW_ID);
                     if (error) throw error;
+                    
+                    renderTable();
                 } catch (error) {
                     console.error("Error saving data to Supabase: ", error);
                     showNotificationModal("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้");
@@ -5751,6 +5761,8 @@
                         .update({ data: projectData })
                         .eq('id', CONFIG.DB_ROW_ID);
                     if (error) throw error;
+                    
+                    renderTable();
                     showToast('บันทึกแผนงานสำเร็จ');
                 } catch (error) {
                     console.error("Error saving summary plan to Supabase: ", error);
@@ -5991,6 +6003,8 @@
 
                     if (error) throw error;
 
+                    projectData = updatedData;
+                    renderTable();
                     showToast('บันทึกข้อมูลสำเร็จ');
                     closeModal('updateModal');
                 } catch (error) {
@@ -6327,6 +6341,9 @@
                         .update({ data: updatedData })
                         .eq('id', CONFIG.DB_ROW_ID);
                     if (error) throw error;
+                    
+                    projectData = updatedData;
+                    renderQuickUpdateTaskList();
                     showToast(`${catDef.name} ของห้อง ${floor}/${room} ถูกอัพเดทแล้ว`);
                 } catch (error) {
                     console.error("Quick update failed:", error);
@@ -6378,6 +6395,9 @@
                                         .update({ data: importedData })
                                         .eq('id', CONFIG.DB_ROW_ID);
                                     if (error) throw error;
+                                    
+                                    projectData = importedData;
+                                    renderTable();
                                     showToast('นำเข้าข้อมูลเรียบร้อยแล้ว');
                                 } catch (err) {
                                     console.error("Supabase update failed:", err);
@@ -8096,6 +8116,9 @@
                                 .update({ data: initialData })
                                 .eq('id', CONFIG.DB_ROW_ID);
                             if (error) throw error;
+                            
+                            projectData = initialData;
+                            renderTable();
                             showToast("รีเซ็ตข้อมูลบนเซิร์ฟเวอร์แล้ว");
                         } catch (err) {
                             console.error("Error resetting data:", err);
