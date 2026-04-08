@@ -1441,7 +1441,17 @@
                         }
                     }
                     if (projectData.globalScheduleSettings) globalScheduleSettings = projectData.globalScheduleSettings;
-                    if (projectData.globalScheduleFilters) globalScheduleFilters = projectData.globalScheduleFilters;
+                    if (projectData.globalScheduleFilters) {
+                        globalScheduleFilters = projectData.globalScheduleFilters;
+                    }
+                    
+                    // Safety check: Ensure maxFloor matches the actual data loaded
+                    if (globalScheduleData.length > 0) {
+                        const actualMax = globalScheduleData[globalScheduleData.length - 1].id;
+                        if (globalScheduleFilters.maxFloor < actualMax) {
+                            globalScheduleFilters.maxFloor = actualMax;
+                        }
+                    }
                 } else {
                     console.log("No data or empty data in Supabase, creating/updating initial document...");
                     splashLoadingText.textContent = "ไม่พบข้อมูล, กำลังสร้างเอกสารเริ่มต้น...";
@@ -1501,6 +1511,12 @@
 
                             const oldData = JSON.parse(oldDataStr); // Deep copy
                             projectData = payload.new.data;
+                            
+                            // Sync local schedule variables from the new projectData
+                            if (projectData.globalScheduleData) globalScheduleData = projectData.globalScheduleData;
+                            if (projectData.globalScheduleTasks) globalScheduleTasks = projectData.globalScheduleTasks;
+                            if (projectData.globalScheduleSettings) globalScheduleSettings = projectData.globalScheduleSettings;
+                            if (projectData.globalScheduleFilters) globalScheduleFilters = projectData.globalScheduleFilters;
                             
                             // If main app is open, render it. If not, just update splash
                             if(!document.getElementById('main-app-container').classList.contains('hidden')) {
@@ -1587,6 +1603,13 @@
                         });
                     });
                 });
+
+                // Initialize schedule data in projectData
+                data.globalScheduleData = globalScheduleData;
+                data.globalScheduleTasks = globalScheduleTasks;
+                data.globalScheduleSettings = globalScheduleSettings;
+                data.globalScheduleFilters = globalScheduleFilters;
+
                 return data;
             }
 
@@ -2949,12 +2972,12 @@
                 const val = parseInt(newMax);
                 if (isNaN(val) || val < 2) return;
                 
-                const currentMax = globalScheduleData.length > 0 ? globalScheduleData[globalScheduleData.length - 1].id : 1;
+                const currentMax = globalScheduleData.length > 0 ? Math.max(...globalScheduleData.map(f => f.id)) : 1;
                 
                 if (val > currentMax) {
                     // Add floors
                     for (let i = currentMax + 1; i <= val; i++) {
-                        const lastFloor = globalScheduleData[globalScheduleData.length - 1];
+                        const lastFloor = globalScheduleData.find(f => f.id === currentMax);
                         // Clone last floor's plan and add 7 days offset as a default
                         const newPlan = lastFloor.plan.map(dateStr => {
                             if (!dateStr) return '';
@@ -3352,8 +3375,31 @@
                 });
             }
 
+            function getDurationForTasksOnFirstFloor(tasks) {
+                if (globalScheduleData.length === 0) return 0;
+                const firstFloor = globalScheduleData[0];
+                const taskIndices = tasks.map(t => t.index);
+                let dates = [];
+                taskIndices.forEach(idx => {
+                    if (firstFloor.plan[idx * 2]) dates.push(new Date(firstFloor.plan[idx * 2]).getTime());
+                    if (firstFloor.plan[idx * 2 + 1]) dates.push(new Date(firstFloor.plan[idx * 2 + 1]).getTime());
+                });
+                
+                if (dates.length > 0) {
+                    const minDate = Math.min(...dates);
+                    const maxDate = Math.max(...dates);
+                    const diffTime = Math.abs(maxDate - minDate);
+                    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                }
+                return 0;
+            }
+
             function updateProjectTotalDisplay() {
                 const elTotalProject = document.getElementById('total-project-days-val');
+                const elTotalWetWork = document.getElementById('total-wetwork-days-val');
+                const elTotalEndProduct = document.getElementById('total-endproduct-days-val');
+                const elTotalAll = document.getElementById('total-all-days-val');
+                
                 if (!elTotalProject) return;
 
                 const allPlanDates = globalScheduleData
@@ -3371,6 +3417,13 @@
                 } else {
                     elTotalProject.innerText = '-';
                 }
+
+                const wetWorkTasks = globalScheduleTasks.map((task, index) => ({ task, index })).filter(t => t.task.category === 'wetwork');
+                const endProductTasks = globalScheduleTasks.map((task, index) => ({ task, index })).filter(t => t.task.category === 'endproduct');
+
+                if (elTotalWetWork) elTotalWetWork.innerText = `${getDurationForTasksOnFirstFloor(wetWorkTasks)} วัน`;
+                if (elTotalEndProduct) elTotalEndProduct.innerText = `${getDurationForTasksOnFirstFloor(endProductTasks)} วัน`;
+                if (elTotalAll) elTotalAll.innerText = `${getDurationForTasksOnFirstFloor([...wetWorkTasks, ...endProductTasks])} วัน`;
             }
 
             function renderScheduleFilter() {
@@ -3502,9 +3555,9 @@
                 const endProductTasks = globalScheduleTasks.map((task, index) => ({ task, index }))
                     .filter(t => t.task.category === 'endproduct');
 
-                const totalWetWorkDays = wetWorkTasks.reduce((sum, t) => sum + t.task.duration, 0);
-                const totalEndProductDays = endProductTasks.reduce((sum, t) => sum + t.task.duration, 0);
-                const totalAllDays = totalWetWorkDays + totalEndProductDays;
+                const totalWetWorkDays = getDurationForTasksOnFirstFloor(wetWorkTasks);
+                const totalEndProductDays = getDurationForTasksOnFirstFloor(endProductTasks);
+                const totalAllDays = getDurationForTasksOnFirstFloor([...wetWorkTasks, ...endProductTasks]);
 
                 const allPlanDates = globalScheduleData
                     .filter(f => f.id >= globalScheduleFilters.minFloor && f.id <= globalScheduleFilters.maxFloor)
@@ -5063,6 +5116,14 @@
                 const toggleScheduleFilterBtn = document.getElementById('toggleScheduleFilterBtn');
                 if (toggleScheduleFilterBtn) {
                     toggleScheduleFilterBtn.classList.toggle('hidden', currentView !== 'schedule');
+                }
+                
+                if (currentView !== 'schedule') {
+                    const scheduleFilter = document.getElementById('schedule-filter');
+                    if (scheduleFilter) scheduleFilter.classList.add('hidden');
+                    
+                    const scheduleSettings = document.getElementById('schedule-settings');
+                    if (scheduleSettings) scheduleSettings.classList.add('hidden');
                 }
                 
                 const toggleQCHandoverSettingsBtn = document.getElementById('toggleQCHandoverSettingsBtn');
