@@ -1426,14 +1426,14 @@
                     if (projectData.globalScheduleTasks) {
                         globalScheduleTasks = projectData.globalScheduleTasks;
                         
-                        // Patch for U32 and U34 swap (if loaded from old DB data)
+                        // Patch for U32 and U33 swap (if loaded from old DB data)
                         const u32Index = globalScheduleTasks.findIndex(t => t.subName === 'U32');
-                        const u34Index = globalScheduleTasks.findIndex(t => t.subName === 'U34');
-                        if (u32Index !== -1 && u34Index !== -1) {
-                            if (globalScheduleTasks[u32Index].name.includes('ปูพื้นไม้ลามิเนต') && globalScheduleTasks[u34Index].name.includes('งานเฟอร์นิเจอร์')) {
+                        const u33Index = globalScheduleTasks.findIndex(t => t.subName === 'U33');
+                        if (u32Index !== -1 && u33Index !== -1) {
+                            if (globalScheduleTasks[u32Index].name.includes('งานเฟอร์นิเจอร์') && globalScheduleTasks[u33Index].name.includes('Shower Screen')) {
                                 const tempName = globalScheduleTasks[u32Index].name;
-                                globalScheduleTasks[u32Index].name = globalScheduleTasks[u34Index].name;
-                                globalScheduleTasks[u34Index].name = tempName;
+                                globalScheduleTasks[u32Index].name = globalScheduleTasks[u33Index].name;
+                                globalScheduleTasks[u33Index].name = tempName;
                                 
                                 // Save the patched data back
                                 saveProjectDataToDB();
@@ -2894,8 +2894,8 @@
                 { name: 'งานติดตั้งประตูห้องพัก /ห้องน้ำ/ห้องนอน /ประตูชาร์ป แล้วเสร็จ 100%(7วัน)', subName: 'U29', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'ติดตั้งอุปกรณ์ดวงโคม+Consumer+Gill+Air(พร้อมTest) (7วัน)', subName: 'U30', color: 'bg-[#ead1dc]', duration: 7, category: 'endproduct' },
                 { name: 'ติดตั้งสุขภัณฑ์ + อุปกรณ์ในห้องน้ำ (7 วัน)', subName: 'U31', color: 'bg-[#ead1dc]', duration: 7, category: 'endproduct' },
-                { name: 'งานเฟอร์นิเจอร์ (SB) 1.ติดตั้งชุดครัว 2.เคาน์เตอร์ห้องน้ำ 3.ติดตั้งกระจกเงา แล้วเสร็จ 100% (7วัน)', subName: 'U32', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
-                { name: 'ติดตั้ง Shower Screen (7วัน)', subName: 'U33', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
+                { name: 'ติดตั้ง Shower Screen (7วัน)', subName: 'U32', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
+                { name: 'งานเฟอร์นิเจอร์ (SB) 1.ติดตั้งชุดครัว 2.เคาน์เตอร์ห้องน้ำ 3.ติดตั้งกระจกเงา แล้วเสร็จ 100% (7วัน)', subName: 'U33', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'ปูพื้นไม้ลามิเนต (7วัน)', subName: 'U34', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'งานสีเที่ยวสุดท้าย แล้วเสร็จ 100%(10วัน)+ติดตั้งปลั๊ก+หน้ากากปลั๊ก', subName: 'U35-U36', color: 'bg-[#cfe2f3]', duration: 10, category: 'endproduct' },
                 { name: 'ส่ง Cm Endproduct เก็บงาน CM End-Product(7วัน)', subName: 'U37', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
