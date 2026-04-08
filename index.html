@@ -2878,9 +2878,9 @@
                 { name: 'งานติดตั้งประตูห้องพัก /ห้องน้ำ/ห้องนอน /ประตูชาร์ป แล้วเสร็จ 100%(7วัน)', subName: 'U29', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'ติดตั้งอุปกรณ์ดวงโคม+Consumer+Gill+Air(พร้อมTest) (7วัน)', subName: 'U30', color: 'bg-[#ead1dc]', duration: 7, category: 'endproduct' },
                 { name: 'ติดตั้งสุขภัณฑ์ + อุปกรณ์ในห้องน้ำ (7 วัน)', subName: 'U31', color: 'bg-[#ead1dc]', duration: 7, category: 'endproduct' },
-                { name: 'ปูพื้นไม้ลามิเนต (7วัน)', subName: 'U32', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
+                { name: 'งานเฟอร์นิเจอร์ (SB) 1.ติดตั้งชุดครัว 2.เคาน์เตอร์ห้องน้ำ 3.ติดตั้งกระจกเงา แล้วเสร็จ 100% (7วัน)', subName: 'U32', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'ติดตั้ง Shower Screen (7วัน)', subName: 'U33', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
-                { name: 'งานเฟอร์นิเจอร์ (SB) 1.ติดตั้งชุดครัว 2.เคาน์เตอร์ห้องน้ำ 3.ติดตั้งกระจกเงา แล้วเสร็จ 100% (7วัน)', subName: 'U34', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
+                { name: 'ปูพื้นไม้ลามิเนต (7วัน)', subName: 'U34', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'งานสีเที่ยวสุดท้าย แล้วเสร็จ 100%(10วัน)+ติดตั้งปลั๊ก+หน้ากากปลั๊ก', subName: 'U35-U36', color: 'bg-[#cfe2f3]', duration: 10, category: 'endproduct' },
                 { name: 'ส่ง Cm Endproduct เก็บงาน CM End-Product(7วัน)', subName: 'U37', color: 'bg-[#cfe2f3]', duration: 7, category: 'endproduct' },
                 { name: 'ส่ง QC End Product(14 วัน)', subName: 'U38', color: 'bg-[#cfe2f3]', duration: 14, category: 'endproduct' }
@@ -3066,6 +3066,21 @@
                 if (!floor.actual) floor.actual = new Array(48).fill('');
             });
 
+            const THAI_HOLIDAYS = [
+                // 2025
+                '2025-01-01', '2025-02-12', '2025-04-06', '2025-04-13', '2025-04-14', '2025-04-15', '2025-05-01', '2025-05-04', '2025-05-11', '2025-06-03', '2025-07-10', '2025-07-11', '2025-07-28', '2025-08-12', '2025-10-13', '2025-10-23', '2025-12-05', '2025-12-10', '2025-12-31',
+                // 2026
+                '2026-01-01', '2026-01-02', '2026-03-03', '2026-04-06', '2026-04-13', '2026-04-14', '2026-04-15', '2026-05-01', '2026-05-04', '2026-05-31', '2026-06-01', '2026-06-03', '2026-07-28', '2026-07-29', '2026-07-30', '2026-08-12', '2026-10-13', '2026-10-23', '2026-12-05', '2026-12-07', '2026-12-10', '2026-12-31'
+            ];
+
+            function checkIsHoliday(dateObj) {
+                const year = dateObj.getFullYear();
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                const dateStr = `${year}-${month}-${day}`;
+                return THAI_HOLIDAYS.includes(dateStr);
+            }
+
             function addWorkingDays(startDateStr, daysToAdd) {
                 if (!startDateStr) return '';
                 let date = new Date(startDateStr);
@@ -3078,7 +3093,7 @@
                     date.setDate(date.getDate() + 1);
                     let dayOfWeek = date.getDay();
                     let isSunday = dayOfWeek === 0;
-                    let isHoliday = false; 
+                    let isHoliday = checkIsHoliday(date); 
 
                     if ((!isSunday || globalScheduleSettings.workOnSunday) && 
                         (!isHoliday || globalScheduleSettings.workOnHoliday)) {
@@ -3102,7 +3117,7 @@
                     date.setDate(date.getDate() + step);
                     let dayOfWeek = date.getDay();
                     let isSunday = dayOfWeek === 0;
-                    let isHoliday = false; 
+                    let isHoliday = checkIsHoliday(date); 
                     
                     if ((!isSunday || globalScheduleSettings.workOnSunday) && 
                         (!isHoliday || globalScheduleSettings.workOnHoliday)) {
@@ -3122,7 +3137,7 @@
                     date.setDate(date.getDate() + 1);
                     let dayOfWeek = date.getDay();
                     let isSunday = dayOfWeek === 0;
-                    let isHoliday = false;
+                    let isHoliday = checkIsHoliday(date);
                     
                     if ((!isSunday || globalScheduleSettings.workOnSunday) && 
                         (!isHoliday || globalScheduleSettings.workOnHoliday)) {
@@ -3233,7 +3248,14 @@
 
             window.updateScheduleSetting = function(key, value) {
                 globalScheduleSettings[key] = value;
+                
+                recalculateAllPlanDates();
+                
                 renderScheduleSettings();
+                renderScheduleTable();
+                renderScheduleFilter();
+                updateProjectTotalDisplay();
+                
                 saveProjectDataToDB();
             };
 
