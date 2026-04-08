@@ -1423,7 +1423,23 @@
                     projectData = data.data;
                     // Load schedule data if it exists in projectData
                     if (projectData.globalScheduleData) globalScheduleData = projectData.globalScheduleData;
-                    if (projectData.globalScheduleTasks) globalScheduleTasks = projectData.globalScheduleTasks;
+                    if (projectData.globalScheduleTasks) {
+                        globalScheduleTasks = projectData.globalScheduleTasks;
+                        
+                        // Patch for U32 and U34 swap (if loaded from old DB data)
+                        const u32Index = globalScheduleTasks.findIndex(t => t.subName === 'U32');
+                        const u34Index = globalScheduleTasks.findIndex(t => t.subName === 'U34');
+                        if (u32Index !== -1 && u34Index !== -1) {
+                            if (globalScheduleTasks[u32Index].name.includes('ปูพื้นไม้ลามิเนต') && globalScheduleTasks[u34Index].name.includes('งานเฟอร์นิเจอร์')) {
+                                const tempName = globalScheduleTasks[u32Index].name;
+                                globalScheduleTasks[u32Index].name = globalScheduleTasks[u34Index].name;
+                                globalScheduleTasks[u34Index].name = tempName;
+                                
+                                // Save the patched data back
+                                saveProjectDataToDB();
+                            }
+                        }
+                    }
                     if (projectData.globalScheduleSettings) globalScheduleSettings = projectData.globalScheduleSettings;
                     if (projectData.globalScheduleFilters) globalScheduleFilters = projectData.globalScheduleFilters;
                 } else {
