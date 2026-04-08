@@ -3088,6 +3088,30 @@
                 return date.toISOString().split('T')[0];
             }
 
+            function shiftWorkingDays(startDateStr, shiftDays) {
+                if (!startDateStr) return '';
+                let date = new Date(startDateStr);
+                if (isNaN(date.getTime())) return '';
+                
+                if (shiftDays === 0) return startDateStr;
+                
+                let step = shiftDays > 0 ? 1 : -1;
+                let remaining = Math.abs(shiftDays);
+                
+                while (remaining > 0) {
+                    date.setDate(date.getDate() + step);
+                    let dayOfWeek = date.getDay();
+                    let isSunday = dayOfWeek === 0;
+                    let isHoliday = false; 
+                    
+                    if ((!isSunday || globalScheduleSettings.workOnSunday) && 
+                        (!isHoliday || globalScheduleSettings.workOnHoliday)) {
+                        remaining--;
+                    }
+                }
+                return date.toISOString().split('T')[0];
+            }
+
             function getNextWorkingDay(dateStr) {
                 if (!dateStr) return '';
                 let date = new Date(dateStr);
@@ -3250,6 +3274,19 @@
                 saveProjectDataToDB();
             };
 
+            window.updateTaskOffset = function(index, value) {
+                const offset = parseInt(value) || 0;
+                globalScheduleTasks[index].offsetDays = offset;
+                
+                recalculateAllPlanDates();
+                
+                renderScheduleTable();
+                renderScheduleFilter();
+                updateProjectTotalDisplay();
+                
+                saveProjectDataToDB();
+            };
+
             function recalculateAllPlanDates() {
                 globalScheduleData.forEach(floor => {
                     // Start with the first task's start date as the anchor
@@ -3260,7 +3297,13 @@
                         if (i > 0) {
                             // Start date of task i is the next working day after end date of task i-1
                             const prevEndDate = floor.plan[(i - 1) * 2 + 1];
-                            currentStartDate = getNextWorkingDay(prevEndDate);
+                            let nextStart = getNextWorkingDay(prevEndDate);
+                            
+                            const offset = globalScheduleTasks[i].offsetDays || 0;
+                            if (offset !== 0) {
+                                nextStart = shiftWorkingDays(nextStart, offset);
+                            }
+                            currentStartDate = nextStart;
                             floor.plan[i * 2] = currentStartDate;
                         }
                         
@@ -3522,11 +3565,23 @@
                                         return `
                                             <div class="bg-white p-3 rounded-xl border border-emerald-100 shadow-sm hover:border-emerald-300 transition-all">
                                                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-tight block mb-2 truncate" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
-                                                <div class="flex items-center gap-2">
-                                                    <input type="number" min="1" value="${task.duration}" 
-                                                        class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-emerald-700 focus:bg-white focus:border-emerald-500 outline-none transition-all"
-                                                        onchange="updateTaskDuration(${idx}, this.value)">
-                                                    <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
+                                                <div class="flex flex-col gap-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10">เวลา:</span>
+                                                        <input type="number" min="1" value="${task.duration}" 
+                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-emerald-700 focus:bg-white focus:border-emerald-500 outline-none transition-all"
+                                                            onchange="updateTaskDuration(${idx}, this.value)">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
+                                                    </div>
+                                                    ${idx > 0 ? `
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม:</span>
+                                                        <input type="number" value="${task.offsetDays || 0}" 
+                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
+                                                            onchange="updateTaskOffset(${idx}, this.value)">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
+                                                    </div>
+                                                    ` : '<div class="h-[30px]"></div>'}
                                                 </div>
                                             </div>
                                         `;
@@ -3559,11 +3614,23 @@
                                         return `
                                             <div class="bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition-all">
                                                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-tight block mb-2 truncate" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
-                                                <div class="flex items-center gap-2">
-                                                    <input type="number" min="1" value="${task.duration}" 
-                                                        class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-blue-700 focus:bg-white focus:border-blue-500 outline-none transition-all"
-                                                        onchange="updateTaskDuration(${idx}, this.value)">
-                                                    <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
+                                                <div class="flex flex-col gap-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10">เวลา:</span>
+                                                        <input type="number" min="1" value="${task.duration}" 
+                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-blue-700 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                                                            onchange="updateTaskDuration(${idx}, this.value)">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
+                                                    </div>
+                                                    ${idx > 0 ? `
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม:</span>
+                                                        <input type="number" value="${task.offsetDays || 0}" 
+                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
+                                                            onchange="updateTaskOffset(${idx}, this.value)">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
+                                                    </div>
+                                                    ` : '<div class="h-[30px]"></div>'}
                                                 </div>
                                             </div>
                                         `;
