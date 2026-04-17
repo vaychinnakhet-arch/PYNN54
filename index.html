@@ -99,7 +99,8 @@
         .is-line-capturing #controls-area,
         .is-line-capturing #primary-action-buttons-container,
         .is-line-capturing #secondary-action-buttons-container,
-        .is-line-capturing #unified-controls {
+        .is-line-capturing #unified-controls,
+        .is-line-capturing #schedule-quick-filter-floating {
             display: none !important;
         }
         .is-line-capturing #home-btn {
@@ -1103,7 +1104,41 @@
         </main>
     </div>
 
+    <!-- Schedule Quick Filter Floating Bar -->
+    <div id="schedule-quick-filter-floating" class="hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-sm shadow-2xl border border-slate-200 rounded-full px-2 py-2 flex items-center justify-center gap-2 z-[60] w-max whitespace-nowrap lg:bottom-8 print:hidden flex-wrap md:flex-nowrap">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest px-2 hidden md:inline">หมวดงาน:</span>
+        <button id="quick-filter-wetwork-btn" onclick="quickFilterSchedule('wetwork')" class="schedule-quick-btn px-3 md:px-4 py-2 rounded-full text-xs font-bold bg-[#e2efda]/50 border border-[#a9d08e] text-slate-800 hover:bg-[#a9d08e]/30 transition-all shadow-sm flex items-center gap-1.5 focus:outline-none">
+            <span class="w-2 h-2 rounded-full bg-[#a9d08e]"></span>
+            <span class="hidden sm:inline">Wet Work (U1-U26)</span><span class="sm:hidden">WW</span>
+        </button>
+        <button id="quick-filter-endproduct-btn" onclick="quickFilterSchedule('endproduct')" class="schedule-quick-btn px-3 md:px-4 py-2 rounded-full text-xs font-bold border bg-[#cfe2f3]/50 border-[#cfe2f3] text-slate-800 hover:bg-[#cfe2f3]/70 transition-all shadow-sm flex items-center gap-1.5 focus:outline-none">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            <span class="hidden sm:inline">End Product (U27-U38)</span><span class="sm:hidden">EP</span>
+        </button>
+        <button id="quick-filter-all-btn" onclick="quickFilterSchedule('all')" class="schedule-quick-btn px-3 md:px-4 py-2 rounded-full text-xs font-bold bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition-all shadow-sm flex items-center gap-1.5 focus:outline-none ring-4 ring-indigo-200">
+            ดูทั้งหมด
+        </button>
 
+        <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+        
+        <label class="flex items-center gap-1.5 cursor-pointer group px-2" title="ทำงานวันอาทิตย์">
+            <div class="relative flex items-center">
+                <input type="checkbox" id="quick-setting-sunday-toggle" class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 checked:bg-indigo-600 transition-all" 
+                    onchange="updateScheduleSetting('workOnSunday', this.checked)">
+                <svg class="absolute h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="text-[10px] font-bold text-slate-600 group-hover:text-indigo-600 transition-colors uppercase">อาทิตย์</span>
+        </label>
+        
+        <label class="flex items-center gap-1.5 cursor-pointer group pr-2" title="ทำงานวันหยุดนักขัตฤกษ์">
+            <div class="relative flex items-center">
+                <input type="checkbox" id="quick-setting-holiday-toggle" class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 checked:bg-indigo-600 transition-all" 
+                    onchange="updateScheduleSetting('workOnHoliday', this.checked)">
+                <svg class="absolute h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="text-[10px] font-bold text-slate-600 group-hover:text-indigo-600 transition-colors uppercase">นักขัตฤกษ์</span>
+        </label>
+    </div>
 
     <!-- Modals (Moved outside main containers) -->
     <div id="summaryPlanModal" class="modal fixed inset-0 w-full h-full items-center justify-center z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="summaryPlanModalTitle">
@@ -2679,6 +2714,11 @@
                     toggleOverallBtn.classList.toggle('hidden', !isResidentialOrSummary || !showExecutiveSummary);
                 }
                 
+                const floatingBar = document.getElementById('schedule-quick-filter-floating');
+                if (floatingBar) {
+                    floatingBar.classList.toggle('hidden', view !== 'schedule');
+                }
+                
                 renderTable();
             }
 
@@ -2698,6 +2738,12 @@
                 document.getElementById('main-app-container').classList.add('hidden');
                 document.getElementById('quick-update-mode-container').classList.add('hidden');
                 document.getElementById('splash-screen').classList.remove('hidden');
+                
+                const floatingBar = document.getElementById('schedule-quick-filter-floating');
+                if (floatingBar) {
+                    floatingBar.classList.add('hidden');
+                }
+                
                 renderSplashScreen(); // Re-render in case of updates
             }
             
@@ -3699,6 +3745,30 @@
                 saveProjectDataToDB();
             };
 
+            window.quickFilterSchedule = function(category) {
+                if (category === 'wetwork') {
+                    globalScheduleFilters.showWetWork = true;
+                    globalScheduleFilters.showEndProduct = false;
+                } else if (category === 'endproduct') {
+                    globalScheduleFilters.showWetWork = false;
+                    globalScheduleFilters.showEndProduct = true;
+                } else {
+                    globalScheduleFilters.showWetWork = true;
+                    globalScheduleFilters.showEndProduct = true;
+                }
+                globalScheduleFilters.hiddenTasks = [];
+                renderScheduleFilter();
+                renderScheduleTable();
+                saveProjectDataToDB();
+                
+                // Update active states on the floating bar
+                document.querySelectorAll('.schedule-quick-btn').forEach(btn => btn.classList.remove('ring-4', 'ring-indigo-200'));
+                if (category) {
+                    const activeBtn = document.getElementById(`quick-filter-${category}-btn`);
+                    if (activeBtn) activeBtn.classList.add('ring-4', 'ring-indigo-200');
+                }
+            };
+
             window.updateScheduleFilterTask = function(taskIdx, isChecked) {
                 if (isChecked) {
                     globalScheduleFilters.hiddenTasks = globalScheduleFilters.hiddenTasks.filter(id => id !== taskIdx);
@@ -3713,6 +3783,13 @@
 
             function renderScheduleSettings() {
                 const container = document.getElementById('schedule-settings');
+                
+                // Keep floating toggles in sync
+                const sunToggle = document.getElementById('quick-setting-sunday-toggle');
+                if (sunToggle) sunToggle.checked = globalScheduleSettings.workOnSunday;
+                const holToggle = document.getElementById('quick-setting-holiday-toggle');
+                if (holToggle) holToggle.checked = globalScheduleSettings.workOnHoliday;
+
                 if (!container) return;
                 
                 const wetWorkTasks = globalScheduleTasks.map((task, index) => ({ task, index }))
