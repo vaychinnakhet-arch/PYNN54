@@ -709,6 +709,11 @@
                 <p class="text-lg md:text-xl text-slate-600 font-medium">ระบบติดตามความคืบหน้าโครงการ</p>
             </div>
             
+            <!-- Splash Alert Banner -->
+            <div id="splash-alert-banner" class="hidden mb-12 bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                <!-- Content will be injected here -->
+            </div>
+            
             <!-- Summary Dashboard -->
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
                 <!-- Overall Progress -->
@@ -2138,6 +2143,121 @@
                 if (window.lucide) lucide.createIcons();
             }
 
+            function updateSplashAlerts() {
+                const alertContainer = document.getElementById('splash-alert-banner');
+                if (!alertContainer) return;
+
+                if (!globalScheduleData || globalScheduleData.length === 0 || !globalScheduleTasks || globalScheduleTasks.length === 0) {
+                    alertContainer.classList.add('hidden');
+                    return;
+                }
+
+                let delayedTasks = [];
+                let inProgressTasks = [];
+                
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const visibleTasks = globalScheduleTasks.map((task, index) => ({ task, index })).filter(({ task, index }) => {
+                    if (task.category === 'wetwork' && !globalScheduleFilters.showWetWork) return false;
+                    if (task.category === 'endproduct' && !globalScheduleFilters.showEndProduct) return false;
+                    if (globalScheduleFilters.hiddenTasks.includes(index)) return false;
+                    return true;
+                });
+
+                visibleTasks.forEach(({ task, index }) => {
+                    globalScheduleData.filter(f => f.id >= globalScheduleFilters.minFloor && f.id <= globalScheduleFilters.maxFloor).forEach(floor => {
+                        const actualStart = floor.actual[index * 2];
+                        const actualEnd = floor.actual[index * 2 + 1];
+                        const planStartStr = floor.plan[index * 2];
+                        const planEndStr = floor.plan[index * 2 + 1];
+
+                        const isDone = actualStart === 'DONE' || actualEnd === 'DONE';
+                        
+                        if (!isDone) {
+                            if (planEndStr) {
+                                const planEndDate = new Date(planEndStr);
+                                planEndDate.setHours(0, 0, 0, 0);
+                                
+                                if (planEndDate < today) {
+                                    delayedTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
+                                } else if (planStartStr) {
+                                    const planStartDate = new Date(planStartStr);
+                                    planStartDate.setHours(0, 0, 0, 0);
+                                    if (planStartDate <= today && planEndDate >= today) {
+                                        inProgressTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+                // Format the date
+                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                const dateStr = `${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
+
+                if (delayedTasks.length === 0 && inProgressTasks.length === 0) {
+                    alertContainer.classList.add('hidden');
+                    return;
+                }
+
+                alertContainer.classList.remove('hidden');
+                
+                let html = `
+                    <div class="bg-indigo-600 text-white px-6 py-3 flex justify-between items-center">
+                        <h3 class="font-bold text-lg flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                            สรุปงานประจำวันที่ ${dateStr}
+                        </h3>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                `;
+
+                if (inProgressTasks.length > 0) {
+                    html += `
+                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                            <h4 class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                แผนงานที่ต้องทำวันนี้ (${inProgressTasks.length})
+                            </h4>
+                            <div class="max-h-32 overflow-y-auto pr-2 space-y-1">
+                                ${inProgressTasks.map(t => `<div class="text-sm text-blue-700 bg-white px-3 py-1.5 rounded shadow-sm border border-blue-50">${t}</div>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex items-center justify-center text-slate-400 text-sm font-medium">
+                            ไม่มีแผนงานที่ต้องทำวันนี้
+                        </div>
+                    `;
+                }
+
+                if (delayedTasks.length > 0) {
+                    html += `
+                        <div class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                            <h4 class="font-bold text-rose-800 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                งานที่ล่าช้าไปแล้ว (${delayedTasks.length})
+                            </h4>
+                            <div class="max-h-32 overflow-y-auto pr-2 space-y-1">
+                                ${delayedTasks.map(t => `<div class="text-sm text-rose-700 bg-white px-3 py-1.5 rounded shadow-sm border border-rose-50">${t}</div>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex items-center justify-center text-emerald-600 text-sm font-medium">
+                            ไม่มีงานที่ล่าช้า 🎉
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+                alertContainer.innerHTML = html;
+            }
+
             function calculateProjectSummary() {
                 if (!projectData || Object.keys(projectData).length === 0) {
                     return { overallProgress: 0, completedUnits: 0, qcPassRate: 0, taskProgress: {} };
@@ -2373,6 +2493,8 @@
                 if(progressCircle) progressCircle.style.setProperty('--progress', `${summary.overallProgress.toFixed(1)}%`);
                 
                 document.getElementById('splash-qc-pass-rate').textContent = `${summary.qcPassRate.toFixed(1)}%`;
+                
+                updateSplashAlerts();
                 
                 // Render task cards
                 const taskCardsContainer = document.getElementById('splash-task-cards');
