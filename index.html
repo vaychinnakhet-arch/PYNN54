@@ -9,6 +9,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- SUPABASE SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -700,7 +701,7 @@
 <link rel="stylesheet" href="/index.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
 </head>
-<body class="p-0 md:p-4 bg-slate-50">
+<body class="p-0 md:p-4 bg-slate-50 relative pb-32">
 
     <!-- Splash Screen -->
     <div id="splash-screen" class="min-h-screen flex items-center justify-center p-4">
@@ -880,6 +881,14 @@
                     </div>
 
                     <!-- Group 3: Data Management -->
+                    <div class="flex items-center gap-2 bg-emerald-50/50 p-1.5 rounded-xl border border-emerald-100/50">
+                        <button id="exportExcelBtn" onclick="exportExcel()" class="action-btn px-3 py-1.5 bg-emerald-600 text-white rounded-lg shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all" title="ส่งออกตารางเป็น Excel">
+                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                            <span class="hidden sm:inline">ส่งออก (Excel)</span>
+                        </button>
+                    </div>
+
+                    <!-- Group 4: App Data Management -->
                     <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100">
                         <input type="file" id="import-file" class="hidden" accept=".json">
                         <label for="import-file" class="action-btn custom-file-button px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all cursor-pointer" title="นำเข้าข้อมูล">
@@ -1122,21 +1131,19 @@
         <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
         
         <label class="flex items-center gap-1.5 cursor-pointer group px-2" title="ทำงานวันอาทิตย์">
-            <div class="relative flex items-center">
-                <input type="checkbox" id="quick-setting-sunday-toggle" class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 checked:bg-indigo-600 transition-all" 
-                    onchange="updateScheduleSetting('workOnSunday', this.checked)">
-                <svg class="absolute h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span class="text-[10px] font-bold text-slate-600 uppercase transition-colors" id="text-sunday-state-badge">ทำอาทิตย์ <span id="text-sunday-state"></span></span>
+            <div class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="quick-setting-sunday-toggle" class="sr-only peer" onchange="updateScheduleSetting('workOnSunday', this.checked)">
+                <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
             </div>
-            <span class="text-[10px] font-bold text-slate-600 group-hover:text-indigo-600 transition-colors uppercase">อาทิตย์</span>
         </label>
         
         <label class="flex items-center gap-1.5 cursor-pointer group pr-2" title="ทำงานวันหยุดนักขัตฤกษ์">
-            <div class="relative flex items-center">
-                <input type="checkbox" id="quick-setting-holiday-toggle" class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 checked:bg-indigo-600 transition-all" 
-                    onchange="updateScheduleSetting('workOnHoliday', this.checked)">
-                <svg class="absolute h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span class="text-[10px] font-bold text-slate-600 uppercase transition-colors" id="text-holiday-state-badge">ทำนักขัตฤกษ์ <span id="text-holiday-state"></span></span>
+            <div class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="quick-setting-holiday-toggle" class="sr-only peer" onchange="updateScheduleSetting('workOnHoliday', this.checked)">
+                <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
             </div>
-            <span class="text-[10px] font-bold text-slate-600 group-hover:text-indigo-600 transition-colors uppercase">นักขัตฤกษ์</span>
         </label>
     </div>
 
@@ -3136,7 +3143,8 @@
                 { name: 'ส่ง QC End Product(14 วัน)', subName: 'U38', color: 'bg-[#cfe2f3]', duration: 14, category: 'endproduct' }
             ];
 
-            let globalScheduleSettings = {
+            let savedSettings = localStorage.getItem('pynn54_schedule_settings');
+            let globalScheduleSettings = savedSettings ? JSON.parse(savedSettings) : {
                 workOnSunday: true,
                 workOnHoliday: true
             };
@@ -3498,6 +3506,7 @@
 
             window.updateScheduleSetting = function(key, value) {
                 globalScheduleSettings[key] = value;
+                localStorage.setItem('pynn54_schedule_settings', JSON.stringify(globalScheduleSettings));
                 
                 recalculateAllPlanDates();
                 
@@ -3787,8 +3796,19 @@
                 // Keep floating toggles in sync
                 const sunToggle = document.getElementById('quick-setting-sunday-toggle');
                 if (sunToggle) sunToggle.checked = globalScheduleSettings.workOnSunday;
+                const textSunState = document.getElementById('text-sunday-state');
+                const textSunBadge = document.getElementById('text-sunday-state-badge');
+                if (textSunState) {
+                    textSunBadge.className = globalScheduleSettings.workOnSunday ? 'text-[10px] font-bold text-emerald-600 uppercase transition-colors' : 'text-[10px] font-bold text-slate-400 uppercase transition-colors';
+                }
+                
                 const holToggle = document.getElementById('quick-setting-holiday-toggle');
                 if (holToggle) holToggle.checked = globalScheduleSettings.workOnHoliday;
+                const textHolState = document.getElementById('text-holiday-state');
+                const textHolBadge = document.getElementById('text-holiday-state-badge');
+                if (textHolState) {
+                    textHolBadge.className = globalScheduleSettings.workOnHoliday ? 'text-[10px] font-bold text-emerald-600 uppercase transition-colors' : 'text-[10px] font-bold text-slate-400 uppercase transition-colors';
+                }
 
                 if (!container) return;
                 
@@ -3851,20 +3871,20 @@
                                 <label class="text-xs font-black text-slate-500 uppercase tracking-wider">วันทำงาน (Working Days)</label>
                                 <div class="flex gap-6 mt-1">
                                     <label class="flex items-center gap-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-300 checked:bg-indigo-600 transition-all" 
+                                        <div class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer" 
                                                 ${globalScheduleSettings.workOnSunday ? 'checked' : ''} 
                                                 onchange="updateScheduleSetting('workOnSunday', this.checked)">
-                                            <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         </div>
                                         <span class="text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">ทำงานวันอาทิตย์</span>
                                     </label>
                                     <label class="flex items-center gap-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-300 checked:bg-indigo-600 transition-all" 
+                                        <div class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer" 
                                                 ${globalScheduleSettings.workOnHoliday ? 'checked' : ''} 
                                                 onchange="updateScheduleSetting('workOnHoliday', this.checked)">
-                                            <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         </div>
                                         <span class="text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">ทำงานวันหยุดนักขัตฤกษ์</span>
                                     </label>
@@ -6735,6 +6755,76 @@
                     // The realtime listener will handle the re-render, so we just remove the spinner
                      if(subTaskContainer.contains(spinnerOverlay)) {
                         subTaskContainer.removeChild(spinnerOverlay);
+                    }
+                }
+            }
+            
+            window.exportExcel = exportExcel;
+            function exportExcel() {
+                try {
+                    let tableName = "Data";
+                    if (currentView === 'residential') tableName = 'ห้องพัก';
+                    else if (currentView === 'common') tableName = 'ส่วนกลาง';
+                    else if (currentView === 'qcSummary') tableName = 'สรุปQC';
+                    else if (currentView === 'summaryReport') tableName = 'รายงานสรุป';
+                    else if (currentView === 'schedule') tableName = 'แผนงาน';
+                    else if (currentView === 'qcHandover') tableName = 'แผนส่งห้องQC';
+                    
+                    let table = document.getElementById('main-table');
+                    if (!table) return;
+
+                    let clonedTable = table.cloneNode(true);
+                    
+                    let originalInputs = table.querySelectorAll('input, select, textarea');
+                    let clonedInputs = clonedTable.querySelectorAll('input, select, textarea');
+                    
+                    for (let i = 0; i < originalInputs.length; i++) {
+                        let val = originalInputs[i].value;
+                        if (originalInputs[i].tagName.toLowerCase() === 'select') {
+                            let option = originalInputs[i].options[originalInputs[i].selectedIndex];
+                            if (option) val = option.text;
+                        }
+                        
+                        let parentCell = clonedInputs[i].parentElement;
+                        clonedInputs[i].remove();
+                        
+                        if (!parentCell.textContent.trim()) {
+                            parentCell.textContent = val || '';
+                        }
+                    }
+                    
+                    const svgs = clonedTable.querySelectorAll('svg');
+                    svgs.forEach(svg => svg.remove());
+                    
+                    const tds = clonedTable.querySelectorAll('td, th');
+                    tds.forEach(td => {
+                        let text = td.textContent.trim();
+                        if (!text) {
+                            let innerHtmlStr = td.innerHTML || '';
+                            let classList = td.className || '';
+                            if (classList.includes('bg-emerald-') || classList.includes('bg-teal-') || innerHtmlStr.includes('bg-emerald-') || innerHtmlStr.includes('bg-teal-')) {
+                                td.textContent = '✓';
+                            } else if (classList.includes('bg-rose-') || innerHtmlStr.includes('bg-rose-')) {
+                                td.textContent = '✗';
+                            } else if (classList.includes('bg-amber-') || classList.includes('bg-yellow-') || innerHtmlStr.includes('bg-amber-') || innerHtmlStr.includes('bg-yellow-')) {
+                                td.textContent = '⚠';
+                            }
+                        }
+                        
+                        if(td.classList.contains('separator-cell')) {
+                            td.innerHTML = '';
+                        }
+                    });
+
+                    let wb = XLSX.utils.table_to_book(clonedTable, {sheet: tableName});
+                    XLSX.writeFile(wb, `[PYNN54] ${tableName}_${new Date().toISOString().split('T')[0]}.xlsx`);
+                    showToast("ส่งออก Excel สำเร็จ");
+                } catch (error) {
+                    console.error("Export Excel failed:", error);
+                    if (typeof showNotificationModal === 'function') {
+                        showNotificationModal("ส่งออกข้อมูลไม่สำเร็จ", "เกิดข้อผิดพลาดขณะส่งออก Excel โปรดลองใหม่อีกครั้ง");
+                    } else {
+                        alert("เกิดข้อผิดพลาดขณะส่งออก Excel");
                     }
                 }
             }
