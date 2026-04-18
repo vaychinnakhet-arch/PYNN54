@@ -1131,7 +1131,7 @@
         <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
         
         <label class="flex items-center gap-1.5 cursor-pointer group px-2" title="ทำงานวันอาทิตย์">
-            <span class="text-[10px] font-bold text-slate-600 uppercase transition-colors" id="text-sunday-state-badge">ทำอาทิตย์ <span id="text-sunday-state"></span></span>
+            <span class="text-[10px] font-bold text-slate-600 uppercase">อาทิตย์ <span id="text-sunday-state"></span></span>
             <div class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="quick-setting-sunday-toggle" class="sr-only peer" onchange="updateScheduleSetting('workOnSunday', this.checked)">
                 <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
@@ -1139,7 +1139,7 @@
         </label>
         
         <label class="flex items-center gap-1.5 cursor-pointer group pr-2" title="ทำงานวันหยุดนักขัตฤกษ์">
-            <span class="text-[10px] font-bold text-slate-600 uppercase transition-colors" id="text-holiday-state-badge">ทำนักขัตฤกษ์ <span id="text-holiday-state"></span></span>
+            <span class="text-[10px] font-bold text-slate-600 uppercase">นักขัตฤกษ์ <span id="text-holiday-state"></span></span>
             <div class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="quick-setting-holiday-toggle" class="sr-only peer" onchange="updateScheduleSetting('workOnHoliday', this.checked)">
                 <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
@@ -3797,17 +3797,17 @@
                 const sunToggle = document.getElementById('quick-setting-sunday-toggle');
                 if (sunToggle) sunToggle.checked = globalScheduleSettings.workOnSunday;
                 const textSunState = document.getElementById('text-sunday-state');
-                const textSunBadge = document.getElementById('text-sunday-state-badge');
                 if (textSunState) {
-                    textSunBadge.className = globalScheduleSettings.workOnSunday ? 'text-[10px] font-bold text-emerald-600 uppercase transition-colors' : 'text-[10px] font-bold text-slate-400 uppercase transition-colors';
+                    textSunState.textContent = globalScheduleSettings.workOnSunday ? '✓' : '✗';
+                    textSunState.className = globalScheduleSettings.workOnSunday ? 'text-emerald-500 text-lg leading-none' : 'text-rose-500 text-lg leading-none';
                 }
                 
                 const holToggle = document.getElementById('quick-setting-holiday-toggle');
                 if (holToggle) holToggle.checked = globalScheduleSettings.workOnHoliday;
                 const textHolState = document.getElementById('text-holiday-state');
-                const textHolBadge = document.getElementById('text-holiday-state-badge');
                 if (textHolState) {
-                    textHolBadge.className = globalScheduleSettings.workOnHoliday ? 'text-[10px] font-bold text-emerald-600 uppercase transition-colors' : 'text-[10px] font-bold text-slate-400 uppercase transition-colors';
+                    textHolState.textContent = globalScheduleSettings.workOnHoliday ? '✓' : '✗';
+                    textHolState.className = globalScheduleSettings.workOnHoliday ? 'text-emerald-500 text-lg leading-none' : 'text-rose-500 text-lg leading-none';
                 }
 
                 if (!container) return;
