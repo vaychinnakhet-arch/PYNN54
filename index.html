@@ -9,7 +9,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     
     <!-- SUPABASE SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -159,8 +159,8 @@
             display: inline-block !important;
         }
         .is-line-capturing .floor-separator {
-            border-top-width: 4px !important;
-            border-top-color: #cbd5e1 !important; /* slate-300 */
+            border-top-width: 2px !important;
+            border-top-color: #1e293b !important; /* slate-800 */
         }
         .is-line-capturing th, .is-line-capturing td {
             vertical-align: middle !important;
@@ -271,7 +271,8 @@
             border-bottom: 1px solid #cbd5e1 !important;
         }
         .floor-separator {
-            border-top-color: #000000 !important;
+            border-top-color: #1e293b !important; /* slate-800 */
+            border-top-width: 2px !important;
         }
         .selection-active {
             background-color: rgba(59, 130, 246, 0.4) !important;
@@ -882,7 +883,7 @@
 
                     <!-- Group 3: Data Management -->
                     <div class="flex items-center gap-2 bg-emerald-50/50 p-1.5 rounded-xl border border-emerald-100/50">
-                        <button id="exportExcelBtn" onclick="exportExcel()" class="action-btn px-3 py-1.5 bg-emerald-600 text-white rounded-lg shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all" title="ส่งออกตารางเป็น Excel">
+                        <button id="exportExcelBtn" onclick="openModal('exportExcelModal')" class="action-btn px-3 py-1.5 bg-emerald-600 text-white rounded-lg shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all" title="ส่งออกตารางเป็น Excel">
                             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
                             <span class="hidden sm:inline">ส่งออก (Excel)</span>
                         </button>
@@ -1335,6 +1336,50 @@
             <div class="p-5 border-t border-slate-100 bg-slate-50/50 rounded-b-2xl flex justify-end gap-3">
                 <button onclick="closeQCHandoverSettings()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm">ยกเลิก</button>
                 <button onclick="saveQCHandoverSettings()" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors shadow-sm">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Excel Modal -->
+    <div id="exportExcelModal" class="modal fixed inset-0 w-full h-full items-center justify-center z-[70] hidden backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="export-excel-title">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/60 transition-opacity" onclick="closeModal('exportExcelModal')"></div>
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 relative z-10 flex flex-col overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                    </div>
+                    <h3 id="export-excel-title" class="text-lg font-bold text-slate-800">ส่งออก Excel</h3>
+                </div>
+                <button onclick="closeModal('exportExcelModal')" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-2 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-3">
+                <button id="exportExcelCurrentBtn" onclick="executeExportExcel('current')" class="w-full flex items-start gap-4 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all text-left group">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                        <i data-lucide="table" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800 group-hover:text-emerald-900">ส่งออกเฉพาะหน้านี้</div>
+                        <div class="text-xs text-slate-500 mt-1">ส่งออกเฉพาะตารางที่คุณกำลังเลือกดูอยู่ในขณะนี้ รวมหัวกระดาษเป็น 1 Sheet</div>
+                    </div>
+                </button>
+
+                <button id="exportExcelAllBtn" onclick="executeExportExcel('all')" class="w-full flex items-start gap-4 p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left group">
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800 group-hover:text-indigo-900">ส่งออกทุกหน้า (หลาย Sheet)</div>
+                        <div class="text-xs text-slate-500 mt-1">รวบรวมทุกรายงานรวมกันไว้ในไฟล์ Excel เดียวกัน แบ่งเป็นหลายๆ Sheet สะดวกต่อการนำเสนอ</div>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="p-4 border-t border-slate-100 bg-slate-50 text-center">
+                <button onclick="closeModal('exportExcelModal')" class="text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors px-4 py-2 rounded-lg hover:bg-slate-200">ยกเลิก</button>
             </div>
         </div>
     </div>
@@ -2725,7 +2770,7 @@
                 }
 
                 if (headerStyleToggle) {
-                    const isResidentialOrSummary = view === 'residential' || view === 'summaryReport' || view === 'schedule' || view === 'qcHandover';
+                    const isResidentialOrSummary = view === 'residential' || view === 'summaryReport' || view === 'schedule' || view === 'qcHandover' || view === 'qcSummary';
                     headerStyleToggle.classList.toggle('hidden', !isResidentialOrSummary);
                     if (isResidentialOrSummary) {
                         document.getElementById('header-style-dark-btn').classList.toggle('active', reportHeaderStyle === 'dark');
@@ -4683,7 +4728,7 @@
                     const endProductRow = document.createElement('tr');
                     
                     // Add separation between floors
-                    const floorSeparatorClass = index === 0 ? '' : 'border-t-4 border-slate-400 floor-separator';
+                    const floorSeparatorClass = index === 0 ? '' : 'border-t-2 border-slate-800 floor-separator';
                     wetWorkRow.className = `${floorSeparatorClass} bg-slate-50/30 hover:bg-slate-50 transition-colors`;
                     endProductRow.className = `bg-slate-50/30 hover:bg-slate-50 transition-colors border-b border-slate-400`;
 
@@ -4788,7 +4833,7 @@
                 
                 const tfoot = document.createElement('tfoot');
                 tfoot.innerHTML = `
-                    <tr class="font-bold bg-slate-200 border-t-4 border-slate-400">
+                    <tr class="font-bold bg-slate-200 border-t-2 border-slate-800">
                         <td class="border border-slate-400 p-2 align-middle" rowspan="2"><span>TOTAL</span></td>
                         <td class="border border-slate-400 p-1 font-semibold bg-slate-100 text-slate-600 text-xs align-middle">Wet Work</td>
                         <td class="border border-slate-400" colspan="${CONFIG.MAX_ROOMS}"><span>( ${CONFIG.TOTAL_UNITS} UNIT )</span></td>
@@ -5622,6 +5667,7 @@
                 }
             }
             
+            window.openModal = openModal;
             function openModal(modalId, triggerElement = document.activeElement) {
                 const modal = document.getElementById(modalId);
                 if (!modal) return;
@@ -5642,6 +5688,7 @@
                 modal.addEventListener('keydown', trapFocus);
             }
             
+            window.closeModal = closeModal;
             function closeModal(modalId) {
                 const modal = document.getElementById(modalId);
                 if (!modal) return;
@@ -6788,66 +6835,103 @@
                 }
             }
             
-            window.exportExcel = exportExcel;
-            function exportExcel() {
-                try {
-                    let tableName = "Data";
-                    if (currentView === 'residential') tableName = 'ห้องพัก';
-                    else if (currentView === 'common') tableName = 'ส่วนกลาง';
-                    else if (currentView === 'qcSummary') tableName = 'สรุปQC';
-                    else if (currentView === 'summaryReport') tableName = 'รายงานสรุป';
-                    else if (currentView === 'schedule') tableName = 'แผนงาน';
-                    else if (currentView === 'qcHandover') tableName = 'แผนส่งห้องQC';
-                    
-                    let table = document.getElementById('main-table');
-                    if (!table) return;
+            window.exportExcel = function() { openModal('exportExcelModal'); };
+            window.executeExportExcel = executeExportExcel;
+            async function executeExportExcel(mode) {
+                closeModal('exportExcelModal');
+                if (typeof showToast === 'function') {
+                    showToast("กำลังสร้างไฟล์ Excel โปรดรอสักครู่...");
+                }
 
-                    let clonedTable = table.cloneNode(true);
+                try {
+                    const ExcelJS = window.ExcelJS;
+                    const workbook = new ExcelJS.Workbook();
                     
-                    let originalInputs = table.querySelectorAll('input, select, textarea');
-                    let clonedInputs = clonedTable.querySelectorAll('input, select, textarea');
+                    const originalView = currentView;
+                    const originalCat = currentCategory;
                     
-                    for (let i = 0; i < originalInputs.length; i++) {
-                        let val = originalInputs[i].value;
-                        if (originalInputs[i].tagName.toLowerCase() === 'select') {
-                            let option = originalInputs[i].options[originalInputs[i].selectedIndex];
-                            if (option) val = option.text;
-                        }
-                        
-                        let parentCell = clonedInputs[i].parentElement;
-                        clonedInputs[i].remove();
-                        
-                        if (!parentCell.textContent.trim()) {
-                            parentCell.textContent = val || '';
-                        }
+                    let viewsToExport = [];
+                    if (mode === 'current') {
+                        viewsToExport = [currentView];
+                    } else {
+                        viewsToExport = ['summaryReport', 'qcSummary', 'schedule', 'qcHandover', 'residential', 'common'];
                     }
-                    
-                    const svgs = clonedTable.querySelectorAll('svg');
-                    svgs.forEach(svg => svg.remove());
-                    
-                    const tds = clonedTable.querySelectorAll('td, th');
-                    tds.forEach(td => {
-                        let text = td.textContent.trim();
-                        if (!text) {
-                            let innerHtmlStr = td.innerHTML || '';
-                            let classList = td.className || '';
-                            if (classList.includes('bg-emerald-') || classList.includes('bg-teal-') || innerHtmlStr.includes('bg-emerald-') || innerHtmlStr.includes('bg-teal-')) {
-                                td.textContent = '✓';
-                            } else if (classList.includes('bg-rose-') || innerHtmlStr.includes('bg-rose-')) {
-                                td.textContent = '✗';
-                            } else if (classList.includes('bg-amber-') || classList.includes('bg-yellow-') || innerHtmlStr.includes('bg-amber-') || innerHtmlStr.includes('bg-yellow-')) {
-                                td.textContent = '⚠';
+
+                    for (const v of viewsToExport) {
+                        let baseSheetName = "Data";
+                        if (v === 'residential') baseSheetName = 'ห้องพัก';
+                        else if (v === 'common') baseSheetName = 'ส่วนกลาง';
+                        else if (v === 'qcSummary') baseSheetName = 'สรุปQC';
+                        else if (v === 'summaryReport') baseSheetName = 'รายงานสรุป';
+                        else if (v === 'schedule') baseSheetName = 'แผนงาน';
+                        else if (v === 'qcHandover') baseSheetName = 'แผนส่งห้องQC';
+                        
+                        // Set currentView so render function works correctly
+                        currentView = v;
+                        
+                        if (v === 'residential') {
+                            const resCategories = mode === 'all' ? Object.keys(taskDefinitions).filter(k => taskDefinitions[k].type !== 'inspection') : [originalCat];
+                            for (const cat of resCategories) {
+                                currentCategory = cat;
+                                if (document.getElementById('task-category-container')) {
+                                    setupCategoryButtons();
+                                }
+                                enterAppView(v); // This calls renderTable()
+                                await new Promise(r => setTimeout(r, 50)); 
+                                
+                                let table = document.getElementById('main-table');
+                                if (table) {
+                                    let safeCatName = taskDefinitions[cat] ? taskDefinitions[cat].name.replace(/[\[\]*?\/\\:]/g, "").substring(0, 15) : cat;
+                                    let sheetName = `${baseSheetName}-${safeCatName}`;
+                                    addTableToWorkbook(workbook, sheetName, table);
+                                }
+                            }
+                        } else if (v === 'summaryReport') {
+                            const modes = ['wetWork', 'endProduct'];
+                            for (const sm of modes) {
+                                summaryReportMode = sm;
+                                enterAppView(v);
+                                await new Promise(r => setTimeout(r, 50)); 
+                                let table = document.getElementById('main-table');
+                                if (table) {
+                                    let sheetName = `${baseSheetName}-${sm === 'wetWork' ? 'WW' : 'END'}`;
+                                    addTableToWorkbook(workbook, sheetName, table);
+                                }
+                            }
+                        } else {
+                            enterAppView(v);
+                            await new Promise(r => setTimeout(r, 50));
+                            let table = document.getElementById('main-table');
+                            if (table) {
+                                addTableToWorkbook(workbook, baseSheetName, table);
                             }
                         }
-                        
-                        if(td.classList.contains('separator-cell')) {
-                            td.innerHTML = '';
-                        }
-                    });
+                    }
 
-                    let wb = XLSX.utils.table_to_book(clonedTable, {sheet: tableName});
-                    XLSX.writeFile(wb, `[PYNN54] ${tableName}_${new Date().toISOString().split('T')[0]}.xlsx`);
-                    showToast("ส่งออก Excel สำเร็จ");
+                    // Restore state
+                    currentView = originalView;
+                    currentCategory = originalCat;
+                    if (originalView === 'residential') {
+                        setupCategoryButtons();
+                    }
+                    enterAppView(originalView);
+
+                    const buffer = await workbook.xlsx.writeBuffer();
+                    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    let filenameSuffix = mode === 'current' ? currentView : 'All';
+                    a.download = `[PYNN54] ${filenameSuffix}_${new Date().toISOString().split('T')[0]}.xlsx`;
+                    
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    
+                    if (typeof showToast === 'function') {
+                        showToast("ส่งออก Excel ระบบหลาย Sheet หรือตามที่เลือก สำเร็จ");
+                    }
+
                 } catch (error) {
                     console.error("Export Excel failed:", error);
                     if (typeof showNotificationModal === 'function') {
@@ -6856,6 +6940,223 @@
                         alert("เกิดข้อผิดพลาดขณะส่งออก Excel");
                     }
                 }
+            }
+
+            function addTableToWorkbook(workbook, sheetNameStr, table) {
+                // Ensure unique sheet name limit 31 chars
+                let sheetName = sheetNameStr.replace(/[\][*?\/\\:]/g, "").substring(0, 31);
+                // check if exists
+                let count = 1;
+                let finalName = sheetName;
+                while (workbook.getWorksheet(finalName)) {
+                    finalName = (`${sheetName}_${count}`).substring(0, 31);
+                    count++;
+                }
+
+                const worksheet = workbook.addWorksheet(finalName);
+                
+                // --- Add the visible report header if available ---
+                let startRowOffset = 0;
+                let headerAdded = false;
+                
+                let reportHeaderLight = document.getElementById('report-header-modern');
+                let reportHeaderDark = document.getElementById('report-header');
+                
+                let activeHeader = null;
+                if (reportHeaderStyle === 'light' && reportHeaderLight && !reportHeaderLight.classList.contains('hidden')) {
+                    activeHeader = reportHeaderLight;
+                } else if (reportHeaderStyle === 'dark' && reportHeaderDark && !reportHeaderDark.classList.contains('hidden')) {
+                    activeHeader = reportHeaderDark;
+                }
+                
+                if (activeHeader) {
+                    // Try to extract lines of text from the header
+                    // Usually we have strong/h1 elements, let's grab the text content
+                    // and write to the first few rows
+                    const headerTexts = [];
+                    // Using a simple strategy: clone and replace block elements with newlines
+                    let clone = activeHeader.cloneNode(true);
+                    
+                    // Simple extraction of h1, h2, div text that looks like labels
+                    const titleEl = clone.querySelector('h1, h2');
+                    if (titleEl) {
+                         headerTexts.push(titleEl.textContent.trim());
+                    } else if (taskDefinitions[currentCategory]) {
+                         headerTexts.push(taskDefinitions[currentCategory].title || taskDefinitions[currentCategory].name)
+                    } else if (sheetNameStr === 'สรุปQC') {
+                         headerTexts.push('REPORT : สรุปจำนวนห้อง Defect QC/CM');
+                    } else if (sheetNameStr === 'แผ่นส่งห้องQC') {
+                         headerTexts.push('แผนส่งห้องให้ QC / โอน')
+                    }
+                    
+                    const pEls = clone.querySelectorAll('p, .text-sm, span');
+                    pEls.forEach(p => {
+                        let txt = p.textContent.replace(/\s+/g, ' ').trim();
+                        // exclude specific icon chars or empty
+                        if (txt && !headerTexts.includes(txt) && txt.length > 2) {
+                            headerTexts.push(txt);
+                        }
+                    });
+                    
+                    if (headerTexts.length === 0) {
+                        // fallback
+                        let fallbackText = activeHeader.textContent.replace(/\s+/g, ' ').trim();
+                        if(fallbackText) headerTexts.push(fallbackText);
+                    }
+
+                    for (let i = 0; i < headerTexts.length; i++) {
+                        const cell = worksheet.getCell(i + 1, 1);
+                        cell.value = headerTexts[i];
+                        cell.font = { name: 'Sarabun', bold: i === 0, size: i === 0 ? 16 : 12, color: { argb: reportHeaderStyle === 'dark' ? 'FFFFFFFF' : 'FF000000' } };
+                        
+                        if (reportHeaderStyle === 'dark') {
+                            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } }; // bg-[#1e3a8a]
+                        }
+                    }
+                    
+                    // Style the header area
+                    if (reportHeaderStyle === 'dark') {
+                         for (let i = 0; i < headerTexts.length; i++) {
+                            for (let col = 1; col <= 10; col++) {
+                                worksheet.getCell(i + 1, col).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
+                            }
+                         }
+                    }
+                    
+                    startRowOffset = headerTexts.length + 1; // blank line after
+                    headerAdded = true;
+                }
+
+                // --------- Write Table -----------
+
+                const cellMatrix = [];
+                const originalRows = table.rows;
+
+                for (let r = 0; r < originalRows.length; r++) {
+                    const tr = originalRows[r];
+                    let c = 0;
+
+                    for (let i = 0; i < tr.cells.length; i++) {
+                        const td = tr.cells[i];
+
+                        while (cellMatrix[r] && cellMatrix[r][c]) {
+                            c++;
+                        }
+
+                        const style = window.getComputedStyle(td);
+                        let text = (td.textContent || '').replace(/\s+/g, ' ').trim();
+                        
+                        const input = td.querySelector('input');
+                        const select = td.querySelector('select');
+                        if (input && input.type !== 'hidden') {
+                            text = input.value;
+                        } else if (select) {
+                            const opt = select.options[select.selectedIndex];
+                            if (opt) text = opt.text;
+                        } else if (!text || text === '') {
+                            const classList = td.className || '';
+                            const innerHtmlStr = td.innerHTML || '';
+                            if (classList.includes('bg-emerald-') || classList.includes('bg-teal-') || innerHtmlStr.includes('bg-emerald-') || innerHtmlStr.includes('bg-teal-')) {
+                                text = '✓';
+                            } else if (classList.includes('bg-rose-') || innerHtmlStr.includes('bg-rose-')) {
+                                text = '✗';
+                            } else if (classList.includes('bg-amber-') || classList.includes('bg-yellow-') || innerHtmlStr.includes('bg-amber-') || innerHtmlStr.includes('bg-yellow-')) {
+                                text = '⚠';
+                            }
+                        }
+
+                        if (td.classList.contains('separator-cell')) {
+                            text = '';
+                        }
+
+                        const rowSpan = td.rowSpan || 1;
+                        const colSpan = td.colSpan || 1;
+
+                        let argbBg = 'FFFFFFFF';
+                        if (style.backgroundColor && style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent') {
+                            const bgColorMatch = style.backgroundColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                            if (bgColorMatch) {
+                                argbBg = 'FF' + parseInt(bgColorMatch[1]).toString(16).padStart(2, '0').toUpperCase() + 
+                                            parseInt(bgColorMatch[2]).toString(16).padStart(2, '0').toUpperCase() + 
+                                            parseInt(bgColorMatch[3]).toString(16).padStart(2, '0').toUpperCase();
+                            }
+                        }
+
+                        let argbFont = 'FF000000';
+                        if (style.color) {
+                            const fontColorMatch = style.color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                            if (fontColorMatch) {
+                                argbFont = 'FF' + parseInt(fontColorMatch[1]).toString(16).padStart(2, '0').toUpperCase() + 
+                                              parseInt(fontColorMatch[2]).toString(16).padStart(2, '0').toUpperCase() + 
+                                              parseInt(fontColorMatch[3]).toString(16).padStart(2, '0').toUpperCase();
+                            }
+                        }
+
+                        const isBold = Number(style.fontWeight) >= 600 || style.fontWeight === 'bold' || td.tagName.toUpperCase() === 'TH' || td.classList.contains('font-bold') || td.classList.contains('font-semibold');
+                        const isSeparator = td.classList.contains('separator-cell');
+                        
+                        let alignH = 'left';
+                        if (style.textAlign === 'center') alignH = 'center';
+                        if (style.textAlign === 'right') alignH = 'right';
+                        if (td.classList.contains('text-center')) alignH = 'center';
+                        if (td.classList.contains('text-right')) alignH = 'right';
+
+                        for (let rr = 0; rr < rowSpan; rr++) {
+                            for (let cc = 0; cc < colSpan; cc++) {
+                                if (!cellMatrix[r + rr]) cellMatrix[r + rr] = [];
+                                cellMatrix[r + rr][c + cc] = true;
+                                
+                                const targetRow = r + rr + 1 + startRowOffset;
+                                const targetCol = c + cc + 1;
+                                const innerCell = worksheet.getCell(targetRow, targetCol);
+                                
+                                if (argbBg !== 'FFFFFFFF') {
+                                    innerCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbBg } };
+                                }
+                                
+                                innerCell.font = { name: 'Sarabun', bold: isBold, color: { argb: argbFont } };
+                                innerCell.alignment = { vertical: 'middle', horizontal: alignH, wrapText: true };
+                                
+                                if (!isSeparator) {
+                                    let borderColor = 'FFCBD5E1'; // slate-300
+                                    if (td.classList.contains('border-black') || td.classList.contains('border-slate-800') || td.classList.contains('border-slate-500')) {
+                                        borderColor = 'FF64748B'; // slate-500
+                                    }
+                                    innerCell.border = {
+                                        top: {style: 'thin', color: {argb: borderColor}},
+                                        left: {style: 'thin', color: {argb: borderColor}},
+                                        bottom: {style: 'thin', color: {argb: borderColor}},
+                                        right: {style: 'thin', color: {argb: borderColor}}
+                                    };
+                                }
+                            }
+                        }
+                        
+                        const writeRow = r + 1 + startRowOffset;
+                        const writeCol = c + 1;
+                        const cell = worksheet.getCell(writeRow, writeCol);
+                        cell.value = text;
+
+                        if (rowSpan > 1 || colSpan > 1) {
+                            worksheet.mergeCells(writeRow, writeCol, writeRow + rowSpan - 1, writeCol + colSpan - 1);
+                        }
+                        
+                        c += colSpan;
+                    }
+                }
+
+                worksheet.columns.forEach((column) => {
+                    let maxLength = 0;
+                    column.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
+                        if (headerAdded && rowNumber <= startRowOffset) return; // Skip header rows for width calculation
+                        const val = cell.value ? cell.value.toString().trim() : '';
+                        const length = val.length * 1.2; 
+                        if (length > maxLength) {
+                            maxLength = length;
+                        }
+                    });
+                    column.width = Math.max(8, Math.min(maxLength + 2, 40));
+                });
             }
             
             function exportData() {
