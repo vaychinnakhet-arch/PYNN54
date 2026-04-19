@@ -1749,7 +1749,10 @@
                 });
 
                 globalScheduleData.filter(f => f.id >= globalScheduleFilters.minFloor && f.id <= globalScheduleFilters.maxFloor).forEach(floor => {
-                    let currentFloorActiveTask = null;
+                    let floorDelayed = [];
+                    let floorInProgress = [];
+                    let floorNotStarted = [];
+                    let isAllDone = true;
                     
                     visibleTasks.forEach(t => {
                         const task = t.task;
@@ -1761,82 +1764,36 @@
                         const planEndStr = floor.plan[taskIndex * 2 + 1];
                         
                         const isDone = actualStart === 'DONE' || actualEnd === 'DONE';
+                        if (!isDone) isAllDone = false;
                         
-                        if (isDone) {
-                            completedTasks++;
-                        } else {
-                            if (planEndStr) {
-                                const planEndDate = new Date(planEndStr);
-                                planEndDate.setHours(0, 0, 0, 0);
-                                
-                                if (planEndDate < today) {
-                                    delayedTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
-                                } else if (planStartStr) {
-                                    const planStartDate = new Date(planStartStr);
-                                    planStartDate.setHours(0, 0, 0, 0);
-                                    if (planStartDate <= today && planEndDate >= today) {
-                                        inProgressTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
-                                    }
+                        if (!isDone && planEndStr) {
+                            const planEndDate = new Date(planEndStr);
+                            planEndDate.setHours(0, 0, 0, 0);
+                            
+                            const taskNameRaw = task.subName + ' ' + task.name.replace(/\s*\(\d+\s*วัน\)/, '');
+                            
+                            if (planEndDate < today) {
+                                const diffDays = Math.ceil((today - planEndDate) / (1000 * 60 * 60 * 24));
+                                delayedTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
+                                floorDelayed.push({ name: taskNameRaw, days: diffDays });
+                            } else if (planStartStr) {
+                                const planStartDate = new Date(planStartStr);
+                                planStartDate.setHours(0, 0, 0, 0);
+                                if (planStartDate <= today && planEndDate >= today) {
+                                    inProgressTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
+                                    floorInProgress.push({ name: taskNameRaw, endStr: formatThaiDateShort(planEndStr) });
+                                } else if (planStartDate > today) {
+                                    const daysUntil = Math.ceil((planStartDate - today) / (1000 * 60 * 60 * 24));
+                                    floorNotStarted.push({ name: taskNameRaw, startStr: formatThaiDateShort(planStartStr), daysUntil, startDate: planStartDate });
                                 }
                             }
-
-                            // Identify the first non-completed task for the floor report
-                            if (!currentFloorActiveTask) {
-                                currentFloorActiveTask = {
-                                    task,
-                                    planStart: planStartStr,
-                                    planEnd: planEndStr,
-                                    actualStart,
-                                    actualEnd
-                                };
-                            }
+                        } else if (isDone) {
+                            completedTasks++;
                         }
                     });
 
                     // Generate professional report for this floor
-                    if (currentFloorActiveTask) {
-                        const { task, planStart, planEnd, actualStart } = currentFloorActiveTask;
-                        const planEndDate = planEnd ? new Date(planEnd) : null;
-                        const planStartDate = planStart ? new Date(planStart) : null;
-                        
-                        let statusText = "";
-                        let statusColor = "text-slate-600";
-                        
-                        if (planEndDate && planEndDate < today) {
-                            const diffDays = Math.ceil((today - planEndDate) / (1000 * 60 * 60 * 24));
-                            statusText = `ล่าช้ากว่าแผนประมาณ ${diffDays} วัน`;
-                            statusColor = "text-rose-600 font-bold";
-                        } else if (planStartDate && planStartDate > today) {
-                            statusText = "ยังไม่ถึงกำหนดเริ่มงาน";
-                            statusColor = "text-slate-400 italic";
-                        } else {
-                            statusText = "ดำเนินการปกติตามแผนงาน";
-                            statusColor = "text-emerald-600 font-bold";
-                        }
-
-                        const formattedEnd = planEnd ? formatThaiDateShort(planEnd) : "-";
-                        const taskName = task.name.replace(/\s*\(\d+\s*วัน\)/, '');
-
-                        floorReports.push(`
-                            <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
-                                    ${floor.id}
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
-                                        <span class="text-xs ${statusColor}">${statusText}</span>
-                                    </div>
-                                    <p class="text-sm text-slate-600">
-                                        สถานะปัจจุบัน: <span class="font-bold text-slate-900">${task.subName} ${taskName}</span>
-                                    </p>
-                                    <p class="text-xs text-slate-500 mt-1">
-                                        กำหนดเสร็จตามแผน: <span class="font-medium text-slate-700">${formattedEnd}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        `);
-                    } else {
+                    if (isAllDone) {
                         floorReports.push(`
                             <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 bg-emerald-50/30">
                                 <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg">
@@ -1848,6 +1805,63 @@
                                         <span class="text-xs text-emerald-600 font-bold">เสร็จสมบูรณ์</span>
                                     </div>
                                     <p class="text-sm text-slate-600 italic">งานทั้งหมดในหมวดที่เลือกดำเนินการเสร็จสิ้นแล้ว</p>
+                                </div>
+                            </div>
+                        `);
+                    } else if (floorDelayed.length > 0) {
+                        const totalDays = floorDelayed.reduce((sum, t) => sum + t.days, 0);
+                        floorReports.push(`
+                            <div class="flex items-start gap-4 p-3 rounded-lg border border-rose-50 bg-rose-50/20">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-lg">
+                                    ${floor.id}
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex justify-between items-start mb-1 gap-2">
+                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
+                                        <span class="text-xs text-rose-600 font-bold shrink-0">ล่าช้ากว่าแผน</span>
+                                    </div>
+                                    <p class="text-xs text-rose-700 font-bold mb-1">ล่าช้ารวม ${totalDays} วัน</p>
+                                    <ul class="text-xs text-slate-600 list-disc pl-4 space-y-1">
+                                        ${floorDelayed.map(t => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-medium">(ช้า ${t.days} วัน)</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `);
+                    } else if (floorInProgress.length > 0) {
+                        floorReports.push(`
+                            <div class="flex items-start gap-4 p-3 rounded-lg border border-indigo-50 bg-indigo-50/20">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
+                                    ${floor.id}
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex justify-between items-start mb-1 gap-2">
+                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
+                                        <span class="text-xs text-indigo-600 font-bold shrink-0">กำลังดำเนินการ</span>
+                                    </div>
+                                    <ul class="text-xs text-slate-600 list-disc pl-4 space-y-1">
+                                        ${floorInProgress.map(t => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500">(ครบกำหนด: ${t.endStr})</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `);
+                    } else if (floorNotStarted.length > 0) {
+                        // Sort to find the earliest task to start
+                        floorNotStarted.sort((a, b) => a.startDate - b.startDate);
+                        const firstTask = floorNotStarted[0];
+                        floorReports.push(`
+                            <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-lg">
+                                    ${floor.id}
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex justify-between items-start mb-1 gap-2">
+                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
+                                        <span class="text-xs text-slate-400 italic shrink-0">ยังไม่ถึงกำหนดเริ่มงาน</span>
+                                    </div>
+                                    <p class="text-xs text-slate-600 mb-1">
+                                        กำหนดเริ่มงานแรก: <span class="font-medium text-slate-800 break-words line-clamp-1">${firstTask.name}</span>
+                                    </p>
+                                    <p class="text-xs text-indigo-600 font-medium">เริ่มวันที่ ${firstTask.startStr} (เหลืออีก ${firstTask.daysUntil} วัน)</p>
                                 </div>
                             </div>
                         `);
@@ -1865,9 +1879,9 @@
                                     <div class="p-2 bg-indigo-50 rounded-lg border border-indigo-100">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
                                     </div>
-                                    บทวิเคราะห์และสรุปผล (EXECUTIVE SUMMARY)
+                                    รายงานสรุปสถานะโครงการ (EXECUTIVE STATUS REPORT)
                                 </h2>
-                                <p class="text-slate-500 text-sm mt-1 font-medium">สรุปสถานะความก้าวหน้าและวิเคราะห์ความล่าช้าแยกรายชั้น</p>
+                                <p class="text-slate-500 text-sm mt-1 font-medium">สรุปภาพรวมความคืบหน้าและติดตามสถานะงานรายชั้น</p>
                             </div>
                             <div class="text-right">
                                 <span class="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg border border-indigo-100">
@@ -1913,7 +1927,7 @@
                                     <div class="flex items-center justify-between mb-8 border-b-2 border-black pb-4">
                                         <h3 class="text-lg font-black text-slate-900 flex items-center gap-3">
                                             <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
-                                            วิเคราะห์สถานะรายชั้น (Floor-by-Floor Analysis)
+                                            รายละเอียดสถานะงานรายชั้น (Floor-by-Floor Status)
                                         </h3>
                                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Active Floors Only</span>
                                     </div>
@@ -2067,7 +2081,7 @@
                         <div class="flex-1 bg-white rounded-[2rem] shadow-xl overflow-hidden border-2 border-black flex flex-col">
                             <!-- Header -->
                             <div class="bg-white p-4 px-6 flex justify-between items-center border-b border-black">
-                                <h2 class="text-black font-bold text-sm md:text-base tracking-wider uppercase">บทวิเคราะห์และสรุปผล (EXECUTIVE SUMMARY)</h2>
+                                <h2 class="text-black font-bold text-sm md:text-base tracking-wider uppercase">รายงานสรุปผลการดำเนินงาน (EXECUTIVE SUMMARY)</h2>
                             </div>
                             
                             <div class="p-6 flex-1 flex flex-col md:flex-row gap-8">
@@ -2203,8 +2217,8 @@
                     return;
                 }
 
-                let delayedTasks = [];
-                let inProgressTasks = [];
+                let floorReports = [];
+                let hasAnyAlert = false;
                 
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -2216,96 +2230,104 @@
                     return true;
                 });
 
-                visibleTasks.forEach(({ task, index }) => {
-                    globalScheduleData.filter(f => f.id >= globalScheduleFilters.minFloor && f.id <= globalScheduleFilters.maxFloor).forEach(floor => {
-                        const actualStart = floor.actual[index * 2];
-                        const actualEnd = floor.actual[index * 2 + 1];
-                        const planStartStr = floor.plan[index * 2];
-                        const planEndStr = floor.plan[index * 2 + 1];
+                globalScheduleData.filter(f => f.id >= globalScheduleFilters.minFloor && f.id <= globalScheduleFilters.maxFloor).forEach(floor => {
+                    let floorDelayed = [];
+                    let floorInProgress = [];
+                    let isAllDone = true;
+                    
+                    visibleTasks.forEach(({ task, index: taskIndex }) => {
+                        const actualStart = floor.actual[taskIndex * 2];
+                        const actualEnd = floor.actual[taskIndex * 2 + 1];
+                        const planStartStr = floor.plan[taskIndex * 2];
+                        const planEndStr = floor.plan[taskIndex * 2 + 1];
 
                         const isDone = actualStart === 'DONE' || actualEnd === 'DONE';
+                        if (!isDone) isAllDone = false;
                         
-                        if (!isDone) {
-                            if (planEndStr) {
-                                const planEndDate = new Date(planEndStr);
-                                planEndDate.setHours(0, 0, 0, 0);
-                                
-                                if (planEndDate < today) {
-                                    delayedTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
-                                } else if (planStartStr) {
-                                    const planStartDate = new Date(planStartStr);
-                                    planStartDate.setHours(0, 0, 0, 0);
-                                    if (planStartDate <= today && planEndDate >= today) {
-                                        inProgressTasks.push(`ชั้น ${floor.id}: ${task.subName}`);
-                                    }
+                        if (!isDone && planEndStr) {
+                            const planEndDate = new Date(planEndStr);
+                            planEndDate.setHours(0, 0, 0, 0);
+                            
+                            const taskNameRaw = task.subName + ' ' + task.name.replace(/\s*\(\d+\s*วัน\)/, '');
+                            
+                            if (planEndDate < today) {
+                                const diffDays = Math.ceil((today - planEndDate) / (1000 * 60 * 60 * 24));
+                                floorDelayed.push({ name: taskNameRaw, days: diffDays });
+                            } else if (planStartStr) {
+                                const planStartDate = new Date(planStartStr);
+                                planStartDate.setHours(0, 0, 0, 0);
+                                if (planStartDate <= today && planEndDate >= today) {
+                                    floorInProgress.push({ name: taskNameRaw, endStr: formatThaiDateShort(planEndStr) });
                                 }
                             }
                         }
                     });
+
+                    if (floorDelayed.length > 0) {
+                        hasAnyAlert = true;
+                        const totalDays = floorDelayed.reduce((sum, t) => sum + t.days, 0);
+                        floorReports.push(`
+                            <div class="flex items-start gap-4 p-4 rounded-xl border border-rose-100 bg-rose-50/10 shadow-[0_2px_10px_-3px_rgba(244,63,94,0.1)]">
+                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-xl">
+                                    ${floor.id}
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex justify-between items-start mb-2 gap-2">
+                                        <h4 class="font-bold text-slate-800 text-lg">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm text-rose-600 font-bold shrink-0">ล่าช้ากว่าแผน</span>
+                                    </div>
+                                    <p class="text-sm text-rose-700 font-bold mb-2">ล่าช้ารวม ${totalDays} วัน</p>
+                                    <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1.5">
+                                        ${floorDelayed.map(t => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-medium">(ช้า ${t.days} วัน)</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `);
+                    } else if (floorInProgress.length > 0 && !isAllDone) {
+                        hasAnyAlert = true;
+                        floorReports.push(`
+                            <div class="flex items-start gap-4 p-4 rounded-xl border border-blue-100 bg-blue-50/10 shadow-[0_2px_10px_-3px_rgba(59,130,246,0.1)]">
+                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xl">
+                                    ${floor.id}
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex justify-between items-start mb-2 gap-2">
+                                        <h4 class="font-bold text-slate-800 text-lg">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm text-blue-600 font-bold shrink-0">แผนงานที่ต้องทำวันนี้</span>
+                                    </div>
+                                    <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1.5">
+                                        ${floorInProgress.map(t => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500">(ครบกำหนด: ${t.endStr})</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `);
+                    }
                 });
 
                 // Format the date
                 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
                 const dateStr = `${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
 
-                if (delayedTasks.length === 0 && inProgressTasks.length === 0) {
+                if (!hasAnyAlert) {
                     alertContainer.classList.add('hidden');
                     return;
                 }
 
                 alertContainer.classList.remove('hidden');
+                alertContainer.className = "mb-12 bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden";
                 
                 let html = `
-                    <div class="bg-indigo-600 text-white px-6 py-3 flex justify-between items-center">
-                        <h3 class="font-bold text-lg flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
-                            สรุปงานประจำวันที่ ${dateStr}
+                    <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-8 py-5 flex justify-between items-center rounded-t-[2rem]">
+                        <h3 class="font-black text-xl flex items-center gap-3 tracking-tight">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            สรุปงานที่ต้องติดตามประจำวันที่ ${dateStr}
                         </h3>
                     </div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        ${floorReports.join('')}
+                    </div>
                 `;
 
-                if (inProgressTasks.length > 0) {
-                    html += `
-                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                            <h4 class="font-bold text-blue-800 mb-3 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                แผนงานที่ต้องทำวันนี้ (${inProgressTasks.length})
-                            </h4>
-                            <div class="max-h-32 overflow-y-auto pr-2 space-y-1">
-                                ${inProgressTasks.map(t => `<div class="text-sm text-blue-700 bg-white px-3 py-1.5 rounded shadow-sm border border-blue-50">${t}</div>`).join('')}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex items-center justify-center text-slate-400 text-sm font-medium">
-                            ไม่มีแผนงานที่ต้องทำวันนี้
-                        </div>
-                    `;
-                }
-
-                if (delayedTasks.length > 0) {
-                    html += `
-                        <div class="bg-rose-50 rounded-xl p-4 border border-rose-100">
-                            <h4 class="font-bold text-rose-800 mb-3 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                                งานที่ล่าช้าไปแล้ว (${delayedTasks.length})
-                            </h4>
-                            <div class="max-h-32 overflow-y-auto pr-2 space-y-1">
-                                ${delayedTasks.map(t => `<div class="text-sm text-rose-700 bg-white px-3 py-1.5 rounded shadow-sm border border-rose-50">${t}</div>`).join('')}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex items-center justify-center text-emerald-600 text-sm font-medium">
-                            ไม่มีงานที่ล่าช้า 🎉
-                        </div>
-                    `;
-                }
-
-                html += `</div>`;
                 alertContainer.innerHTML = html;
             }
 
@@ -6924,10 +6946,18 @@
                 const mainAppContainer = document.getElementById('main-app-container');
                 const originalMainAppWidth = mainAppContainer.style.width;
                 
+                const execDashboard = document.getElementById('executive-summary-dashboard');
+                const originalExecWidth = execDashboard ? execDashboard.style.width : '';
+                const originalExecMaxWidth = execDashboard ? execDashboard.style.maxWidth : '';
+                
                 captureArea.style.width = fullWidth + 'px';
                 document.body.style.width = fullWidth + 'px';
                 document.documentElement.style.width = fullWidth + 'px';
                 mainAppContainer.style.width = fullWidth + 'px';
+                if (execDashboard && currentView === 'schedule') {
+                    execDashboard.style.width = fullWidth + 'px';
+                    execDashboard.style.maxWidth = fullWidth + 'px';
+                }
 
                 setTimeout(() => {
                     const finalWidth = captureArea.scrollWidth;
@@ -7001,6 +7031,10 @@
                         document.body.style.width = originalBodyWidth;
                         document.documentElement.style.width = originalHtmlWidth;
                         mainAppContainer.style.width = originalMainAppWidth;
+                        if (execDashboard) {
+                            execDashboard.style.width = originalExecWidth;
+                            execDashboard.style.maxWidth = originalExecMaxWidth;
+                        }
                         
                         captureBtn.innerHTML = originalBtnHTML;
                         captureBtn.disabled = false;
@@ -7040,10 +7074,18 @@
                 const mainAppContainer = document.getElementById('main-app-container');
                 const originalMainAppWidth = mainAppContainer.style.width;
                 
+                const execDashboard = document.getElementById('executive-summary-dashboard');
+                const originalExecWidth = execDashboard ? execDashboard.style.width : '';
+                const originalExecMaxWidth = execDashboard ? execDashboard.style.maxWidth : '';
+                
                 captureArea.style.width = fullWidth + 'px';
                 document.body.style.width = fullWidth + 'px';
                 document.documentElement.style.width = fullWidth + 'px';
                 mainAppContainer.style.width = fullWidth + 'px';
+                if (execDashboard && currentView === 'schedule') {
+                    execDashboard.style.width = fullWidth + 'px';
+                    execDashboard.style.maxWidth = fullWidth + 'px';
+                }
 
                 setTimeout(() => {
                     const finalWidth = captureArea.scrollWidth;
@@ -7113,6 +7155,10 @@
                         document.body.style.width = originalBodyWidth;
                         document.documentElement.style.width = originalHtmlWidth;
                         mainAppContainer.style.width = originalMainAppWidth;
+                        if (execDashboard) {
+                            execDashboard.style.width = originalExecWidth;
+                            execDashboard.style.maxWidth = originalExecMaxWidth;
+                        }
                         
                         captureBtn.innerHTML = originalBtnHTML;
                         captureBtn.disabled = false;
