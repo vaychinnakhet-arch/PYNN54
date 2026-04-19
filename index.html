@@ -701,7 +701,7 @@
 <link rel="stylesheet" href="/index.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
 </head>
-<body class="p-0 md:p-4 bg-slate-50 relative pb-32">
+<body class="p-0 md:p-4 bg-slate-50 relative">
 
     <!-- Splash Screen -->
     <div id="splash-screen" class="min-h-screen flex items-center justify-center p-4">
@@ -1091,6 +1091,10 @@
                 </div>
             </div>
         </div>
+
+        <!-- Spacer to prevent floating elements from blocking bottom form controls -->
+        <div class="h-48 md:h-64 w-full pointer-events-none"></div>
+
     </div> <!-- END of main-app-container -->
     
     <!-- Quick Update Mode Container -->
@@ -1533,6 +1537,11 @@
                     if (projectData.globalScheduleSettings) globalScheduleSettings = projectData.globalScheduleSettings;
                     if (projectData.globalScheduleFilters) {
                         globalScheduleFilters = projectData.globalScheduleFilters;
+                    }
+
+                    // Ensure settings UI matches the loaded database parameters
+                    if (typeof renderScheduleSettings === 'function') {
+                        renderScheduleSettings();
                     }
                     
                     // Safety check: Ensure maxFloor matches the actual data loaded
@@ -3143,8 +3152,7 @@
                 { name: 'ส่ง QC End Product(14 วัน)', subName: 'U38', color: 'bg-[#cfe2f3]', duration: 14, category: 'endproduct' }
             ];
 
-            let savedSettings = localStorage.getItem('pynn54_schedule_settings');
-            let globalScheduleSettings = savedSettings ? JSON.parse(savedSettings) : {
+            let globalScheduleSettings = {
                 workOnSunday: true,
                 workOnHoliday: true
             };
@@ -3506,7 +3514,6 @@
 
             window.updateScheduleSetting = function(key, value) {
                 globalScheduleSettings[key] = value;
-                localStorage.setItem('pynn54_schedule_settings', JSON.stringify(globalScheduleSettings));
                 
                 recalculateAllPlanDates();
                 
