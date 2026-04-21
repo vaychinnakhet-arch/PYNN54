@@ -1022,20 +1022,6 @@
 
         <!-- Main Content -->
         <main class="p-0 md:p-4 overflow-x-auto">
-          <div
-            id="schedule-filter"
-            class="hidden mb-6 mx-2 md:mx-0 p-4 bg-white border border-slate-200 shadow-sm rounded-xl"
-          >
-            <!-- JS Generated Content -->
-          </div>
-
-          <div
-            id="schedule-settings"
-            class="hidden mb-6 mx-2 md:mx-0 p-4 bg-white border border-slate-200 shadow-sm rounded-xl"
-          >
-            <!-- JS Generated Content -->
-          </div>
-
           <table
             id="main-table"
             class="w-full border-collapse text-center text-xs md:text-sm"
@@ -1338,20 +1324,6 @@
           </div>
 
           <!-- Settings & Filters -->
-          <button
-            id="toggleScheduleFilterBtn"
-            onclick="toggleScheduleFilter()"
-            class="hidden action-btn px-3 py-1.5 bg-white text-slate-700 border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-          >
-            <i data-lucide="filter" class="w-3.5 h-3.5"></i> ตัวกรองแผนงาน
-          </button>
-          <button
-            id="toggleScheduleSettingsBtn"
-            onclick="toggleScheduleSettings()"
-            class="hidden action-btn px-3 py-1.5 bg-slate-800 text-white rounded-lg shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-          >
-            <i data-lucide="settings" class="w-3.5 h-3.5"></i> ตั้งค่าแผนงาน
-          </button>
           <button
             id="toggleQCHandoverSettingsBtn"
             onclick="openQCHandoverSettings()"
@@ -2318,6 +2290,123 @@
             บันทึก
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Schedule Filter Modal -->
+    <div
+      id="scheduleFilterModal"
+      class="modal fixed inset-0 w-full h-full items-center justify-center z-[70] hidden backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="modal-overlay absolute inset-0 bg-slate-900/60 transition-opacity"
+        onclick="closeModal('scheduleFilterModal')"
+      ></div>
+      <div
+        class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 relative transform transition-all overflow-hidden flex flex-col max-h-[90vh]"
+      >
+        <div
+          class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50"
+        >
+          <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7.086V4z"></path></svg>
+            ตัวกรองแผนงาน
+          </h3>
+          <button
+            class="text-slate-400 hover:text-slate-600 focus:outline-none p-2 rounded-full hover:bg-slate-200 transition-colors"
+            onclick="closeModal('scheduleFilterModal')"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <div class="p-6 overflow-y-auto w-full text-slate-600 flex flex-col gap-8">
+          <div id="schedule-filter" class="w-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Settings Modal -->
+    <div
+      id="scheduleSettingsModal"
+      class="modal fixed inset-0 w-full h-full items-center justify-center z-[70] hidden backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="modal-overlay absolute inset-0 bg-slate-900/60 transition-opacity"
+        onclick="closeModal('scheduleSettingsModal')"
+      ></div>
+      <div
+        class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-6xl mx-4 relative transform transition-all overflow-hidden flex flex-col max-h-[90vh]"
+      >
+        <div
+          class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50"
+        >
+          <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            ตั้งค่าแผนงาน
+          </h3>
+          <button
+            class="text-slate-400 hover:text-slate-600 focus:outline-none p-2 rounded-full hover:bg-slate-200 transition-colors"
+            onclick="closeModal('scheduleSettingsModal')"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <div class="p-6 overflow-y-auto w-full text-slate-600 flex flex-col gap-8">
+          <div id="schedule-settings" class="w-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Action Buttons for Schedule -->
+    <div id="schedule-fab-container" class="fixed bottom-6 right-6 z-50 flex-col gap-4 hidden">
+      <!-- Setting FAB -->
+      <div class="relative group flex justify-center items-center">
+        <!-- Tooltip -->
+        <span class="absolute right-14 scale-0 group-hover:scale-100 transition-all font-bold text-xs bg-slate-800 text-white p-2 rounded-lg whitespace-nowrap shadow-lg select-none origin-right pointer-events-none">
+          ตั้งค่าแผนงาน
+        </span>
+        <button onclick="openScheduleSettingsModal()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-full p-4 shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </button>
+      </div>
+
+      <!-- Filter FAB -->
+      <div class="relative group flex justify-center items-center">
+        <!-- Tooltip -->
+        <span class="absolute right-14 scale-0 group-hover:scale-100 transition-all font-bold text-xs bg-slate-800 text-white p-2 rounded-lg whitespace-nowrap shadow-lg select-none origin-right pointer-events-none">
+          ตัวกรองแผนงาน
+        </span>
+        <button onclick="openScheduleFilterModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-600 rounded-full p-4 shadow-lg shadow-indigo-500/30 transition-transform transform hover:scale-105 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7.086V4z"></path></svg>
+        </button>
       </div>
     </div>
 
@@ -5516,32 +5605,18 @@
           return colors[month];
         }
 
-        window.toggleScheduleSettings = function () {
-          const container = document.getElementById("schedule-settings");
-          if (container) {
-            const isHidden = container.classList.contains("hidden");
-            if (isHidden) {
-              renderScheduleSettings();
-              container.classList.remove("hidden");
-              container.scrollIntoView({ behavior: "smooth", block: "start" });
-            } else {
-              container.classList.add("hidden");
-            }
-          }
+        window.openScheduleFilterModal = function () {
+          renderScheduleFilter();
+          const filterContainer = document.getElementById("schedule-filter");
+          if (filterContainer) filterContainer.classList.remove("hidden");
+          openModal('scheduleFilterModal');
         };
 
-        window.toggleScheduleFilter = function () {
-          const container = document.getElementById("schedule-filter");
-          if (container) {
-            const isHidden = container.classList.contains("hidden");
-            if (isHidden) {
-              renderScheduleFilter();
-              container.classList.remove("hidden");
-              container.scrollIntoView({ behavior: "smooth", block: "start" });
-            } else {
-              container.classList.add("hidden");
-            }
-          }
+        window.openScheduleSettingsModal = function () {
+          renderScheduleSettings();
+          const settingsContainer = document.getElementById("schedule-settings");
+          if (settingsContainer) settingsContainer.classList.remove("hidden");
+          openModal('scheduleSettingsModal');
         };
 
         function parseThaiDate(thaiStr) {
@@ -6617,28 +6692,26 @@
                                             "",
                                           );
                                         return `
-                                            <div class="bg-white p-3 rounded-xl border border-emerald-100 shadow-sm hover:border-emerald-300 transition-all">
-                                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-tight block mb-2 truncate" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
-                                                <div class="flex flex-col gap-2">
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10">เวลา:</span>
+                                            <div class="bg-white p-3.5 rounded-xl border border-emerald-100 shadow-sm hover:border-emerald-300 transition-all flex flex-col justify-between">
+                                                <label class="text-[11px] font-bold text-slate-700 leading-snug block mb-3 line-clamp-2" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
+                                                <div class="flex gap-2 w-full">
+                                                    <div class="flex-1 flex flex-col gap-1.5">
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">เวลา (วัน)</span>
                                                         <input type="number" min="1" value="${task.duration}" 
-                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-emerald-700 focus:bg-white focus:border-emerald-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-emerald-700 focus:bg-white focus:border-emerald-500 outline-none transition-all"
                                                             onchange="updateTaskDuration(${idx}, this.value)">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
                                                     </div>
                                                     ${
                                                       idx > 0
                                                         ? `
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม:</span>
+                                                    <div class="flex-1 flex flex-col gap-1.5">
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม (วัน)</span>
                                                         <input type="number" value="${task.offsetDays || 0}" 
-                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
                                                             onchange="updateTaskOffset(${idx}, this.value)">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
                                                     </div>
                                                     `
-                                                        : '<div class="h-[30px]"></div>'
+                                                        : '<div class="flex-1"></div>'
                                                     }
                                                 </div>
                                             </div>
@@ -6676,28 +6749,26 @@
                                             "",
                                           );
                                         return `
-                                            <div class="bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition-all">
-                                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-tight block mb-2 truncate" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
-                                                <div class="flex flex-col gap-2">
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10">เวลา:</span>
+                                            <div class="bg-white p-3.5 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition-all flex flex-col justify-between">
+                                                <label class="text-[11px] font-bold text-slate-700 leading-snug block mb-3 line-clamp-2" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
+                                                <div class="flex gap-2 w-full">
+                                                    <div class="flex-1 flex flex-col gap-1.5">
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">เวลา (วัน)</span>
                                                         <input type="number" min="1" value="${task.duration}" 
-                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-blue-700 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-blue-700 focus:bg-white focus:border-blue-500 outline-none transition-all"
                                                             onchange="updateTaskDuration(${idx}, this.value)">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
                                                     </div>
                                                     ${
                                                       idx > 0
                                                         ? `
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase w-10" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม:</span>
+                                                    <div class="flex-1 flex flex-col gap-1.5">
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม (วัน)</span>
                                                         <input type="number" value="${task.offsetDays || 0}" 
-                                                            class="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
                                                             onchange="updateTaskOffset(${idx}, this.value)">
-                                                        <span class="text-[10px] font-bold text-slate-400 uppercase">วัน</span>
                                                     </div>
                                                     `
-                                                        : '<div class="h-[30px]"></div>'
+                                                        : '<div class="flex-1"></div>'
                                                     }
                                                 </div>
                                             </div>
@@ -8366,32 +8437,15 @@
               : "none";
           }
 
-          const toggleScheduleSettingsBtn = document.getElementById(
-            "toggleScheduleSettingsBtn",
-          );
-          if (toggleScheduleSettingsBtn) {
-            toggleScheduleSettingsBtn.classList.toggle(
-              "hidden",
-              currentView !== "schedule",
-            );
-          }
-          const toggleScheduleFilterBtn = document.getElementById(
-            "toggleScheduleFilterBtn",
-          );
-          if (toggleScheduleFilterBtn) {
-            toggleScheduleFilterBtn.classList.toggle(
-              "hidden",
-              currentView !== "schedule",
-            );
-          }
-
-          if (currentView !== "schedule") {
-            const scheduleFilter = document.getElementById("schedule-filter");
-            if (scheduleFilter) scheduleFilter.classList.add("hidden");
-
-            const scheduleSettings =
-              document.getElementById("schedule-settings");
-            if (scheduleSettings) scheduleSettings.classList.add("hidden");
+          const scheduleFabContainer = document.getElementById("schedule-fab-container");
+          if (scheduleFabContainer) {
+            if (currentView === "schedule") {
+              scheduleFabContainer.classList.remove("hidden");
+              scheduleFabContainer.classList.add("flex");
+            } else {
+              scheduleFabContainer.classList.add("hidden");
+              scheduleFabContainer.classList.remove("flex");
+            }
           }
 
           const toggleQCHandoverSettingsBtn = document.getElementById(
