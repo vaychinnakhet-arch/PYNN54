@@ -10673,9 +10673,10 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            // Use a lower scale on mobile to prevent memory crashes (like on Z Fold 7)
+            // Increase scale significantly for maximum sharpness
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isMobile ? 1.5 : 2;
+            // Use scale 4 for Desktop (4K-like sharpness), scale 2.5 for mobile (to avoid canvas memory crashes while improving quality)
+            const captureScale = isMobile ? 2.5 : 4;
 
             html2canvas(captureArea, {
               scale: captureScale,
@@ -10819,9 +10820,10 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            // Use a lower scale on mobile to prevent memory crashes
+            // Increase scale significantly for maximum sharpness
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isMobile ? 1.5 : 2;
+            // Use pixelRatio 4 for Desktop (4K-like sharpness), 2.5 for mobile (balance between sharpness and memory limits)
+            const captureScale = isMobile ? 2.5 : 4;
 
             // Use html-to-image which handles SVGs and scaling much better
             htmlToImage
