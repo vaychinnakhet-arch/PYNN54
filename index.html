@@ -305,10 +305,10 @@
         transition: all 0.2s ease-in-out;
       }
       .view-toggle-btn.active {
-        background-color: #ffffff; /* white */
-        color: #4f46e5; /* indigo-600 */
-        font-weight: 600;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        background-color: #ffffff;
+        color: #1e1b4b; /* slate-900 / indigo-950 */
+        font-weight: 700;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
       }
 
       .text-shadow-md {
@@ -745,6 +745,25 @@
           background-position: 0 0;
         }
       }
+      
+      /* Hide scrollbar for neatness in scrollable areas */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+
+      /* Hide Number Inputs Spinners for better visibility */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield; /* Firefox */
+      }
     </style>
     <link rel="stylesheet" href="/index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
@@ -1048,323 +1067,154 @@
       <!-- Unified Controls & Actions Area -->
       <div
         id="unified-controls"
-        class="max-w-full mx-auto mt-4 bg-white md:rounded-xl shadow-sm border-y md:border border-slate-200 p-4 flex flex-col gap-5"
+        class="max-w-full mx-auto mt-4 bg-white/95 backdrop-blur-xl md:rounded-2xl shadow-sm border-y md:border border-slate-200 p-4 md:p-5 flex flex-col gap-4 sticky top-0 z-40 transition-all print:hidden"
       >
         <!-- Top Row: Views & Primary Actions -->
-        <div
-          class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 w-full"
-        >
-          <!-- Left: View Navigation -->
-          <div
-            class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full xl:w-auto overflow-x-auto scrollbar-hide pb-1 xl:pb-0"
-          >
-            <div
-              id="view-toggle"
-              class="bg-slate-100/80 p-1.5 rounded-xl flex items-center gap-1 whitespace-nowrap"
-            >
-              <button
-                id="view-residential-btn"
-                class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-medium transition-all active"
-              >
+        <div class="flex flex-col 2xl:flex-row justify-between items-start 2xl:items-center gap-4 w-full">
+          
+          <!-- Left: View Navigation (Scrollable on small screens) -->
+          <div class="w-full 2xl:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 2xl:mx-0 2xl:px-0 shrink-0">
+            <div id="view-toggle" class="inline-flex bg-slate-100/80 p-1 rounded-xl gap-1 whitespace-nowrap border border-slate-200/50 mix-blend-multiply">
+              <button id="view-residential-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/50 transition-all active">
                 ห้องพัก
               </button>
-              <button
-                id="view-qc-summary-btn"
-                class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              >
+              <button id="view-qc-summary-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/50 transition-all">
                 สรุป QC
               </button>
-              <button
-                id="view-summary-report-btn"
-                class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              >
+              <button id="view-summary-report-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/50 transition-all">
                 รายงานสรุป
               </button>
-              <button
-                id="view-common-btn"
-                class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              >
+              <button id="view-common-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/50 transition-all">
                 ส่วนกลาง
               </button>
-              <button
-                id="view-qc-handover-btn"
-                class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              >
+              <button id="view-qc-handover-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/50 transition-all">
                 แผนส่งห้อง QC
               </button>
-              <button
-                id="view-schedule-btn"
-                class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              >
+              <button id="view-schedule-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/50 transition-all">
                 แผนงาน
               </button>
             </div>
           </div>
 
-          <!-- Right: Action Groups -->
-          <div class="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+          <!-- Right: Action Groups (Toolbars) -->
+          <div class="flex items-center gap-2 w-full 2xl:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 2xl:mx-0 2xl:px-0 shrink-0">
+            
             <!-- Group 1: Display Options -->
-            <div
-              class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100"
-            >
-              <button
-                id="overall-progress-toggle-btn"
-                onclick="toggleOverallProgressCard()"
-                class="action-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-                title="ซ่อน/แสดงกราฟความก้าวหน้า"
-              >
-                <i
-                  id="overall-progress-toggle-icon"
-                  data-lucide="eye-off"
-                  class="w-3.5 h-3.5"
-                ></i>
-                <span id="overall-progress-toggle-text" class="hidden sm:inline"
-                  >ซ่อนกราฟ</span
-                >
+            <div class="flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200">
+              <button id="overall-progress-toggle-btn" onclick="toggleOverallProgressCard()" class="action-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]" title="ซ่อน/แสดงกราฟความก้าวหน้า">
+                <i id="overall-progress-toggle-icon" data-lucide="eye-off" class="w-4 h-4 text-indigo-500"></i>
+                <span id="overall-progress-toggle-text">ซ่อนกราฟ</span>
               </button>
-              <button
-                id="toggleExecutiveSummaryBtn"
-                class="action-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-                title="สรุปภาพรวม"
-              >
-                <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline">สรุปภาพรวม</span>
+              <button id="toggleExecutiveSummaryBtn" class="action-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]" title="สรุปภาพรวม">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-500"></i>
+                <span>สรุปภาพรวม</span>
               </button>
             </div>
 
-            <!-- Group 2: Capture & Report -->
-            <div
-              class="flex items-center gap-2 bg-indigo-50/50 p-1.5 rounded-xl border border-indigo-100/50"
-            >
-              <button
-                id="captureNewBtn"
-                class="action-btn px-3 py-1.5 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-              >
-                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline">แคปเจอร์</span>
+            <!-- Group 2: Capture & Report (Primary) -->
+            <div class="flex items-center gap-1 bg-indigo-50/50 p-1 rounded-xl border border-indigo-200/50">
+              <button id="captureNewBtn" class="action-btn px-4 py-1.5 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-bold text-xs whitespace-nowrap min-h-[36px] active:scale-95">
+                <i data-lucide="camera" class="w-4 h-4"></i>
+                <span>แคปเจอร์</span>
               </button>
-              <button
-                id="toggleCaptureModeBtn"
-                class="action-btn px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-                title="ดูแบบแคปเจอร์"
-              >
-                <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+              <button id="toggleCaptureModeBtn" class="action-btn px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]" title="ดูแบบแคปเจอร์">
+                <i data-lucide="maximize" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">ดูแบบแคปเจอร์</span>
               </button>
-              <button
-                id="openReportModalBtn"
-                class="action-btn px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-              >
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <button id="openReportModalBtn" class="action-btn px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">ทำรายงาน</span>
               </button>
-              <button
-                id="openCommonAreaReportModalBtn"
-                class="action-btn px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all hidden"
-              >
-                <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
+              <button id="openCommonAreaReportModalBtn" class="action-btn px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px] hidden">
+                <i data-lucide="pie-chart" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">Infographic</span>
               </button>
-
               <!-- Hidden legacy buttons -->
               <button id="captureDownloadBtn" class="hidden"></button>
               <button id="captureShareBtn" class="hidden"></button>
             </div>
 
-            <!-- Group 3: Data Management -->
-            <div
-              class="flex items-center gap-2 bg-emerald-50/50 p-1.5 rounded-xl border border-emerald-100/50"
-            >
-              <button
-                id="exportExcelBtn"
-                onclick="openModal('exportExcelModal')"
-                class="action-btn px-3 py-1.5 bg-emerald-600 text-white rounded-lg shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-                title="ส่งออกตารางเป็น Excel"
-              >
-                <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+            <!-- Group 3: Data Export / Import (Emerald/Slate) -->
+            <div class="flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200">
+              <button id="exportExcelBtn" onclick="openModal('exportExcelModal')" class="action-btn px-3 py-1.5 bg-emerald-600 border border-emerald-700 text-white rounded-lg shadow-sm hover:bg-emerald-700 hover:border-emerald-800 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]" title="ส่งออกตารางเป็น Excel">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">ส่งออก (Excel)</span>
               </button>
-            </div>
+              
+              <div class="w-px h-6 bg-slate-300 mx-1"></div>
 
-            <!-- Group 4: App Data Management -->
-            <div
-              class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100"
-            >
-              <input
-                type="file"
-                id="import-file"
-                class="hidden"
-                accept=".json"
-              />
-              <label
-                for="import-file"
-                class="action-btn custom-file-button px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all cursor-pointer"
-                title="นำเข้าข้อมูล"
-              >
-                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline">นำเข้า</span>
+              <input type="file" id="import-file" class="hidden" accept=".json"/>
+              <label for="import-file" class="action-btn custom-file-button px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap cursor-pointer min-h-[36px]" title="นำเข้าข้อมูล JSON">
+                <i data-lucide="upload" class="w-4 h-4"></i>
+                <span class="hidden md:inline text-[11px] uppercase tracking-wider">นำเข้า</span>
               </label>
-              <button
-                id="exportDataBtn"
-                class="action-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-                title="ส่งออกข้อมูล"
-              >
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline">ส่งออก</span>
+              <button id="exportDataBtn" class="action-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]" title="สำรองข้อมูล JSON">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span class="hidden md:inline text-[11px] uppercase tracking-wider">ส่งออก</span>
               </button>
-              <button
-                id="clearDataBtn"
-                class="action-btn px-3 py-1.5 bg-white border border-rose-200 text-rose-600 rounded-lg shadow-sm hover:bg-rose-50 hover:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-                title="รีเซ็ตข้อมูล"
-              >
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline">รีเซ็ต</span>
+              <button id="clearDataBtn" class="action-btn px-2.5 py-1.5 bg-white border border-rose-200 text-rose-600 rounded-lg shadow-sm hover:bg-rose-50 hover:border-rose-300 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[36px]" title="รีเซ็ตข้อมูลทั้งหมด">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Middle Row: Contextual Options (Filters, Modes, Settings) -->
-        <div
-          class="flex flex-wrap items-center gap-3 w-full bg-slate-50/50 p-2 rounded-xl border border-slate-100 empty:hidden"
-        >
-          <!-- Task View Mode -->
-          <div
-            id="task-view-mode-toggle"
-            class="flex items-center gap-2 hidden"
-          >
-            <span
-              class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-              >โหมดตาราง</span
-            >
-            <div
-              class="bg-white p-1 rounded-lg border border-slate-200 text-slate-600 text-xs font-medium flex shadow-sm"
-            >
-              <button
-                id="task-view-summary-btn"
-                class="view-toggle-btn px-3 py-1 rounded-md active"
-              >
-                สรุป
-              </button>
-              <button
-                id="task-view-detailed-btn"
-                class="view-toggle-btn px-3 py-1 rounded-md"
-              >
-                ละเอียด
-              </button>
+        <!-- Middle Row: Contextual Options & Search -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full border-t border-slate-100 pt-4">
+          <!-- Contextual Modes Container -->
+          <div id="contextual-modes-container" class="flex flex-wrap items-center gap-2 w-full md:w-auto empty:hidden">
+            <!-- Task View Mode -->
+            <div id="task-view-mode-toggle" class="flex items-center bg-slate-100 p-1 rounded-xl hidden border border-slate-200/80">
+              <span class="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider hidden lg:block">มุมมองตาราง</span>
+              <div class="bg-slate-200/60 p-1 rounded-lg text-slate-500 text-xs font-medium flex shadow-inner items-center gap-0.5">
+                <button id="task-view-summary-btn" class="view-toggle-btn px-3 py-1 rounded-md active transition-all font-semibold whitespace-nowrap hover:text-slate-800">สรุป</button>
+                <button id="task-view-detailed-btn" class="view-toggle-btn px-3 py-1 rounded-md transition-all font-semibold whitespace-nowrap hover:text-slate-800">ละเอียด</button>
+              </div>
             </div>
-          </div>
 
-          <!-- Summary Report Mode -->
-          <div
-            id="summary-report-mode-toggle"
-            class="flex items-center gap-2 hidden"
-          >
-            <span
-              class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-              >โหมดรายงาน</span
-            >
-            <div
-              class="bg-white p-1 rounded-lg border border-slate-200 text-slate-600 text-xs font-medium flex shadow-sm"
-            >
-              <button
-                id="summary-report-wet-btn"
-                class="view-toggle-btn px-3 py-1 rounded-md active"
-              >
-                QC Wet work
-              </button>
-              <button
-                id="summary-report-end-btn"
-                class="view-toggle-btn px-3 py-1 rounded-md"
-              >
-                QC End product
-              </button>
+            <!-- Summary Report Mode -->
+            <div id="summary-report-mode-toggle" class="flex items-center bg-slate-100 p-1 rounded-xl hidden border border-slate-200/80">
+              <span class="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider hidden lg:block">โหมดรายงาน</span>
+              <div class="bg-slate-200/60 p-1 rounded-lg text-slate-500 text-xs font-medium flex shadow-inner items-center gap-0.5">
+                <button id="summary-report-wet-btn" class="view-toggle-btn px-3 py-1 rounded-md active transition-all font-semibold whitespace-nowrap hover:text-slate-800">QC Wet work</button>
+                <button id="summary-report-end-btn" class="view-toggle-btn px-3 py-1 rounded-md transition-all font-semibold whitespace-nowrap hover:text-slate-800">QC End product</button>
+              </div>
             </div>
-          </div>
 
-          <!-- Header Style -->
-          <div
-            id="report-header-style-toggle"
-            class="flex items-center gap-2 hidden"
-          >
-            <span
-              class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-              >รูปแบบหัวกระดาษ</span
-            >
-            <div
-              class="bg-white p-1 rounded-lg border border-slate-200 text-slate-600 text-xs font-medium flex shadow-sm"
-            >
-              <button
-                id="header-style-dark-btn"
-                class="view-toggle-btn px-3 py-1 rounded-md active"
-              >
-                Classic (Dark)
-              </button>
-              <button
-                id="header-style-light-btn"
-                class="view-toggle-btn px-3 py-1 rounded-md"
-              >
-                Modern (Light)
-              </button>
+            <!-- Header Style -->
+            <div id="report-header-style-toggle" class="flex items-center bg-slate-100 p-1 rounded-xl hidden border border-slate-200/80">
+              <span class="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider hidden lg:block">รูปแบบหัวกระดาษ</span>
+              <div class="bg-slate-200/60 p-1 rounded-lg text-slate-500 text-xs font-medium flex shadow-inner items-center gap-0.5">
+                <button id="header-style-dark-btn" class="view-toggle-btn px-3 py-1 rounded-md active transition-all font-semibold whitespace-nowrap hover:text-slate-800">Classic (Dark)</button>
+                <button id="header-style-light-btn" class="view-toggle-btn px-3 py-1 rounded-md transition-all font-semibold whitespace-nowrap hover:text-slate-800">Modern (Light)</button>
+              </div>
             </div>
-          </div>
 
-          <!-- Floor Selection -->
-          <div
-            id="summary-report-floor-selection"
-            class="flex items-center gap-2 hidden"
-          >
-            <span
-              class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-              >เลือกชั้น</span
-            >
-            <div id="summary-report-floor-list" class="flex flex-wrap gap-1">
-              <!-- JS Generated Content -->
+            <!-- Floor Selection -->
+            <div id="summary-report-floor-selection" class="flex items-center gap-2 hidden px-2 py-1 bg-slate-50 border border-slate-200 rounded-xl">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">เลือกชั้น</span>
+              <div id="summary-report-floor-list" class="flex flex-wrap gap-1"></div>
             </div>
-          </div>
 
-          <!-- Settings & Filters -->
-          <button
-            id="toggleQCHandoverSettingsBtn"
-            onclick="openQCHandoverSettings()"
-            class="hidden action-btn px-3 py-1.5 bg-slate-800 text-white rounded-lg shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 text-xs font-medium inline-flex items-center gap-1.5 transition-all"
-          >
-            <i data-lucide="settings" class="w-3.5 h-3.5"></i> ตั้งค่าแผนส่งห้อง
-          </button>
+            <!-- Settings & Filters -->
+            <button id="toggleQCHandoverSettingsBtn" onclick="openQCHandoverSettings()" class="hidden action-btn px-3 py-1.5 bg-slate-800 text-white rounded-xl shadow-md hover:bg-slate-700 hover:shadow-lg focus:outline-none transition-all font-bold text-xs flex items-center justify-center gap-2 whitespace-nowrap">
+              <i data-lucide="settings" class="w-4 h-4 border border-white/20 rounded-full p-0.5"></i>
+              <span>ตั้งค่าแผนส่งห้อง</span>
+            </button>
+          </div>
+          
+          <!-- Search input mapped to flex end (Right aligned) -->
+          <div class="w-full md:w-72 lg:w-80 xl:w-96 relative ml-auto flex-shrink-0" id="task-search-container">
+            <input type="text" id="task-search-input" class="w-full pl-10 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-slate-50 hover:bg-white focus:bg-white shadow-inner font-medium text-slate-700 placeholder-slate-400" placeholder="ค้นหางาน หมวดหมู่ หรือขั้นตอน..." />
+            <i data-lucide="search" class="w-4 h-4 text-indigo-500 absolute left-4 top-2.5"></i>
+          </div>
         </div>
 
         <!-- Bottom Row: Task Selection -->
-        <div
-          id="task-selection-container"
-          class="w-full border-t border-slate-100 pt-4"
-        >
-          <div
-            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-3"
-          >
-            <span
-              class="text-xs font-bold text-slate-400 uppercase tracking-wider block"
-              >เลือกงาน</span
-            >
-            <div class="relative w-full sm:w-auto">
-              <input
-                type="text"
-                id="task-search-input"
-                class="w-full sm:w-64 pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-slate-50 focus:bg-white"
-                placeholder="ค้นหางาน..."
-              />
-              <i
-                data-lucide="search"
-                class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"
-              ></i>
-            </div>
-          </div>
-          <div
-            class="overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide"
-          >
-            <div
-              id="task-category-buttons"
-              class="flex flex-col gap-3 min-w-max"
-            >
+        <div id="task-selection-container" class="w-full border-t border-slate-100 pt-4 mt-1">
+          <!-- We no longer need the "เลือกงาน" label + search bar side-by-side here because search is moved up cleanly -->
+          <div class="overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+            <div id="task-category-buttons" class="flex flex-col gap-4 min-w-max">
               <!-- JS Generated Content -->
             </div>
           </div>
@@ -6681,7 +6531,7 @@
                                         <div id="total-wetwork-days-val" class="text-xl font-black text-emerald-700">${totalWetWorkDays} วัน</div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-4">
                                     ${wetWorkTasks
                                       .map((t) => {
                                         const task = t.task;
@@ -6693,21 +6543,21 @@
                                           );
                                         return `
                                             <div class="bg-white p-3.5 rounded-xl border border-emerald-100 shadow-sm hover:border-emerald-300 transition-all flex flex-col justify-between">
-                                                <label class="text-[11px] font-bold text-slate-700 leading-snug block mb-3 line-clamp-2" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
+                                                <label class="text-xs font-bold text-slate-700 leading-snug block mb-3 line-clamp-2" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
                                                 <div class="flex gap-2 w-full">
                                                     <div class="flex-1 flex flex-col gap-1.5">
-                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">เวลา (วัน)</span>
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">เวลา(วัน)</span>
                                                         <input type="number" min="1" value="${task.duration}" 
-                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-emerald-700 focus:bg-white focus:border-emerald-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-emerald-700 focus:bg-white focus:border-emerald-500 outline-none transition-all shadow-inner"
                                                             onchange="updateTaskDuration(${idx}, this.value)">
                                                     </div>
                                                     ${
                                                       idx > 0
                                                         ? `
                                                     <div class="flex-1 flex flex-col gap-1.5">
-                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม (วัน)</span>
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม(วัน)</span>
                                                         <input type="number" value="${task.offsetDays || 0}" 
-                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all shadow-inner"
                                                             onchange="updateTaskOffset(${idx}, this.value)">
                                                     </div>
                                                     `
@@ -6738,7 +6588,7 @@
                                         <div id="total-endproduct-days-val" class="text-xl font-black text-blue-700">${totalEndProductDays} วัน</div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-4">
                                     ${endProductTasks
                                       .map((t) => {
                                         const task = t.task;
@@ -6750,21 +6600,21 @@
                                           );
                                         return `
                                             <div class="bg-white p-3.5 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition-all flex flex-col justify-between">
-                                                <label class="text-[11px] font-bold text-slate-700 leading-snug block mb-3 line-clamp-2" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
+                                                <label class="text-xs font-bold text-slate-700 leading-snug block mb-3 line-clamp-2" title="${taskNameWithoutDuration}">${task.subName}: ${taskNameWithoutDuration}</label>
                                                 <div class="flex gap-2 w-full">
                                                     <div class="flex-1 flex flex-col gap-1.5">
-                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">เวลา (วัน)</span>
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">เวลา(วัน)</span>
                                                         <input type="number" min="1" value="${task.duration}" 
-                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-blue-700 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-blue-700 focus:bg-white focus:border-blue-500 outline-none transition-all shadow-inner"
                                                             onchange="updateTaskDuration(${idx}, this.value)">
                                                     </div>
                                                     ${
                                                       idx > 0
                                                         ? `
                                                     <div class="flex-1 flex flex-col gap-1.5">
-                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม (วัน)</span>
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center" title="เริ่มก่อน/หลัง งานก่อนหน้า">เริ่ม(วัน)</span>
                                                         <input type="number" value="${task.offsetDays || 0}" 
-                                                            class="w-full py-1.5 px-1 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all"
+                                                            class="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center font-bold text-amber-600 focus:bg-white focus:border-amber-500 outline-none transition-all shadow-inner"
                                                             onchange="updateTaskOffset(${idx}, this.value)">
                                                     </div>
                                                     `
@@ -8394,15 +8244,21 @@
           const taskSelectionContainer = document.getElementById(
             "task-selection-container",
           );
-          if (taskSelectionContainer) {
-            taskSelectionContainer.style.display =
-              isCommonView ||
+          const taskSearchContainer = document.getElementById(
+            "task-search-container",
+          );
+          
+          const shouldHideTaskSelection = isCommonView ||
               isQCSummaryView ||
               currentView === "summaryReport" ||
               currentView === "schedule" ||
-              currentView === "qcHandover"
-                ? "none"
-                : "block";
+              currentView === "qcHandover";
+
+          if (taskSelectionContainer) {
+            taskSelectionContainer.style.display = shouldHideTaskSelection ? "none" : "block";
+          }
+          if (taskSearchContainer) {
+             taskSearchContainer.style.display = shouldHideTaskSelection ? "none" : "block";
           }
 
           const legend = document.getElementById("legend");
