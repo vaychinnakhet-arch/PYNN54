@@ -13053,6 +13053,9 @@
           let touchStartY = 0;
           let isTouchScrolling = false;
           let lastTouchTime = 0;
+          let selectionLock = false;
+          let touchTimer = null;
+          let touchStartCell = null;
 
           function handleSelectionStart(e) {
             if (e.type.includes("touch")) {
@@ -13075,25 +13078,46 @@
               touchStartX = e.touches[0].clientX;
               touchStartY = e.touches[0].clientY;
               isTouchScrolling = false;
-              // Do not preventDefault to allow native scrolling on touch devices
+              selectionLock = false;
+              touchStartCell = cell;
+
+              // Smart timer: if held for 250ms, lock into selection mode
+              if (touchTimer) clearTimeout(touchTimer);
+              touchTimer = setTimeout(() => {
+                selectionLock = true;
+                if (touchStartCell && !isTouchScrolling) {
+                  if (currentView === "qcSummary") {
+                    clearSelection();
+                  }
+                  touchStartCell.classList.add("selection-active");
+                  selectedCells.add(touchStartCell);
+                  if (window.navigator && window.navigator.vibrate) {
+                    try {
+                      window.navigator.vibrate(25);
+                    } catch (err) {}
+                  }
+                }
+              }, 250);
             } else {
               e.preventDefault();
             }
 
             isSelecting = true;
 
-            if (
-              currentView === "qcSummary" ||
-              (!e.ctrlKey && !e.type.includes("touch"))
-            ) {
-              clearSelection();
-            }
+            if (!e.type.includes("touch")) {
+              if (
+                currentView === "qcSummary" ||
+                (!e.ctrlKey && !e.type.includes("touch"))
+              ) {
+                clearSelection();
+              }
 
-            cell.classList.toggle("selection-active");
-            if (cell.classList.contains("selection-active")) {
-              selectedCells.add(cell);
-            } else {
-              selectedCells.delete(cell);
+              cell.classList.toggle("selection-active");
+              if (cell.classList.contains("selection-active")) {
+                selectedCells.add(cell);
+              } else {
+                selectedCells.delete(cell);
+              }
             }
           }
 
@@ -13106,11 +13130,21 @@
               const deltaX = Math.abs(touch.clientX - touchStartX);
               const deltaY = Math.abs(touch.clientY - touchStartY);
 
-              // If moved more than 10px, consider it a scroll
-              if (deltaX > 10 || deltaY > 10) {
-                isTouchScrolling = true;
-                isSelecting = false;
-                clearSelection();
+              if (selectionLock) {
+                e.preventDefault(); // Lock scroll now that we are in selection mode
+              } else {
+                // If moved significantly before lock, cancel selection and allow scroll
+                if (deltaX > 20 || deltaY > 20) {
+                  if (touchTimer) {
+                    clearTimeout(touchTimer);
+                    touchTimer = null;
+                  }
+                  isTouchScrolling = true;
+                  isSelecting = false;
+                  clearSelection();
+                  return;
+                }
+                // If not locked yet and distance is small, don't do selection yet to avoid wiggles
                 return;
               }
 
@@ -13123,15 +13157,25 @@
             if (target.nodeType === 3) target = target.parentNode; // Handle text nodes
             const cell = target.closest(".table-cell");
             if (cell && !selectedCells.has(cell)) {
+              if (currentView === "qcSummary") {
+                // Single selection only in QC summary
+                return;
+              }
               cell.classList.add("selection-active");
               selectedCells.add(cell);
             }
           }
 
           function handleSelectionEnd(e) {
+            if (touchTimer) {
+              clearTimeout(touchTimer);
+              touchTimer = null;
+            }
+
             if (e.type === "touchcancel") {
               isSelecting = false;
               isTouchScrolling = false;
+              selectionLock = false;
               clearSelection();
               return;
             }
@@ -13140,12 +13184,28 @@
               if (isTouchScrolling) {
                 isSelecting = false;
                 isTouchScrolling = false;
+                selectionLock = false;
                 return;
               }
             }
 
             if (isSelecting) {
+              // If it was a tap (no selection yet and not scrolling)
+              if (
+                selectedCells.size === 0 &&
+                !isTouchScrolling &&
+                touchStartCell
+              ) {
+                if (currentView === "qcSummary") {
+                  clearSelection();
+                }
+                touchStartCell.classList.add("selection-active");
+                selectedCells.add(touchStartCell);
+              }
+
               isSelecting = false;
+              selectionLock = false;
+
               if (currentView === "qcSummary" && selectedCells.size > 1) {
                 showToast("ไม่สามารถเลือกหลายรายการในมุมมองสรุป QC ได้", 2500);
                 clearSelection();
