@@ -10588,10 +10588,9 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            // Increase scale significantly for maximum sharpness
-            const isMobile = window.innerWidth <= 768;
-            // Use scale 4 for Desktop (4K-like sharpness), scale 2.5 for mobile (to avoid canvas memory crashes while improving quality)
-            const captureScale = isMobile ? 2.5 : 4;
+            // For LINE App specifically, too large an image causes aggressive compression and bluriness.
+            // Using a scale between 1.5 to 2 is optimal for LINE readability.
+            const captureScale = isMobile ? 1.5 : 2;
 
             html2canvas(captureArea, {
               scale: captureScale,
@@ -10605,8 +10604,8 @@
               scrollY: 0,
             })
               .then((canvas) => {
-                const filename = `line-update-${Date.now()}.png`;
-                const dataUrl = canvas.toDataURL("image/png");
+                const filename = `line-update-${Date.now()}.jpg`;
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
 
                 function fallbackDownload() {
                   const link = document.createElement("a");
@@ -10626,7 +10625,7 @@
                         return;
                       }
                       const file = new File([blob], filename, {
-                        type: "image/png",
+                        type: "image/jpeg",
                       });
                       if (navigator.canShare({ files: [file] })) {
                         navigator
@@ -10643,7 +10642,7 @@
                       } else {
                         fallbackDownload();
                       }
-                    }, "image/png");
+                    }, "image/jpeg", 0.9);
                   } else {
                     fallbackDownload();
                   }
@@ -10735,14 +10734,14 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            // Increase scale significantly for maximum sharpness
-            const isMobile = window.innerWidth <= 768;
-            // Use pixelRatio 4 for Desktop (4K-like sharpness), 2.5 for mobile (balance between sharpness and memory limits)
-            const captureScale = isMobile ? 2.5 : 4;
+            // For LINE App specifically, too large an image causes aggressive compression and bluriness.
+            // Using a scale between 1.5 to 2 is optimal for LINE readability.
+            const captureScale = isMobile ? 1.5 : 2;
 
             // Use html-to-image which handles SVGs and scaling much better
             htmlToImage
-              .toPng(captureArea, {
+              .toJpeg(captureArea, {
+                quality: 0.9,
                 backgroundColor: "#ffffff",
                 pixelRatio: captureScale,
                 width: finalWidth,
@@ -10752,7 +10751,7 @@
                 },
               })
               .then((dataUrl) => {
-                const filename = `line-update-new-${Date.now()}.png`;
+                const filename = `line-update-new-${Date.now()}.jpg`;
 
                 function fallbackDownload() {
                   const link = document.createElement("a");
@@ -10770,7 +10769,7 @@
                       .then((res) => res.blob())
                       .then((blob) => {
                         const file = new File([blob], filename, {
-                          type: "image/png",
+                          type: "image/jpeg",
                         });
                         if (navigator.canShare({ files: [file] })) {
                           navigator
