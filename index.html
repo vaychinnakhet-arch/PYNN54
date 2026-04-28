@@ -3414,7 +3414,7 @@
                         `);
               } else if (floorDelayed.length > 0) {
                 const totalDays = floorDelayed.reduce(
-                  (sum, t) => sum + t.days,
+                  (max, t) => Math.max(max, t.days),
                   0,
                 );
                 floorReports.push(`
@@ -3959,7 +3959,7 @@
               if (floorDelayed.length > 0) {
                 hasAnyAlert = true;
                 const totalDays = floorDelayed.reduce(
-                  (sum, t) => sum + t.days,
+                  (max, t) => Math.max(max, t.days),
                   0,
                 );
                 floorReports.push(`
