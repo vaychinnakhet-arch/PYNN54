@@ -10637,7 +10637,12 @@
             // For LINE App specifically, too large an image causes aggressive compression and bluriness.
             // Using a scale between 1.5 to 2 is optimal for LINE readability.
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isMobile ? 1.5 : 2;
+            const preferredScale = isMobile ? 1.5 : 2;
+            // Mobile devices (especially iOS) freeze when encoding huge canvases. 
+            // Cap at 6 Megapixels for mobile, 14 Megapixels for desktop.
+            const maxCanvasArea = isMobile ? 6000000 : 14000000;
+            const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
+            const captureScale = Math.min(preferredScale, rawScale);
 
             html2canvas(captureArea, {
               scale: captureScale,
@@ -10784,7 +10789,11 @@
             // For LINE App specifically, too large an image causes aggressive compression and bluriness.
             // Using a scale between 1.5 to 2 is optimal for LINE readability.
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isMobile ? 1.5 : 2;
+            const preferredScale = isMobile ? 1.5 : 2;
+            // Capping canvas area to prevent OOM freezes on mobile
+            const maxCanvasArea = isMobile ? 6000000 : 14000000;
+            const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
+            const captureScale = Math.min(preferredScale, rawScale);
 
             // Use html-to-image which handles SVGs and scaling much better
             htmlToImage
@@ -10919,7 +10928,12 @@
           setTimeout(() => {
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
-            const captureScale = 2; // For PDF, we want high quality
+            
+            const isMobile = window.innerWidth <= 768;
+            const maxCanvasArea = isMobile ? 6000000 : 14000000;
+            const preferredScale = 2; // For PDF, we want high quality
+            const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
+            const captureScale = Math.min(preferredScale, rawScale);
 
             htmlToImage
               .toJpeg(captureArea, {
