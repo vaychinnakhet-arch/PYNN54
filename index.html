@@ -10625,7 +10625,7 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard && currentView === "schedule") {
+          if (execDashboard) {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
           }
@@ -10777,7 +10777,7 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard && currentView === "schedule") {
+          if (execDashboard) {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
           }
@@ -10795,18 +10795,30 @@
             const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
             const captureScale = Math.min(preferredScale, rawScale);
 
-            // Use html-to-image which handles SVGs and scaling much better
-            htmlToImage
-              .toJpeg(captureArea, {
-                quality: 0.9,
-                backgroundColor: "#ffffff",
-                pixelRatio: captureScale,
-                width: finalWidth,
-                height: finalHeight,
-                style: {
-                  transformOrigin: "top left",
-                },
-              })
+            // On mobile, html-to-image creates massive SVG data URIs that freeze iOS Safari.
+            // We use html2canvas for mobile to prevent freezing, and html-to-image for desktop.
+            const generateImage = isMobile 
+              ? html2canvas(captureArea, {
+                  scale: captureScale,
+                  useCORS: true,
+                  backgroundColor: "#ffffff",
+                  width: finalWidth,
+                  height: finalHeight,
+                  windowWidth: finalWidth,
+                  windowHeight: finalHeight,
+                  scrollX: 0,
+                  scrollY: 0,
+                }).then(canvas => canvas.toDataURL("image/jpeg", 0.9))
+              : htmlToImage.toJpeg(captureArea, {
+                  quality: 0.9,
+                  backgroundColor: "#ffffff",
+                  pixelRatio: captureScale,
+                  width: finalWidth,
+                  height: finalHeight,
+                  style: { transformOrigin: "top left" },
+                });
+
+            generateImage
               .then((dataUrl) => {
                 const filename = `${getFileExportName()}.jpg`;
 
@@ -10920,7 +10932,7 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard && currentView === "schedule") {
+          if (execDashboard) {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
           }
@@ -10935,17 +10947,29 @@
             const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
             const captureScale = Math.min(preferredScale, rawScale);
 
-            htmlToImage
-              .toJpeg(captureArea, {
-                quality: 0.95,
-                backgroundColor: "#ffffff",
-                pixelRatio: captureScale,
-                width: finalWidth,
-                height: finalHeight,
-                style: {
-                  transformOrigin: "top left",
-                },
-              })
+            // On mobile, html-to-image creates massive SVG data URIs that freeze iOS Safari.
+            const generateImage = isMobile
+              ? html2canvas(captureArea, {
+                  scale: captureScale,
+                  useCORS: true,
+                  backgroundColor: "#ffffff",
+                  width: finalWidth,
+                  height: finalHeight,
+                  windowWidth: finalWidth,
+                  windowHeight: finalHeight,
+                  scrollX: 0,
+                  scrollY: 0,
+                }).then(canvas => canvas.toDataURL("image/jpeg", 0.95))
+              : htmlToImage.toJpeg(captureArea, {
+                  quality: 0.95,
+                  backgroundColor: "#ffffff",
+                  pixelRatio: captureScale,
+                  width: finalWidth,
+                  height: finalHeight,
+                  style: { transformOrigin: "top left" },
+                });
+
+            generateImage
               .then((dataUrl) => {
                 const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
                 if (!jsPDF) {
@@ -10973,7 +10997,7 @@
                 document.body.style.width = originalStyles.bodyWidth;
                 document.documentElement.style.width = originalStyles.htmlWidth;
                 mainAppContainer.style.width = originalStyles.mainAppWidth;
-                if (execDashboard && currentView === "schedule") {
+                if (execDashboard) {
                   execDashboard.style.width = originalStyles.execWidth;
                   execDashboard.style.maxWidth = originalStyles.execMaxWidth;
                 }
