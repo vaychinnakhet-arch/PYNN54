@@ -10625,7 +10625,7 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard) {
+          if (execDashboard && currentView === "schedule") {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
           }
@@ -10637,12 +10637,7 @@
             // For LINE App specifically, too large an image causes aggressive compression and bluriness.
             // Using a scale between 1.5 to 2 is optimal for LINE readability.
             const isMobile = window.innerWidth <= 768;
-            const preferredScale = isMobile ? 1.5 : 2;
-            // Mobile devices (especially iOS) freeze when encoding huge canvases. 
-            // Cap at 6 Megapixels for mobile, 14 Megapixels for desktop.
-            const maxCanvasArea = isMobile ? 6000000 : 14000000;
-            const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
-            const captureScale = Math.min(preferredScale, rawScale);
+            const captureScale = isMobile ? 1.5 : 2;
 
             html2canvas(captureArea, {
               scale: captureScale,
@@ -10777,7 +10772,7 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard) {
+          if (execDashboard && currentView === "schedule") {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
           }
@@ -10789,36 +10784,20 @@
             // For LINE App specifically, too large an image causes aggressive compression and bluriness.
             // Using a scale between 1.5 to 2 is optimal for LINE readability.
             const isMobile = window.innerWidth <= 768;
-            const preferredScale = isMobile ? 1.5 : 2;
-            // Capping canvas area to prevent OOM freezes on mobile
-            const maxCanvasArea = isMobile ? 6000000 : 14000000;
-            const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
-            const captureScale = Math.min(preferredScale, rawScale);
+            const captureScale = isMobile ? 1.5 : 2;
 
-            // On mobile, html-to-image creates massive SVG data URIs that freeze iOS Safari.
-            // We use html2canvas for mobile to prevent freezing, and html-to-image for desktop.
-            const generateImage = isMobile 
-              ? html2canvas(captureArea, {
-                  scale: captureScale,
-                  useCORS: true,
-                  backgroundColor: "#ffffff",
-                  width: finalWidth,
-                  height: finalHeight,
-                  windowWidth: finalWidth,
-                  windowHeight: finalHeight,
-                  scrollX: 0,
-                  scrollY: 0,
-                }).then(canvas => canvas.toDataURL("image/jpeg", 0.9))
-              : htmlToImage.toJpeg(captureArea, {
-                  quality: 0.9,
-                  backgroundColor: "#ffffff",
-                  pixelRatio: captureScale,
-                  width: finalWidth,
-                  height: finalHeight,
-                  style: { transformOrigin: "top left" },
-                });
-
-            generateImage
+            // Use html-to-image which handles SVGs and scaling much better
+            htmlToImage
+              .toJpeg(captureArea, {
+                quality: 0.9,
+                backgroundColor: "#ffffff",
+                pixelRatio: captureScale,
+                width: finalWidth,
+                height: finalHeight,
+                style: {
+                  transformOrigin: "top left",
+                },
+              })
               .then((dataUrl) => {
                 const filename = `${getFileExportName()}.jpg`;
 
@@ -10932,7 +10911,7 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard) {
+          if (execDashboard && currentView === "schedule") {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
           }
@@ -10940,36 +10919,19 @@
           setTimeout(() => {
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
-            
-            const isMobile = window.innerWidth <= 768;
-            const maxCanvasArea = isMobile ? 6000000 : 14000000;
-            const preferredScale = 2; // For PDF, we want high quality
-            const rawScale = Math.sqrt(maxCanvasArea / (finalWidth * finalHeight));
-            const captureScale = Math.min(preferredScale, rawScale);
+            const captureScale = 2; // For PDF, we want high quality
 
-            // On mobile, html-to-image creates massive SVG data URIs that freeze iOS Safari.
-            const generateImage = isMobile
-              ? html2canvas(captureArea, {
-                  scale: captureScale,
-                  useCORS: true,
-                  backgroundColor: "#ffffff",
-                  width: finalWidth,
-                  height: finalHeight,
-                  windowWidth: finalWidth,
-                  windowHeight: finalHeight,
-                  scrollX: 0,
-                  scrollY: 0,
-                }).then(canvas => canvas.toDataURL("image/jpeg", 0.95))
-              : htmlToImage.toJpeg(captureArea, {
-                  quality: 0.95,
-                  backgroundColor: "#ffffff",
-                  pixelRatio: captureScale,
-                  width: finalWidth,
-                  height: finalHeight,
-                  style: { transformOrigin: "top left" },
-                });
-
-            generateImage
+            htmlToImage
+              .toJpeg(captureArea, {
+                quality: 0.95,
+                backgroundColor: "#ffffff",
+                pixelRatio: captureScale,
+                width: finalWidth,
+                height: finalHeight,
+                style: {
+                  transformOrigin: "top left",
+                },
+              })
               .then((dataUrl) => {
                 const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
                 if (!jsPDF) {
@@ -10997,7 +10959,7 @@
                 document.body.style.width = originalStyles.bodyWidth;
                 document.documentElement.style.width = originalStyles.htmlWidth;
                 mainAppContainer.style.width = originalStyles.mainAppWidth;
-                if (execDashboard) {
+                if (execDashboard && currentView === "schedule") {
                   execDashboard.style.width = originalStyles.execWidth;
                   execDashboard.style.maxWidth = originalStyles.execMaxWidth;
                 }
