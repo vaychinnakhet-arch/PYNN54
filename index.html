@@ -3213,13 +3213,10 @@
                 }, 2000);
               }
               if (status === "CHANNEL_ERROR") {
-                console.error("Realtime channel error:", err);
-                showNotificationModal(
-                  "Connection Error",
-                  "การเชื่อมต่อ Real-time ล้มเหลว กรุณาตรวจสอบว่าเปิดใช้งาน Publications ใน Supabase แล้ว",
-                );
-                splashLoadingText.textContent =
-                  "การเชื่อมต่อ Real-time ล้มเหลว";
+                console.warn("Realtime channel error:", err);
+                // Supabase will automatically attempt to reconnect. 
+                // We show a non-intrusive toast instead of a blocking modal.
+                showToast("การเชื่อมต่อ Real-time ขัดข้อง กำลังเชื่อมต่อใหม่...", 3000);
               }
             });
         }
@@ -3480,10 +3477,79 @@
               }
             });
 
+          // Calculate overall progress from room-level data to match sub-tables
+          let actualTotalProgressPoints = 0;
+          let actualTotalMaxPoints = 0;
+
+          const catsToSum = [];
+          if (globalScheduleFilters.showWetWork) catsToSum.push("wetWork");
+          if (globalScheduleFilters.showEndProduct) catsToSum.push("endProduct");
+
+          let minF = globalScheduleFilters.minFloor;
+          let maxF = globalScheduleFilters.maxFloor;
+
+          catsToSum.forEach((catKey) => {
+            const catDef = taskDefinitions[catKey];
+            if (!catDef) return;
+            
+            for (let floor = minF; floor <= maxF; floor++) {
+              // Ensure this floor is actually in the filtered data before counting
+              const hasFloorInSchedule = globalScheduleData.some(f => f.id === floor);
+              if (!hasFloorInSchedule) continue;
+
+              const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
+              for (let room = 1; room <= roomsOnThisFloor; room++) {
+                const unitData = projectData[catKey]?.[floor]?.[room] || {};
+                if (catDef.type === "progress") {
+                  const applicableTasks = catDef.tasks.filter(
+                    (t) => !t.condition || t.condition(floor, room),
+                  );
+                  const taskCount = applicableTasks.length;
+                  if (taskCount > 0) {
+                      const taskProg = (unitData.progress || 0) / taskCount;
+                      const completedTasksProgress =
+                        (unitData.taskIndex || 0) * (100 / taskCount);
+                      actualTotalProgressPoints += taskProg + completedTasksProgress;
+                      actualTotalMaxPoints += 100;
+                  }
+                } else if (catDef.type === "multi-progress") {
+                  let subTaskTotal = 0;
+                  let applicableTaskCount = 0;
+                  catDef.tasks.forEach((task) => {
+                    if (task.condition && !task.condition(floor, room)) return;
+                    applicableTaskCount++;
+                    subTaskTotal += unitData[`progress_${task.key}`] || 0;
+                  });
+                  actualTotalProgressPoints +=
+                    applicableTaskCount > 0
+                      ? subTaskTotal / applicableTaskCount
+                      : 0;
+                  if (applicableTaskCount > 0) {
+                      actualTotalMaxPoints += 100;
+                  }
+                } else if (catDef.type === "inspection" || catDef.type === "qc_defect" || catKey === "endProduct") {
+                  let score = 0;
+                  // For endProduct specifically
+                  if (catKey === "endProduct") {
+                     score = unitData.qcScore >= 85 ? 100 : (unitData.qcScore > 0 ? unitData.qcScore : 0);
+                  } else {
+                     score = unitData.qcScore > 0
+                      ? unitData.qcScore
+                      : unitData.cmScore || 0;
+                  }
+                  actualTotalProgressPoints += score;
+                  actualTotalMaxPoints += 100;
+                }
+              }
+            }
+          });
+
+          // Compute exact matching progress
           const overallProgress =
-            totalTasks > 0
-              ? Math.round((completedTasks / totalTasks) * 100)
+            actualTotalMaxPoints > 0
+              ? Math.round((actualTotalProgressPoints / actualTotalMaxPoints) * 100)
               : 0;
+
           const formattedToday = today.toLocaleDateString("th-TH", {
             year: "numeric",
             month: "long",
@@ -3510,38 +3576,9 @@
                         </div>
                         
                         <div class="p-8 bg-white">
-                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                                <!-- Left Column: Stats & Progress -->
-                                <div class="lg:col-span-4 space-y-8">
-                                    <div class="flex flex-col items-center justify-center p-10 bg-slate-50 rounded-3xl border-2 border-black relative overflow-hidden">
-                                        <div class="relative w-44 h-44 flex items-center justify-center rounded-full bg-white mb-8 border border-slate-100">
-                                            <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#f8fafc" stroke-width="6"></circle>
-                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#4f46e5" stroke-width="6" stroke-dasharray="${overallProgress * 2.83} 283" stroke-linecap="round" class="transition-all duration-1000 ease-out"></circle>
-                                            </svg>
-                                            <div class="text-center z-10">
-                                                <span class="text-5xl font-black text-slate-900 tracking-tighter">${overallProgress}%</span>
-                                                <div class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-2">Overall Progress</div>
-                                            </div>
-                                        </div>
-                                        <h3 class="font-black text-slate-900 text-xl text-center">ความก้าวหน้าโครงการ</h3>
-                                        <p class="text-sm text-slate-500 mt-2 font-medium text-center">ดำเนินการแล้วเสร็จ ${completedTasks} งาน จากทั้งหมด ${totalTasks} งาน</p>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div class="bg-white p-5 rounded-2xl border-2 border-black shadow-sm flex flex-col items-center justify-center">
-                                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">เเล้วเสร็จ</div>
-                                            <div class="text-2xl font-black text-emerald-600 tracking-tighter">${completedTasks} งาน</div>
-                                        </div>
-                                        <div class="bg-white p-5 rounded-2xl border-2 border-black shadow-sm flex flex-col items-center justify-center">
-                                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">ล่าช้า</div>
-                                            <div class="text-2xl font-black text-rose-600 tracking-tighter">${delayedTasks.length} งาน</div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div>
                                 <!-- Right Column: Floor by Floor Report -->
-                                <div class="lg:col-span-8">
+                                <div>
                                     <div class="flex items-center justify-between mb-8 border-b-2 border-black pb-4">
                                         <h3 class="text-lg font-black text-slate-900 flex items-center gap-3">
                                             <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
@@ -3550,7 +3587,7 @@
                                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Active Floors Only</span>
                                     </div>
                                     
-                                    <div id="floor-by-floor-container" class="grid grid-cols-1 md:grid-cols-2 gap-5 max-h-[550px] overflow-y-auto pr-3 custom-scrollbar">
+                                    <div id="floor-by-floor-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-h-[600px] overflow-y-auto pr-3 custom-scrollbar">
                                         ${floorReports.join("")}
                                     </div>
                                 </div>
@@ -3719,7 +3756,10 @@
               }
             }
 
-            const floorProg = Math.round(floorTotalProgressPoints / floorTotal);
+            let floorProg = Math.round(floorTotalProgressPoints / floorTotal);
+            if (floorProg === 100 && floorTotalProgressPoints < floorTotal * 100) {
+              floorProg = 99;
+            }
             floorStats[floor] = {
               completed: floorCompleted,
               total: floorTotal,
@@ -3730,7 +3770,11 @@
           });
 
           const totalUnits = CONFIG.TOTAL_UNITS;
-          const overallProgress = (totalProgressPoints / totalUnits).toFixed(1);
+          let overallProgressRaw = (totalProgressPoints / totalUnits);
+          let overallProgress = overallProgressRaw.toFixed(1);
+          if (overallProgress === "100.0" && totalProgressPoints < totalUnits * 100) {
+            overallProgress = "99.9";
+          }
           const remainingUnits = totalUnits - totalCompletedRooms;
 
           // Determine status badge
