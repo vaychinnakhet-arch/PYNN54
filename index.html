@@ -3583,7 +3583,8 @@
           const catDef = taskDefinitions[taskKey];
           if (!catDef) return;
 
-          let totalCompleted = 0;
+          let totalCompletedRooms = 0;
+          let totalProgressPoints = 0;
           let totalInProgress = 0;
           let totalNotStarted = 0;
           let floorStats = {};
@@ -3596,6 +3597,7 @@
               count: 0,
               total: 0,
               inProgress: 0,
+              progressSum: 0,
             };
           });
 
@@ -3606,6 +3608,7 @@
                 total: 0,
                 completed: 0,
                 inProgress: 0,
+                progressSum: 0,
                 name: t.name,
               };
             });
@@ -3613,6 +3616,7 @@
 
           CONFIG.FLOORS.forEach((floor) => {
             let floorCompleted = 0;
+            let floorTotalProgressPoints = 0;
             let floorTotal = CONFIG.getRoomsOnFloor(floor);
 
             for (let room = 1; room <= floorTotal; room++) {
@@ -3631,13 +3635,18 @@
                   subTaskStats[t.key || t.name].total++;
                   floorTaskStatus[floor][t.key || t.name].total++;
 
-                  const isCompleted =
-                    unitData.taskIndex > idx ||
-                    (unitData.taskIndex === idx && unitData.progress >= 100);
-                  const isInProgress =
-                    unitData.taskIndex === idx &&
-                    unitData.progress > 0 &&
-                    unitData.progress < 100;
+                  let taskProgPercentage = 0;
+                  if (unitData.taskIndex > idx) {
+                    taskProgPercentage = 100;
+                  } else if (unitData.taskIndex === idx) {
+                    taskProgPercentage = unitData.progress || 0;
+                  }
+                  
+                  subTaskStats[t.key || t.name].progressSum += taskProgPercentage;
+                  floorTaskStatus[floor][t.key || t.name].progressSum += taskProgPercentage;
+
+                  const isCompleted = taskProgPercentage >= 100;
+                  const isInProgress = taskProgPercentage > 0 && taskProgPercentage < 100;
 
                   if (isCompleted) {
                     subTaskStats[t.key || t.name].count++;
@@ -3663,6 +3672,9 @@
 
                   subTaskStats[task.key].total++;
                   floorTaskStatus[floor][task.key || task.name].total++;
+                  
+                  subTaskStats[task.key].progressSum += subProg;
+                  floorTaskStatus[floor][task.key || task.name].progressSum += subProg;
 
                   if (subProg >= 100) {
                     subTaskStats[task.key].count++;
@@ -3682,6 +3694,10 @@
                 catDef.tasks.forEach((t) => {
                   subTaskStats[t.key || t.name].total++;
                   floorTaskStatus[floor][t.key || t.name].total++;
+                  
+                  subTaskStats[t.key || t.name].progressSum += progress;
+                  floorTaskStatus[floor][t.key || t.name].progressSum += progress;
+
                   if (progress >= 100) {
                     subTaskStats[t.key || t.name].count++;
                     floorTaskStatus[floor][t.key || t.name].completed++;
@@ -3692,6 +3708,8 @@
                 });
               }
 
+              floorTotalProgressPoints += progress;
+
               if (progress >= 100) {
                 floorCompleted++;
               } else if (progress > 0) {
@@ -3701,20 +3719,19 @@
               }
             }
 
-            const floorProg = Math.round((floorCompleted / floorTotal) * 100);
+            const floorProg = Math.round(floorTotalProgressPoints / floorTotal);
             floorStats[floor] = {
               completed: floorCompleted,
               total: floorTotal,
               progress: floorProg,
             };
-            totalCompleted += floorCompleted;
+            totalCompletedRooms += floorCompleted;
+            totalProgressPoints += floorTotalProgressPoints;
           });
 
           const totalUnits = CONFIG.TOTAL_UNITS;
-          const overallProgress = ((totalCompleted / totalUnits) * 100).toFixed(
-            1,
-          );
-          const remainingUnits = totalUnits - totalCompleted;
+          const overallProgress = (totalProgressPoints / totalUnits).toFixed(1);
+          const remainingUnits = totalUnits - totalCompletedRooms;
 
           // Determine status badge
           let statusBadge = "JUST STARTED";
@@ -3744,18 +3761,15 @@
                                               subTaskStats[t.key || t.name];
                                             const perc =
                                               stats.total > 0
-                                                ? Math.round(
-                                                    (stats.count /
-                                                      stats.total) *
-                                                      100,
-                                                  )
+                                                ? (stats.progressSum /
+                                                      stats.total)
                                                 : 0;
                                             return `
                                                 <div class="flex items-end justify-between border-b border-slate-100 pb-2">
                                                     <span class="text-slate-700 font-bold text-lg">${t.name}</span>
                                                     <div class="flex items-baseline gap-4">
                                                         <span class="text-slate-900 font-black text-xl">${stats.count} <span class="text-sm font-bold text-slate-400">ห้อง</span></span>
-                                                        <span class="text-indigo-500 font-bold text-sm w-10 text-right">${perc.toFixed(1)}%</span>
+                                                        <span class="text-indigo-500 font-bold text-sm w-12 text-right">${perc.toFixed(1)}%</span>
                                                     </div>
                                                 </div>
                                             `;
@@ -3853,7 +3867,7 @@
                                 </div>
                                 
                                 <div class="mt-10 bg-slate-50 px-6 py-2 rounded-full border border-slate-200 z-10">
-                                    <span class="text-xs font-black tracking-widest uppercase text-slate-500">DONE: ${totalCompleted} / TOTAL: ${totalUnits}</span>
+                                    <span class="text-xs font-black tracking-widest uppercase text-slate-500">DONE: ${totalCompletedRooms} / TOTAL: ${totalUnits}</span>
                                 </div>
                             </div>
                             
