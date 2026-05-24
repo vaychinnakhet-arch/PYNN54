@@ -2548,40 +2548,39 @@
               },
             ],
           },
-          ceilingRoom: {
-            name: "งานฝ้า (ห้องพัก)",
-            reportName: "งานติดตั้งฝ้าห้องพัก",
+          ceiling: {
+            name: "งานฝ้า",
+            reportName: "งานติดตั้งฝ้า",
             reportEmoji: "🪜",
-            title: "STATUS งานติดตั้งฝ้าห้องพัก",
-            type: "progress",
+            title: "STATUS งานติดตั้งฝ้า",
+            type: "multi-progress",
             tasks: [
               {
-                name: "ขึ้นโครง",
+                name: "ห้องพัก (โครง)",
+                key: "room_framing",
+                shortName: "โครง(พ)",
                 color: "bg-slate-500",
                 textColor: "text-white",
               },
               {
-                name: "ติดแผ่น",
-                color: "bg-yellow-400",
+                name: "ห้องพัก (แผ่น)",
+                key: "room_board",
+                shortName: "แผ่น(พ)",
+                color: "bg-amber-400",
                 textColor: "text-black",
               },
-            ],
-          },
-          ceilingBathroom: {
-            name: "งานฝ้า (ห้องน้ำ)",
-            reportName: "งานติดตั้งฝ้าห้องน้ำ",
-            reportEmoji: "🪜",
-            title: "STATUS งานติดตั้งฝ้าห้องน้ำ",
-            type: "progress",
-            tasks: [
               {
-                name: "ขึ้นโครง",
+                name: "ห้องน้ำ (โครง)",
+                key: "bathroom_framing",
+                shortName: "โครง(น)",
                 color: "bg-slate-600",
                 textColor: "text-white",
               },
               {
-                name: "ติดแผ่น",
-                color: "bg-yellow-500",
+                name: "ห้องน้ำ (แผ่น)",
+                key: "bathroom_board",
+                shortName: "แผ่น(น)",
+                color: "bg-amber-500",
                 textColor: "text-black",
               },
             ],
@@ -4264,12 +4263,7 @@
             color: "text-cyan-600",
             svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 8v4l3 3"/></svg>',
           },
-          ceilingRoom: {
-            bg: "bg-sky-100",
-            color: "text-sky-600",
-            svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M12 2v20"/><path d="M4 6h16"/><path d="M4 18h16"/></svg>',
-          },
-          ceilingBathroom: {
+          ceiling: {
             bg: "bg-sky-100",
             color: "text-sky-600",
             svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M12 2v20"/><path d="M4 6h16"/><path d="M4 18h16"/></svg>',
@@ -4384,8 +4378,7 @@
             const wetWorkKeys = [
               "skimAndPaint",
               "topping",
-              "ceilingRoom",
-              "ceilingBathroom",
+              "ceiling",
               "texcaWall",
               "waterproofing",
               "tiling",
@@ -4807,8 +4800,7 @@
             "topping",
             "waterproofing",
             "tiling",
-            "ceilingRoom",
-            "ceilingBathroom",
+            "ceiling",
             "skimOnly",
             "wetWork",
           ];
@@ -7872,11 +7864,19 @@
                     applicableTaskCount > 0
                       ? totalProgress / applicableTaskCount
                       : 0;
+
+                  let categoryBaseColor = "bg-sky-500";
+                  const iconDef = categoryIcons[currentCategory];
+                  if (iconDef && iconDef.color) {
+                      const cName = iconDef.color.split("-")[1];
+                      if (cName) categoryBaseColor = `bg-${cName}-500`;
+                  }
+
                   styleClasses =
                     Math.round(avgProgress) >= 100
                       ? "bg-teal-500 text-white"
                       : avgProgress > 0
-                        ? getProgressColor(avgProgress, "bg-sky-500")
+                        ? getProgressColor(avgProgress, categoryBaseColor)
                         : "bg-white text-black";
                   cellText = `${Math.round(avgProgress)}%`;
                   if (activeTasks.length > 0) {
@@ -7893,7 +7893,7 @@
                     const isCompleted = isFinalTask && progress >= 100;
 
                     if (isCompleted) {
-                      styleClasses = "bg-teal-500 text-white";
+                      styleClasses = `${currentTask.color} ${currentTask.textColor}`;
                     } else if (progress >= 100 && !isFinalTask) {
                       styleClasses = `${currentTask.color} ${currentTask.textColor}`;
                     } else if (progress > 0) {
@@ -7984,8 +7984,11 @@
                   if (isRoomComplete) floorCompleted++;
                 }
                 floorCounts.forEach((count, i) => {
+                  const colorName = categoryTasks[i].color ? categoryTasks[i].color.split("-")[1] : "slate";
+                  const bgColor = `bg-${colorName}-50`;
+                  const textColor = count > 0 ? `text-${colorName}-700 font-bold` : "";
                   const countCell = document.createElement("td");
-                  countCell.className = "border p-2 summary-cell";
+                  countCell.className = `border p-2 summary-cell ${bgColor} ${textColor}`;
                   countCell.innerHTML = `<span>${count}</span>`;
                   row.appendChild(countCell);
                   totals[i] += count;
@@ -8010,8 +8013,11 @@
                     floorCompleted++;
                 }
                 floorCounts.forEach((count, i) => {
+                  const colorName = categoryTasks[i].color ? categoryTasks[i].color.split("-")[1] : "slate";
+                  const bgColor = `bg-${colorName}-50`;
+                  const textColor = count > 0 ? `text-${colorName}-700 font-bold` : "";
                   const countCell = document.createElement("td");
-                  countCell.className = "border p-2 summary-cell";
+                  countCell.className = `border p-2 summary-cell ${bgColor} ${textColor}`;
                   countCell.innerHTML = `<span>${count}</span>`;
                   row.appendChild(countCell);
                   totals[i] += count;
@@ -8071,12 +8077,17 @@
           } else {
             totals.forEach((total, index) => {
               let bgColor = "bg-slate-100";
+              let textColor = "";
               if (isInspection) {
                 if (index === 1) bgColor = "bg-teal-100";
                 if (index === 2) bgColor = "bg-rose-100";
+              } else {
+                const colorName = categoryTasks[index].color ? categoryTasks[index].color.split("-")[1] : "slate";
+                bgColor = `bg-${colorName}-100`;
+                textColor = total > 0 ? `text-${colorName}-800 font-bold` : "";
               }
               const cell = document.createElement("td");
-              cell.className = `border p-2 ${bgColor}`;
+              cell.className = `border p-2 ${bgColor} ${textColor}`;
               cell.innerHTML = `<span>${total}</span>`;
               row.appendChild(cell);
             });
@@ -8180,8 +8191,7 @@
                   electrical: "text-yellow-500",
                   plumbing: "text-blue-500",
                   airCon: "text-cyan-500",
-                  ceilingRoom: "text-sky-500",
-                  ceilingBathroom: "text-sky-600",
+                  ceiling: "text-sky-500",
                   texcaWall: "text-orange-500",
                   waterproofing: "text-cyan-500",
                   tiling: "text-teal-500",
@@ -8203,8 +8213,7 @@
               electrical: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`,
               plumbing: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"></path></svg>`,
               airCon: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
-              ceilingRoom: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>`,
-              ceilingBathroom: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>`,
+              ceiling: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>`,
               texcaWall: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m5-8h1m-1 4h1m-1 4h1M5 21v-3a2 2 0 012-2h10a2 2 0 012 2v3"></path></svg>`,
               waterproofing: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"></path></svg>`,
               tiling: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>`,
@@ -8227,8 +8236,7 @@
           const wetWorkKeys = [
             "skimAndPaint",
             "topping",
-            "ceilingRoom",
-            "ceilingBathroom",
+            "ceiling",
             "texcaWall",
             "waterproofing",
             "tiling",
