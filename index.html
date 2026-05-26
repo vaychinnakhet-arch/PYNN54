@@ -1124,6 +1124,13 @@
                 <i data-lucide="camera" class="w-4 h-4"></i>
                 <span>แคปเจอร์</span>
               </button>
+              <button id="captureUltraBtn" class="action-btn px-5 py-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl shadow hover:from-violet-700 hover:to-fuchsia-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-black text-xs whitespace-nowrap min-h-[40px] active:scale-95" title="แคปเจอร์แบบคมชัดสุดๆ">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span class="flex flex-col items-start leading-none gap-0.5">
+                  <span>Ultra HD</span>
+                  <span class="text-[9px] font-medium opacity-90 uppercase tracking-widest">แคปเจอร์แบบคมชัด</span>
+                </span>
+              </button>
               <button id="exportPdfBtn" class="action-btn px-5 py-2 bg-rose-600 text-white rounded-xl shadow hover:bg-rose-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-bold text-xs whitespace-nowrap min-h-[40px] active:scale-95">
                 <i data-lucide="file-down" class="w-4 h-4"></i>
                 <span>ส่งออก PDF</span>
@@ -3419,35 +3426,35 @@
                   0,
                 );
                 floorReports.push(`
-                            <div class="flex items-start gap-4 p-3 rounded-lg border border-rose-50 bg-rose-50/20">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-lg">
+                            <div class="flex items-start gap-5 p-5 rounded-xl border border-rose-100 bg-rose-50/20 shadow-sm">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-2xl shadow-inner">
                                     ${floor.id}
                                 </div>
                                 <div class="flex-grow min-w-0">
-                                    <div class="flex justify-between items-start mb-1 gap-2">
-                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
-                                        <span class="text-xs text-rose-600 font-bold shrink-0">ล่าช้ากว่าแผน</span>
+                                    <div class="flex justify-between items-start mb-2 gap-2">
+                                        <h4 class="text-xl font-black text-slate-800">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-black shrink-0">ล่าช้ากว่าแผน</span>
                                     </div>
-                                    <p class="text-xs text-rose-700 font-bold mb-1">ล่าช้ารวม ${totalDays} วัน</p>
-                                    <ul class="text-xs text-slate-600 list-disc pl-4 space-y-1">
-                                        ${floorDelayed.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-medium">(ช้า ${t.days} วัน)</span></li>`).join("")}
+                                    <p class="text-sm text-rose-700 font-bold mb-2">ล่าช้ารวม ${totalDays} วัน</p>
+                                    <ul class="text-base text-slate-700 list-disc pl-5 space-y-1.5 font-medium">
+                                        ${floorDelayed.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-bold">(ช้า ${t.days} วัน)</span></li>`).join("")}
                                     </ul>
                                 </div>
                             </div>
                         `);
               } else if (floorInProgress.length > 0) {
                 floorReports.push(`
-                            <div class="flex items-start gap-4 p-3 rounded-lg border border-indigo-50 bg-indigo-50/20">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
+                            <div class="flex items-start gap-5 p-5 rounded-xl border border-indigo-100 bg-indigo-50/20 shadow-sm">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-2xl shadow-inner">
                                     ${floor.id}
                                 </div>
                                 <div class="flex-grow min-w-0">
-                                    <div class="flex justify-between items-start mb-1 gap-2">
-                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
-                                        <span class="text-xs text-indigo-600 font-bold shrink-0">กำลังดำเนินการ</span>
+                                    <div class="flex justify-between items-start mb-2 gap-2">
+                                        <h4 class="text-xl font-black text-slate-800">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-black shrink-0">กำลังดำเนินการ</span>
                                     </div>
-                                    <ul class="text-xs text-slate-600 list-disc pl-4 space-y-1">
-                                        ${floorInProgress.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500">(ครบกำหนด: ${t.endStr})</span></li>`).join("")}
+                                    <ul class="text-base text-slate-700 list-disc pl-5 space-y-1.5 font-medium">
+                                        ${floorInProgress.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500 font-semibold">(ครบกำหนด: ${t.endStr})</span></li>`).join("")}
                                     </ul>
                                 </div>
                             </div>
@@ -3457,19 +3464,19 @@
                 floorNotStarted.sort((a, b) => a.startDate - b.startDate);
                 const firstTask = floorNotStarted[0];
                 floorReports.push(`
-                            <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-lg">
+                            <div class="flex items-start gap-5 p-5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-2xl shadow-inner">
                                     ${floor.id}
                                 </div>
                                 <div class="flex-grow min-w-0">
-                                    <div class="flex justify-between items-start mb-1 gap-2">
-                                        <h4 class="font-bold text-slate-800">ชั้น ${floor.id}</h4>
-                                        <span class="text-xs text-slate-400 italic shrink-0">ยังไม่ถึงกำหนดเริ่มงาน</span>
+                                    <div class="flex justify-between items-start mb-2 gap-2">
+                                        <h4 class="text-xl font-black text-slate-800">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm px-2 py-0.5 bg-slate-100 rounded-full text-slate-500 font-semibold shrink-0">ยังไม่ถึงกำหนดเริ่มงาน</span>
                                     </div>
-                                    <p class="text-xs text-slate-600 mb-1">
-                                        กำหนดเริ่มงานแรก: <span class="font-medium text-slate-800 break-words line-clamp-1">${firstTask.name}</span>
+                                    <p class="text-sm text-slate-700 mb-1.5 font-medium">
+                                        กำหนดเริ่มงานแรก: <span class="font-bold text-slate-800 break-words line-clamp-1 truncate block mt-1">${firstTask.name}</span>
                                     </p>
-                                    <p class="text-xs text-indigo-600 font-medium">เริ่มวันที่ ${firstTask.startStr} (เหลืออีก ${firstTask.daysUntil} วัน)</p>
+                                    <p class="text-sm text-indigo-600 font-bold">เริ่มวันที่ ${firstTask.startStr} <span class="text-slate-500 font-medium">(เหลืออีก ${firstTask.daysUntil} วัน)</span></p>
                                 </div>
                             </div>
                         `);
@@ -4025,18 +4032,18 @@
                   0,
                 );
                 floorReports.push(`
-                            <div class="flex items-start gap-4 p-4 rounded-xl border border-rose-100 bg-rose-50/10 shadow-[0_2px_10px_-3px_rgba(244,63,94,0.1)]">
-                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-xl">
+                            <div class="flex items-start gap-5 p-5 rounded-xl border border-rose-100 bg-rose-50/10 shadow-[0_2px_10px_-3px_rgba(244,63,94,0.1)]">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-2xl shadow-inner">
                                     ${floor.id}
                                 </div>
                                 <div class="flex-grow min-w-0">
                                     <div class="flex justify-between items-start mb-2 gap-2">
-                                        <h4 class="font-bold text-slate-800 text-lg">ชั้น ${floor.id}</h4>
-                                        <span class="text-sm text-rose-600 font-bold shrink-0">ล่าช้ากว่าแผน</span>
+                                        <h4 class="font-black text-slate-800 text-xl">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-black shrink-0">ล่าช้ากว่าแผน</span>
                                     </div>
-                                    <p class="text-sm text-rose-700 font-bold mb-2">ล่าช้ารวม ${totalDays} วัน</p>
-                                    <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1.5">
-                                        ${floorDelayed.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-medium">(ช้า ${t.days} วัน)</span></li>`).join("")}
+                                    <p class="text-base text-rose-700 font-bold mb-2">ล่าช้ารวม ${totalDays} วัน</p>
+                                    <ul class="text-base text-slate-700 list-disc pl-5 space-y-2 font-medium">
+                                        ${floorDelayed.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-bold">(ช้า ${t.days} วัน)</span></li>`).join("")}
                                     </ul>
                                 </div>
                             </div>
@@ -4044,17 +4051,17 @@
               } else if (floorInProgress.length > 0 && !isAllDone) {
                 hasAnyAlert = true;
                 floorReports.push(`
-                            <div class="flex items-start gap-4 p-4 rounded-xl border border-blue-100 bg-blue-50/10 shadow-[0_2px_10px_-3px_rgba(59,130,246,0.1)]">
-                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xl">
+                            <div class="flex items-start gap-5 p-5 rounded-xl border border-blue-100 bg-blue-50/10 shadow-[0_2px_10px_-3px_rgba(59,130,246,0.1)]">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl shadow-inner">
                                     ${floor.id}
                                 </div>
                                 <div class="flex-grow min-w-0">
                                     <div class="flex justify-between items-start mb-2 gap-2">
-                                        <h4 class="font-bold text-slate-800 text-lg">ชั้น ${floor.id}</h4>
-                                        <span class="text-sm text-blue-600 font-bold shrink-0">แผนงานที่ต้องทำวันนี้</span>
+                                        <h4 class="font-black text-slate-800 text-xl">ชั้น ${floor.id}</h4>
+                                        <span class="text-sm px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-black shrink-0">แผนงานที่ต้องทำวันนี้</span>
                                     </div>
-                                    <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1.5">
-                                        ${floorInProgress.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500">(ครบกำหนด: ${t.endStr})</span></li>`).join("")}
+                                    <ul class="text-base text-slate-700 list-disc pl-5 space-y-2 font-medium">
+                                        ${floorInProgress.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500 font-semibold">(ครบกำหนด: ${t.endStr})</span></li>`).join("")}
                                     </ul>
                                 </div>
                             </div>
@@ -10792,7 +10799,7 @@
           }, 500); // Increased timeout to ensure rendering
         }
 
-        function captureForLineNew(mode = "download", btnId = "captureNewBtn") {
+        function captureForLineNew(mode = "download", btnId = "captureNewBtn", isUltraHD = false) {
           const captureArea = document.getElementById("capture-area");
           const captureBtn = document.getElementById(btnId);
           const originalBtnHTML = captureBtn.innerHTML;
@@ -10850,12 +10857,11 @@
             // For LINE App specifically, too large an image causes aggressive compression and bluriness.
             // Using a scale between 1.5 to 2 is optimal for LINE readability.
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isMobile ? 1.5 : 2;
-
+            const captureScale = isUltraHD ? (isMobile ? 3 : 4) : (isMobile ? 1.5 : 2);
+            
             // Use html-to-image which handles SVGs and scaling much better
-            htmlToImage
-              .toJpeg(captureArea, {
-                quality: 0.9,
+            const captureOptions = {
+                quality: isUltraHD ? 1.0 : 0.9,
                 backgroundColor: "#ffffff",
                 pixelRatio: captureScale,
                 width: finalWidth,
@@ -10863,9 +10869,15 @@
                 style: {
                   transformOrigin: "top left",
                 },
-              })
+            };
+            
+            const capturePromise = isUltraHD 
+                ? htmlToImage.toPng(captureArea, captureOptions)
+                : htmlToImage.toJpeg(captureArea, captureOptions);
+
+            capturePromise
               .then((dataUrl) => {
-                const filename = `${getFileExportName()}.jpg`;
+                const filename = `${getFileExportName()}.${isUltraHD ? 'png' : 'jpg'}`;
 
                 function fallbackDownload() {
                   const link = document.createElement("a");
@@ -10883,7 +10895,7 @@
                       .then((res) => res.blob())
                       .then((blob) => {
                         const file = new File([blob], filename, {
-                          type: "image/jpeg",
+                          type: isUltraHD ? "image/png" : "image/jpeg",
                         });
                         if (navigator.canShare({ files: [file] })) {
                           navigator
@@ -13091,6 +13103,12 @@
             .addEventListener("click", () =>
               captureForLineNew("download", "captureNewBtn"),
             );
+          document
+            .getElementById("captureUltraBtn")
+            .addEventListener("click", () => {
+              alert("คำเตือน:\n\nรูปแบบไฟล์ภาพความละเอียดสูง (Ultra HD) ไม่เหมาะสำหรับการส่งผ่านแอปพลิเคชัน LINE เนื่องจากระบบของ LINE จะทำการบีบอัดภาพที่มีขนาดใหญ่เกินไปอย่างหนัก ทำให้ภาพแตกและเบลอ\n\nหากต้องการภาพเพื่อส่งลง LINE Group แนะนำให้ใช้ปุ่ม 'แคปเจอร์' แบบปกติแทน");
+              captureForLineNew("download", "captureUltraBtn", true);
+            });
 
           document
             .getElementById("exportPdfBtn")
