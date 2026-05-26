@@ -2590,6 +2590,13 @@
                 color: "bg-amber-500",
                 textColor: "text-black",
               },
+              {
+                name: "ตรวจเหนือฝ้า",
+                key: "above_ceiling_inspection",
+                shortName: "ตรวจเหนือฝ้า",
+                color: "bg-sky-600",
+                textColor: "text-white",
+              },
             ],
           },
           texcaWall: {
@@ -4800,15 +4807,18 @@
           if (!projectData.plans) projectData.plans = {};
 
           const wetWorkTasks = [
-            "texcaWall",
+            "texcaWallOnly",
             "electricalRoughIn",
             "plumbingRoughIn",
             "airConRoughIn",
             "topping",
             "waterproofing",
             "tiling",
-            "ceiling",
-            "skimOnly",
+            "ceilingRoomFraming",
+            "ceilingBathroomFraming",
+            "ceilingBoard",
+            "above_ceiling_inspection",
+            "skimAndPaintCombined",
             "wetWork",
           ];
           const endProductTasks = [
@@ -4831,6 +4841,60 @@
             summaryReportMode === "wetWork" ? wetWorkTasks : endProductTasks;
           const activeTasks = activeTaskKeys
             .map((key) => {
+              if (key === "texcaWallOnly") {
+                return {
+                  key: "texcaWallOnly",
+                  name: "งานผนัง TEXCA",
+                  reportName: "TEXCA",
+                  reportEmoji: "🧱",
+                  type: "progress-texca",
+                };
+              }
+              if (key === "ceilingRoomFraming") {
+                return {
+                  key: "ceilingRoomFraming",
+                  name: "โครงฝ้าห้องพัก",
+                  reportName: "โครงฝ้า(พัก)",
+                  reportEmoji: "🪜",
+                  type: "progress-ceiling-room-framing",
+                };
+              }
+              if (key === "ceilingBathroomFraming") {
+                return {
+                  key: "ceilingBathroomFraming",
+                  name: "โครงฝ้าห้องน้ำ",
+                  reportName: "โครงฝ้า(น้ำ)",
+                  reportEmoji: "🪜",
+                  type: "progress-ceiling-bathroom-framing",
+                };
+              }
+              if (key === "ceilingBoard") {
+                return {
+                  key: "ceilingBoard",
+                  name: "ปิดแผ่นฝ้า",
+                  reportName: "ปิดแผ่น",
+                  reportEmoji: "🪜",
+                  type: "progress-ceiling-board",
+                };
+              }
+              if (key === "above_ceiling_inspection") {
+                return {
+                  key: "above_ceiling_inspection",
+                  name: "ตรวจเหนือฝ้า",
+                  reportName: "ตรวจเหนือฝ้า",
+                  reportEmoji: "🪜",
+                  type: "progress-above-ceiling-inspection",
+                };
+              }
+              if (key === "skimAndPaintCombined") {
+                return {
+                  key: "skimAndPaintCombined",
+                  name: "งานสกิมทาสี",
+                  reportName: "สกิมทาสี",
+                  reportEmoji: "🖌️",
+                  type: "progress-skim-paint",
+                };
+              }
               if (key === "kitchenOnly") {
                 return {
                   key: "kitchenOnly",
@@ -4909,7 +4973,39 @@
                 let progress = 0;
                 let scoreToShow = null;
 
-                if (taskDef.key === "paintOnly") {
+                if (taskDef.key === "texcaWallOnly") {
+                  taskData = projectData["texcaWall"]?.[floor]?.[room] || {};
+                  if (taskData.taskIndex === 2) {
+                    progress = taskData.progress || 0;
+                  } else if (taskData.taskIndex > 2) {
+                    progress = 100;
+                  } else {
+                    progress = 0;
+                  }
+                } else if (taskDef.key === "ceilingRoomFraming") {
+                  taskData = projectData["ceiling"]?.[floor]?.[room] || {};
+                  progress = taskData["progress_room_framing"] || 0;
+                } else if (taskDef.key === "ceilingBathroomFraming") {
+                  taskData = projectData["ceiling"]?.[floor]?.[room] || {};
+                  progress = taskData["progress_bathroom_framing"] || 0;
+                } else if (taskDef.key === "ceilingBoard") {
+                  taskData = projectData["ceiling"]?.[floor]?.[room] || {};
+                  const roomBoard = taskData["progress_room_board"] || 0;
+                  const bathBoard = taskData["progress_bathroom_board"] || 0;
+                  // If either was submitted or they just want the average of both, let's average. 
+                  // If both boards are done, it'll average to 100.
+                  progress = (roomBoard + bathBoard) / 2;
+                } else if (taskDef.key === "above_ceiling_inspection") {
+                  taskData = projectData["ceiling"]?.[floor]?.[room] || {};
+                  progress = taskData["progress_above_ceiling_inspection"] || 0;
+                } else if (taskDef.key === "skimAndPaintCombined") {
+                  taskData = projectData["skimAndPaint"]?.[floor]?.[room] || {};
+                  if (taskData.taskIndex === 1) {
+                    progress = 50 + ((taskData.progress || 0) / 2);
+                  } else {
+                    progress = (taskData.progress || 0) / 2;
+                  }
+                } else if (taskDef.key === "paintOnly") {
                   taskData = projectData["skimAndPaint"]?.[floor]?.[room] || {};
                   if (taskData.taskIndex === 1) {
                     progress = taskData.progress || 0;
@@ -8679,9 +8775,16 @@
         let currentSummaryPlanData = { floor: null, room: null, taskKey: null };
 
         function getTaskName(key) {
+          if (key === "texcaWallOnly") return "TEXCA";
+          if (key === "ceilingRoomFraming") return "โครงฝ้า(พัก)";
+          if (key === "ceilingBathroomFraming") return "โครงฝ้า(น้ำ)";
+          if (key === "ceilingBoard") return "ปิดแผ่น";
+          if (key === "above_ceiling_inspection") return "ตรวจเหนือฝ้า";
+          if (key === "skimAndPaintCombined") return "งานสกิมทาสี";
           if (key === "kitchenOnly") return "งานติดตั้งชุดครัว";
           if (key === "paintOnly") return "งานสี";
           if (key === "skimOnly") return "งานสกิม";
+          if (key === "showerScreenInspection") return "ตรวจรับพื้นที่(Shower)";
           return (
             taskDefinitions[key]?.reportName ||
             taskDefinitions[key]?.name ||
@@ -8761,9 +8864,13 @@
               ? "paintOnly"
               : taskKey === "skimOnly"
                 ? "skimOnly"
-                : taskKey === "kitchenOnly"
-                  ? "kitchenOnly"
-                  : null;
+                : taskKey === "skimAndPaintCombined"
+                  ? "skimAndPaintCombined"
+                  : taskKey === "above_ceiling_inspection"
+                    ? "above_ceiling_inspection"
+                    : taskKey === "kitchenOnly"
+                      ? "kitchenOnly"
+                      : null;
 
           let progress = 0;
           let isInspection = false;
@@ -8825,6 +8932,16 @@
               } else {
                 progress = 0;
               }
+            } else if (category === "skimAndPaintCombined") {
+              const unitData = projectData["skimAndPaint"]?.[floor]?.[room] || {};
+              if (unitData.taskIndex === 1) {
+                progress = 50 + ((unitData.progress || 0) / 2);
+              } else {
+                progress = (unitData.progress || 0) / 2;
+              }
+            } else if (category === "above_ceiling_inspection") {
+              const unitData = projectData["ceiling"]?.[floor]?.[room] || {};
+              progress = unitData["progress_above_ceiling_inspection"] || 0;
             } else if (category === "kitchenOnly") {
               const unitData = projectData["furniture"]?.[floor]?.[room] || {};
               if (unitData.taskIndex === 0) {
@@ -9233,9 +9350,13 @@
                   ? "paintOnly"
                   : taskKey === "skimOnly"
                     ? "skimOnly"
-                    : taskKey === "kitchenOnly"
-                      ? "kitchenOnly"
-                      : null;
+                    : taskKey === "skimAndPaintCombined"
+                      ? "skimAndPaintCombined"
+                      : taskKey === "above_ceiling_inspection"
+                        ? "above_ceiling_inspection"
+                        : taskKey === "kitchenOnly"
+                          ? "kitchenOnly"
+                          : null;
               if (category) {
                 if (category === "paintOnly") {
                   if (!projectData["skimAndPaint"])
@@ -9266,6 +9387,27 @@
                     unitData.taskIndex = 0; // "สกิม"
                     unitData.progress = newProgress;
                   }
+                } else if (category === "skimAndPaintCombined") {
+                  if (!projectData["skimAndPaint"]) projectData["skimAndPaint"] = {};
+                  if (!projectData["skimAndPaint"][floor]) projectData["skimAndPaint"][floor] = {};
+                  if (!projectData["skimAndPaint"][floor][room]) projectData["skimAndPaint"][floor][room] = {};
+                  
+                  const unitData = projectData["skimAndPaint"][floor][room];
+                  // newProgress is 0-100 total
+                  // 0-50 mapped to skim (0-100)
+                  // 50-100 mapped to paint (0-100)
+                  if (newProgress > 50) {
+                    unitData.taskIndex = 1;
+                    unitData.progress = (newProgress - 50) * 2;
+                  } else {
+                    unitData.taskIndex = 0;
+                    unitData.progress = newProgress * 2;
+                  }
+                } else if (category === "above_ceiling_inspection") {
+                  if (!projectData["ceiling"]) projectData["ceiling"] = {};
+                  if (!projectData["ceiling"][floor]) projectData["ceiling"][floor] = {};
+                  if (!projectData["ceiling"][floor][room]) projectData["ceiling"][floor][room] = {};
+                  projectData["ceiling"][floor][room].progress_above_ceiling_inspection = newProgress;
                 } else if (category === "kitchenOnly") {
                   if (!projectData["furniture"]) projectData["furniture"] = {};
                   if (!projectData["furniture"][floor])
