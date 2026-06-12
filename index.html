@@ -6829,16 +6829,22 @@
             label: "เหนือฝ้า",
             color: "bg-amber-500",
             textColor: "text-white",
+            actualColor: "bg-amber-200",
+            actualTextColor: "text-amber-900",
           },
           qcWW: {
             label: "QC WW",
             color: "bg-sky-500",
             textColor: "text-white",
+            actualColor: "bg-sky-200",
+            actualTextColor: "text-sky-900",
           },
           qcEnd: {
             label: "QC END",
             color: "bg-teal-500",
             textColor: "text-white",
+            actualColor: "bg-teal-200",
+            actualTextColor: "text-teal-900",
           },
         };
 
@@ -7173,7 +7179,7 @@
               if (activeTypes.length === 1) {
                 const type = activeTypes[0];
                 const typeInfo = QC_HANDOVER_TYPES[type];
-                cellClass = typeInfo.color + " " + typeInfo.textColor;
+                cellClass = typeInfo.actualColor + " " + typeInfo.actualTextColor;
                 cellContent = actuals[type];
               } else if (activeTypes.length > 1) {
                 // Split view
@@ -7182,7 +7188,7 @@
                                 ${activeTypes
                                   .map((t) => {
                                     const typeInfo = QC_HANDOVER_TYPES[t];
-                                    return `<div class="${typeInfo.color} text-white text-[10px] leading-none px-1 py-0.5 rounded w-full text-center font-bold">${typeInfo.label.replace("QC ", "")}: ${actuals[t]}</div>`;
+                                    return `<div class="${typeInfo.actualColor} ${typeInfo.actualTextColor} text-[10px] leading-none px-1 py-0.5 rounded w-full text-center font-bold">${typeInfo.label.replace("QC ", "")}: ${actuals[t]}</div>`;
                                   })
                                   .join("")}
                             </div>`;
