@@ -6949,6 +6949,8 @@
               month: thaiMonths[weekStart.getMonth()],
               dates: `${weekStart.getDate()}-${weekEnd.getDate()}`,
               year: weekStart.getFullYear(),
+              startDate: new Date(weekStart),
+              endDate: new Date(weekEnd),
             });
 
             current.setDate(current.getDate() + 7);
@@ -7132,6 +7134,23 @@
               },
             );
 
+            const totalPlanAmount = planTotal.neuaFa + planTotal.qcWW + planTotal.qcEnd;
+            let tempAccPlan = 0;
+            let tempAccActual = 0;
+            const weekStats = QC_HANDOVER_WEEKS.map((w, i) => {
+              const weekKey = `week_${i}`;
+              const planObj = projectData.qcHandover.data[floorKey]?.[weekKey]?.plan;
+              const actualObj = projectData.qcHandover.data[floorKey]?.[weekKey]?.actual || {};
+              const wPlan = planObj ? planObj.value : 0;
+              const wActual = Object.values(actualObj).reduce((a, b) => a + (b || 0), 0);
+              tempAccPlan += wPlan;
+              tempAccActual += wActual;
+              return { accPlan: tempAccPlan, accActual: tempAccActual, wPlan, wActual };
+            });
+
+            const now = new Date();
+            now.setHours(0,0,0,0);
+
             // Plan Row
             const planRow = document.createElement("tr");
             let planCells = "";
@@ -7141,6 +7160,7 @@
                 projectData.qcHandover.data[floorKey]?.[weekKey]?.plan;
               let cellContent = "";
               let cellClass = "bg-white";
+
               if (cellData && cellData.value > 0) {
                 const typeInfo = QC_HANDOVER_TYPES[cellData.type];
                 cellClass = typeInfo.color + " " + typeInfo.textColor;
@@ -7175,7 +7195,7 @@
 
               let cellContent = "";
               let cellClass = "bg-white";
-
+              
               if (activeTypes.length === 1) {
                 const type = activeTypes[0];
                 const typeInfo = QC_HANDOVER_TYPES[type];
@@ -7291,6 +7311,10 @@
               return { ...d, accPlan, accActual };
             });
 
+            const totalPlanForType = rows[rows.length - 1].accPlan;
+            const now = new Date();
+            now.setHours(0,0,0,0);
+
             table.innerHTML = `
                         <div class="${type.color} p-3 text-white font-bold text-center text-sm">${type.label}</div>
                         <div class="overflow-x-auto">
@@ -7304,19 +7328,42 @@
                                 <tbody>
                                     <tr>
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-white shadow-[1px_0_0_0_#000] text-slate-700">Plan</td>
-                                        ${rows.map((r) => `<td class="border-b border-r border-black p-2 text-center text-sm font-medium">${r.plan}</td>`).join("")}
+                                        ${rows.map((r, i) => {
+                                            const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
+                                            const isAfterPlanAllocated = i > 0 && rows[i-1].accPlan >= totalPlanForType && totalPlanForType > 0;
+                                            let cellClass = "bg-white text-slate-700";
+                                            if ((isBeforeStart && r.plan === 0) || (isAfterPlanAllocated && r.plan === 0)) cellClass = "bg-slate-200 text-transparent pointer-events-none";
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-medium ${cellClass}">${r.plan}</td>`;
+                                        }).join("")}
                                     </tr>
                                     <tr class="bg-slate-50">
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-slate-50 shadow-[1px_0_0_0_#000] text-slate-700">Acc. Plan</td>
-                                        ${rows.map((r) => `<td class="border-b border-r border-black p-2 text-center text-sm font-bold text-blue-600">${r.accPlan}</td>`).join("")}
+                                        ${rows.map((r, i) => {
+                                            const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
+                                            let cellClass = "bg-slate-50 text-blue-600";
+                                            if (isBeforeStart && r.plan === 0) cellClass = "bg-slate-200 text-transparent pointer-events-none";
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-bold ${cellClass}">${r.accPlan}</td>`;
+                                        }).join("")}
                                     </tr>
                                     <tr>
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-white shadow-[1px_0_0_0_#000] text-slate-700">Actual</td>
-                                        ${rows.map((r) => `<td class="border-b border-r border-black p-2 text-center text-sm font-medium">${r.actual}</td>`).join("")}
+                                        ${rows.map((r, i) => {
+                                            const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
+                                            const isFuture = QC_HANDOVER_WEEKS[i].startDate > now;
+                                            let cellClass = "bg-white text-slate-700";
+                                            if (isFuture || (isBeforeStart && r.actual === 0)) cellClass = "bg-slate-200 text-transparent pointer-events-none";
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-medium ${cellClass}">${r.actual}</td>`;
+                                        }).join("")}
                                     </tr>
                                     <tr class="bg-slate-50">
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-slate-50 shadow-[1px_0_0_0_#000] text-slate-700">Acc. Actual</td>
-                                        ${rows.map((r) => `<td class="border-b border-r border-black p-2 text-center text-sm font-bold text-emerald-600">${r.accActual}</td>`).join("")}
+                                        ${rows.map((r, i) => {
+                                            const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
+                                            const isFuture = QC_HANDOVER_WEEKS[i].startDate > now;
+                                            let cellClass = "bg-slate-50 text-emerald-600";
+                                            if (isFuture || (isBeforeStart && r.actual === 0)) cellClass = "bg-slate-200 text-transparent pointer-events-none";
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-bold ${cellClass}">${r.accActual}</td>`;
+                                        }).join("")}
                                     </tr>
                                 </tbody>
                             </table>
