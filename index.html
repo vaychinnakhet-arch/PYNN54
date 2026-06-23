@@ -1724,6 +1724,11 @@
           </button>
         </div>
         <div class="p-5 space-y-4 overflow-y-auto">
+          <div id="summaryPlanMultiSelectNotice" class="hidden bg-indigo-50 border border-indigo-100 text-indigo-800 rounded-lg p-3 text-sm font-medium mb-2 flex items-center gap-2">
+            <svg class="w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 16v-4"/><path d="m12 8h.01"/></svg>
+            <span id="summaryPlanMultiSelectNoticeText">กำลังทำรายการหลายห้องพร้อมกัน</span>
+          </div>
+
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1"
               >เพิ่มวันที่คาดว่าจะแล้วเสร็จ</label
@@ -1735,14 +1740,8 @@
                 class="flex-1 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
               <button
-                id="addSummaryPlanDateBtn"
-                class="px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-medium hover:bg-indigo-100 transition-colors"
-              >
-                เพิ่ม
-              </button>
-              <button
                 id="clearSummaryPlanDateBtn"
-                class="px-3 py-2 bg-rose-50 text-rose-600 rounded-lg font-medium hover:bg-rose-100 transition-colors"
+                class="px-3 py-2 bg-rose-50 text-rose-600 rounded-lg font-medium hover:bg-rose-100 transition-colors whitespace-nowrap"
               >
                 ล้างวันที่
               </button>
@@ -1792,9 +1791,17 @@
             id="summaryPlanNoteContainer"
             class="mt-4 pt-4 border-t border-slate-100"
           >
-            <label class="block text-sm font-semibold text-slate-700 mb-2"
-              >โน๊ตเพิ่มเติม</label
-            >
+            <div class="flex justify-between items-center mb-2">
+              <label class="text-sm font-semibold text-slate-700"
+                >โน๊ตเพิ่มเติม</label
+              >
+              <button
+                id="clearSummaryPlanNoteBtn"
+                class="text-xs text-rose-600 hover:text-rose-800 font-medium"
+              >
+                ล้างโน๊ต
+              </button>
+            </div>
             <textarea
               id="summaryPlanNoteInput"
               rows="3"
@@ -8909,7 +8916,7 @@
           const noteInput = document.getElementById("summaryPlanNoteInput");
 
           dateInput.value = "";
-          noteInput.value = planData.note || "";
+          noteInput.value = isMultiSelect ? "" : (planData.note || "");
 
           let category = taskDefinitions[taskKey]
             ? taskKey
@@ -8923,7 +8930,13 @@
                     ? "above_ceiling_inspection"
                     : taskKey === "kitchenOnly"
                       ? "kitchenOnly"
-                      : null;
+                      : taskKey === "ceilingBoard"
+                        ? "ceilingBoard"
+                        : taskKey === "ceilingRoomFraming"
+                          ? "ceilingRoomFraming"
+                          : taskKey === "ceilingBathroomFraming"
+                            ? "ceilingBathroomFraming"
+                            : null;
 
           let progress = 0;
           let isInspection = false;
@@ -8939,13 +8952,13 @@
           const historyContainer = document.getElementById(
             "summaryPlanHistoryContainer",
           );
-          const addDateBtn = document.getElementById("addSummaryPlanDateBtn");
+          const multiSelectNotice = document.getElementById("summaryPlanMultiSelectNotice");
+          const multiSelectNoticeText = document.getElementById("summaryPlanMultiSelectNoticeText");
+          const clearNoteBtn = document.getElementById("clearSummaryPlanNoteBtn");
 
           subTasksList.innerHTML = "";
           subTasksContainer.classList.add("hidden");
           progressContainer.classList.remove("hidden");
-          historyContainer.classList.remove("hidden");
-          addDateBtn.classList.remove("hidden");
 
           const modalTitle = document.getElementById("summaryPlanModalTitle");
           if (isMultiSelect) {
@@ -8953,10 +8966,11 @@
               (c) => c.dataset.taskkey === taskKey,
             );
             const taskName = allSameTask ? getTaskName(taskKey) : "หลายงาน";
-            modalTitle.textContent = `อัพเดท ${taskName} (${selectedCells.size} รายการ)`;
-            progressContainer.classList.remove("hidden"); // Show progress for bulk update
+            modalTitle.textContent = `อัพเดทแผนงาน`;
+            multiSelectNoticeText.textContent = `กำลังอัพเดท ${taskName} พร้อมกัน ${selectedCells.size} รายการ`;
+            multiSelectNotice.classList.remove("hidden");
             historyContainer.classList.add("hidden");
-            addDateBtn.classList.add("hidden");
+            clearNoteBtn.classList.remove("hidden");
 
             // Reset progress for bulk update
             progressSlider.value = 0;
@@ -8964,6 +8978,9 @@
             completedCheckbox.checked = false;
           } else {
             modalTitle.textContent = `อัพเดทแผนงาน`;
+            multiSelectNotice.classList.add("hidden");
+            historyContainer.classList.remove("hidden");
+            clearNoteBtn.classList.remove("hidden"); // Optional for single item, but let's keep it
           }
 
           if (category && !isMultiSelect) {
@@ -8995,6 +9012,17 @@
             } else if (category === "above_ceiling_inspection") {
               const unitData = projectData["ceiling"]?.[floor]?.[room] || {};
               progress = unitData["progress_above_ceiling_inspection"] || 0;
+            } else if (category === "ceilingBoard") {
+              const unitData = projectData["ceiling"]?.[floor]?.[room] || {};
+              const roomBoard = unitData["progress_room_board"] || 0;
+              const bathBoard = unitData["progress_bathroom_board"] || 0;
+              progress = (roomBoard + bathBoard) / 2;
+            } else if (category === "ceilingRoomFraming") {
+              const unitData = projectData["ceiling"]?.[floor]?.[room] || {};
+              progress = unitData["progress_room_framing"] || 0;
+            } else if (category === "ceilingBathroomFraming") {
+              const unitData = projectData["ceiling"]?.[floor]?.[room] || {};
+              progress = unitData["progress_bathroom_framing"] || 0;
             } else if (category === "kitchenOnly") {
               const unitData = projectData["furniture"]?.[floor]?.[room] || {};
               if (unitData.taskIndex === 0) {
@@ -9223,57 +9251,42 @@
           renderTable(); // update the background table
         };
 
-        function addSummaryPlanDate() {
-          const { floor, room, taskKey } = currentSummaryPlanData;
-          const dateInput = document.getElementById("summaryPlanDateInput");
-          const newDateStr = dateInput.value;
+        window.clearSummaryPlanNote = function () {
+          if (!currentSummaryPlanData) return;
 
-          if (!newDateStr) return;
+          const isMulti = currentSummaryPlanData.isMultiSelect;
+          const msg = isMulti
+            ? "คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลโน๊ตของทุกรายการที่เลือก?"
+            : "คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลโน๊ตของรายการนี้?";
 
-          if (!projectData.plans) projectData.plans = {};
-          if (!projectData.plans[floor]) projectData.plans[floor] = {};
-          if (!projectData.plans[floor][room])
-            projectData.plans[floor][room] = {};
+          showConfirmModal("ยืนยันการล้างโน๊ต", msg, async () => {
+            const cellsToUpdate = isMulti
+              ? Array.from(selectedCells)
+              : [
+                  {
+                    dataset: {
+                      floor: currentSummaryPlanData.floor,
+                      room: currentSummaryPlanData.room,
+                      taskkey: currentSummaryPlanData.taskKey,
+                    },
+                  },
+                ];
 
-          let planData = projectData.plans[floor][room][taskKey];
-          if (!planData) {
-            planData = { history: [] };
-          } else if (!planData.history) {
-            planData.history = [];
-            if (
-              planData.firstPlanDate &&
-              planData.firstPlanDate !== planData.currentPlanDate
-            ) {
-              planData.history.push({
-                date: planData.firstPlanDate,
-                timestamp: Date.now() - 2000,
-              });
-            }
-            if (planData.currentPlanDate) {
-              planData.history.push({
-                date: planData.currentPlanDate,
-                timestamp: Date.now() - 1000,
-              });
-            }
-          }
+            cellsToUpdate.forEach((cell) => {
+              const floor = cell.dataset.floor;
+              const room = cell.dataset.room;
+              const taskKey = cell.dataset.taskkey;
 
-          planData.history.push({ date: newDateStr, timestamp: Date.now() });
+              if (projectData.plans?.[floor]?.[room]?.[taskKey]) {
+                projectData.plans[floor][room][taskKey].note = "";
+              }
+            });
 
-          // Recalculate
-          const sorted = [...planData.history].sort(
-            (a, b) => a.timestamp - b.timestamp,
-          );
-          planData.firstPlanDate = sorted[0].date;
-          planData.currentPlanDate = sorted[sorted.length - 1].date;
-
-          projectData.plans[floor][room][taskKey] = planData;
-
-          dateInput.value = ""; // clear input
-          saveProjectDataToDB();
-          renderSummaryPlanHistory();
-          updateSummaryPlanDelayInfo();
-          renderTable();
-        }
+            document.getElementById("summaryPlanNoteInput").value = "";
+            await saveProjectDataToDB();
+            renderTable();
+          });
+        };
 
         function updateSummaryPlanDelayInfo() {
           const dateInput = document.getElementById("summaryPlanDateInput");
@@ -9385,8 +9398,10 @@
               planData.currentPlanDate = sorted[sorted.length - 1].date;
             }
 
-            // Update Note
-            planData.note = noteText;
+            // Update Note: Only overwrite in multi-select if user typed something new
+            if (!currentSummaryPlanData.isMultiSelect || noteText !== "") {
+              planData.note = noteText;
+            }
 
             projectData.plans[floor][room][taskKey] = planData;
 
@@ -9409,7 +9424,13 @@
                         ? "above_ceiling_inspection"
                         : taskKey === "kitchenOnly"
                           ? "kitchenOnly"
-                          : null;
+                          : taskKey === "ceilingBoard"
+                            ? "ceilingBoard"
+                            : taskKey === "ceilingRoomFraming"
+                              ? "ceilingRoomFraming"
+                              : taskKey === "ceilingBathroomFraming"
+                                ? "ceilingBathroomFraming"
+                                : null;
               if (category) {
                 if (category === "paintOnly") {
                   if (!projectData["skimAndPaint"])
@@ -9461,6 +9482,22 @@
                   if (!projectData["ceiling"][floor]) projectData["ceiling"][floor] = {};
                   if (!projectData["ceiling"][floor][room]) projectData["ceiling"][floor][room] = {};
                   projectData["ceiling"][floor][room].progress_above_ceiling_inspection = newProgress;
+                } else if (category === "ceilingBoard") {
+                  if (!projectData["ceiling"]) projectData["ceiling"] = {};
+                  if (!projectData["ceiling"][floor]) projectData["ceiling"][floor] = {};
+                  if (!projectData["ceiling"][floor][room]) projectData["ceiling"][floor][room] = {};
+                  projectData["ceiling"][floor][room].progress_room_board = newProgress;
+                  projectData["ceiling"][floor][room].progress_bathroom_board = newProgress;
+                } else if (category === "ceilingRoomFraming") {
+                  if (!projectData["ceiling"]) projectData["ceiling"] = {};
+                  if (!projectData["ceiling"][floor]) projectData["ceiling"][floor] = {};
+                  if (!projectData["ceiling"][floor][room]) projectData["ceiling"][floor][room] = {};
+                  projectData["ceiling"][floor][room].progress_room_framing = newProgress;
+                } else if (category === "ceilingBathroomFraming") {
+                  if (!projectData["ceiling"]) projectData["ceiling"] = {};
+                  if (!projectData["ceiling"][floor]) projectData["ceiling"][floor] = {};
+                  if (!projectData["ceiling"][floor][room]) projectData["ceiling"][floor][room] = {};
+                  projectData["ceiling"][floor][room].progress_bathroom_framing = newProgress;
                 } else if (category === "kitchenOnly") {
                   if (!projectData["furniture"]) projectData["furniture"] = {};
                   if (!projectData["furniture"][floor])
@@ -13271,14 +13308,14 @@
             .getElementById("saveSummaryPlanBtn")
             .addEventListener("click", saveSummaryPlan);
           document
-            .getElementById("addSummaryPlanDateBtn")
-            .addEventListener("click", addSummaryPlanDate);
+            .getElementById("clearSummaryPlanNoteBtn")
+            .addEventListener("click", window.clearSummaryPlanNote);
           document
             .getElementById("clearSummaryPlanDateBtn")
-            .addEventListener("click", clearSummaryPlanDate);
+            .addEventListener("click", window.clearSummaryPlanDate);
           document
             .getElementById("clearSummaryPlanHistoryBtn")
-            .addEventListener("click", clearSummaryPlanHistory);
+            .addEventListener("click", window.clearSummaryPlanHistory);
           document
             .getElementById("summaryPlanDateInput")
             .addEventListener("input", updateSummaryPlanDelayInfo);
