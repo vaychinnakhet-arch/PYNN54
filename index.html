@@ -7945,21 +7945,18 @@
                   let floorTaskCountsHTML =
                     '<div class="flex flex-col p-1 space-y-0.5 text-xs text-left">';
                   detailedTasks.forEach((t, index) => {
-                    let startedCount = 0;
+                    let targetCount = 0;
                     for (let r = 1; r <= roomsOnThisFloor; r++) {
-                      if (
-                        (projectData[currentCategory]?.[floor]?.[r]?.[
-                          `progress_${t.key}`
-                        ] || 0) > 0
-                      )
-                        startedCount++;
+                      if (!t.condition || t.condition(floor, r)) {
+                        targetCount++;
+                      }
                     }
-                    totals[t.key] = (totals[t.key] || 0) + startedCount;
+                    totals[t.key] = (totals[t.key] || 0) + targetCount;
                     const borderClass =
                       index === detailedTasks.length - 1
                         ? ""
                         : "border-b border-slate-200";
-                    floorTaskCountsHTML += `<div class="grid grid-cols-2 gap-2 py-1 ${borderClass}"><span>${t.name}:</span><span class="font-semibold text-right">${startedCount}</span></div>`;
+                    floorTaskCountsHTML += `<div class="grid grid-cols-2 gap-2 py-1 ${borderClass}"><span>${t.name}:</span><span class="font-semibold text-right">${targetCount}</span></div>`;
                   });
                   floorTaskCountsHTML += "</div>";
                   const topBorderClass =
@@ -11445,12 +11442,17 @@
                   row.innerHTML += `<td class="border border-slate-400 p-1 bg-white">${task.name}</td>`;
 
                   let taskCompletedCount = 0;
+                  let taskTargetCount = 0;
 
                   // Room Cells
                   for (let room = 1; room <= CONFIG.MAX_ROOMS; room++) {
                     if (room > roomsOnThisFloor) {
                       row.innerHTML += `<td class="border border-slate-400 p-0.5 bg-slate-100"></td>`;
                       continue;
+                    }
+
+                    if (!task.condition || task.condition(floor, room)) {
+                      taskTargetCount++;
                     }
 
                     const unitData = projectData[catKey]?.[floor]?.[room] || {};
@@ -11475,7 +11477,7 @@
                   }
 
                   // Task Summary (จำนวน)
-                  row.innerHTML += `<td class="border border-slate-400 p-1 text-center font-bold">${taskCompletedCount}</td>`;
+                  row.innerHTML += `<td class="border border-slate-400 p-1 text-center font-bold">${taskTargetCount}</td>`;
 
                   // Floor Summary (เสร็จ / คงเหลือ) - Merged
                   if (sIdx === 0) {
@@ -12119,6 +12121,9 @@
           let completedRooms = 0,
             inProgressRooms = 0,
             totalRooms = 0;
+          let totalSubTaskTargets = 0;
+          let completedSubTasks = 0;
+          let inProgressSubTasks = 0;
           const catDef = taskDefinitions[categoryKey];
           const relevantTasks = selectedSubTaskIndexes.map(
             (idx) => catDef.tasks[idx],
@@ -12133,10 +12138,11 @@
               relevantTasks.forEach((t) => {
                 if (!t.condition || t.condition(floor, room)) {
                   applicableTaskCount++;
-                  roomTotalProgress +=
-                    projectData[categoryKey][floor][room][
-                      `progress_${t.key}`
-                    ] || 0;
+                  totalSubTaskTargets++;
+                  const p = projectData[categoryKey][floor][room]?.[`progress_${t.key}`] || 0;
+                  roomTotalProgress += p;
+                  if (p >= 100) completedSubTasks++;
+                  else if (p > 0) inProgressSubTasks++;
                 }
               });
 
@@ -12150,7 +12156,7 @@
               }
             }
           });
-          return { completedRooms, inProgressRooms, totalRooms };
+          return { completedRooms, inProgressRooms, totalRooms, totalSubTaskTargets, completedSubTasks, inProgressSubTasks };
         }
 
         function calculateMultiProgressOverallPercentage(
@@ -12159,7 +12165,7 @@
           selectedSubTaskIndexes,
         ) {
           let totalProgress = 0,
-            totalUnitsInvolved = 0;
+            totalSubTaskTargets = 0;
           const catDef = taskDefinitions[categoryKey];
           const relevantTasks = selectedSubTaskIndexes.map(
             (idx) => catDef.tasks[idx],
@@ -12168,26 +12174,18 @@
           floorsToCalc.forEach((floor) => {
             const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
             for (let room = 1; room <= roomsOnThisFloor; room++) {
-              let applicableTaskCount = 0;
-              let roomTotalProgress = 0;
-
               relevantTasks.forEach((t) => {
                 if (!t.condition || t.condition(floor, room)) {
-                  applicableTaskCount++;
-                  roomTotalProgress +=
-                    projectData[categoryKey][floor][room][
+                  totalSubTaskTargets++;
+                  totalProgress +=
+                    projectData[categoryKey][floor][room]?.[
                       `progress_${t.key}`
                     ] || 0;
                 }
               });
-
-              if (applicableTaskCount === 0) continue;
-              
-              totalUnitsInvolved++;
-              totalProgress += roomTotalProgress / applicableTaskCount;
             }
           });
-          const maxProgress = totalUnitsInvolved * 100;
+          const maxProgress = totalSubTaskTargets * 100;
           return maxProgress > 0 ? (totalProgress / maxProgress) * 100 : 0;
         }
 
@@ -12644,9 +12642,20 @@
               const total = isSummary ? CONFIG.TOTAL_UNITS : stats.totalRooms;
               let line = `- ภาพรวม: แล้วเสร็จ ${overallProgress.toFixed(1)}%`;
               if (reportType === "long") {
-                line += `\n  • ดำเนินการแล้วเสร็จ: ${stats.completedRooms}/${total} ห้อง`;
-                if (stats.inProgressRooms > 0)
-                  line += `\n  • อยู่ระหว่างดำเนินการ: ${stats.inProgressRooms} ห้อง`;
+                if (
+                  catKey === "door" ||
+                  catKey === "aluminum" ||
+                  catKey === "tiling"
+                ) {
+                  const unitName = catKey === "door" ? "บาน" : (catKey === "tiling" ? "ห้อง" : "ชุด");
+                  line += `\n  • ดำเนินการแล้วเสร็จ: ${stats.completedSubTasks}/${stats.totalSubTaskTargets} ${unitName}`;
+                  if (stats.inProgressSubTasks > 0)
+                    line += `\n  • อยู่ระหว่างดำเนินการ: ${stats.inProgressSubTasks} ${unitName}`;
+                } else {
+                  line += `\n  • ดำเนินการแล้วเสร็จ: ${stats.completedRooms}/${total} ห้อง`;
+                  if (stats.inProgressRooms > 0)
+                    line += `\n  • อยู่ระหว่างดำเนินการ: ${stats.inProgressRooms} ห้อง`;
+                }
 
                 // Detailed summaries for specific multi-progress tasks
                 if (
