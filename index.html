@@ -2824,6 +2824,17 @@
               },
             ],
           },
+          paintOnly: {
+            name: "งานสี end product",
+            reportName: "งานสี end product",
+            reportEmoji: "🎨",
+            title: "STATUS งานสี end product",
+            type: "progress",
+            tasks: [
+              { name: "เก็บงาน", color: "bg-stone-400", textColor: "text-white" },
+              { name: "ทาสี", color: "bg-sky-500", textColor: "text-white" },
+            ],
+          },
           laminate: {
             name: "งานปูพื้นไม้ลามิเนต",
             reportName: "งานปูพื้นไม้ลามิเนต",
@@ -4374,6 +4385,11 @@
             color: "",
             svg: '<img src="https://img2.pic.in.th/shower-screen.png" alt="Shower Screen" class="w-[70px] h-[70px] object-contain" />',
           },
+          paintOnly: {
+            bg: "bg-sky-100",
+            color: "text-sky-600",
+            svg: '<img src="https://img1.pic.in.th/images/paint.md.png" alt="งานสี end product" class="w-[50px] h-[50px] object-contain" />',
+          },
           endProduct: {
             bg: "bg-transparent",
             color: "",
@@ -4436,6 +4452,7 @@
               "laminate",
               "door",
               "showerScreen",
+              "paintOnly",
               "aluminumPaint",
               "cleaning",
               "endProduct",
@@ -4936,15 +4953,6 @@
                   type: "progress-kitchen",
                 };
               }
-              if (key === "paintOnly") {
-                return {
-                  key: "paintOnly",
-                  name: "งานสี",
-                  reportName: "งานสี",
-                  reportEmoji: "🎨",
-                  type: "progress-paint",
-                };
-              }
               if (key === "skimOnly") {
                 return {
                   key: "skimOnly",
@@ -5038,11 +5046,11 @@
                     progress = (taskData.progress || 0) / 2;
                   }
                 } else if (taskDef.key === "paintOnly") {
-                  taskData = projectData["skimAndPaint"]?.[floor]?.[room] || {};
+                  taskData = projectData["paintOnly"]?.[floor]?.[room] || {};
                   if (taskData.taskIndex === 1) {
-                    progress = taskData.progress || 0;
+                    progress = 50 + ((taskData.progress || 0) / 2);
                   } else {
-                    progress = 0;
+                    progress = (taskData.progress || 0) / 2;
                   }
                 } else if (taskDef.key === "skimOnly") {
                   taskData = projectData["skimAndPaint"]?.[floor]?.[room] || {};
@@ -5061,6 +5069,18 @@
                     progress = 100;
                   } else {
                     progress = 0;
+                  }
+                } else if (taskDef.key === "laminate") {
+                  taskData = projectData["laminate"]?.[floor]?.[room] || {};
+                  if (taskData.taskIndex === 1) {
+                    progress = taskData.progress || 0;
+                  } else if (taskData.taskIndex > 1) {
+                    progress = 100;
+                  } else {
+                    progress = 0;
+                  }
+                  if ((taskData.taskIndex === 0 || !taskData.taskIndex) && (taskData.progress || 0) > 0) {
+                     scoreToShow = `ตรวจรับพื้นที่ ${taskData.progress}%`;
                   }
                 } else if (taskDef.key === "showerScreenInspection") {
                   taskData = projectData["showerScreen"]?.[floor]?.[room] || {};
@@ -5124,7 +5144,7 @@
                   !!planData.firstPlanDate ||
                   (planData.history && planData.history.length > 0) ||
                   !!planData.note;
-                const hasProgress = progress > 0;
+                const hasProgress = progress > 0 || (scoreToShow !== null && scoreToShow !== 0);
 
                 function formatShortThaiDate(dateStr) {
                   if (!dateStr) return "";
@@ -5235,10 +5255,10 @@
                                         ${noteIcon}
                                         <div class="flex flex-col gap-1.5 h-full justify-center pointer-events-none w-full overflow-hidden">
                                             ${
-                                              hasProgress
+                                              hasProgress || scoreToShow !== null
                                                 ? `
                                             <div class="${planData.currentPlanDate ? "text-xs" : "text-sm"} font-bold text-blue-600">
-                                                ${Math.round(progress)}%
+                                                ${scoreToShow !== null ? scoreToShow : Math.round(progress) + "%"}
                                             </div>
                                             `
                                                 : ""
@@ -8099,8 +8119,19 @@
                       styleClasses = "bg-white text-black";
                     }
 
-                    cellText = `${progress}%`;
-                    if (progress > 0 && !isCompleted) {
+                    if (currentCategory === "laminate") {
+                        if (isCompleted) {
+                            cellText = `✔️`;
+                        } else if (currentTaskIndex === 0 && progress > 0) {
+                            cellText = `ตรวจรับพื้นที่ ${progress}%`;
+                        } else {
+                            cellText = `${progress}%`;
+                        }
+                    } else {
+                        cellText = `${progress}%`;
+                    }
+
+                    if (progress > 0 && !isCompleted && currentCategory !== "laminate") {
                       cellText += `<span class="sub-task-name absolute bottom-0 right-1 text-[8px] opacity-70">${currentTask.name}</span>`;
                     }
                   } else {
@@ -8402,7 +8433,7 @@
 
             const icons = {
               skimAndPaint: `<img src="https://img1.pic.in.th/images/paint.md.png" alt="งานสี" class="w-5 h-5 object-contain" />`,
-              paintOnly: `<img src="https://img1.pic.in.th/images/paint.md.png" alt="งานสี" class="w-5 h-5 object-contain" />`,
+              paintOnly: `<img src="https://img1.pic.in.th/images/paint.md.png" alt="งานสี end product" class="w-5 h-5 object-contain" />`,
               topping: `<img src="https://img1.pic.in.th/images/Topping.png" alt="งาน Topping" class="w-5 h-5 object-contain" />`,
               electrical: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`,
               plumbing: `<svg class="w-5 h-5 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"></path></svg>`,
@@ -8442,6 +8473,7 @@
             "laminate",
             "door",
             "showerScreen",
+            "paintOnly",
             "aluminumPaint",
             "cleaning",
             "endProduct",
@@ -8873,7 +8905,7 @@
           if (key === "above_ceiling_inspection") return "ตรวจเหนือฝ้า";
           if (key === "skimAndPaintCombined") return "งานสกิมทาสี";
           if (key === "kitchenOnly") return "งานติดตั้งชุดครัว";
-          if (key === "paintOnly") return "งานสี";
+          if (key === "paintOnly") return "งานสี end product";
           if (key === "skimOnly") return "งานสกิม";
           if (key === "showerScreenInspection") return "ตรวจรับพื้นที่(Shower)";
           return (
@@ -8967,7 +8999,9 @@
                           ? "ceilingRoomFraming"
                           : taskKey === "ceilingBathroomFraming"
                             ? "ceilingBathroomFraming"
-                            : null;
+                            : taskKey === "texcaWallOnly"
+                              ? "texcaWallOnly"
+                              : null;
 
           let progress = 0;
           let isInspection = false;
@@ -9016,13 +9050,29 @@
 
           if (category && !isMultiSelect) {
             if (category === "paintOnly") {
-              const unitData =
-                projectData["skimAndPaint"]?.[floor]?.[room] || {};
-              if (unitData.taskIndex === 1) {
-                progress = unitData.progress || 0;
-              } else {
-                progress = 0;
-              }
+              const unitData = projectData["paintOnly"]?.[floor]?.[room] || {};
+              const subTasks = taskDefinitions["paintOnly"].tasks;
+              progress = (unitData.taskIndex === 1) ? (unitData.progress || 0) : ((unitData.taskIndex > 1) ? 100 : 0);
+
+              subTasksContainer.classList.remove("hidden");
+              progressContainer.classList.add("hidden");
+              subTasks.forEach((st, idx) => {
+                let stProgress = 0;
+                if ((unitData.taskIndex || 0) > idx) {
+                  stProgress = 100;
+                } else if ((unitData.taskIndex || 0) === idx) {
+                  stProgress = unitData.progress || 0;
+                }
+                subTasksList.innerHTML += `
+                                  <div>
+                                      <div class="flex justify-between text-xs mb-1">
+                                          <span class="font-medium text-slate-700">${st.name}</span>
+                                          <span class="text-indigo-600 font-bold">${stProgress}%</span>
+                                      </div>
+                                      <input type="range" data-idx="${idx}" min="0" max="100" value="${stProgress}" class="subtask-slider-texca w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                                  </div>
+                              `;
+              });
             } else if (category === "skimOnly") {
               const unitData =
                 projectData["skimAndPaint"]?.[floor]?.[room] || {};
@@ -9054,6 +9104,54 @@
             } else if (category === "ceilingBathroomFraming") {
               const unitData = projectData["ceiling"]?.[floor]?.[room] || {};
               progress = unitData["progress_bathroom_framing"] || 0;
+            } else if (category === "laminate") {
+              const unitData = projectData["laminate"]?.[floor]?.[room] || {};
+              const subTasks = taskDefinitions["laminate"].tasks;
+              progress = (unitData.taskIndex === 1) ? (unitData.progress || 0) : ((unitData.taskIndex > 1) ? 100 : 0);
+
+              subTasksContainer.classList.remove("hidden");
+              progressContainer.classList.add("hidden");
+              subTasks.forEach((st, idx) => {
+                let stProgress = 0;
+                if ((unitData.taskIndex || 0) > idx) {
+                  stProgress = 100;
+                } else if ((unitData.taskIndex || 0) === idx) {
+                  stProgress = unitData.progress || 0;
+                }
+                subTasksList.innerHTML += `
+                                  <div>
+                                      <div class="flex justify-between text-xs mb-1">
+                                          <span class="font-medium text-slate-700">${st.name}</span>
+                                          <span class="text-indigo-600 font-bold">${stProgress}%</span>
+                                      </div>
+                                      <input type="range" data-idx="${idx}" min="0" max="100" value="${stProgress}" class="subtask-slider-texca w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                                  </div>
+                              `;
+              });
+            } else if (category === "texcaWallOnly") {
+              const unitData = projectData["texcaWall"]?.[floor]?.[room] || {};
+              const subTasks = taskDefinitions["texcaWall"].tasks;
+              progress = (unitData.taskIndex === 2) ? (unitData.progress || 0) : ((unitData.taskIndex > 2) ? 100 : 0);
+
+              subTasksContainer.classList.remove("hidden");
+              progressContainer.classList.add("hidden");
+              subTasks.forEach((st, idx) => {
+                let stProgress = 0;
+                if ((unitData.taskIndex || 0) > idx) {
+                  stProgress = 100;
+                } else if ((unitData.taskIndex || 0) === idx) {
+                  stProgress = unitData.progress || 0;
+                }
+                subTasksList.innerHTML += `
+                                  <div>
+                                      <div class="flex justify-between text-xs mb-1">
+                                          <span class="font-medium text-slate-700">${st.name}</span>
+                                          <span class="text-indigo-600 font-bold">${stProgress}%</span>
+                                      </div>
+                                      <input type="range" data-idx="${idx}" min="0" max="100" value="${stProgress}" class="subtask-slider-texca w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                                  </div>
+                              `;
+              });
             } else if (category === "kitchenOnly") {
               const unitData = projectData["furniture"]?.[floor]?.[room] || {};
               if (unitData.taskIndex === 0) {
@@ -9113,7 +9211,7 @@
           completedCheckbox.checked = progress >= 100;
 
           // Add event listeners for subtask sliders
-          document.querySelectorAll(".subtask-slider").forEach((slider) => {
+          document.querySelectorAll(".subtask-slider, .subtask-slider-texca").forEach((slider) => {
             slider.oninput = (e) => {
               const val = e.target.value;
               e.target.previousElementSibling.querySelector(
@@ -9461,19 +9559,35 @@
                               ? "ceilingRoomFraming"
                               : taskKey === "ceilingBathroomFraming"
                                 ? "ceilingBathroomFraming"
-                                : null;
+                                : taskKey === "texcaWallOnly"
+                                  ? "texcaWallOnly"
+                                  : null;
               if (category) {
                 if (category === "paintOnly") {
-                  if (!projectData["skimAndPaint"])
-                    projectData["skimAndPaint"] = {};
-                  if (!projectData["skimAndPaint"][floor])
-                    projectData["skimAndPaint"][floor] = {};
-                  if (!projectData["skimAndPaint"][floor][room])
-                    projectData["skimAndPaint"][floor][room] = {};
+                  if (!projectData["paintOnly"]) projectData["paintOnly"] = {};
+                  if (!projectData["paintOnly"][floor]) projectData["paintOnly"][floor] = {};
+                  if (!projectData["paintOnly"][floor][room]) projectData["paintOnly"][floor][room] = {};
 
-                  const unitData = projectData["skimAndPaint"][floor][room];
-                  unitData.taskIndex = 1; // "ทาสี"
-                  unitData.progress = newProgress;
+                  const unitData = projectData["paintOnly"][floor][room];
+                  if (isCompleted) {
+                    unitData.taskIndex = 1; // Last task in paintOnly
+                    unitData.progress = 100;
+                  } else {
+                    let highestIdx = 0;
+                    let highestProgress = 0;
+                    document.querySelectorAll(".subtask-slider-texca").forEach((slider) => {
+                      const val = parseInt(slider.value, 10);
+                      const idx = parseInt(slider.dataset.idx, 10);
+                      if (val > 0) {
+                        if (idx > highestIdx || (idx === highestIdx && val > highestProgress)) {
+                          highestIdx = idx;
+                          highestProgress = val;
+                        }
+                      }
+                    });
+                    unitData.taskIndex = highestIdx;
+                    unitData.progress = highestProgress;
+                  }
                 } else if (category === "skimOnly") {
                   if (!projectData["skimAndPaint"])
                     projectData["skimAndPaint"] = {};
@@ -9529,6 +9643,56 @@
                   if (!projectData["ceiling"][floor]) projectData["ceiling"][floor] = {};
                   if (!projectData["ceiling"][floor][room]) projectData["ceiling"][floor][room] = {};
                   projectData["ceiling"][floor][room].progress_bathroom_framing = newProgress;
+                } else if (category === "laminate") {
+                  if (!projectData["laminate"]) projectData["laminate"] = {};
+                  if (!projectData["laminate"][floor]) projectData["laminate"][floor] = {};
+                  if (!projectData["laminate"][floor][room]) projectData["laminate"][floor][room] = {};
+
+                  const unitData = projectData["laminate"][floor][room];
+                  if (isCompleted) {
+                    unitData.taskIndex = 1; // Last task in laminate
+                    unitData.progress = 100;
+                  } else {
+                    let highestIdx = 0;
+                    let highestProgress = 0;
+                    document.querySelectorAll(".subtask-slider-texca").forEach((slider) => {
+                      const val = parseInt(slider.value, 10);
+                      const idx = parseInt(slider.dataset.idx, 10);
+                      if (val > 0) {
+                        if (idx > highestIdx || (idx === highestIdx && val > highestProgress)) {
+                          highestIdx = idx;
+                          highestProgress = val;
+                        }
+                      }
+                    });
+                    unitData.taskIndex = highestIdx;
+                    unitData.progress = highestProgress;
+                  }
+                } else if (category === "texcaWallOnly") {
+                  if (!projectData["texcaWall"]) projectData["texcaWall"] = {};
+                  if (!projectData["texcaWall"][floor]) projectData["texcaWall"][floor] = {};
+                  if (!projectData["texcaWall"][floor][room]) projectData["texcaWall"][floor][room] = {};
+
+                  const unitData = projectData["texcaWall"][floor][room];
+                  if (isCompleted) {
+                    unitData.taskIndex = 2; // Last task in texcaWall
+                    unitData.progress = 100;
+                  } else {
+                    let highestIdx = 0;
+                    let highestProgress = 0;
+                    document.querySelectorAll(".subtask-slider-texca").forEach((slider) => {
+                      const val = parseInt(slider.value, 10);
+                      const idx = parseInt(slider.dataset.idx, 10);
+                      if (val > 0) {
+                        if (idx > highestIdx || (idx === highestIdx && val > highestProgress)) {
+                          highestIdx = idx;
+                          highestProgress = val;
+                        }
+                      }
+                    });
+                    unitData.taskIndex = highestIdx;
+                    unitData.progress = highestProgress;
+                  }
                 } else if (category === "kitchenOnly") {
                   if (!projectData["furniture"]) projectData["furniture"] = {};
                   if (!projectData["furniture"][floor])
