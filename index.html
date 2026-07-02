@@ -2726,25 +2726,101 @@
             type: "multi-progress",
             tasks: [
               {
-                name: "บานกั้นห้อง",
-                key: "partition",
-                shortName: "กั้น",
+                name: "บานกั้นห้อง (AD13)",
+                key: "partition_ad13",
+                shortName: "กั้น AD13",
                 color: "bg-slate-400",
                 textColor: "text-white",
+                condition: (f, r) => {
+                  if (f >= 2 && f <= 7) return [1, 2, 3, 4, 5].includes(r);
+                  if (f === 8) return [2, 3, 4].includes(r);
+                  return false;
+                },
               },
               {
-                name: "บานออกระเบียง",
-                key: "balcony",
-                shortName: "รบ.",
+                name: "บานออกระเบียง (AD04)",
+                key: "balcony_ad04",
+                shortName: "รบ. AD04",
                 color: "bg-blue-400",
                 textColor: "text-white",
+                condition: (f, r) => {
+                  if (f >= 2 && f <= 7) return [1, 2, 3, 4, 5].includes(r);
+                  if (f === 8) return [2, 3, 4].includes(r);
+                  return false;
+                },
               },
               {
-                name: "บานหน้าต่าง",
-                key: "window",
-                shortName: "นต.",
-                color: "bg-sky-300",
-                textColor: "text-black",
+                name: "บานกั้นห้อง (AD03)",
+                key: "partition_ad03",
+                shortName: "กั้น AD03",
+                color: "bg-slate-500",
+                textColor: "text-white",
+                condition: (f, r) => {
+                  if (f === 2) return [6, 7, 8].includes(r);
+                  if (f >= 3 && f <= 7) return [6, 7, 12].includes(r);
+                  if (f === 8) return [5, 6, 11].includes(r);
+                  return false;
+                },
+              },
+              {
+                name: "บานออกระเบียง (AD02)",
+                key: "balcony_ad02",
+                shortName: "รบ. AD02",
+                color: "bg-blue-500",
+                textColor: "text-white",
+                condition: (f, r) => {
+                  if (f === 2) return [6, 7, 8].includes(r);
+                  if (f >= 3 && f <= 7) return [6, 7, 12].includes(r);
+                  if (f === 8) return [5, 6, 11].includes(r);
+                  return false;
+                },
+              },
+              {
+                name: "บานกั้นห้อง (AD10)",
+                key: "partition_ad10",
+                shortName: "กั้น AD10",
+                color: "bg-slate-600",
+                textColor: "text-white",
+                condition: (f, r) => {
+                  if (f >= 3 && f <= 7) return [8, 11].includes(r);
+                  if (f === 8) return [7, 10].includes(r);
+                  return false;
+                },
+              },
+              {
+                name: "บานออกระเบียง (AD11)",
+                key: "balcony_ad11",
+                shortName: "รบ. AD11",
+                color: "bg-blue-600",
+                textColor: "text-white",
+                condition: (f, r) => {
+                  if (f >= 3 && f <= 7) return [8, 11].includes(r);
+                  if (f === 8) return [7, 10].includes(r);
+                  return false;
+                },
+              },
+              {
+                name: "บานออกระเบียง 2 บาน (AD05)",
+                key: "balcony_ad05_2",
+                shortName: "รบ. AD05 (x2)",
+                color: "bg-indigo-400",
+                textColor: "text-white",
+                condition: (f, r) => {
+                  if (f >= 3 && f <= 7) return [9, 10].includes(r);
+                  if (f === 8) return [8, 9].includes(r);
+                  return false;
+                },
+              },
+              {
+                name: "บานออกระเบียง (AD05)",
+                key: "balcony_ad05",
+                shortName: "รบ. AD05",
+                color: "bg-indigo-500",
+                textColor: "text-white",
+                condition: (f, r) => {
+                  if (f === 8) return [1].includes(r);
+                  return false;
+                },
               },
             ],
           },
