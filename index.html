@@ -8254,18 +8254,21 @@
                   let floorTaskCountsHTML =
                     '<div class="flex flex-col p-1 space-y-0.5 text-xs text-left">';
                   detailedTasks.forEach((t, index) => {
-                    let targetCount = 0;
+                    let completedCount = 0;
                     for (let r = 1; r <= roomsOnThisFloor; r++) {
                       if (!t.condition || t.condition(floor, r)) {
-                        targetCount++;
+                        const unitData = projectData[currentCategory]?.[floor]?.[r] || {};
+                        if ((unitData[`progress_${t.key}`] || 0) === 100) {
+                          completedCount++;
+                        }
                       }
                     }
-                    totals[t.key] = (totals[t.key] || 0) + targetCount;
+                    totals[t.key] = (totals[t.key] || 0) + completedCount;
                     const borderClass =
                       index === detailedTasks.length - 1
                         ? ""
                         : "border-b border-slate-200";
-                    floorTaskCountsHTML += `<div class="grid grid-cols-2 gap-2 py-1 ${borderClass}"><span>${t.name}:</span><span class="font-semibold text-right">${targetCount}</span></div>`;
+                    floorTaskCountsHTML += `<div class="grid grid-cols-2 gap-2 py-1 ${borderClass}"><span>${t.name}:</span><span class="font-semibold text-right">${completedCount}</span></div>`;
                   });
                   floorTaskCountsHTML += "</div>";
                   const topBorderClass =
@@ -8408,19 +8411,9 @@
                       styleClasses = "bg-white text-black";
                     }
 
-                    if (currentCategory === "laminate") {
-                        if (isCompleted) {
-                            cellText = `✔️`;
-                        } else if (currentTaskIndex === 0 && progress > 0) {
-                            cellText = `ตรวจรับพื้นที่ ${progress}%`;
-                        } else {
-                            cellText = `${progress}%`;
-                        }
-                    } else {
-                        cellText = `${progress}%`;
-                    }
+                    cellText = `${progress}%`;
 
-                    if (progress > 0 && !isCompleted && currentCategory !== "laminate") {
+                    if (progress > 0 && !isCompleted) {
                       cellText += `<span class="sub-task-name absolute bottom-0 right-1 text-[8px] opacity-70">${currentTask.name}</span>`;
                     }
                   } else {
@@ -11934,7 +11927,7 @@
                   }
 
                   // Task Summary (จำนวน)
-                  row.innerHTML += `<td class="border border-slate-400 p-1 text-center font-bold">${taskTargetCount}</td>`;
+                  row.innerHTML += `<td class="border border-slate-400 p-1 text-center font-bold">${taskCompletedCount}</td>`;
 
                   // Floor Summary (เสร็จ / คงเหลือ) - Merged
                   if (sIdx === 0) {
