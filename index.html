@@ -767,6 +767,7 @@
     <link rel="stylesheet" href="/index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
   </head>
   <body class="p-0 md:p-4 bg-slate-50 relative">
     <!-- Splash Screen -->
@@ -2023,6 +2024,38 @@
         >
           ตกลง
         </button>
+      </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div
+      id="imagePreviewModal"
+      class="modal fixed inset-0 w-full h-full items-center justify-center z-[80] hidden backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modal-overlay absolute inset-0 bg-slate-900/80" onclick="closeModal('imagePreviewModal')"></div>
+      <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 relative z-10 flex flex-col overflow-hidden max-h-[90vh]">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+          <h3 class="text-lg font-bold text-slate-800">ตัวอย่างรูปภาพ</h3>
+          <button onclick="closeModal('imagePreviewModal')" class="text-slate-500 hover:text-slate-800 p-2 rounded-full hover:bg-slate-200 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div class="p-4 overflow-y-auto flex-1 flex flex-col items-center justify-center bg-slate-100">
+          <img id="previewImageElement" src="" class="max-w-full max-h-full object-contain shadow-md rounded border border-slate-300" alt="Preview" />
+          <p class="text-sm text-slate-500 mt-3 text-center">💡 กดค้างที่รูปภาพเพื่อบันทึก หรือใช้ปุ่มด้านล่าง</p>
+        </div>
+        <div class="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row justify-end gap-3">
+          <button id="previewDownloadBtn" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            บันทึกลงเครื่อง
+          </button>
+          <button id="previewShareBtn" class="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+            แชร์ / ส่ง LINE
+          </button>
+        </div>
       </div>
     </div>
 
@@ -11439,49 +11472,52 @@
               .then((canvas) => {
                 const filename = `${getFileExportName()}.jpg`;
                 const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-
-                function fallbackDownload() {
-                  const link = document.createElement("a");
-                  link.download = filename;
-                  link.href = dataUrl;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
+                
+                // Show preview modal instead of trying to download/share immediately
+                // This fixes iOS Safari user gesture expiration bugs
+                const previewImg = document.getElementById("previewImageElement");
+                const downloadBtn = document.getElementById("previewDownloadBtn");
+                const shareBtn = document.getElementById("previewShareBtn");
+                
+                if (previewImg) previewImg.src = dataUrl;
+                
+                // Set up Download Button
+                if (downloadBtn) {
+                  downloadBtn.onclick = function() {
+                    const link = document.createElement("a");
+                    link.download = filename;
+                    link.href = dataUrl;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  };
                 }
-
-                if (mode === "share") {
-                  // Try to use Web Share API if available (great for mobile)
-                  if (navigator.share && navigator.canShare) {
-                    canvas.toBlob((blob) => {
-                      if (!blob) {
-                        fallbackDownload();
-                        return;
-                      }
-                      const file = new File([blob], filename, {
-                        type: "image/jpeg",
-                      });
-                      if (navigator.canShare({ files: [file] })) {
-                        navigator
-                          .share({
+                
+                // Set up Share Button
+                if (shareBtn) {
+                  // Hide share button if Web Share is not supported
+                  if (!(navigator.share && navigator.canShare)) {
+                    shareBtn.style.display = "none";
+                  } else {
+                    shareBtn.style.display = "flex";
+                    shareBtn.onclick = function() {
+                      canvas.toBlob((blob) => {
+                        if (!blob) return;
+                        const file = new File([blob], filename, { type: "image/jpeg" });
+                        if (navigator.canShare({ files: [file] })) {
+                          navigator.share({
                             files: [file],
                             title: "รายงานความคืบหน้า",
-                          })
-                          .catch((err) => {
+                          }).catch((err) => {
                             console.error("Share failed:", err);
-                            if (err.name !== "AbortError") {
-                              fallbackDownload();
-                            }
                           });
-                      } else {
-                        fallbackDownload();
-                      }
-                    }, "image/jpeg", 0.9);
-                  } else {
-                    fallbackDownload();
+                        }
+                      }, "image/jpeg", 0.9);
+                    };
                   }
-                } else {
-                  fallbackDownload();
                 }
+                
+                openModal("imagePreviewModal");
               })
               .catch((err) => {
                 console.error("Capture failed:", err);
@@ -13629,10 +13665,48 @@
             backgroundColor: "#ffffff",
           })
             .then((canvas) => {
-              const link = document.createElement("a");
-              link.download = `infographic-report-${Date.now()}.png`;
-              link.href = canvas.toDataURL("image/png");
-              link.click();
+              const dataUrl = canvas.toDataURL("image/png");
+              const filename = `infographic-report-${Date.now()}.png`;
+
+              // Show preview modal instead of immediate download
+              const previewImg = document.getElementById("previewImageElement");
+              const dBtn = document.getElementById("previewDownloadBtn");
+              const shareBtn = document.getElementById("previewShareBtn");
+              
+              if (previewImg) previewImg.src = dataUrl;
+              
+              if (dBtn) {
+                dBtn.onclick = function() {
+                  const link = document.createElement("a");
+                  link.download = filename;
+                  link.href = dataUrl;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                };
+              }
+              
+              if (shareBtn) {
+                if (!(navigator.share && navigator.canShare)) {
+                  shareBtn.style.display = "none";
+                } else {
+                  shareBtn.style.display = "flex";
+                  shareBtn.onclick = function() {
+                    canvas.toBlob((blob) => {
+                      if (!blob) return;
+                      const file = new File([blob], filename, { type: "image/png" });
+                      if (navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                          files: [file],
+                          title: "Infographic Report",
+                        }).catch((err) => console.error("Share failed:", err));
+                      }
+                    }, "image/png");
+                  };
+                }
+              }
+              
+              openModal("imagePreviewModal");
             })
             .catch((err) => {
               console.error("Infographic capture failed:", err);
