@@ -2044,7 +2044,7 @@
         </div>
         <div class="p-4 overflow-y-auto flex-1 flex flex-col items-center justify-center bg-slate-100">
           <img id="previewImageElement" src="" class="max-w-full max-h-full object-contain shadow-md rounded border border-slate-300" alt="Preview" />
-          <p class="text-sm text-slate-500 mt-3 text-center">💡 กดค้างที่รูปภาพเพื่อบันทึก หรือใช้ปุ่มด้านล่าง</p>
+          <p class="text-sm text-slate-600 mt-3 text-center font-medium">💡 สำหรับผู้ใช้ iOS / LINE: หากกดบันทึกไม่ได้ แนะนำให้ <strong>กดค้างที่รูปภาพ</strong> แล้วเลือก <strong>'บันทึกไปยังแอปรูปภาพ' (Save to Photos)</strong></p>
         </div>
         <div class="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row justify-end gap-3">
           <button id="previewDownloadBtn" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
@@ -11395,6 +11395,63 @@
             return `PYNN NGAMWONGWAN 54 ${name} ${getThaiDateForFilename()}`;
         }
 
+        function showImagePreview(dataUrl, filename, canvas = null) {
+          const previewImg = document.getElementById("previewImageElement");
+          const downloadBtn = document.getElementById("previewDownloadBtn");
+          const shareBtn = document.getElementById("previewShareBtn");
+          
+          if (previewImg) previewImg.src = dataUrl;
+          
+          // Set up Download Button
+          if (downloadBtn) {
+            downloadBtn.onclick = function() {
+              const link = document.createElement("a");
+              link.download = filename;
+              link.href = dataUrl;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            };
+          }
+          
+          // Set up Share Button
+          if (shareBtn) {
+            if (!(navigator.share && navigator.canShare)) {
+              shareBtn.style.display = "none";
+            } else {
+              shareBtn.style.display = "flex";
+              shareBtn.onclick = function() {
+                if (canvas) {
+                  canvas.toBlob((blob) => {
+                    if (!blob) return;
+                    const file = new File([blob], filename, { type: "image/jpeg" });
+                    if (navigator.canShare({ files: [file] })) {
+                      navigator.share({
+                        files: [file],
+                        title: "รายงานความคืบหน้า",
+                      }).catch((err) => console.error("Share failed:", err));
+                    }
+                  }, "image/jpeg", 0.9);
+                } else {
+                  fetch(dataUrl)
+                    .then(res => res.blob())
+                    .then(blob => {
+                      const file = new File([blob], filename, { type: isUltraHD ? "image/png" : "image/jpeg" });
+                      if (navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                          files: [file],
+                          title: "รายงานความคืบหน้า",
+                        }).catch((err) => console.error("Share failed:", err));
+                      }
+                    });
+                }
+              };
+            }
+          }
+          
+          openModal("imagePreviewModal");
+        }
+
         function captureForLine(
           mode = "download",
           btnId = "captureDownloadBtn",
@@ -11453,10 +11510,67 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            // For LINE App specifically, too large an image causes aggressive compression and bluriness.
-            // Using a scale between 1.5 to 2 is optimal for LINE readability.
+            // iOS Safari is highly sensitive to canvas size limits (crash/silent fail)
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isMobile ? 1.5 : 2;
+            
+            let captureScale = isMobile ? 1.2 : 1.8;
+            if (isIOS) {
+              // Strict scaling for iOS Safari to keep total pixels below memory thresholds
+              const estimatedTotalPixels = finalWidth * finalHeight * 1.5 * 1.5;
+              if (estimatedTotalPixels > 9000000) {
+                captureScale = 0.8;
+              } else if (estimatedTotalPixels > 5000000) {
+                captureScale = 1.0;
+              } else {
+                captureScale = 1.2;
+              }
+            }
+
+            const cleanUpAndRestore = () => {
+              document.documentElement.classList.remove("is-line-capturing");
+              document.body.classList.remove("is-line-capturing");
+
+              // Restore inline widths
+              captureArea.style.width = originalCaptureAreaWidth;
+              document.body.style.width = originalBodyWidth;
+              document.documentElement.style.width = originalHtmlWidth;
+              mainAppContainer.style.width = originalMainAppWidth;
+              if (execDashboard) {
+                execDashboard.style.width = originalExecWidth;
+                execDashboard.style.maxWidth = originalExecMaxWidth;
+              }
+
+              captureBtn.innerHTML = originalBtnHTML;
+              captureBtn.disabled = false;
+              // Restore scroll position
+              window.scrollTo(scrollX, scrollY);
+            };
+
+            const runHtmlToImageFallback = () => {
+              const fallbackOptions = {
+                quality: 0.9,
+                backgroundColor: "#ffffff",
+                pixelRatio: Math.min(captureScale, 1.2),
+                width: finalWidth,
+                height: finalHeight,
+              };
+              htmlToImage.toJpeg(captureArea, fallbackOptions)
+                .then((dataUrl) => {
+                  const filename = `${getFileExportName()}.jpg`;
+                  showImagePreview(dataUrl, filename);
+                  cleanUpAndRestore();
+                })
+                .catch((fallbackErr) => {
+                  console.error("All capture methods failed:", fallbackErr);
+                  showNotificationModal(
+                    "เกิดข้อผิดพลาด",
+                    "ไม่สามารถสร้างไฟล์ภาพได้ (ข้อจำกัดด้านหน่วยความจำของอุปกรณ์ แนะนำให้ลดจำนวนชั้นหรือข้อมูลที่แสดงเพื่อลดขนาดหน้าจอแล้วลองอีกครั้ง)",
+                  );
+                  cleanUpAndRestore();
+                });
+            };
 
             html2canvas(captureArea, {
               scale: captureScale,
@@ -11472,78 +11586,12 @@
               .then((canvas) => {
                 const filename = `${getFileExportName()}.jpg`;
                 const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-                
-                // Show preview modal instead of trying to download/share immediately
-                // This fixes iOS Safari user gesture expiration bugs
-                const previewImg = document.getElementById("previewImageElement");
-                const downloadBtn = document.getElementById("previewDownloadBtn");
-                const shareBtn = document.getElementById("previewShareBtn");
-                
-                if (previewImg) previewImg.src = dataUrl;
-                
-                // Set up Download Button
-                if (downloadBtn) {
-                  downloadBtn.onclick = function() {
-                    const link = document.createElement("a");
-                    link.download = filename;
-                    link.href = dataUrl;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  };
-                }
-                
-                // Set up Share Button
-                if (shareBtn) {
-                  // Hide share button if Web Share is not supported
-                  if (!(navigator.share && navigator.canShare)) {
-                    shareBtn.style.display = "none";
-                  } else {
-                    shareBtn.style.display = "flex";
-                    shareBtn.onclick = function() {
-                      canvas.toBlob((blob) => {
-                        if (!blob) return;
-                        const file = new File([blob], filename, { type: "image/jpeg" });
-                        if (navigator.canShare({ files: [file] })) {
-                          navigator.share({
-                            files: [file],
-                            title: "รายงานความคืบหน้า",
-                          }).catch((err) => {
-                            console.error("Share failed:", err);
-                          });
-                        }
-                      }, "image/jpeg", 0.9);
-                    };
-                  }
-                }
-                
-                openModal("imagePreviewModal");
+                showImagePreview(dataUrl, filename, canvas);
+                cleanUpAndRestore();
               })
               .catch((err) => {
-                console.error("Capture failed:", err);
-                showNotificationModal(
-                  "เกิดข้อผิดพลาด",
-                  "ไม่สามารถสร้างไฟล์ภาพได้",
-                );
-              })
-              .finally(() => {
-                document.documentElement.classList.remove("is-line-capturing");
-                document.body.classList.remove("is-line-capturing");
-
-                // Restore inline widths
-                captureArea.style.width = originalCaptureAreaWidth;
-                document.body.style.width = originalBodyWidth;
-                document.documentElement.style.width = originalHtmlWidth;
-                mainAppContainer.style.width = originalMainAppWidth;
-                if (execDashboard) {
-                  execDashboard.style.width = originalExecWidth;
-                  execDashboard.style.maxWidth = originalExecMaxWidth;
-                }
-
-                captureBtn.innerHTML = originalBtnHTML;
-                captureBtn.disabled = false;
-                // Restore scroll position
-                window.scrollTo(scrollX, scrollY);
+                console.warn("html2canvas failed, trying htmlToImage fallback...", err);
+                runHtmlToImageFallback();
               });
           }, 500); // Increased timeout to ensure rendering
         }
@@ -11603,11 +11651,70 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            // For LINE App specifically, too large an image causes aggressive compression and bluriness.
-            // Using a scale between 1.5 to 2 is optimal for LINE readability.
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             const isMobile = window.innerWidth <= 768;
-            const captureScale = isUltraHD ? (isMobile ? 3 : 4) : (isMobile ? 1.5 : 2);
             
+            let captureScale = isUltraHD ? (isMobile ? 2.5 : 3.5) : (isMobile ? 1.2 : 1.8);
+            if (isIOS) {
+              const estimatedTotalPixels = finalWidth * finalHeight * (isUltraHD ? 2 : 1.5) * (isUltraHD ? 2 : 1.5);
+              if (estimatedTotalPixels > 9000000) {
+                captureScale = isUltraHD ? 1.0 : 0.8;
+              } else if (estimatedTotalPixels > 5000000) {
+                captureScale = isUltraHD ? 1.2 : 1.0;
+              } else {
+                captureScale = isUltraHD ? 1.5 : 1.2;
+              }
+            }
+
+            const cleanUpAndRestore = () => {
+              document.documentElement.classList.remove("is-line-capturing");
+              document.body.classList.remove("is-line-capturing");
+
+              // Restore inline widths
+              captureArea.style.width = originalCaptureAreaWidth;
+              document.body.style.width = originalBodyWidth;
+              document.documentElement.style.width = originalHtmlWidth;
+              mainAppContainer.style.width = originalMainAppWidth;
+              if (execDashboard) {
+                execDashboard.style.width = originalExecWidth;
+                execDashboard.style.maxWidth = originalExecMaxWidth;
+              }
+
+              captureBtn.innerHTML = originalBtnHTML;
+              captureBtn.disabled = false;
+              // Restore scroll position
+              window.scrollTo(scrollX, scrollY);
+            };
+
+            const runHtml2CanvasFallback = () => {
+              html2canvas(captureArea, {
+                scale: Math.min(captureScale, 1.2),
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                width: finalWidth,
+                height: finalHeight,
+                windowWidth: finalWidth,
+                windowHeight: finalHeight,
+                scrollX: 0,
+                scrollY: 0,
+              })
+                .then((canvas) => {
+                  const filename = `${getFileExportName()}.${isUltraHD ? 'png' : 'jpg'}`;
+                  const dataUrl = canvas.toDataURL(isUltraHD ? "image/png" : "image/jpeg", isUltraHD ? 1.0 : 0.9);
+                  showImagePreview(dataUrl, filename, canvas);
+                  cleanUpAndRestore();
+                })
+                .catch((fallbackErr) => {
+                  console.error("All capture methods failed:", fallbackErr);
+                  showNotificationModal(
+                    "เกิดข้อผิดพลาด",
+                    "ไม่สามารถสร้างไฟล์ภาพได้ (ข้อจำกัดด้านหน่วยความจำของอุปกรณ์ แนะนำให้ลดจำนวนชั้นหรือข้อมูลที่แสดงเพื่อลดขนาดหน้าจอแล้วลองอีกครั้ง)",
+                  );
+                  cleanUpAndRestore();
+                });
+            };
+
             // Use html-to-image which handles SVGs and scaling much better
             const captureOptions = {
                 quality: isUltraHD ? 1.0 : 0.9,
@@ -11627,73 +11734,12 @@
             capturePromise
               .then((dataUrl) => {
                 const filename = `${getFileExportName()}.${isUltraHD ? 'png' : 'jpg'}`;
-
-                function fallbackDownload() {
-                  const link = document.createElement("a");
-                  link.download = filename;
-                  link.href = dataUrl;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }
-
-                if (mode === "share") {
-                  // Try to use Web Share API if available
-                  if (navigator.share && navigator.canShare) {
-                    fetch(dataUrl)
-                      .then((res) => res.blob())
-                      .then((blob) => {
-                        const file = new File([blob], filename, {
-                          type: isUltraHD ? "image/png" : "image/jpeg",
-                        });
-                        if (navigator.canShare({ files: [file] })) {
-                          navigator
-                            .share({
-                              files: [file],
-                              title: "รายงานความคืบหน้า",
-                            })
-                            .catch((err) => {
-                              console.error("Share failed:", err);
-                              if (err.name !== "AbortError") {
-                                fallbackDownload();
-                              }
-                            });
-                        } else {
-                          fallbackDownload();
-                        }
-                      });
-                  } else {
-                    fallbackDownload();
-                  }
-                } else {
-                  fallbackDownload();
-                }
+                showImagePreview(dataUrl, filename);
+                cleanUpAndRestore();
               })
               .catch((err) => {
-                console.error("Capture failed:", err);
-                showNotificationModal(
-                  "เกิดข้อผิดพลาด",
-                  "ไม่สามารถสร้างไฟล์ภาพได้ (อาจเกิดจากข้อจำกัดของเบราว์เซอร์หรือรูปภาพข้ามโดเมน)",
-                );
-              })
-              .finally(() => {
-                document.documentElement.classList.remove("is-line-capturing");
-                document.body.classList.remove("is-line-capturing");
-
-                // Restore inline widths
-                captureArea.style.width = originalCaptureAreaWidth;
-                document.body.style.width = originalBodyWidth;
-                document.documentElement.style.width = originalHtmlWidth;
-                mainAppContainer.style.width = originalMainAppWidth;
-                if (execDashboard) {
-                  execDashboard.style.width = originalExecWidth;
-                  execDashboard.style.maxWidth = originalExecMaxWidth;
-                }
-
-                captureBtn.innerHTML = originalBtnHTML;
-                captureBtn.disabled = false;
-                // Restore scroll position
-                window.scrollTo(scrollX, scrollY);
+                console.warn("htmlToImage failed, trying html2canvas fallback...", err);
+                runHtml2CanvasFallback();
               });
           }, 500);
         }
