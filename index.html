@@ -1078,6 +1078,11 @@
             <!-- JS Generated Content -->
           </table>
 
+          <!-- Common Area Defect tracking content -->
+          <div id="common-defect-container" class="hidden w-full mx-auto p-2 md:p-4">
+            <!-- Tables will be generated here -->
+          </div>
+
           <div
             id="legend"
             class="mb-4 mx-2 md:mx-0 p-3 bg-slate-50 border border-slate-200 shadow-sm rounded-xl flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-slate-700"
@@ -1116,6 +1121,9 @@
               </button>
               <button id="view-common-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
                 ส่วนกลาง
+              </button>
+              <button id="view-common-defect-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
+                DEFECT ส่วนกลาง
               </button>
               <button id="view-qc-handover-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
                 แผนส่งห้อง QC
@@ -2343,6 +2351,235 @@
       </div>
     </div>
 
+    <!-- Common Area Defect Edit Modal -->
+    <div
+      id="commonDefectEditModal"
+      class="modal fixed inset-0 w-full h-full items-center justify-center z-[70] hidden backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="modal-overlay absolute inset-0 bg-slate-900/60 transition-opacity"
+        onclick="closeModal('commonDefectEditModal')"
+      ></div>
+      <div
+        class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 relative transform transition-all overflow-hidden flex flex-col max-h-[90vh]"
+      >
+        <div
+          class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50"
+        >
+          <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            แก้ไขข้อมูล DEFECT ส่วนกลาง
+          </h3>
+          <button
+            class="text-slate-400 hover:text-slate-600 focus:outline-none p-2 rounded-full hover:bg-slate-200 transition-colors"
+            onclick="closeModal('commonDefectEditModal')"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        
+        <form id="common-defect-edit-form" onsubmit="saveCommonDefectRow(event)" class="p-6 overflow-y-auto flex flex-col gap-4">
+          <input type="hidden" id="edit-defect-id" />
+          
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">กลุ่มพื้นที่</label>
+            <select
+              id="edit-defect-group-select"
+              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-slate-800 bg-white"
+              onchange="onDefectGroupSelectChange()"
+            >
+              <option value="ดาดฟ้า">ดาดฟ้า</option>
+              <option value="โถงทางเดิน">โถงทางเดิน</option>
+              <option value="ห้องขยะประจำชั้น">ห้องขยะประจำชั้น</option>
+              <option value="ห้องไฟฟ้าประจำชั้น">ห้องไฟฟ้าประจำชั้น</option>
+              <option value="บันได">บันได</option>
+              <option value="ห้องเครื่อง/พื้นที่ส่วนกลาง">ห้องเครื่อง/พื้นที่ส่วนกลาง</option>
+              <option value="รูปด้านอาคาร">รูปด้านอาคาร</option>
+              <option value="CUSTOM">กำหนดกลุ่มใหม่... (ระบุด้านล่าง)</option>
+            </select>
+            <input
+              type="text"
+              id="edit-defect-group-custom"
+              placeholder="พิมพ์ชื่อกลุ่มพื้นที่ใหม่ที่นี่..."
+              class="hidden mt-2 w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">สถานที่ / รายการ</label>
+            <input
+              type="text"
+              id="edit-defect-name"
+              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-slate-800"
+              required
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-1">จำนวน DEFECT ทั้งหมด (TOT)</label>
+              <input
+                type="number"
+                id="edit-defect-tot"
+                min="0"
+                class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold"
+                oninput="onEditDefectCountsChange()"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-1">แก้ไขแล้ว (FIX)</label>
+              <input
+                type="number"
+                id="edit-defect-fix"
+                min="0"
+                class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-emerald-600"
+                oninput="onEditDefectCountsChange()"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-xl flex justify-between items-center text-sm">
+            <span class="font-bold text-slate-500">คงเหลือที่ต้องแก้ไข (REM):</span>
+            <span id="edit-defect-rem-val" class="font-black text-lg text-rose-600">0</span>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">กำหนดเสร็จ / ตรวจสอบ (TARGET)</label>
+            <input
+              type="date"
+              id="edit-defect-target-date"
+              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">สถานะ (STATUS)</label>
+            <select
+              id="edit-defect-status"
+              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-slate-800 bg-white"
+            >
+              <option value="รอดำเนินการ" class="text-slate-600 font-bold">รอดำเนินการ</option>
+              <option value="รอนัดตรวจ" class="text-amber-600 font-bold">รอนัดตรวจ</option>
+              <option value="แก้ไขเรียบร้อย" class="text-emerald-600 font-bold">แก้ไขเรียบร้อย</option>
+            </select>
+          </div>
+
+          <div class="flex justify-between items-center gap-3 mt-4 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              id="edit-defect-delete-btn"
+              onclick="deleteCommonDefectRow()"
+              class="px-5 py-2.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl font-bold hover:bg-rose-100 transition-colors shadow-sm"
+            >
+              ลบรายการ
+            </button>
+            <div class="flex gap-2">
+              <button
+                type="button"
+                onclick="closeModal('commonDefectEditModal')"
+                class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-colors shadow-sm"
+              >
+                ยกเลิก
+              </button>
+              <button
+                type="submit"
+                class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-sm"
+              >
+                บันทึกข้อมูล
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Common Area Group Edit Modal -->
+    <div
+      id="commonGroupEditModal"
+      class="modal fixed inset-0 w-full h-full items-center justify-center z-[70] hidden backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="modal-overlay absolute inset-0 bg-slate-900/60 transition-opacity"
+        onclick="closeModal('commonGroupEditModal')"
+      ></div>
+      <div
+        class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 relative transform transition-all overflow-hidden flex flex-col"
+      >
+        <div
+          class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50"
+        >
+          <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            📂 จัดการหัวข้อใหญ่ / กลุ่มพื้นที่
+          </h3>
+          <button
+            class="text-slate-400 hover:text-slate-600 focus:outline-none p-2 rounded-full hover:bg-slate-200 transition-colors"
+            onclick="closeModal('commonGroupEditModal')"
+          >
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <form id="common-group-edit-form" onsubmit="saveCommonGroupName(event)" class="p-6 flex flex-col gap-4">
+          <input type="hidden" id="edit-group-old-name" />
+          
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">ชื่อหัวข้อใหญ่ (กลุ่มพื้นที่)</label>
+            <input
+              type="text"
+              id="edit-group-new-name"
+              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-slate-800"
+              required
+            />
+          </div>
+
+          <div class="flex justify-between items-center gap-3 mt-4 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onclick="deleteCommonGroupAndItems()"
+              class="px-4 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl font-bold hover:bg-rose-100 transition-colors shadow-sm text-sm"
+            >
+              ลบหัวข้อใหญ่นี้ทั้งหมด
+            </button>
+            <div class="flex gap-2">
+              <button
+                type="button"
+                onclick="closeModal('commonGroupEditModal')"
+                class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-colors shadow-sm text-sm"
+              >
+                ยกเลิก
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-sm text-sm"
+              >
+                บันทึก
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Export Excel Modal -->
     <div
       id="exportExcelModal"
@@ -3269,6 +3506,9 @@
                 globalScheduleFilters.maxFloor = actualMax;
               }
             }
+            if (!projectData.commonDefects) {
+              projectData.commonDefects = getInitialCommonDefects();
+            }
           } else {
             console.log(
               "No data or empty data in Supabase, creating/updating initial document...",
@@ -3347,6 +3587,9 @@
 
                 const oldData = JSON.parse(oldDataStr); // Deep copy
                 projectData = payload.new.data;
+                if (projectData && !projectData.commonDefects) {
+                  projectData.commonDefects = getInitialCommonDefects();
+                }
 
                 // Sync local schedule variables from the new projectData
                 if (projectData.globalScheduleData)
@@ -3474,6 +3717,7 @@
           data.globalScheduleTasks = globalScheduleTasks;
           data.globalScheduleSettings = globalScheduleSettings;
           data.globalScheduleFilters = globalScheduleFilters;
+          data.commonDefects = getInitialCommonDefects();
 
           return data;
         }
@@ -4135,166 +4379,199 @@
           const alertContainer = document.getElementById("splash-alert-banner");
           if (!alertContainer) return;
 
-          if (
-            !globalScheduleData ||
-            globalScheduleData.length === 0 ||
-            !globalScheduleTasks ||
-            globalScheduleTasks.length === 0
-          ) {
-            alertContainer.classList.add("hidden");
-            return;
+          // Guard & Initialize qcHandover if needed
+          if (!projectData.qcHandover) {
+            projectData.qcHandover = { data: {}, floorTotals: {} };
+          }
+          if (!projectData.qcHandoverSettings) {
+            projectData.qcHandoverSettings = { startDate: "2025-09-15", endDate: "2026-03-01", title: "แผนส่งห้อง QC" };
+          }
+          if (!QC_HANDOVER_WEEKS || QC_HANDOVER_WEEKS.length === 0 || !QC_HANDOVER_WEEKS[0].startDate) {
+            generateQCHandoverWeeks(
+              projectData.qcHandoverSettings.startDate || "2025-09-15",
+              projectData.qcHandoverSettings.endDate || "2026-03-01"
+            );
           }
 
-          let floorReports = [];
-          let hasAnyAlert = false;
-
           const today = new Date();
-          today.setHours(0, 0, 0, 0);
+          const todayNoTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          
+          const types = [
+            { key: "neuaFa", label: "QC เหนือฝ้า", color: "amber", subtitle: "Above Ceiling QC" },
+            { key: "qcWW", label: "QC Wetwork", color: "sky", subtitle: "Wet Work QC" },
+            { key: "qcEnd", label: "QC End Product", color: "teal", subtitle: "End Product QC" }
+          ];
 
-          const visibleTasks = globalScheduleTasks
-            .map((task, index) => ({ task, index }))
-            .filter(({ task, index }) => {
-              if (
-                task.category === "wetwork" &&
-                !globalScheduleFilters.showWetWork
-              )
-                return false;
-              if (
-                task.category === "endproduct" &&
-                !globalScheduleFilters.showEndProduct
-              )
-                return false;
-              if (globalScheduleFilters.hiddenTasks.includes(index))
-                return false;
-              return true;
-            });
+          const stats = {};
 
-          globalScheduleData
-            .filter(
-              (f) =>
-                f.id >= globalScheduleFilters.minFloor &&
-                f.id <= globalScheduleFilters.maxFloor,
-            )
-            .forEach((floor) => {
-              let floorDelayed = [];
-              let floorInProgress = [];
-              let isAllDone = true;
+          types.forEach(type => {
+            let accPlan = 0;
+            let accActual = 0;
 
-              visibleTasks.forEach(({ task, index: taskIndex }) => {
-                const actualStart = floor.actual[taskIndex * 2];
-                const actualEnd = floor.actual[taskIndex * 2 + 1];
-                const planStartStr = floor.plan[taskIndex * 2];
-                const planEndStr = floor.plan[taskIndex * 2 + 1];
+            QC_HANDOVER_WEEKS.forEach((w, i) => {
+              let weekPlan = 0;
+              let weekActual = 0;
 
-                const isDone = actualStart === "DONE" || actualEnd === "DONE";
-                if (!isDone) isAllDone = false;
-
-                if (!isDone && planEndStr) {
-                  const planEndDate = new Date(planEndStr);
-                  planEndDate.setHours(0, 0, 0, 0);
-
-                  const taskNameRaw =
-                    task.subName +
-                    " " +
-                    task.name.replace(/\s*\(\d+\s*วัน\)/, "");
-
-                  if (planEndDate < today) {
-                    const diffDays = Math.ceil(
-                      (today - planEndDate) / (1000 * 60 * 60 * 24),
-                    );
-                    floorDelayed.push({ name: taskNameRaw, days: diffDays });
-                  } else if (planStartStr) {
-                    const planStartDate = new Date(planStartStr);
-                    planStartDate.setHours(0, 0, 0, 0);
-                    if (planStartDate <= today && planEndDate >= today) {
-                      floorInProgress.push({
-                        name: taskNameRaw,
-                        endStr: formatThaiDateShort(planEndStr),
-                      });
-                    }
+              [2, 3, 4, 5, 6, 7, 8].forEach((fId) => {
+                const weekData = projectData.qcHandover.data[`floor_${fId}`]?.[`week_${i}`];
+                if (weekData) {
+                  if (weekData.plan && weekData.plan.type === type.key) {
+                    weekPlan += weekData.plan.value;
+                  }
+                  if (weekData.actual && weekData.actual[type.key]) {
+                    weekActual += weekData.actual[type.key];
                   }
                 }
               });
 
-              if (floorDelayed.length > 0) {
-                hasAnyAlert = true;
-                const totalDays = floorDelayed.reduce(
-                  (max, t) => Math.max(max, t.days),
-                  0,
-                );
-                floorReports.push(`
-                            <div class="flex items-start gap-5 p-5 rounded-xl border border-rose-100 bg-rose-50/10 shadow-[0_2px_10px_-3px_rgba(244,63,94,0.1)]">
-                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-2xl shadow-inner">
-                                    ${floor.id}
-                                </div>
-                                <div class="flex-grow min-w-0">
-                                    <div class="flex justify-between items-start mb-2 gap-2">
-                                        <h4 class="font-black text-slate-800 text-xl">ชั้น ${floor.id}</h4>
-                                        <span class="text-sm px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-black shrink-0">ล่าช้ากว่าแผน</span>
-                                    </div>
-                                    <p class="text-base text-rose-700 font-bold mb-2">ล่าช้ารวม ${totalDays} วัน</p>
-                                    <ul class="text-base text-slate-700 list-disc pl-5 space-y-2 font-medium">
-                                        ${floorDelayed.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-rose-600 font-bold">(ช้า ${t.days} วัน)</span></li>`).join("")}
-                                    </ul>
-                                </div>
-                            </div>
-                        `);
-              } else if (floorInProgress.length > 0 && !isAllDone) {
-                hasAnyAlert = true;
-                floorReports.push(`
-                            <div class="flex items-start gap-5 p-5 rounded-xl border border-blue-100 bg-blue-50/10 shadow-[0_2px_10px_-3px_rgba(59,130,246,0.1)]">
-                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl shadow-inner">
-                                    ${floor.id}
-                                </div>
-                                <div class="flex-grow min-w-0">
-                                    <div class="flex justify-between items-start mb-2 gap-2">
-                                        <h4 class="font-black text-slate-800 text-xl">ชั้น ${floor.id}</h4>
-                                        <span class="text-sm px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-black shrink-0">แผนงานที่ต้องทำวันนี้</span>
-                                    </div>
-                                    <ul class="text-base text-slate-700 list-disc pl-5 space-y-2 font-medium">
-                                        ${floorInProgress.map((t) => `<li class="break-words whitespace-normal">${t.name} <span class="text-slate-500 font-semibold">(ครบกำหนด: ${t.endStr})</span></li>`).join("")}
-                                    </ul>
-                                </div>
-                            </div>
-                        `);
+              // Accumulate actual always
+              accActual += weekActual;
+
+              // Accumulate plan only if the week's startDate has passed or is today
+              const wStart = new Date(w.startDate);
+              wStart.setHours(0,0,0,0);
+              if (wStart <= todayNoTime) {
+                accPlan += weekPlan;
               }
             });
 
+            const delayed = Math.max(0, accPlan - accActual);
+            stats[type.key] = {
+              label: type.label,
+              subtitle: type.subtitle,
+              accPlan,
+              accActual,
+              delayed
+            };
+          });
+
           // Format the date
           const thaiMonths = [
-            "ม.ค.",
-            "ก.พ.",
-            "มี.ค.",
-            "เม.ย.",
-            "พ.ค.",
-            "มิ.ย.",
-            "ก.ค.",
-            "ส.ค.",
-            "ก.ย.",
-            "ต.ค.",
-            "พ.ย.",
-            "ธ.ค.",
+            "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
+            "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."
           ];
           const dateStr = `${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
 
-          if (!hasAnyAlert) {
-            alertContainer.classList.add("hidden");
-            return;
-          }
-
           alertContainer.classList.remove("hidden");
           alertContainer.className =
-            "mb-12 bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden";
+            "mb-12 bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden";
 
           let html = `
-                    <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-8 py-5 flex justify-between items-center rounded-t-[2rem]">
+                    <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-8 py-5 flex justify-between items-center">
                         <h3 class="font-black text-xl flex items-center gap-3 tracking-tight">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            สรุปงานที่ต้องติดตามประจำวันที่ ${dateStr}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+                            สรุปความคืบหน้าแผนงานและสถานะการตรวจสอบ QC (สะสม)
                         </h3>
+                        <span class="text-sm bg-white/20 px-4 py-1.5 rounded-full font-bold">ข้อมูลสะสม ณ วันที่ ${dateStr}</span>
                     </div>
-                    <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        ${floorReports.join("")}
+                    <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-8 bg-slate-50">
+                        <!-- Card 1: QC เหนือฝ้า -->
+                        <div class="bg-white rounded-3xl border-t-8 border-amber-500 p-6 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.15)] flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_12px_40px_-6px_rgba(245,158,11,0.25)] border border-slate-100">
+                            <div>
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 shadow-inner">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-slate-800 text-lg leading-tight">QC เหนือฝ้า</h4>
+                                            <p class="text-xs text-slate-400 font-bold tracking-wider uppercase mt-0.5">${stats.neuaFa.subtitle}</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-bold">เหนือฝ้า</span>
+                                </div>
+                                
+                                <div class="space-y-4 my-6">
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                        <span class="text-sm text-slate-500 font-bold">แผนงานสะสม (ACC Plan)</span>
+                                        <span class="text-xl font-black text-slate-800">${stats.neuaFa.accPlan} <span class="text-xs text-slate-400 font-bold">ห้อง</span></span>
+                                    </div>
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                        <span class="text-sm text-slate-500 font-bold">ผลงานสะสม (ACC Actual)</span>
+                                        <span class="text-xl font-black text-emerald-600">${stats.neuaFa.accActual} <span class="text-xs text-emerald-400 font-bold">ห้อง</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-sm text-slate-600 font-extrabold">ล่าช้ากว่าแผน (Delayed)</span>
+                                <span class="px-3.5 py-1.5 rounded-xl text-sm font-black transition-all ${stats.neuaFa.delayed > 0 ? 'bg-rose-50 text-rose-600 border border-rose-100 animate-pulse' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}">
+                                    ${stats.neuaFa.delayed > 0 ? `ล่าช้า ${stats.neuaFa.delayed} ห้อง` : 'ตามแผนงาน ✅'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: QC Wetwork -->
+                        <div class="bg-white rounded-3xl border-t-8 border-sky-500 p-6 shadow-[0_4px_20px_-4px_rgba(14,165,233,0.15)] flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_12px_40px_-6px_rgba(14,165,233,0.25)] border border-slate-100">
+                            <div>
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl bg-sky-50 flex items-center justify-center text-sky-600 shadow-inner">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-slate-800 text-lg leading-tight">QC Wetwork</h4>
+                                            <p class="text-xs text-slate-400 font-bold tracking-wider uppercase mt-0.5">${stats.qcWW.subtitle}</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 font-bold">Wet Work</span>
+                                </div>
+                                
+                                <div class="space-y-4 my-6">
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                        <span class="text-sm text-slate-500 font-bold">แผนงานสะสม (ACC Plan)</span>
+                                        <span class="text-xl font-black text-slate-800">${stats.qcWW.accPlan} <span class="text-xs text-slate-400 font-bold">ห้อง</span></span>
+                                    </div>
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                        <span class="text-sm text-slate-500 font-bold">ผลงานสะสม (ACC Actual)</span>
+                                        <span class="text-xl font-black text-emerald-600">${stats.qcWW.accActual} <span class="text-xs text-emerald-400 font-bold">ห้อง</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-sm text-slate-600 font-extrabold">ล่าช้ากว่าแผน (Delayed)</span>
+                                <span class="px-3.5 py-1.5 rounded-xl text-sm font-black transition-all ${stats.qcWW.delayed > 0 ? 'bg-rose-50 text-rose-600 border border-rose-100 animate-pulse' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}">
+                                    ${stats.qcWW.delayed > 0 ? `ล่าช้า ${stats.qcWW.delayed} ห้อง` : 'ตามแผนงาน ✅'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: QC End Product -->
+                        <div class="bg-white rounded-3xl border-t-8 border-teal-500 p-6 shadow-[0_4px_20px_-4px_rgba(20,184,166,0.15)] flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_12px_40px_-6px_rgba(20,184,166,0.25)] border border-slate-100">
+                            <div>
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 shadow-inner">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-slate-800 text-lg leading-tight">QC End Product</h4>
+                                            <p class="text-xs text-slate-400 font-bold tracking-wider uppercase mt-0.5">${stats.qcEnd.subtitle}</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs px-2.5 py-1 rounded-full bg-teal-100 text-teal-800 font-bold">End Product</span>
+                                </div>
+                                
+                                <div class="space-y-4 my-6">
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                        <span class="text-sm text-slate-500 font-bold">แผนงานสะสม (ACC Plan)</span>
+                                        <span class="text-xl font-black text-slate-800">${stats.qcEnd.accPlan} <span class="text-xs text-slate-400 font-bold">ห้อง</span></span>
+                                    </div>
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                        <span class="text-sm text-slate-500 font-bold">ผลงานสะสม (ACC Actual)</span>
+                                        <span class="text-xl font-black text-emerald-600">${stats.qcEnd.accActual} <span class="text-xs text-emerald-400 font-bold">ห้อง</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-sm text-slate-600 font-extrabold">ล่าช้ากว่าแผน (Delayed)</span>
+                                <span class="px-3.5 py-1.5 rounded-xl text-sm font-black transition-all ${stats.qcEnd.delayed > 0 ? 'bg-rose-50 text-rose-600 border border-rose-100 animate-pulse' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}">
+                                    ${stats.qcEnd.delayed > 0 ? `ล่าช้า ${stats.qcEnd.delayed} ห้อง` : 'ตามแผนงาน ✅'}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 `;
 
@@ -4735,6 +5012,7 @@
 
           const resBtn = document.getElementById("view-residential-btn");
           const comBtn = document.getElementById("view-common-btn");
+          const comDefectBtn = document.getElementById("view-common-defect-btn");
           const qcBtn = document.getElementById("view-qc-summary-btn");
           const reportBtn = document.getElementById("view-summary-report-btn");
           const scheduleBtn = document.getElementById("view-schedule-btn");
@@ -4743,6 +5021,8 @@
 
           resBtn.classList.toggle("active", view === "residential");
           comBtn.classList.toggle("active", view === "common");
+          if (comDefectBtn)
+            comDefectBtn.classList.toggle("active", view === "commonDefect");
           qcBtn.classList.toggle("active", view === "qcSummary");
           reportBtn.classList.toggle("active", view === "summaryReport");
           if (scheduleBtn)
@@ -4751,6 +5031,12 @@
             qcHandoverBtn.classList.toggle("active", view === "qcHandover");
           if (extPaintingBtn)
             extPaintingBtn.classList.toggle("active", view === "exteriorPaintingPlan");
+
+          // Hide/Show common area defect container
+          const commonDefectContainer = document.getElementById("common-defect-container");
+          if (commonDefectContainer) {
+            commonDefectContainer.classList.toggle("hidden", view !== "commonDefect");
+          }
 
           // Hide summary tables if not in qcHandover view
           const qcSummaryContainer = document.getElementById(
@@ -4971,27 +5257,34 @@
             return;
           }
 
-          if (currentView === "residential") {
+          if (currentView === "commonDefect") {
+            mainTable.classList.add("hidden");
             captureArea.classList.remove("common-view-active");
-            renderResidentialTable();
-          } else if (currentView === "common") {
-            captureArea.classList.add("common-view-active");
-            renderCommonAreaTable();
-          } else if (currentView === "qcSummary") {
-            captureArea.classList.remove("common-view-active");
-            renderQCSummaryTable();
-          } else if (currentView === "summaryReport") {
-            captureArea.classList.remove("common-view-active");
-            renderSummaryReportTable();
-          } else if (currentView === "schedule") {
-            captureArea.classList.remove("common-view-active");
-            renderScheduleTable();
-          } else if (currentView === "qcHandover") {
-            captureArea.classList.remove("common-view-active");
-            renderQCHandoverTable();
-          } else if (currentView === "exteriorPaintingPlan") {
-            captureArea.classList.remove("common-view-active");
-            renderExteriorPaintingPlanTable();
+            renderCommonDefectTable();
+          } else {
+            mainTable.classList.remove("hidden");
+            if (currentView === "residential") {
+              captureArea.classList.remove("common-view-active");
+              renderResidentialTable();
+            } else if (currentView === "common") {
+              captureArea.classList.add("common-view-active");
+              renderCommonAreaTable();
+            } else if (currentView === "qcSummary") {
+              captureArea.classList.remove("common-view-active");
+              renderQCSummaryTable();
+            } else if (currentView === "summaryReport") {
+              captureArea.classList.remove("common-view-active");
+              renderSummaryReportTable();
+            } else if (currentView === "schedule") {
+              captureArea.classList.remove("common-view-active");
+              renderScheduleTable();
+            } else if (currentView === "qcHandover") {
+              captureArea.classList.remove("common-view-active");
+              renderQCHandoverTable();
+            } else if (currentView === "exteriorPaintingPlan") {
+              captureArea.classList.remove("common-view-active");
+              renderExteriorPaintingPlanTable();
+            }
           }
           updateUI();
         }
@@ -7747,6 +8040,589 @@
           closeExteriorPaintingModal();
           renderExteriorPaintingPlanTable();
         }
+
+        // --- COMMON AREA DEFECT MANAGEMENT AND RENDERING ---
+        
+        window.getInitialCommonDefects = function() {
+          const initialGroups = [
+            { group: "ดาดฟ้า", items: ["พื้น/ระบายน้ำ/รอยต่อ", "ราวกันตก/งานโครงสร้าง", "หลังคา/งานระบบระบายอากาศ"] },
+            { group: "โถงทางเดิน", items: ["พื้นกระเบื้อง/บัวเชิงผนัง", "ผนังฉาบเรียบ/ทาสี", "ฝ้าเพดาน/โคมไฟ", "ประตูช่องทางเดิน"] },
+            { group: "ห้องขยะประจำชั้น", items: ["พื้นกระเบื้อง/ผนัง", "ถังขยะ/ประตู", "พัดลมดูดอากาศ"] },
+            { group: "ห้องไฟฟ้าประจำชั้น", items: ["ตู้ MDB/งานระบบ", "การเข้าสายไฟ/ความสะอาด", "ประตู/กุญแจล็อค"] },
+            { group: "บันได", items: ["ราวจับบันได", "พื้นบันไดหนีไฟ/บัว", "ไฟส่องสว่างฉุกเฉิน", "ประตูกันไฟ"] },
+            { group: "ห้องเครื่อง/พื้นที่ส่วนกลาง", items: ["ห้องเครื่องลิฟต์", "ห้องเครื่องปั๊มน้ำ", "ห้องฟิตเนส/สระว่ายน้ำ", "โถงล็อบบี้"] },
+            { group: "รูปด้านอาคาร", items: ["สีผนังภายนอก/รอยร้าว", "ระเบียง/ราวกันตกภายนอก"] }
+          ];
+
+          const list = [];
+          let idCounter = 1;
+          initialGroups.forEach(g => {
+            g.items.forEach(item => {
+              list.push({
+                id: idCounter++,
+                group: g.group,
+                name: item,
+                tot: 0,
+                fix: 0,
+                rem: 0,
+                target: "",
+                status: "รอดำเนินการ"
+              });
+            });
+          });
+          return list;
+        };
+
+        window.renderCommonDefectTable = function() {
+          const container = document.getElementById("common-defect-container");
+          if (!container) return;
+          container.innerHTML = "";
+
+          if (!projectData.commonDefects) {
+            projectData.commonDefects = getInitialCommonDefects();
+          }
+
+          const list = projectData.commonDefects;
+
+          // Filter / Action header
+          const actionsHTML = `
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white p-4 border border-slate-200 rounded-2xl shadow-sm">
+              <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <div class="relative w-full sm:w-64">
+                  <input
+                    id="defect-search-input"
+                    type="text"
+                    placeholder="ค้นหาตามรายการ/สถานที่..."
+                    class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                    oninput="filterDefectList()"
+                  />
+                  <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <select
+                  id="defect-filter-group"
+                  class="p-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700 bg-white"
+                  onchange="filterDefectList()"
+                >
+                  <option value="ALL">กลุ่มพื้นที่ทั้งหมด</option>
+                  <option value="ดาดฟ้า">ดาดฟ้า</option>
+                  <option value="โถงทางเดิน">โถงทางเดิน</option>
+                  <option value="ห้องขยะประจำชั้น">ห้องขยะประจำชั้น</option>
+                  <option value="ห้องไฟฟ้าประจำชั้น">ห้องไฟฟ้าประจำชั้น</option>
+                  <option value="บันได">บันได</option>
+                  <option value="ห้องเครื่อง/พื้นที่ส่วนกลาง">ห้องเครื่อง/พื้นที่ส่วนกลาง</option>
+                  <option value="รูปด้านอาคาร">รูปด้านอาคาร</option>
+                </select>
+                <select
+                  id="defect-filter-status"
+                  class="p-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700 bg-white"
+                  onchange="filterDefectList()"
+                >
+                  <option value="ALL">สถานะทั้งหมด</option>
+                  <option value="รอดำเนินการ">รอดำเนินการ</option>
+                  <option value="รอนัดตรวจ">รอนัดตรวจ</option>
+                  <option value="แก้ไขเรียบร้อย">แก้ไขเรียบร้อย</option>
+                </select>
+              </div>
+              <button
+                onclick="openAddCommonDefectModal()"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-indigo-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+                เพิ่มรายการใหม่
+              </button>
+            </div>
+          `;
+
+          // Table wrapper
+          const tableWrapperHTML = `
+            <div id="defect-tables-container" class="space-y-8 pb-20">
+              <!-- Grouped tables will render here -->
+            </div>
+          `;
+
+          container.innerHTML = actionsHTML + tableWrapperHTML;
+
+          // Initially render list
+          filterDefectList();
+        };
+
+        window.filterDefectList = function() {
+          const searchInput = document.getElementById("defect-search-input");
+          const groupSelect = document.getElementById("defect-filter-group");
+          const statusSelect = document.getElementById("defect-filter-status");
+
+          const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : "";
+          const groupVal = groupSelect ? groupSelect.value : "ALL";
+          const statusVal = statusSelect ? statusSelect.value : "ALL";
+
+          const container = document.getElementById("defect-tables-container");
+          if (!container) return;
+
+          const defects = projectData.commonDefects || [];
+
+          // Filter rows
+          const filtered = defects.filter(item => {
+            const matchesSearch = item.name.toLowerCase().includes(searchVal);
+            const matchesGroup = groupVal === "ALL" || item.group === groupVal;
+            const matchesStatus = statusVal === "ALL" || item.status === statusVal;
+            return matchesSearch && matchesGroup && matchesStatus;
+          });
+
+          if (filtered.length === 0) {
+            container.innerHTML = `
+              <div class="text-center p-12 bg-white border border-slate-950 rounded-2xl shadow-sm text-slate-500">
+                <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-bold text-slate-700">ไม่พบข้อมูล DEFECT ที่ตรงกับเงื่อนไข</span>
+                <p class="text-xs text-slate-400 mt-1">ลองพิมพ์ค้นหาแบบอื่น ปรับตัวเลือก หรือเริ่มกดปุ่ม "เพิ่มรายการใหม่" ด้านบน</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Group by space group
+          const groups = {};
+          filtered.forEach(item => {
+            if (!groups[item.group]) {
+              groups[item.group] = [];
+            }
+            groups[item.group].push(item);
+          });
+
+          let html = `
+            <div class="bg-white border-2 border-slate-950 rounded-2xl shadow-md overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-slate-950 text-left text-xs md:text-sm">
+                  <thead>
+                    <tr class="bg-slate-800 text-white font-black border-b border-slate-950 text-center">
+                      <th class="p-3 text-center w-12 border border-slate-950">#</th>
+                      <th class="p-3 text-left border border-slate-950 min-w-[250px]">รายการ / สถานที่ตรวจพบ DEFECT</th>
+                      <th class="p-3 text-center border border-slate-950 w-24">ทั้งหมด (TOT)</th>
+                      <th class="p-3 text-center border border-slate-950 w-24">แก้ไขแล้ว (FIX)</th>
+                      <th class="p-3 text-center border border-slate-950 w-24">คงเหลือ (REM)</th>
+                      <th class="p-3 text-center border border-slate-950 w-36">กำหนดเสร็จ (TARGET)</th>
+                      <th class="p-3 text-center border border-slate-950 w-36">สถานะ (STATUS)</th>
+                      <th class="p-3 text-center border border-slate-950 w-24">จัดการ</th>
+                    </tr>
+                  </thead>
+                  <tbody class="font-bold text-slate-800 divide-y divide-slate-950">
+          `;
+
+          let globalIndex = 1;
+
+          Object.keys(groups).forEach(groupName => {
+            const items = groups[groupName];
+
+            // Group metrics
+            let groupTot = 0;
+            let groupFix = 0;
+            items.forEach(it => {
+              groupTot += Number(it.tot) || 0;
+              groupFix += Number(it.fix) || 0;
+            });
+            const groupRem = groupTot - groupFix;
+            const groupPercent = groupTot > 0 ? Math.round((groupFix / groupTot) * 100) : 100;
+
+            // Group divider row
+            html += `
+              <tr class="bg-indigo-50 border-t border-b-2 border-slate-950">
+                <td colspan="8" class="p-3 bg-indigo-50/90 text-left font-black text-indigo-950 text-xs md:text-sm border border-slate-950">
+                  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
+                      <span class="flex items-center gap-1.5 text-slate-900">
+                        📂 <span class="font-black underline text-sm md:text-base">${groupName}</span>
+                      </span>
+                      <button
+                        onclick="openEditGroupNameModal('${groupName}')"
+                        class="px-2 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        title="แก้ไขชื่อหัวข้อใหญ่"
+                      >
+                        ✏️ แก้ไขชื่อหัวข้อ
+                      </button>
+                      <button
+                        onclick="openAddSubItemInGroupModal('${groupName}')"
+                        class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1 cursor-pointer"
+                        title="เพิ่มหัวข้อย่อยในกลุ่มนี้"
+                      >
+                        ➕ เพิ่มหัวข้อย่อย
+                      </button>
+                      <button
+                        onclick="deleteCommonGroupAndItemsDirectly('${groupName}')"
+                        class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        title="ลบกลุ่มพื้นที่นี้พร้อมข้อมูลทั้งหมด"
+                      >
+                        🗑️ ลบหัวข้อใหญ่
+                      </button>
+                    </div>
+                    <span class="text-xs font-black text-indigo-800 bg-white border border-indigo-200 px-3 py-1 rounded-full flex flex-wrap items-center gap-3 shadow-sm self-start lg:self-center">
+                      <span>ทั้งหมด: ${groupTot}</span> | 
+                      <span class="text-emerald-700">แก้ไขเสร็จ: ${groupFix}</span> | 
+                      <span class="text-rose-700 font-extrabold">คงเหลือ: ${groupRem}</span> | 
+                      <span class="text-indigo-900">${groupPercent}% สำเร็จ</span>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            `;
+
+            items.forEach((item) => {
+              const rem = (Number(item.tot) || 0) - (Number(item.fix) || 0);
+
+              // Status badges
+              let statusClass = "text-slate-700 bg-slate-100 border-slate-400";
+              if (item.status === "รอนัดตรวจ") {
+                statusClass = "text-amber-800 bg-amber-50 border-amber-300";
+              } else if (item.status === "แก้ไขเรียบร้อย") {
+                statusClass = "text-emerald-800 bg-emerald-50 border-emerald-300";
+              }
+
+              // Date formatting
+              let dateDisplay = "-";
+              if (item.target) {
+                const d = new Date(item.target);
+                if (!isNaN(d.getTime())) {
+                  dateDisplay = d.toLocaleDateString("th-TH", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                  });
+                }
+              }
+
+              const remClass = rem > 0 ? "text-rose-700 font-black" : "text-slate-400 font-medium";
+              const fixClass = item.fix > 0 ? "text-emerald-700 font-bold" : "text-slate-500 font-semibold";
+
+              html += `
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="p-3 text-center border border-slate-950 font-black text-slate-500 bg-slate-50/50">${globalIndex++}</td>
+                  <td class="p-3 border border-slate-950 text-slate-900 font-extrabold text-left">
+                    ${item.name}
+                  </td>
+                  <td class="p-3 text-center border border-slate-950 font-black text-slate-900">${item.tot}</td>
+                  <td class="p-3 text-center border border-slate-950 ${fixClass}">${item.fix}</td>
+                  <td class="p-3 text-center border border-slate-950 ${remClass}">${rem}</td>
+                  <td class="p-3 text-center border border-slate-950 text-slate-600 font-medium">${dateDisplay}</td>
+                  <td class="p-3 text-center border border-slate-950">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${statusClass}">
+                      ● ${item.status}
+                    </span>
+                  </td>
+                  <td class="p-3 text-center border border-slate-950">
+                    <div class="flex items-center justify-center gap-1.5">
+                      <button
+                        onclick="openEditCommonDefectModal(${item.id})"
+                        class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 rounded-lg font-bold text-xs transition-colors shadow-sm focus:outline-none border border-indigo-200"
+                        title="แก้ไขรายละเอียด"
+                      >
+                        ✏️ แก้ไข
+                      </button>
+                      <button
+                        onclick="deleteCommonDefectRowDirectly(${item.id})"
+                        class="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-xs transition-colors shadow-sm focus:outline-none border border-rose-200"
+                        title="ลบหัวข้อย่อยนี้"
+                      >
+                        🗑️ ลบ
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            });
+          });
+
+          html += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+
+          container.innerHTML = html;
+        };
+
+        window.openEditCommonDefectModal = function(id) {
+          const defects = projectData.commonDefects || [];
+          const defect = defects.find(x => x.id === id);
+          if (!defect) return;
+
+          document.getElementById("edit-defect-id").value = id;
+          document.getElementById("edit-defect-name").value = defect.name;
+          document.getElementById("edit-defect-tot").value = defect.tot;
+          document.getElementById("edit-defect-fix").value = defect.fix;
+          document.getElementById("edit-defect-rem-val").textContent = (Number(defect.tot) || 0) - (Number(defect.fix) || 0);
+          document.getElementById("edit-defect-target-date").value = defect.target || "";
+          document.getElementById("edit-defect-status").value = defect.status;
+
+          // Set up group selector
+          const select = document.getElementById("edit-defect-group-select");
+          const customInput = document.getElementById("edit-defect-group-custom");
+
+          const standardGroups = ["ดาดฟ้า", "โถงทางเดิน", "ห้องขยะประจำชั้น", "ห้องไฟฟ้าประจำชั้น", "บันได", "ห้องเครื่อง/พื้นที่ส่วนกลาง", "รูปด้านอาคาร"];
+          if (standardGroups.includes(defect.group)) {
+            select.value = defect.group;
+            customInput.classList.add("hidden");
+            customInput.value = "";
+          } else {
+            select.value = "CUSTOM";
+            customInput.classList.remove("hidden");
+            customInput.value = defect.group;
+          }
+
+          // Show delete button
+          document.getElementById("edit-defect-delete-btn").classList.remove("hidden");
+
+          openModal("commonDefectEditModal");
+        };
+
+        window.openAddCommonDefectModal = function() {
+          document.getElementById("edit-defect-id").value = "NEW";
+          document.getElementById("edit-defect-name").value = "";
+          document.getElementById("edit-defect-tot").value = 0;
+          document.getElementById("edit-defect-fix").value = 0;
+          document.getElementById("edit-defect-rem-val").textContent = 0;
+          document.getElementById("edit-defect-target-date").value = "";
+          document.getElementById("edit-defect-status").value = "รอดำเนินการ";
+
+          const select = document.getElementById("edit-defect-group-select");
+          const customInput = document.getElementById("edit-defect-group-custom");
+          select.value = "ดาดฟ้า";
+          customInput.classList.add("hidden");
+          customInput.value = "";
+
+          // Hide delete button
+          document.getElementById("edit-defect-delete-btn").classList.add("hidden");
+
+          openModal("commonDefectEditModal");
+        };
+
+        window.openAddSubItemInGroupModal = function(groupName) {
+          // Pre-fill as new item
+          document.getElementById("edit-defect-id").value = "NEW";
+          document.getElementById("edit-defect-name").value = "";
+          document.getElementById("edit-defect-tot").value = 0;
+          document.getElementById("edit-defect-fix").value = 0;
+          document.getElementById("edit-defect-rem-val").textContent = 0;
+          document.getElementById("edit-defect-target-date").value = "";
+          document.getElementById("edit-defect-status").value = "รอดำเนินการ";
+
+          const select = document.getElementById("edit-defect-group-select");
+          const customInput = document.getElementById("edit-defect-group-custom");
+          
+          const standardGroups = ["ดาดฟ้า", "โถงทางเดิน", "ห้องขยะประจำชั้น", "ห้องไฟฟ้าประจำชั้น", "บันได", "ห้องเครื่อง/พื้นที่ส่วนกลาง", "รูปด้านอาคาร"];
+          if (standardGroups.includes(groupName)) {
+            select.value = groupName;
+            customInput.classList.add("hidden");
+            customInput.value = "";
+          } else {
+            select.value = "CUSTOM";
+            customInput.classList.remove("hidden");
+            customInput.value = groupName;
+          }
+
+          // Hide delete button since it's a new item
+          document.getElementById("edit-defect-delete-btn").classList.add("hidden");
+
+          // Open the modal
+          openModal("commonDefectEditModal");
+          
+          // Focus the input
+          setTimeout(() => {
+            const input = document.getElementById("edit-defect-name");
+            if (input) input.focus();
+          }, 150);
+        };
+
+        window.openEditGroupNameModal = function(groupName) {
+          document.getElementById("edit-group-old-name").value = groupName;
+          document.getElementById("edit-group-new-name").value = groupName;
+          openModal("commonGroupEditModal");
+          setTimeout(() => {
+            const input = document.getElementById("edit-group-new-name");
+            if (input) input.focus();
+          }, 150);
+        };
+
+        window.saveCommonGroupName = function(event) {
+          if (event) event.preventDefault();
+          const oldName = document.getElementById("edit-group-old-name").value;
+          const newName = document.getElementById("edit-group-new-name").value.trim();
+
+          if (!newName) {
+            showToast("กรุณากรอกชื่อกลุ่มพื้นที่!", 3000);
+            return;
+          }
+
+          if (!projectData.commonDefects) {
+            projectData.commonDefects = getInitialCommonDefects();
+          }
+
+          projectData.commonDefects.forEach(item => {
+            if (item.group === oldName) {
+              item.group = newName;
+            }
+          });
+
+          saveProjectDataToDB();
+          closeModal("commonGroupEditModal");
+          renderCommonDefectTable();
+          showToast("เปลี่ยนชื่อกลุ่มพื้นที่เรียบร้อย!");
+        };
+
+        window.deleteCommonGroupAndItems = function() {
+          const groupName = document.getElementById("edit-group-old-name").value;
+          showConfirmModal(
+            "ยืนยันการลบหัวข้อใหญ่",
+            `คุณแน่ใจหรือไม่ว่าต้องการลบกลุ่มพื้นที่ "${groupName}" พร้อมหัวข้อย่อยทั้งหมด?`,
+            function() {
+              if (!projectData.commonDefects) {
+                projectData.commonDefects = getInitialCommonDefects();
+              }
+
+              projectData.commonDefects = projectData.commonDefects.filter(item => item.group !== groupName);
+
+              saveProjectDataToDB();
+              closeModal("commonGroupEditModal");
+              renderCommonDefectTable();
+              showToast("ลบกลุ่มพื้นที่และหัวข้อย่อยเรียบร้อย!");
+            }
+          );
+        };
+
+        window.deleteCommonGroupAndItemsDirectly = function(groupName) {
+          showConfirmModal(
+            "ยืนยันการลบหัวข้อใหญ่",
+            `คุณแน่ใจหรือไม่ว่าต้องการลบกลุ่มพื้นที่ "${groupName}" พร้อมหัวข้อย่อยทั้งหมด?`,
+            function() {
+              if (!projectData.commonDefects) {
+                projectData.commonDefects = getInitialCommonDefects();
+              }
+
+              projectData.commonDefects = projectData.commonDefects.filter(item => item.group !== groupName);
+
+              saveProjectDataToDB();
+              renderCommonDefectTable();
+              showToast("ลบกลุ่มพื้นที่และหัวข้อย่อยเรียบร้อย!");
+            }
+          );
+        };
+
+        window.deleteCommonDefectRowDirectly = function(id) {
+          if (!projectData.commonDefects) return;
+          const defect = projectData.commonDefects.find(x => x.id === id);
+          if (!defect) return;
+
+          showConfirmModal(
+            "ยืนยันการลบหัวข้อย่อย",
+            `คุณแน่ใจหรือไม่ว่าต้องการลบหัวข้อย่อย "${defect.name}"?`,
+            function() {
+              projectData.commonDefects = projectData.commonDefects.filter(x => x.id !== id);
+
+              saveProjectDataToDB();
+              renderCommonDefectTable();
+              showToast("ลบหัวข้อย่อยสำเร็จ!");
+            }
+          );
+        };
+
+        window.onDefectGroupSelectChange = function() {
+          const select = document.getElementById("edit-defect-group-select");
+          const customInput = document.getElementById("edit-defect-group-custom");
+          if (select.value === "CUSTOM") {
+            customInput.classList.remove("hidden");
+            customInput.focus();
+          } else {
+            customInput.classList.add("hidden");
+          }
+        };
+
+        window.onEditDefectCountsChange = function() {
+          const tot = Number(document.getElementById("edit-defect-tot").value) || 0;
+          const fix = Number(document.getElementById("edit-defect-fix").value) || 0;
+          const rem = Math.max(0, tot - fix);
+          document.getElementById("edit-defect-rem-val").textContent = rem;
+        };
+
+        window.saveCommonDefectRow = function(event) {
+          if (event) event.preventDefault();
+
+          const idVal = document.getElementById("edit-defect-id").value;
+          const name = document.getElementById("edit-defect-name").value.trim();
+          const selectGroup = document.getElementById("edit-defect-group-select").value;
+          const customGroup = document.getElementById("edit-defect-group-custom").value.trim();
+
+          let group = selectGroup;
+          if (selectGroup === "CUSTOM") {
+            group = customGroup || "ทั่วไป / อื่นๆ";
+          }
+
+          const tot = Number(document.getElementById("edit-defect-tot").value) || 0;
+          let fix = Number(document.getElementById("edit-defect-fix").value) || 0;
+
+          if (fix > tot) {
+            showToast("จำนวนที่แก้ไขเสร็จแล้วห้ามเกินจำนวน DEFECT ทั้งหมด!", 3000);
+            return;
+          }
+
+          const rem = tot - fix;
+          const target = document.getElementById("edit-defect-target-date").value;
+          const status = document.getElementById("edit-defect-status").value;
+
+          if (!projectData.commonDefects) {
+            projectData.commonDefects = getInitialCommonDefects();
+          }
+
+          if (idVal === "NEW") {
+            const maxId = projectData.commonDefects.reduce((max, x) => Math.max(max, x.id), 0);
+            const newDefect = {
+              id: maxId + 1,
+              group: group,
+              name: name,
+              tot: tot,
+              fix: fix,
+              rem: rem,
+              target: target,
+              status: status
+            };
+            projectData.commonDefects.push(newDefect);
+            showToast("เพิ่มข้อมูล DEFECT สำเร็จ!");
+          } else {
+            const id = Number(idVal);
+            const index = projectData.commonDefects.findIndex(x => x.id === id);
+            if (index !== -1) {
+              projectData.commonDefects[index].group = group;
+              projectData.commonDefects[index].name = name;
+              projectData.commonDefects[index].tot = tot;
+              projectData.commonDefects[index].fix = fix;
+              projectData.commonDefects[index].rem = rem;
+              projectData.commonDefects[index].target = target;
+              projectData.commonDefects[index].status = status;
+            }
+            showToast("บันทึกข้อมูลเรียบร้อย!");
+          }
+
+          saveProjectDataToDB();
+          closeModal("commonDefectEditModal");
+          renderCommonDefectTable();
+        };
+
+        window.deleteCommonDefectRow = function() {
+          const idVal = document.getElementById("edit-defect-id").value;
+          if (idVal === "NEW") return;
+
+          showConfirmModal(
+            "ยืนยันการลบ",
+            "คุณมั่นใจว่าต้องการลบรายการ DEFECT นี้ใช่ไหม?",
+            function() {
+              const id = Number(idVal);
+              projectData.commonDefects = (projectData.commonDefects || []).filter(x => x.id !== id);
+
+              saveProjectDataToDB();
+              closeModal("commonDefectEditModal");
+              renderCommonDefectTable();
+              showToast("ลบข้อมูลสำเร็จ!");
+            }
+          );
+        };
+
         function renderScheduleTable() {
           const mainTable = document.getElementById("main-table");
           mainTable.innerHTML = "";
@@ -8884,7 +9760,8 @@
               isCommonView ||
               currentView === "summaryReport" ||
               currentView === "schedule" ||
-              currentView === "qcHandover"
+              currentView === "qcHandover" ||
+              currentView === "commonDefect"
                 ? "none"
                 : "flex";
           }
@@ -8896,7 +9773,8 @@
               isCommonView ||
               currentView === "summaryReport" ||
               currentView === "schedule" ||
-              currentView === "qcHandover"
+              currentView === "qcHandover" ||
+              currentView === "commonDefect"
                 ? "none"
                 : "inline-flex";
           }
@@ -8932,7 +9810,9 @@
           }
 
           let title = "";
-          if (isCommonView) {
+          if (currentView === "commonDefect") {
+            title = "งาน DEFECT ส่วนกลาง";
+          } else if (isCommonView) {
             title = "STATUS งานพื้นที่ส่วนกลาง";
           } else if (isQCSummaryView) {
             title = "STATUS สรุปผล QC";
@@ -13920,6 +14800,7 @@
           document
             .getElementById("confirmOkBtn")
             .addEventListener("click", () => {
+              closeModal("confirmModal");
               if (confirmCallback) confirmCallback();
             });
 
@@ -14105,6 +14986,12 @@
             enterAppView("qcSummary"),
           );
           viewCommonBtn.addEventListener("click", () => enterAppView("common"));
+          const viewCommonDefectBtn = document.getElementById("view-common-defect-btn");
+          if (viewCommonDefectBtn) {
+            viewCommonDefectBtn.addEventListener("click", () =>
+              enterAppView("commonDefect")
+            );
+          }
           viewSummaryReportBtn.addEventListener("click", () =>
             enterAppView("summaryReport"),
           );
