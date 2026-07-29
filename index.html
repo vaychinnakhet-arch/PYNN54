@@ -1308,6 +1308,20 @@
               <div id="summary-report-floor-list" class="flex flex-wrap gap-1"></div>
             </div>
 
+            <!-- QC Handover Capture Scope -->
+            <div id="qc-handover-capture-scope-toggle" class="hidden items-center gap-2 px-2 py-1.5 bg-slate-50/80 border border-slate-200/70 rounded-xl shadow-sm">
+              <span class="px-2 text-[11px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">ขอบเขตภาพแคป</span>
+              <div class="qc-capture-scope-buttons bg-slate-200/60 p-1 rounded-lg text-xs font-semibold flex items-center gap-1 shadow-inner">
+                <button id="qc-capture-scope-all-btn" type="button" class="qc-capture-scope-btn active px-3 py-1.5 rounded-md transition-all whitespace-nowrap border border-transparent" aria-pressed="true">
+                  ภาพรวมทั้งหมด
+                </button>
+                <button id="qc-capture-scope-delayed-btn" type="button" class="qc-capture-scope-btn px-3 py-1.5 rounded-md transition-all whitespace-nowrap border border-transparent" aria-pressed="false">
+                  เฉพาะงานที่ล่าช้า
+                </button>
+              </div>
+              <span class="hidden xl:inline text-[10px] font-semibold text-slate-400 whitespace-nowrap">LINE: สัปดาห์ปัจจุบัน ±3</span>
+            </div>
+
             <!-- Settings & Filters -->
             <button id="toggleQCHandoverSettingsBtn" onclick="openQCHandoverSettings()" class="hidden action-btn px-4 py-2 bg-slate-800 text-white rounded-xl shadow-md hover:bg-slate-700 hover:shadow-lg focus:outline-none transition-all font-bold text-xs flex items-center justify-center gap-2 whitespace-nowrap min-h-[40px]">
               <i data-lucide="settings" class="w-4 h-4 border border-white/20 rounded-full p-0.5"></i>
@@ -3486,6 +3500,8 @@
         let summaryReportSelectedFloors = [2]; // Default to floor 2
         let isMultiFloorSelectionEnabled = false;
         let showMajorDefectHighlight = false;
+        let qcHandoverCaptureScope = "all";
+        let isQCHandoverCompactCapture = false;
         let currentQuickUpdateRoom = { floor: null, room: null };
         let isSelecting = false;
         let selectedCells = new Set();
@@ -7696,6 +7712,121 @@
           QC_HANDOVER_WEEKS = weeks;
         }
 
+        function getCurrentQCHandoverWeekIndex() {
+          if (!QC_HANDOVER_WEEKS.length) return -1;
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const directMatch = QC_HANDOVER_WEEKS.findIndex((week) => {
+            const start = new Date(week.startDate);
+            const end = new Date(week.endDate);
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+            return today >= start && today <= end;
+          });
+
+          if (directMatch >= 0) return directMatch;
+          const firstStart = new Date(QC_HANDOVER_WEEKS[0].startDate);
+          return today < firstStart ? 0 : QC_HANDOVER_WEEKS.length - 1;
+        }
+
+        function getVisibleQCHandoverWeeks() {
+          const allWeeks = QC_HANDOVER_WEEKS.map((week, index) => ({
+            week,
+            index,
+          }));
+          if (!isQCHandoverCompactCapture || allWeeks.length <= 7) {
+            return allWeeks;
+          }
+
+          const currentIndex = getCurrentQCHandoverWeekIndex();
+          const startIndex = Math.max(0, currentIndex - 3);
+          const endIndex = Math.min(
+            QC_HANDOVER_WEEKS.length - 1,
+            currentIndex + 3,
+          );
+          return allWeeks.filter(
+            ({ index }) => index >= startIndex && index <= endIndex,
+          );
+        }
+
+        function getQCHandoverFloorDelay(floorId) {
+          const currentIndex = getCurrentQCHandoverWeekIndex();
+          if (currentIndex < 0) {
+            return { isDelayed: false, gap: 0, plan: 0, actual: 0 };
+          }
+
+          const floorKey = `floor_${floorId}`;
+          let plan = 0;
+          let actual = 0;
+          for (let index = 0; index <= currentIndex; index++) {
+            const weekData =
+              projectData.qcHandover?.data?.[floorKey]?.[`week_${index}`];
+            plan += weekData?.plan?.value || 0;
+            actual += Object.values(weekData?.actual || {}).reduce(
+              (sum, value) => sum + (Number(value) || 0),
+              0,
+            );
+          }
+
+          return {
+            isDelayed: plan > actual,
+            gap: Math.max(0, plan - actual),
+            plan,
+            actual,
+          };
+        }
+
+        function getVisibleQCHandoverFloors() {
+          const floors = [2, 3, 4, 5, 6, 7, 8];
+          if (qcHandoverCaptureScope !== "delayed") return floors;
+          return floors.filter(
+            (floorId) => getQCHandoverFloorDelay(floorId).isDelayed,
+          );
+        }
+
+        function getQCHandoverWeekHighlightClass(weekIndex) {
+          return weekIndex === getCurrentQCHandoverWeekIndex()
+            ? "qc-current-week"
+            : "";
+        }
+
+        function updateQCHandoverCaptureScopeButtons() {
+          const allButton = document.getElementById(
+            "qc-capture-scope-all-btn",
+          );
+          const delayedButton = document.getElementById(
+            "qc-capture-scope-delayed-btn",
+          );
+          const isAll = qcHandoverCaptureScope === "all";
+
+          if (allButton) {
+            allButton.classList.toggle("active", isAll);
+            allButton.setAttribute("aria-pressed", String(isAll));
+          }
+          if (delayedButton) {
+            delayedButton.classList.toggle("active", !isAll);
+            delayedButton.setAttribute("aria-pressed", String(!isAll));
+          }
+        }
+
+        window.setQCHandoverCaptureScope = function (scope) {
+          qcHandoverCaptureScope = scope === "delayed" ? "delayed" : "all";
+          updateQCHandoverCaptureScopeButtons();
+          if (currentView === "qcHandover") {
+            renderQCHandoverTable();
+          }
+        };
+
+        function setQCHandoverCompactCapture(isActive) {
+          const nextState = Boolean(isActive);
+          if (isQCHandoverCompactCapture === nextState) return;
+          isQCHandoverCompactCapture = nextState;
+          if (currentView === "qcHandover") {
+            renderQCHandoverTable();
+          }
+        }
+
         function openQCHandoverPopover(floorId, weekIndex, isPlan) {
           currentQCHandoverContext = { floorId, weekIndex, isPlan };
           const popover = document.getElementById("qc-handover-popover");
@@ -7806,14 +7937,23 @@
           if (!projectData.qcHandover)
             projectData.qcHandover = { data: {}, floorTotals: {} };
 
+          const visibleWeekEntries = getVisibleQCHandoverWeeks();
+          const currentWeekIndex = getCurrentQCHandoverWeekIndex();
+          const floors = getVisibleQCHandoverFloors();
+          mainTable.classList.add("qc-handover-table");
+          mainTable.classList.toggle(
+            "qc-handover-compact-capture",
+            isQCHandoverCompactCapture,
+          );
+
           // Group weeks by month for header
           const monthGroups = [];
-          QC_HANDOVER_WEEKS.forEach((w, i) => {
+          visibleWeekEntries.forEach(({ week }) => {
             if (
               monthGroups.length === 0 ||
-              monthGroups[monthGroups.length - 1].month !== w.month
+              monthGroups[monthGroups.length - 1].month !== week.month
             ) {
-              monthGroups.push({ month: w.month, count: 1 });
+              monthGroups.push({ month: week.month, count: 1 });
             } else {
               monthGroups[monthGroups.length - 1].count++;
             }
@@ -7838,14 +7978,33 @@
                         <th class="border-l border-b border-black p-1.5 text-xs font-medium bg-sky-400 text-sky-900">ส่ง</th>
                         <th class="border-l border-b border-black p-1.5 text-xs font-medium bg-teal-400 text-teal-900">ทั้งหมด</th>
                         <th class="border-l border-b border-black p-1.5 text-xs font-medium bg-teal-400 text-teal-900">ส่ง</th>
-                        ${QC_HANDOVER_WEEKS.map((w, idx) => `<th class="border-l border-b ${idx === QC_HANDOVER_WEEKS.length - 1 ? "border-r" : ""} border-black p-2 text-xs font-medium text-slate-600 bg-slate-100 min-w-[70px]">${w.dates}</th>`).join("")}
+                        ${visibleWeekEntries
+                          .map(({ week, index }, visibleIndex) => {
+                            const currentWeekClass =
+                              getQCHandoverWeekHighlightClass(index);
+                            const currentBadge =
+                              index === currentWeekIndex
+                                ? '<span class="qc-current-week-badge">สัปดาห์นี้</span>'
+                                : "";
+                            return `<th class="border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-2 text-xs font-medium text-slate-600 bg-slate-100 min-w-[70px] ${currentWeekClass}">${week.dates}${currentBadge}</th>`;
+                          })
+                          .join("")}
                     </tr>
                 `;
           thead.innerHTML = headerRow1 + headerRow2;
           mainTable.appendChild(thead);
 
           const tbody = document.createElement("tbody");
-          const floors = [2, 3, 4, 5, 6, 7, 8];
+
+          if (floors.length === 0) {
+            const emptyRow = document.createElement("tr");
+            emptyRow.innerHTML = `
+              <td colspan="${visibleWeekEntries.length + 8}" class="border-l border-r border-b border-black bg-emerald-50 px-4 py-8 text-center text-sm font-bold text-emerald-700">
+                ไม่มีชั้นที่ล่าช้ากว่าแผนในสัปดาห์ปัจจุบัน
+              </td>
+            `;
+            tbody.appendChild(emptyRow);
+          }
 
           floors.forEach((floorId) => {
             const floorKey = `floor_${floorId}`;
@@ -7871,28 +8030,11 @@
               },
             );
 
-            const totalPlanAmount = planTotal.neuaFa + planTotal.qcWW + planTotal.qcEnd;
-            let tempAccPlan = 0;
-            let tempAccActual = 0;
-            const weekStats = QC_HANDOVER_WEEKS.map((w, i) => {
-              const weekKey = `week_${i}`;
-              const planObj = projectData.qcHandover.data[floorKey]?.[weekKey]?.plan;
-              const actualObj = projectData.qcHandover.data[floorKey]?.[weekKey]?.actual || {};
-              const wPlan = planObj ? planObj.value : 0;
-              const wActual = Object.values(actualObj).reduce((a, b) => a + (b || 0), 0);
-              tempAccPlan += wPlan;
-              tempAccActual += wActual;
-              return { accPlan: tempAccPlan, accActual: tempAccActual, wPlan, wActual };
-            });
-
-            const now = new Date();
-            now.setHours(0,0,0,0);
-
             // Plan Row
             const planRow = document.createElement("tr");
             let planCells = "";
-            QC_HANDOVER_WEEKS.forEach((w, i) => {
-              const weekKey = `week_${i}`;
+            visibleWeekEntries.forEach(({ index: weekIndex }, visibleIndex) => {
+              const weekKey = `week_${weekIndex}`;
               const cellData =
                 projectData.qcHandover.data[floorKey]?.[weekKey]?.plan;
               let cellContent = "";
@@ -7903,7 +8045,9 @@
                 cellClass = typeInfo.color + " " + typeInfo.textColor;
                 cellContent = cellData.value;
               }
-              planCells += `<td onclick="openQCHandoverPopover(${floorId}, ${i}, true)" class="border-l border-b ${i === QC_HANDOVER_WEEKS.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium cursor-pointer hover:opacity-80 transition-all ${cellClass}" style="height: 36px;">${cellContent}</td>`;
+              const currentWeekClass =
+                getQCHandoverWeekHighlightClass(weekIndex);
+              planCells += `<td onclick="openQCHandoverPopover(${floorId}, ${weekIndex}, true)" class="border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium cursor-pointer hover:opacity-80 transition-all ${cellClass} ${currentWeekClass}" style="height: 36px;">${cellContent}</td>`;
             });
 
             planRow.innerHTML = `
@@ -7922,8 +8066,8 @@
             // Actual Row
             const actualRow = document.createElement("tr");
             let actualCells = "";
-            QC_HANDOVER_WEEKS.forEach((w, i) => {
-              const weekKey = `week_${i}`;
+            visibleWeekEntries.forEach(({ index: weekIndex }, visibleIndex) => {
+              const weekKey = `week_${weekIndex}`;
               const actuals =
                 projectData.qcHandover.data[floorKey]?.[weekKey]?.actual || {};
               const activeTypes = Object.keys(actuals).filter(
@@ -7951,7 +8095,9 @@
                             </div>`;
               }
 
-              actualCells += `<td onclick="openQCHandoverPopover(${floorId}, ${i}, false)" class="border-l border-b ${i === QC_HANDOVER_WEEKS.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium cursor-pointer hover:opacity-80 transition-all ${cellClass}" style="height: 36px;">${cellContent}</td>`;
+              const currentWeekClass =
+                getQCHandoverWeekHighlightClass(weekIndex);
+              actualCells += `<td onclick="openQCHandoverPopover(${floorId}, ${weekIndex}, false)" class="border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium cursor-pointer hover:opacity-80 transition-all ${cellClass} ${currentWeekClass}" style="height: 36px;">${cellContent}</td>`;
             });
 
             actualRow.innerHTML = `
@@ -7993,7 +8139,7 @@
                     <td class="border-l border-b border-black p-2 bg-sky-600 text-white font-bold text-center text-sm">${grandTotals.qcWW.sent}</td>
                     <td class="border-l border-b border-black p-2 bg-teal-600 text-white font-bold text-center text-sm">${grandTotals.qcEnd.total}</td>
                     <td class="border-l border-b border-black p-2 bg-teal-600 text-white font-bold text-center text-sm">${grandTotals.qcEnd.sent}</td>
-                    <td class="border-l border-b border-r border-black bg-slate-800" colspan="${QC_HANDOVER_WEEKS.length + 1}"></td>
+                    <td class="border-l border-b border-r border-black bg-slate-800" colspan="${visibleWeekEntries.length + 1}"></td>
                 `;
           tbody.appendChild(footerRow);
           mainTable.appendChild(tbody);
@@ -8012,6 +8158,9 @@
             document.getElementById("main-table").after(container);
           }
           container.innerHTML = "";
+          const visibleWeekEntries = getVisibleQCHandoverWeeks();
+          const visibleFloors = getVisibleQCHandoverFloors();
+          const currentWeekIndex = getCurrentQCHandoverWeekIndex();
 
           const types = [
             { key: "neuaFa", label: "สรุป QC เหนือฝ้า", color: "bg-amber-500" },
@@ -8024,10 +8173,10 @@
             table.className =
               "bg-white rounded-xl shadow-sm border border-black overflow-hidden";
 
-            let weeklyData = QC_HANDOVER_WEEKS.map((w, i) => {
+            const weeklyData = QC_HANDOVER_WEEKS.map((w, i) => {
               let plan = 0;
               let actual = 0;
-              [2, 3, 4, 5, 6, 7, 8].forEach((fId) => {
+              visibleFloors.forEach((fId) => {
                 const weekData =
                   projectData.qcHandover.data[`floor_${fId}`]?.[`week_${i}`];
                 if (weekData) {
@@ -8042,13 +8191,17 @@
 
             let accPlan = 0;
             let accActual = 0;
-            const rows = weeklyData.map((d) => {
+            const allRows = weeklyData.map((d, weekIndex) => {
               accPlan += d.plan;
               accActual += d.actual;
-              return { ...d, accPlan, accActual };
+              return { ...d, accPlan, accActual, weekIndex };
             });
+            const rows = visibleWeekEntries.map(
+              ({ index }) => allRows[index],
+            );
 
-            const totalPlanForType = rows[rows.length - 1].accPlan;
+            const totalPlanForType =
+              allRows.length > 0 ? allRows[allRows.length - 1].accPlan : 0;
             const now = new Date();
             now.setHours(0,0,0,0);
 
@@ -8059,7 +8212,17 @@
                                 <thead>
                                     <tr class="bg-slate-50">
                                         <th class="border-b border-r border-black p-2 sticky left-0 z-10 bg-slate-50 min-w-[80px] shadow-[1px_0_0_0_#000]"></th>
-                                        ${QC_HANDOVER_WEEKS.map((w) => `<th class="border-b border-r border-black p-2 min-w-[70px] font-bold text-slate-600">${w.dates}/${w.month}</th>`).join("")}
+                                        ${visibleWeekEntries
+                                          .map(({ week, index }) => {
+                                            const currentWeekClass =
+                                              getQCHandoverWeekHighlightClass(index);
+                                            const currentBadge =
+                                              index === currentWeekIndex
+                                                ? '<span class="qc-current-week-badge">สัปดาห์นี้</span>'
+                                                : "";
+                                            return `<th class="border-b border-r border-black p-2 min-w-[70px] font-bold text-slate-600 ${currentWeekClass}">${week.dates}/${week.month}${currentBadge}</th>`;
+                                          })
+                                          .join("")}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -8067,44 +8230,46 @@
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-white shadow-[1px_0_0_0_#000] text-slate-700">Plan</td>
                                         ${rows.map((r, i) => {
                                             const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
-                                            const isAfterPlanAllocated = i > 0 && rows[i-1].accPlan >= totalPlanForType && totalPlanForType > 0;
+                                            const previousRow = r.weekIndex > 0 ? allRows[r.weekIndex - 1] : null;
+                                            const isAfterPlanAllocated = previousRow && previousRow.accPlan >= totalPlanForType && totalPlanForType > 0;
                                             let cellClass = "bg-white text-slate-700";
                                             if ((isBeforeStart && r.plan === 0) || (isAfterPlanAllocated && r.plan === 0)) cellClass = "bg-slate-200 text-transparent pointer-events-none";
-                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-medium ${cellClass}">${r.plan}</td>`;
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-medium ${cellClass} ${getQCHandoverWeekHighlightClass(r.weekIndex)}">${r.plan}</td>`;
                                         }).join("")}
                                     </tr>
                                     <tr class="bg-slate-50">
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-slate-50 shadow-[1px_0_0_0_#000] text-slate-700">Actual</td>
                                         ${rows.map((r, i) => {
                                             const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
-                                            const isFuture = QC_HANDOVER_WEEKS[i].startDate > now;
+                                            const isFuture = QC_HANDOVER_WEEKS[r.weekIndex].startDate > now;
                                             let cellClass = "bg-slate-50 text-slate-700";
                                             if (isFuture || (isBeforeStart && r.actual === 0)) cellClass = "bg-slate-200 text-transparent pointer-events-none";
-                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-medium ${cellClass}">${r.actual}</td>`;
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-medium ${cellClass} ${getQCHandoverWeekHighlightClass(r.weekIndex)}">${r.actual}</td>`;
                                         }).join("")}
                                     </tr>
                                     <tr>
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-white shadow-[1px_0_0_0_#000] text-slate-700">Acc. Plan</td>
                                         ${rows.map((r, i) => {
                                             const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
-                                            const isAfterPlanAllocated = i > 0 && rows[i-1].accPlan >= totalPlanForType && totalPlanForType > 0;
+                                            const previousRow = r.weekIndex > 0 ? allRows[r.weekIndex - 1] : null;
+                                            const isAfterPlanAllocated = previousRow && previousRow.accPlan >= totalPlanForType && totalPlanForType > 0;
                                             let cellClass = "bg-white text-blue-600";
                                             if (isBeforeStart && r.plan === 0) {
                                                 cellClass = "bg-slate-200 text-transparent pointer-events-none";
                                             } else if (isAfterPlanAllocated && r.plan === 0 && r.actual === 0) {
                                                 cellClass = "bg-slate-200 text-transparent pointer-events-none";
                                             }
-                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-bold ${cellClass}">${r.accPlan}</td>`;
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-bold ${cellClass} ${getQCHandoverWeekHighlightClass(r.weekIndex)}">${r.accPlan}</td>`;
                                         }).join("")}
                                     </tr>
                                     <tr class="bg-slate-50">
                                         <td class="border-b border-r border-black p-2 font-bold sticky left-0 z-10 bg-slate-50 shadow-[1px_0_0_0_#000] text-slate-700">Acc. Actual</td>
                                         ${rows.map((r, i) => {
                                             const isBeforeStart = r.accPlan === 0 && r.accActual === 0;
-                                            const isFuture = QC_HANDOVER_WEEKS[i].startDate > now;
+                                            const isFuture = QC_HANDOVER_WEEKS[r.weekIndex].startDate > now;
                                             let cellClass = "bg-slate-50 text-emerald-600";
                                             if (isFuture || (isBeforeStart && r.actual === 0)) cellClass = "bg-slate-200 text-transparent pointer-events-none";
-                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-bold ${cellClass}">${r.accActual}</td>`;
+                                            return `<td class="border-b border-r border-black p-2 text-center text-sm font-bold ${cellClass} ${getQCHandoverWeekHighlightClass(r.weekIndex)}">${r.accActual}</td>`;
                                         }).join("")}
                                     </tr>
                                 </tbody>
@@ -10237,6 +10402,23 @@
               "hidden",
               currentView !== "qcHandover",
             );
+          }
+          const qcHandoverCaptureScopeToggle = document.getElementById(
+            "qc-handover-capture-scope-toggle",
+          );
+          if (qcHandoverCaptureScopeToggle) {
+            const isQCHandoverView = currentView === "qcHandover";
+            qcHandoverCaptureScopeToggle.classList.toggle(
+              "hidden",
+              !isQCHandoverView,
+            );
+            qcHandoverCaptureScopeToggle.classList.toggle(
+              "flex",
+              isQCHandoverView,
+            );
+            if (isQCHandoverView) {
+              updateQCHandoverCaptureScopeButtons();
+            }
           }
 
           let title = "";
@@ -12863,6 +13045,12 @@
           const captureArea = document.getElementById("capture-area");
           const captureBtn = document.getElementById(btnId);
           const originalBtnHTML = captureBtn.innerHTML;
+          const useCompactQCHandoverWindow =
+            currentView === "qcHandover";
+
+          if (useCompactQCHandoverWindow) {
+            setQCHandoverCompactCapture(true);
+          }
 
           captureBtn.innerHTML = "กำลังแคปเจอร์...";
           captureBtn.disabled = true;
@@ -12954,6 +13142,9 @@
               if (execDashboard) {
                 execDashboard.style.width = originalExecWidth;
                 execDashboard.style.maxWidth = originalExecMaxWidth;
+              }
+              if (useCompactQCHandoverWindow) {
+                setQCHandoverCompactCapture(false);
               }
 
               captureBtn.innerHTML = originalBtnHTML;
@@ -15617,6 +15808,16 @@
               captureForLine("share", "captureShareBtn"),
             );
           document
+            .getElementById("qc-capture-scope-all-btn")
+            .addEventListener("click", () =>
+              setQCHandoverCaptureScope("all"),
+            );
+          document
+            .getElementById("qc-capture-scope-delayed-btn")
+            .addEventListener("click", () =>
+              setQCHandoverCaptureScope("delayed"),
+            );
+          document
             .getElementById("captureNewBtn")
             .addEventListener("click", () =>
               captureForLineNew("download", "captureNewBtn"),
@@ -15684,6 +15885,9 @@
           document
             .getElementById("toggleCaptureModeBtn")
             .addEventListener("click", () => {
+              if (currentView === "qcHandover") {
+                setQCHandoverCompactCapture(true);
+              }
               document.documentElement.classList.add("is-line-capturing");
               document.documentElement.classList.add("is-capture-preview");
               document.body.classList.add("is-line-capturing");
@@ -15696,6 +15900,7 @@
               document.documentElement.classList.remove("is-capture-preview");
               document.body.classList.remove("is-line-capturing");
               document.body.classList.remove("is-capture-preview");
+              setQCHandoverCompactCapture(false);
             });
           document.addEventListener("keydown", (e) => {
             if (
@@ -15706,6 +15911,7 @@
               document.documentElement.classList.remove("is-capture-preview");
               document.body.classList.remove("is-line-capturing");
               document.body.classList.remove("is-capture-preview");
+              setQCHandoverCompactCapture(false);
             }
           });
           document.addEventListener("mouseleave", () => {
