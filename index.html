@@ -775,9 +775,9 @@
       }
 
       /* Styles for capturing elements or single tables in common defect */
-      .is-line-capturing .capture-hide,
-      .is-line-capturing th:last-child,
-      .is-line-capturing tr:not(.bg-indigo-50) td:last-child {
+      .is-line-capturing #common-defect-container .capture-hide,
+      .is-line-capturing #common-defect-container th:last-child,
+      .is-line-capturing #common-defect-container tr:not(.bg-indigo-50) td:last-child {
         display: none !important;
       }
     </style>
@@ -793,15 +793,27 @@
       class="min-h-screen flex items-center justify-center p-4"
     >
       <div class="w-full max-w-6xl mx-auto splash-content">
-        <div class="text-center mb-12">
-          <h1
-            class="text-5xl md:text-7xl font-extrabold mb-3 tracking-tight title-text"
-          >
-            PYNN NGAMWONGWAN 54
-          </h1>
-          <p class="text-lg md:text-xl text-slate-600 font-medium">
-            ระบบติดตามความคืบหน้าโครงการ
-          </p>
+        <div class="splash-topbar">
+          <div class="splash-brand">
+            <div class="splash-brand-mark" aria-hidden="true">P54</div>
+            <div>
+              <div class="splash-brand-name">PYNN NGAMWONGWAN 54</div>
+              <div class="splash-brand-subtitle">Project progress control</div>
+            </div>
+          </div>
+          <div class="splash-live">LIVE PROJECT DATA</div>
+        </div>
+
+        <div class="splash-hero-intro">
+          <div>
+            <p class="splash-eyebrow">Project overview · 2026</p>
+            <h1
+              class="title-text"
+            >
+              PYNN
+              <span>NGAMWONGWAN 54</span>
+            </h1>
+          </div>
         </div>
 
         <!-- Splash Alert Banner -->
@@ -813,7 +825,10 @@
         </div>
 
         <!-- Summary Dashboard -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 md:gap-4 mb-10">
+        <div
+          id="splash-summary-grid"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 md:gap-4 mb-10"
+        >
           <!-- Overall Progress -->
           <div
             class="splash-card p-4 md:p-5 flex flex-col items-center justify-between text-center overflow-hidden min-h-[160px]"
@@ -1014,10 +1029,12 @@
         </div>
 
         <!-- Task Navigation Cards -->
-        <div class="mb-4 text-left">
-          <h2 class="text-lg font-bold text-slate-700">
-            เลือกงานที่ต้องการดูรายละเอียด
-          </h2>
+        <div class="splash-task-heading">
+          <div>
+            <p class="splash-section-kicker">Work categories</p>
+            <h2>ความคืบหน้ารายหมวดงาน</h2>
+          </div>
+          <p>เลือกหมวดเพื่อดูรายละเอียดเชิงลึก</p>
         </div>
         <div
           id="splash-task-cards"
@@ -1148,49 +1165,49 @@
       <!-- Unified Controls & Actions Area -->
       <div
         id="unified-controls"
-        class="max-w-full mx-auto mt-4 bg-white/95 backdrop-blur-2xl md:rounded-[24px] shadow-sm border border-slate-200/70 p-4 md:p-6 flex flex-col gap-6 sticky top-0 z-40 transition-all print:hidden"
+        class="control-deck max-w-full mx-auto mt-4 bg-white/95 backdrop-blur-2xl md:rounded-[24px] shadow-sm border border-slate-200/70 p-4 md:p-6 flex flex-col gap-6 sticky top-0 z-40 transition-all print:hidden"
       >
         <!-- Top Row: Views & Primary Actions -->
-        <div class="flex flex-col 2xl:flex-row justify-between items-start 2xl:items-center gap-6 w-full">
+        <div class="controls-top-row flex flex-col 2xl:flex-row justify-between items-start 2xl:items-center gap-6 w-full">
           
           <!-- Left: View Navigation (Scrollable on small screens) -->
-          <div class="w-full 2xl:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 2xl:mx-0 2xl:px-0 shrink-0 pb-1 2xl:pb-0">
-            <div id="view-toggle" class="inline-flex bg-slate-100/90 p-1.5 rounded-2xl gap-1.5 whitespace-nowrap border border-slate-200/60 shadow-inner">
+          <div class="controls-view-scroller w-full 2xl:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 2xl:mx-0 2xl:px-0 shrink-0 pb-1 2xl:pb-0">
+            <div id="view-toggle" class="controls-view-toggle inline-flex bg-slate-100/90 p-1.5 rounded-2xl gap-1.5 whitespace-nowrap border border-slate-200/60 shadow-inner">
               <button id="view-residential-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all active">
-                ห้องพัก
+                <i data-lucide="building-2" aria-hidden="true"></i><span>ห้องพัก</span>
               </button>
               <button id="view-qc-summary-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                สรุป QC
+                <i data-lucide="shield-check" aria-hidden="true"></i><span>สรุป QC</span>
               </button>
               <button id="view-summary-report-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                รายงานสรุป
+                <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>รายงานสรุป</span>
               </button>
               <button id="view-common-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                ส่วนกลาง
+                <i data-lucide="landmark" aria-hidden="true"></i><span>ส่วนกลาง</span>
               </button>
               <button id="view-common-defect-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                DEFECT ส่วนกลาง
+                <i data-lucide="clipboard-x" aria-hidden="true"></i><span>DEFECT ส่วนกลาง</span>
               </button>
               <button id="view-qc-handover-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                แผนส่งห้อง QC
+                <i data-lucide="clipboard-check" aria-hidden="true"></i><span>แผนส่งห้อง QC</span>
               </button>
               <button id="view-schedule-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                แผนงาน
+                <i data-lucide="calendar-days" aria-hidden="true"></i><span>แผนงาน</span>
               </button>
               <button id="view-exterior-painting-btn" class="view-toggle-btn px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-all">
-                แผนงานเก็บสีรูปด้าน
+                <i data-lucide="paint-roller" aria-hidden="true"></i><span>แผนงานเก็บสีรูปด้าน</span>
               </button>
             </div>
           </div>
 
           <!-- Right: Action Groups (Toolbars) -->
-          <div class="flex items-center gap-3 w-full 2xl:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 2xl:mx-0 2xl:px-0 shrink-0 pb-1 2xl:pb-0">
+          <div class="controls-toolbar flex items-center gap-3 w-full 2xl:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 2xl:mx-0 2xl:px-0 shrink-0 pb-1 2xl:pb-0">
             
             <!-- Group 1: Display Options -->
-            <div class="flex items-center gap-1.5 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/70">
-              <button id="overall-progress-toggle-btn" onclick="toggleOverallProgressCard()" class="action-btn px-3 py-2 bg-white border border-slate-200/80 text-slate-600 rounded-xl shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[40px]" title="ซ่อน/แสดงกราฟความก้าวหน้า">
-                <i id="overall-progress-toggle-icon" data-lucide="eye-off" class="w-4 h-4 text-indigo-500"></i>
-                <span id="overall-progress-toggle-text">ซ่อนกราฟ</span>
+            <div class="control-group control-group-display flex items-center gap-1.5 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/70" data-group-label="การแสดงผล">
+              <button id="overall-progress-toggle-btn" onclick="toggleSignatureBoxes()" class="action-btn px-3 py-2 bg-white border border-slate-200/80 text-slate-600 rounded-xl shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[40px]" title="ซ่อนหรือแสดงช่องลงนามในรายงาน">
+                <i id="overall-progress-toggle-icon" data-lucide="signature" class="w-4 h-4 text-indigo-500"></i>
+                <span id="overall-progress-toggle-text">ซ่อนช่องลงนาม</span>
               </button>
               <button id="toggleExecutiveSummaryBtn" class="action-btn px-3 py-2 bg-white border border-slate-200/80 text-slate-600 rounded-xl shadow-sm hover:bg-slate-100 hover:text-slate-900 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[40px]" title="สรุปภาพรวม">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-500"></i>
@@ -1199,17 +1216,14 @@
             </div>
 
             <!-- Group 2: Capture & Report (Primary) -->
-            <div class="flex items-center gap-1.5 bg-indigo-50/60 p-1.5 rounded-2xl border border-indigo-200/60">
+            <div class="control-group control-group-capture flex items-center gap-1.5 bg-indigo-50/60 p-1.5 rounded-2xl border border-indigo-200/60" data-group-label="บันทึกและรายงาน">
               <button id="captureNewBtn" class="action-btn px-5 py-2 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-bold text-xs whitespace-nowrap min-h-[40px] active:scale-95">
                 <i data-lucide="camera" class="w-4 h-4"></i>
-                <span>แคปเจอร์</span>
+                <span>แคปและบันทึก</span>
               </button>
               <button id="captureUltraBtn" class="action-btn px-5 py-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl shadow hover:from-violet-700 hover:to-fuchsia-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-black text-xs whitespace-nowrap min-h-[40px] active:scale-95" title="แคปเจอร์แบบคมชัดสุดๆ">
                 <i data-lucide="sparkles" class="w-4 h-4"></i>
-                <span class="flex flex-col items-start leading-none gap-0.5">
-                  <span>Ultra HD</span>
-                  <span class="text-[9px] font-medium opacity-90 uppercase tracking-widest">แคปเจอร์แบบคมชัด</span>
-                </span>
+                <span>Ultra HD</span>
               </button>
               <button id="exportPdfBtn" class="action-btn px-5 py-2 bg-rose-600 text-white rounded-xl shadow hover:bg-rose-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-bold text-xs whitespace-nowrap min-h-[40px] active:scale-95">
                 <i data-lucide="file-down" class="w-4 h-4"></i>
@@ -1233,7 +1247,7 @@
             </div>
 
             <!-- Group 3: Data Export / Import (Emerald/Slate) -->
-            <div class="flex items-center gap-1.5 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/70">
+            <div class="control-group control-group-data flex items-center gap-1.5 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/70" data-group-label="ข้อมูล">
               <button id="exportExcelBtn" onclick="openModal('exportExcelModal')" class="action-btn px-4 py-2 bg-emerald-600 border border-emerald-700 text-white rounded-xl shadow-sm hover:bg-emerald-700 hover:border-emerald-800 focus:outline-none flex items-center justify-center gap-2 transition-all font-semibold text-xs whitespace-nowrap min-h-[40px]" title="ส่งออกตารางเป็น Excel">
                 <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">ส่งออก (Excel)</span>
@@ -1258,7 +1272,7 @@
         </div>
 
         <!-- Middle Row: Contextual Options & Search -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
+        <div class="controls-context-row flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
           <!-- Contextual Modes Container -->
           <div id="contextual-modes-container" class="flex flex-wrap items-center gap-3 w-full md:w-auto empty:hidden">
             <!-- Task View Mode -->
@@ -1309,7 +1323,7 @@
         </div>
 
         <!-- Bottom Row: Task Selection -->
-        <div id="task-selection-container" class="w-full border-t border-slate-100 pt-4 mt-1">
+        <div id="task-selection-container" class="controls-categories w-full border-t border-slate-100 pt-4 mt-1">
           <!-- We no longer need the "เลือกงาน" label + search bar side-by-side here because search is moved up cleanly -->
           <div class="overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
             <div id="task-category-buttons" class="flex flex-col gap-4 min-w-max">
@@ -2096,17 +2110,19 @@
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
-        <div class="p-4 overflow-y-auto flex-1 flex flex-col items-center justify-center bg-slate-100">
+        <div id="preview-scroll-container" class="p-4 overflow-y-auto flex-1 min-h-0 flex flex-col items-center justify-start bg-slate-100">
           <img id="previewImageElement" src="" class="max-w-full max-h-full object-contain shadow-md rounded border border-slate-300" alt="Preview" />
-          <p class="text-sm text-slate-600 mt-3 text-center font-medium">💡 สำหรับผู้ใช้ iOS / LINE: หากกดบันทึกไม่ได้ แนะนำให้ <strong>กดค้างที่รูปภาพ</strong> แล้วเลือก <strong>'บันทึกไปยังแอปรูปภาพ' (Save to Photos)</strong></p>
+          <p id="previewSaveHint" class="text-sm text-slate-600 mt-3 text-center font-medium">
+            ตรวจสอบภาพ แล้วเลือกบันทึกหรือแชร์ด้านล่าง
+          </p>
         </div>
         <div class="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row justify-end gap-3">
           <button id="previewDownloadBtn" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            บันทึกลงเครื่อง
+            <i data-lucide="download" class="w-5 h-5" aria-hidden="true"></i>
+            <span id="previewDownloadLabel">บันทึกลงเครื่อง</span>
           </button>
           <button id="previewShareBtn" class="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+            <i data-lucide="share-2" class="w-5 h-5" aria-hidden="true"></i>
             แชร์ / ส่ง LINE
           </button>
         </div>
@@ -3460,13 +3476,13 @@
 
         // --- STATE VARIABLES ---
         let projectData = {};
-        let showExecutiveSummary = false;
+        let showExecutiveSummary = true;
         let currentView = "residential";
         let currentCategory = "skimAndPaint";
         let isDetailedViewActive = false;
         let summaryReportMode = "wetWork"; // 'wetWork' or 'endProduct'
-        let reportHeaderStyle = "dark"; // 'dark' or 'light'
-        let showOverallProgressCard = true;
+        let reportHeaderStyle = "light"; // 'dark' or 'light'
+        let showSignatureBoxes = true;
         let summaryReportSelectedFloors = [2]; // Default to floor 2
         let isMultiFloorSelectionEnabled = false;
         let showMajorDefectHighlight = false;
@@ -3771,8 +3787,8 @@
         }
 
         // --- SPLASH SCREEN LOGIC ---
-        window.toggleOverallProgressCard = function () {
-          showOverallProgressCard = !showOverallProgressCard;
+        window.toggleSignatureBoxes = function () {
+          showSignatureBoxes = !showSignatureBoxes;
 
           // Update the button in unified controls if it exists
           const btn = document.getElementById("overall-progress-toggle-btn");
@@ -3780,12 +3796,12 @@
           const icon = document.getElementById("overall-progress-toggle-icon");
 
           if (btn && text && icon) {
-            text.textContent = showOverallProgressCard
-              ? "ซ่อนกราฟความก้าวหน้า"
-              : "แสดงกราฟความก้าวหน้า";
+            text.textContent = showSignatureBoxes
+              ? "ซ่อนช่องลงนาม"
+              : "แสดงช่องลงนาม";
             icon.setAttribute(
               "data-lucide",
-              showOverallProgressCard ? "eye-off" : "eye",
+              showSignatureBoxes ? "signature" : "eye",
             );
             if (window.lucide) lucide.createIcons();
           }
@@ -4274,6 +4290,155 @@
           else if (parseFloat(overallProgress) > 0)
             statusBadge = "JUST STARTED";
 
+          const taskSummaryItems = catDef.tasks.map((task) => {
+            const stats = subTaskStats[task.key || task.name];
+            const progress =
+              stats.total > 0 ? stats.progressSum / stats.total : 0;
+            const completedProgress =
+              stats.total > 0 ? (stats.count / stats.total) * 100 : 0;
+            const inProgressContribution = Math.max(
+              0,
+              progress - completedProgress,
+            );
+            return {
+              name: task.name,
+              completed: stats.count,
+              inProgress: stats.inProgress,
+              progress,
+              completedProgress,
+              inProgressContribution,
+            };
+          });
+          const visibleTaskSummaryItems =
+            taskSummaryItems.length <= 4
+              ? taskSummaryItems
+              : [...taskSummaryItems]
+                  .sort((a, b) => a.progress - b.progress)
+                  .slice(0, 4);
+          const focusFloors = CONFIG.FLOORS.map((floor) => ({
+            floor,
+            ...floorStats[floor],
+          }))
+            .filter((item) => item.progress < 100)
+            .sort((a, b) => a.progress - b.progress || b.floor - a.floor)
+            .slice(0, 4);
+          const completedPercent = (
+            (totalCompletedRooms / Math.max(totalUnits, 1)) *
+            100
+          ).toFixed(1);
+          dashboard.innerHTML = `
+            <section class="executive-summary-compact" aria-label="สรุปสำหรับส่งรายงาน">
+              <div class="exec-summary-heading">
+                <div>
+                  <p class="exec-summary-eyebrow">EXECUTIVE SUMMARY</p>
+                  <h2>รายงานสรุปสถานะและความก้าวหน้าการดำเนินงาน</h2>
+                </div>
+              </div>
+
+              <div class="exec-kpi-grid">
+                <div class="exec-kpi exec-kpi-primary">
+                  <span>ความคืบหน้ารวม</span>
+                  <strong>${overallProgress}%</strong>
+                </div>
+                <div class="exec-kpi">
+                  <span>เสร็จครบ</span>
+                  <strong>${totalCompletedRooms}</strong>
+                  <small>${completedPercent}% ของทั้งหมด</small>
+                </div>
+                <div class="exec-kpi">
+                  <span>กำลังดำเนินการ</span>
+                  <strong>${totalInProgress}</strong>
+                  <small>ห้องที่มีงานค้างระหว่างทำ</small>
+                </div>
+                <div class="exec-kpi">
+                  <span>ยังไม่เริ่ม</span>
+                  <strong>${totalNotStarted}</strong>
+                  <small>ห้องที่ต้องเริ่มงาน</small>
+                </div>
+                <div class="exec-kpi exec-kpi-alert">
+                  <span>คงเหลือทั้งหมด</span>
+                  <strong>${remainingUnits}</strong>
+                  <small>จากทั้งหมด ${totalUnits} ห้อง</small>
+                </div>
+              </div>
+
+              <div class="exec-detail-grid">
+                <div class="exec-detail-panel">
+                  <div class="exec-panel-heading">
+                    <h3>${taskSummaryItems.length > 4 ? "ขั้นตอนที่ต้องติดตาม" : "ความคืบหน้ารายขั้นตอน"}</h3>
+                    ${taskSummaryItems.length > 4 ? `<span>แสดง 4 ขั้นตอนที่คืบหน้าน้อยสุด</span>` : ""}
+                  </div>
+                  <div class="exec-phase-grid">
+                    ${visibleTaskSummaryItems
+                      .map(
+                        (item) => `
+                          <div class="exec-phase-item">
+                            <div class="exec-phase-topline">
+                              <strong>${item.name}</strong>
+                              <span>${item.progress.toFixed(1)}%</span>
+                            </div>
+                            <div class="exec-progress-track">
+                              <span class="exec-progress-completed" style="width:${Math.max(0, Math.min(100, item.completedProgress))}%"></span>
+                              <span class="exec-progress-active" style="width:${Math.max(0, Math.min(100 - item.completedProgress, item.inProgressContribution))}%"></span>
+                            </div>
+                            <div class="exec-progress-legend">
+                              <span class="is-completed">แล้วเสร็จ ${item.completedProgress.toFixed(1)}% (${item.completed} ห้อง)</span>
+                              <span class="is-active">กำลังดำเนินการ ${item.inProgressContribution.toFixed(1)}% (${item.inProgress} ห้อง)</span>
+                            </div>
+                          </div>
+                        `,
+                      )
+                      .join("")}
+                  </div>
+                </div>
+
+                <div class="exec-detail-panel exec-focus-panel">
+                  <div class="exec-panel-heading">
+                    <h3>ชั้นที่ต้องติดตาม</h3>
+                    <span>${focusFloors.length > 0 ? "เรียงจากความคืบหน้าน้อยสุด" : "ทุกชั้นเสร็จครบแล้ว"}</span>
+                  </div>
+                  <div class="exec-focus-grid">
+                    ${
+                      focusFloors.length > 0
+                        ? focusFloors
+                            .map(
+                              (item) => `
+                                <div class="exec-floor-item">
+                                  <span>ชั้น ${item.floor}</span>
+                                  <strong>${item.progress}%</strong>
+                                  <small>คงเหลือ ${item.total - item.completed} ห้อง</small>
+                                </div>
+                              `,
+                            )
+                            .join("")
+                        : `<div class="exec-all-complete">งานในหมวดนี้เสร็จครบทุกชั้น</div>`
+                    }
+                  </div>
+                </div>
+              </div>
+
+              ${
+                showSignatureBoxes
+                  ? `
+                    <div class="exec-signature-row">
+                      <div class="exec-signature-box">
+                        <span>ผู้จัดทำ / PREPARED BY</span>
+                        <div class="exec-signature-line"></div>
+                        <small>Site Engineer</small>
+                      </div>
+                      <div class="exec-signature-box">
+                        <span>ผู้ตรวจสอบ / REVIEWED BY</span>
+                        <div class="exec-signature-line"></div>
+                        <small>Project Engineer</small>
+                      </div>
+                    </div>
+                  `
+                  : ""
+              }
+            </section>
+          `;
+          return;
+
           dashboard.innerHTML = `
                     <div class="flex flex-col lg:flex-row gap-6 items-stretch">
                         <!-- Left Main Box -->
@@ -4383,7 +4548,7 @@
                         </div>
                         
                         <!-- Right Column -->
-                        <div class="w-full lg:w-[320px] flex flex-col gap-6 transition-all duration-300 ${showOverallProgressCard ? "" : "hidden"}">
+                        <div class="w-full lg:w-[320px] flex flex-col gap-6 transition-all duration-300 ${showSignatureBoxes ? "" : "hidden"}">
                             <!-- Overall Progress Card -->
                             <div class="bg-white rounded-[2rem] p-8 text-slate-900 flex flex-col items-center justify-center relative overflow-hidden flex-1 min-h-[300px] border-2 border-black">
                                 <h3 class="text-slate-400 font-black text-xs tracking-[0.2em] uppercase mb-10 z-10">OVERALL PROGRESS</h3>
@@ -4878,6 +5043,26 @@
           },
         };
 
+        const categoryPictogramPositions = {
+          skimAndPaint: "0% 0%",
+          topping: "33.333% 0%",
+          ceiling: "66.667% 0%",
+          texcaWall: "100% 0%",
+          waterproofing: "0% 25%",
+          tiling: "33.333% 25%",
+          aluminum: "66.667% 25%",
+          wetWork: "100% 25%",
+          furniture: "0% 50%",
+          laminate: "33.333% 50%",
+          door: "66.667% 50%",
+          showerScreen: "100% 50%",
+          paintOnly: "0% 75%",
+          aluminumPaint: "33.333% 75%",
+          cleaning: "66.667% 75%",
+          endProduct: "100% 75%",
+          common: "0% 100%",
+        };
+
         function renderSplashScreen() {
           const summary = calculateProjectSummary();
           const progressCircle = document.querySelector(
@@ -4925,12 +5110,9 @@
             ];
 
             const createCard = (catKey, catDef, progress, isCommon = false) => {
-              const iconData = categoryIcons[catKey] || {
-                bg: "bg-slate-100",
-                color: "text-slate-600",
-                svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
-              };
-              const iconHtml = `<div class="w-14 h-14 rounded-2xl ${iconData.bg} ${iconData.color} flex items-center justify-center mb-4 shadow-sm">${iconData.svg}</div>`;
+              const pictogramPosition =
+                categoryPictogramPositions[catKey] || "0% 0%";
+              const iconHtml = `<div class="work-pictogram" style="--pictogram-position: ${pictogramPosition}" aria-hidden="true"></div>`;
 
               const card = document.createElement("div");
               const hoverBorderColor = isCommon
@@ -5200,6 +5382,15 @@
               !isResidentialOrSummary || !showExecutiveSummary,
             );
           }
+          const displayOptionsGroup = document.querySelector(
+            ".control-group-display",
+          );
+          if (displayOptionsGroup) {
+            displayOptionsGroup.classList.toggle(
+              "hidden",
+              !isResidentialOrSummary,
+            );
+          }
 
           const floatingBar = document.getElementById(
             "schedule-quick-filter-floating",
@@ -5288,6 +5479,10 @@
           // Reset table border classes (Schedule view might have changed them)
           mainTable.classList.remove("border-separate", "border-spacing-0");
           mainTable.classList.add("border-collapse");
+          mainTable.classList.toggle(
+            "qc-summary-table",
+            currentView === "qcSummary",
+          );
 
           const floorSelection = document.getElementById(
             "summary-report-floor-selection",
@@ -5464,6 +5659,7 @@
             .filter((t) => t.reportName);
 
           const thead = document.createElement("thead");
+          thead.className = "qc-summary-head";
           const { headerColor, stickyHeaderColor } = getHeaderColors();
 
           const headerHTML = `
@@ -5484,6 +5680,7 @@
           mainTable.appendChild(thead);
 
           const tbody = document.createElement("tbody");
+          tbody.className = "qc-summary-body";
           CONFIG.FLOORS.filter((f) =>
             summaryReportSelectedFloors.includes(f),
           ).forEach((floor) => {
@@ -9006,11 +9203,23 @@
 
           const { headerColor, subHeaderColor } = getHeaderColors();
 
+          const colgroup = document.createElement("colgroup");
+          colgroup.innerHTML = `
+            <col class="qc-col-floor">
+            <col class="qc-col-type">
+            ${Array.from({ length: CONFIG.MAX_ROOMS }, () => '<col class="qc-col-room">').join("")}
+            <col class="qc-col-separator">
+            <col class="qc-col-result">
+            <col class="qc-col-result">
+            <col class="qc-col-result">
+          `;
+          mainTable.appendChild(colgroup);
+
           const thead = document.createElement("thead");
           let headerHTML = `
                     <tr>
                         <th class="border border-slate-400 p-2 ${headerColor}" rowspan="2"><span>ชั้น</span></th>
-                        <th class="border border-slate-400 p-2 ${headerColor}" rowspan="2"><span>รายการ</span></th>
+                        <th class="border border-slate-400 p-2 ${headerColor}" rowspan="2"><span>ประเภทงาน</span></th>
                         <th class="border border-slate-400 p-2 ${headerColor}" colspan="${CONFIG.MAX_ROOMS}"><span>ROOM No.</span></th>
                         <th class="border-y border-slate-400 separator-cell" rowspan="2"></th>
                         <th class="border border-slate-400 p-2 ${headerColor}" colspan="3"><span>สรุปผลตรวจ</span></th>
@@ -9034,11 +9243,11 @@
           };
 
           const renderCellContent = (unitData) => {
-            let styleClasses = "bg-slate-50 text-slate-400";
-            let cellText = "-";
+            let styleClasses = "qc-cell-empty";
+            let cellText = '<span class="qc-empty-mark">–</span>';
             if (unitData.inInspection) {
-              styleClasses = "bg-yellow-400 text-black";
-              cellText = "รอคะแนน";
+              styleClasses = "qc-cell-pending";
+              cellText = '<span class="qc-pending-label">รอตรวจ</span>';
             } else {
               let scoreToShow = 0,
                 defectToShow = false,
@@ -9049,27 +9258,33 @@
               ) {
                 scoreToShow = unitData.qcScore;
                 defectToShow = unitData.qcHasMajorDefect;
-                stageLabel = "QC-CM: ";
+                stageLabel = "QC+CM";
               } else if (unitData.qcScore > 0) {
                 scoreToShow = unitData.qcScore;
                 defectToShow = unitData.qcHasMajorDefect;
-                stageLabel = "QC: ";
+                stageLabel = "QC";
               } else if (unitData.cmScore > 0) {
                 scoreToShow = unitData.cmScore;
                 defectToShow = unitData.cmHasMajorDefect;
-                stageLabel = "CM: ";
+                stageLabel = "CM";
               }
               if (scoreToShow > 0) {
                 styleClasses =
-                  scoreToShow >= 85
-                    ? "bg-teal-500 text-white"
-                    : "bg-rose-500 text-white";
-                cellText = `${stageLabel}${Number.isInteger(scoreToShow) ? scoreToShow : scoreToShow.toFixed(2)}`;
-                if (defectToShow) {
-                  cellText += "!";
-                  if (showMajorDefectHighlight) {
-                    styleClasses += " major-defect-highlight";
-                  }
+                  scoreToShow >= 95
+                    ? "qc-cell-excellent"
+                    : scoreToShow >= 85
+                      ? "qc-cell-pass"
+                      : "qc-cell-fail";
+                const formattedScore = Number.isInteger(scoreToShow)
+                  ? scoreToShow
+                  : scoreToShow.toFixed(2);
+                cellText = `
+                  <span class="qc-stage-label">${stageLabel}</span>
+                  <strong class="qc-score-value">${formattedScore}</strong>
+                `;
+                if (defectToShow && showMajorDefectHighlight) {
+                  cellText += '<span class="qc-defect-badge">!</span>';
+                  styleClasses += " major-defect-highlight";
                 }
               }
             }
@@ -9085,27 +9300,21 @@
             // Add separation between floors
             const floorSeparatorClass =
               index === 0 ? "" : "border-t-2 border-slate-800 floor-separator";
-            wetWorkRow.className = `${floorSeparatorClass} bg-slate-50/30 hover:bg-slate-50 transition-colors`;
-            endProductRow.className = `bg-slate-50/30 hover:bg-slate-50 transition-colors border-b border-slate-400`;
+            wetWorkRow.className = `${floorSeparatorClass} qc-row-wet`;
+            endProductRow.className = "qc-row-end";
 
             // Floor Cell (Sticky)
             wetWorkRow.innerHTML = `
-                        <td class="border border-slate-400 p-2 font-black text-slate-700 align-middle text-center bg-white sticky left-0 z-20 shadow-[4px_0_8px_-4px_rgba(0,0,0,0.1)]" rowspan="2" style="min-width: 50px;">
+                        <td class="qc-floor-cell border border-slate-400 p-2 font-black text-slate-700 align-middle text-center bg-white sticky left-0 z-20" rowspan="2" style="min-width: 50px;">
                             <span class="text-lg">${floor}</span>
                         </td>
-                        <td class="border border-slate-400 p-2 font-bold text-blue-700 bg-blue-50/80 text-xs align-middle sticky left-[50px] z-20 shadow-[4px_0_8px_-4px_rgba(0,0,0,0.1)] whitespace-nowrap" style="min-width: 100px;">
-                            <div class="flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                Wet Work
-                            </div>
+                        <td class="qc-type-cell qc-type-wet border border-slate-400 p-2 font-bold text-xs align-middle whitespace-nowrap">
+                            <span class="qc-type-label">Wet Work</span>
                         </td>
                     `;
             endProductRow.innerHTML = `
-                        <td class="border border-slate-400 p-2 font-bold text-emerald-700 bg-emerald-50/80 text-xs align-middle sticky left-[50px] z-20 shadow-[4px_0_8px_-4px_rgba(0,0,0,0.1)] whitespace-nowrap" style="min-width: 100px;">
-                            <div class="flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                End Product
-                            </div>
+                        <td class="qc-type-cell qc-type-end border border-slate-400 p-2 font-bold text-xs align-middle whitespace-nowrap">
+                            <span class="qc-type-label">End Product</span>
                         </td>
                     `;
 
@@ -9126,8 +9335,8 @@
               const { styleClasses: wwStyle, cellText: wwText } =
                 renderCellContent(wwData);
               const wwCell = document.createElement("td");
-              wwCell.className = `border border-slate-400 p-2 table-cell ${wwStyle} transition-opacity hover:opacity-80 cursor-default`;
-              wwCell.innerHTML = `<span class="percentage-text font-medium">${wwText}</span>`;
+              wwCell.className = `qc-score-cell border border-slate-400 p-2 table-cell ${wwStyle} cursor-default`;
+              wwCell.innerHTML = wwText;
               wwCell.dataset.floor = floor;
               wwCell.dataset.room = room;
               wetWorkRow.appendChild(wwCell);
@@ -9139,9 +9348,11 @@
                 wwData.cmScore > 0
               ) {
                 floorTotals.wetWork.submitted++;
-                if ((wwData.qcScore || wwData.cmScore) >= 85)
-                  floorTotals.wetWork.passed++;
-                else floorTotals.wetWork.failed++;
+                const wwFinalScore = wwData.qcScore || wwData.cmScore || 0;
+                if (wwFinalScore > 0) {
+                  if (wwFinalScore >= 85) floorTotals.wetWork.passed++;
+                  else floorTotals.wetWork.failed++;
+                }
               }
 
               // End Product Cell
@@ -9149,8 +9360,8 @@
               const { styleClasses: epStyle, cellText: epText } =
                 renderCellContent(epData);
               const epCell = document.createElement("td");
-              epCell.className = `border border-slate-400 p-2 table-cell ${epStyle} transition-opacity hover:opacity-80 cursor-default`;
-              epCell.innerHTML = `<span class="percentage-text font-medium">${epText}</span>`;
+              epCell.className = `qc-score-cell border border-slate-400 p-2 table-cell ${epStyle} cursor-default`;
+              epCell.innerHTML = epText;
               epCell.dataset.floor = floor;
               epCell.dataset.room = room;
               endProductRow.appendChild(epCell);
@@ -9162,9 +9373,11 @@
                 epData.cmScore > 0
               ) {
                 floorTotals.endProduct.submitted++;
-                if ((epData.qcScore || epData.cmScore) >= 85)
-                  floorTotals.endProduct.passed++;
-                else floorTotals.endProduct.failed++;
+                const epFinalScore = epData.qcScore || epData.cmScore || 0;
+                if (epFinalScore > 0) {
+                  if (epFinalScore >= 85) floorTotals.endProduct.passed++;
+                  else floorTotals.endProduct.failed++;
+                }
               }
             }
 
@@ -9200,11 +9413,24 @@
           mainTable.appendChild(tbody);
 
           const tfoot = document.createElement("tfoot");
+          tfoot.className = "qc-summary-foot";
+          const wetWorkInspected =
+            totals.wetWork.passed + totals.wetWork.failed;
+          const endProductInspected =
+            totals.endProduct.passed + totals.endProduct.failed;
+          const wetWorkPassRate =
+            wetWorkInspected > 0
+              ? ((totals.wetWork.passed / wetWorkInspected) * 100).toFixed(1)
+              : "0.0";
+          const endProductPassRate =
+            endProductInspected > 0
+              ? ((totals.endProduct.passed / endProductInspected) * 100).toFixed(1)
+              : "0.0";
           tfoot.innerHTML = `
                     <tr class="font-bold bg-slate-200 border-t-2 border-slate-800">
                         <td class="border border-slate-400 p-2 align-middle" rowspan="2"><span>TOTAL</span></td>
                         <td class="border border-slate-400 p-1 font-semibold bg-slate-100 text-slate-600 text-xs align-middle">Wet Work</td>
-                        <td class="border border-slate-400" colspan="${CONFIG.MAX_ROOMS}"><span>( ${CONFIG.TOTAL_UNITS} UNIT )</span></td>
+                        <td class="qc-total-summary border border-slate-400" colspan="${CONFIG.MAX_ROOMS}"><span>${wetWorkInspected} ห้องที่มีผลตรวจ · อัตราผ่าน ${wetWorkPassRate}%</span></td>
                         <td class="border-y border-slate-400 separator-cell" rowspan="2"></td>
                         <td class="border border-slate-400 p-2 bg-slate-100"><span>${totals.wetWork.submitted}</span></td>
                         <td class="border border-slate-400 p-2 bg-teal-100"><span>${totals.wetWork.passed}</span></td>
@@ -9212,7 +9438,7 @@
                     </tr>
                     <tr class="font-bold bg-slate-200">
                         <td class="border border-slate-400 p-1 font-semibold bg-slate-100 text-slate-600 text-xs align-middle">End Product</td>
-                        <td class="border border-slate-400" colspan="${CONFIG.MAX_ROOMS}"></td>
+                        <td class="qc-total-summary border border-slate-400" colspan="${CONFIG.MAX_ROOMS}"><span>${endProductInspected} ห้องที่มีผลตรวจ · อัตราผ่าน ${endProductPassRate}%</span></td>
                         <td class="border border-slate-400 p-2 bg-slate-100"><span>${totals.endProduct.submitted}</span></td>
                         <td class="border border-slate-400 p-2 bg-teal-100"><span>${totals.endProduct.passed}</span></td>
                         <td class="border border-slate-400 p-2 bg-rose-100"><span>${totals.endProduct.failed}</span></td>
@@ -9443,11 +9669,9 @@
                           ? "bg-teal-500 text-white"
                           : "bg-rose-500 text-white";
                       cellText = `${stageLabel}${Number.isInteger(scoreToShow) ? scoreToShow : scoreToShow.toFixed(2)}`;
-                      if (defectToShow) {
+                      if (defectToShow && showMajorDefectHighlight) {
                         cellText += "!";
-                        if (showMajorDefectHighlight) {
-                          styleClasses += " major-defect-highlight";
-                        }
+                        styleClasses += " major-defect-highlight";
                       }
                     } else {
                       styleClasses = "bg-slate-50 text-slate-400";
@@ -9789,6 +10013,10 @@
           container.innerHTML = "";
 
           const getIconForTask = (catKey, isSelected) => {
+            const pictogramPosition =
+              categoryPictogramPositions[catKey] || "0% 0%";
+            return `<span class="category-pictogram ${isSelected ? "is-selected" : ""}" style="--pictogram-position: ${pictogramPosition}" aria-hidden="true"></span>`;
+
             const iconColor = isSelected
               ? "text-white"
               : {
@@ -9863,29 +10091,29 @@
           const createGroup = (title, keys, colorClass) => {
             const groupDiv = document.createElement("div");
             groupDiv.className =
-              "flex items-center gap-3 bg-slate-50/50 p-2 rounded-[20px] border border-slate-200/60 w-max shadow-sm";
+              "task-category-group flex items-center gap-3 bg-slate-50/50 p-2 rounded-[20px] border border-slate-200/60 w-max shadow-sm";
 
             const label = document.createElement("div");
-            label.className = `px-3 py-1.5 text-xs font-black uppercase tracking-widest rounded-xl ${colorClass}`;
+            label.className = `task-category-group-label px-3 py-1.5 text-xs font-black uppercase tracking-widest rounded-xl ${colorClass}`;
             label.textContent = title;
             groupDiv.appendChild(label);
 
             const btnContainer = document.createElement("div");
-            btnContainer.className = "flex gap-1.5";
+            btnContainer.className = "task-category-list flex gap-1.5";
 
             keys.forEach((catKey) => {
               const btn = document.createElement("button");
               const isSelected = catKey === currentCategory;
 
-              btn.className = `flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+              btn.className = `task-category-button flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
                 isSelected
-                  ? "bg-slate-800 text-white shadow-md ring-2 ring-slate-800 ring-offset-2 scale-105 z-10"
+                  ? "is-active bg-slate-800 text-white shadow-md ring-2 ring-slate-800 ring-offset-2 scale-105 z-10"
                   : "bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-slate-200/80 shadow-sm hover:border-slate-300"
               }`;
 
               btn.innerHTML = `
                             ${getIconForTask(catKey, isSelected)}
-                            ${taskDefinitions[catKey].name}
+                            <span class="task-category-name">${taskDefinitions[catKey].name}</span>
                         `;
 
               btn.onclick = () => {
@@ -9931,17 +10159,29 @@
             "task-search-container",
           );
           
-          const shouldHideTaskSelection = isCommonView ||
-              isQCSummaryView ||
-              currentView === "summaryReport" ||
-              currentView === "schedule" ||
-              currentView === "qcHandover";
+          const shouldHideTaskSelection = currentView !== "residential";
 
           if (taskSelectionContainer) {
             taskSelectionContainer.style.display = shouldHideTaskSelection ? "none" : "block";
           }
           if (taskSearchContainer) {
              taskSearchContainer.style.display = shouldHideTaskSelection ? "none" : "block";
+          }
+          const contextualControlsRow = document.querySelector(
+            ".controls-context-row",
+          );
+          const viewsWithContextControls = [
+            "residential",
+            "summaryReport",
+            "schedule",
+            "qcHandover",
+            "qcSummary",
+          ];
+          if (contextualControlsRow) {
+            contextualControlsRow.classList.toggle(
+              "hidden",
+              !viewsWithContextControls.includes(currentView),
+            );
           }
 
           const legend = document.getElementById("legend");
@@ -10043,28 +10283,29 @@
           });
 
           const header = document.getElementById("main-header");
+          header.dataset.headerStyle = reportHeaderStyle;
           if (reportHeaderStyle === "light") {
             header.className =
-              "w-full bg-white text-slate-800 p-4 md:p-8 flex flex-col gap-0 mb-0 shadow-sm relative";
+              "w-full bg-white text-slate-800 p-4 md:p-6 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 mb-0 shadow-sm relative";
             header.innerHTML = `
-                        <div class="flex justify-between items-start w-full mb-6">
-                            <div class="flex items-center gap-4">
-                                <button onclick="backToSplash()" id="home-btn" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all border border-slate-200 shadow-sm flex items-center justify-center text-slate-600" title="กลับสู่หน้าหลัก">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                                </button>
-                                <div>
-                                    <h1 class="text-3xl md:text-5xl font-black text-[#1e3a8a] tracking-tighter leading-none">PYNN NGAMWONGWAN 54</h1>
-                                    <p class="text-[9px] md:text-[11px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2">CONSTRUCTION PROGRESS REPORT</p>
-                                </div>
+                        <div id="home-btn-container" class="flex items-center gap-4 min-w-0">
+                            <button onclick="backToSplash()" id="home-btn" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all border border-slate-200 shadow-sm flex items-center justify-center text-slate-600 shrink-0" title="กลับสู่หน้าหลัก">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                            </button>
+                            <div class="min-w-0">
+                                <h1 class="text-2xl md:text-3xl font-black text-[#1e3a8a] tracking-tighter leading-none whitespace-nowrap">PYNN NGAMWONGWAN 54</h1>
+                                <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-[0.28em] mt-2 whitespace-nowrap">CONSTRUCTION PROGRESS REPORT</p>
                             </div>
-                            <div class="bg-slate-50 border border-slate-200 px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm">
+                        </div>
+                        <div id="header-title-container" class="text-center min-w-0">
+                            <h2 class="text-xl md:text-2xl font-black tracking-tight text-slate-900 uppercase whitespace-nowrap" id="status-title">${title}</h2>
+                        </div>
+                        <div id="header-date-container" class="flex justify-start md:justify-end">
+                            <div class="bg-slate-50 border border-slate-200 px-4 py-2 md:px-5 md:py-2.5 rounded-xl shadow-sm whitespace-nowrap">
                                 <span class="text-xs md:text-sm font-bold text-slate-700">วันที่รายงาน: <span id="update-date">${thaiDateShort}</span></span>
                             </div>
                         </div>
-                        <div class="flex flex-col mt-4">
-                             <h2 class="text-2xl md:text-3xl font-black tracking-tight text-slate-900 uppercase" id="status-title">${title}</h2>
-                        </div>
-                        <div class="h-1.5 w-full bg-[#1e3a8a] mt-6"></div>
+                        <div data-report-rule class="col-span-full h-1 w-full bg-[#1e3a8a] mt-1"></div>
                     `;
           } else {
             header.className =
@@ -10142,7 +10383,7 @@
               ? "border-yellow-400 ring-2 ring-yellow-400 bg-yellow-50"
               : "border-black";
             return `
-                        <button onclick="toggleMajorDefectHighlight()" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border ${borderClass} shadow-sm transition-transform hover:scale-105 flex-shrink-0 cursor-pointer">
+                        <button onclick="toggleMajorDefectHighlight()" aria-pressed="${showMajorDefectHighlight}" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border ${borderClass} shadow-sm transition-transform hover:scale-105 flex-shrink-0 cursor-pointer">
                             <div class="w-4 h-4 flex items-center justify-center rounded-full bg-rose-100 text-rose-600 font-bold text-[10px] border border-rose-200">!</div>
                             <span class="text-slate-600 font-medium text-xs md:text-sm whitespace-nowrap">พบ Major Defect</span>
                         </button>
@@ -12465,61 +12706,154 @@
             return `PYNN NGAMWONGWAN 54 ${name} ${getThaiDateForFilename()}`;
         }
 
+        function isAppleMobileDevice() {
+          return (
+            /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+          );
+        }
+
+        function dataUrlToFile(dataUrl, filename) {
+          const parts = dataUrl.split(",");
+          const mimeMatch = parts[0].match(/data:([^;]+)/);
+          const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
+          const binary = atob(parts[1]);
+          const bytes = new Uint8Array(binary.length);
+          for (let index = 0; index < binary.length; index++) {
+            bytes[index] = binary.charCodeAt(index);
+          }
+          return new File([bytes], filename, {
+            type: mimeType,
+            lastModified: Date.now(),
+          });
+        }
+
+        function canSharePreviewFile(file) {
+          return Boolean(
+            navigator.share &&
+              navigator.canShare &&
+              navigator.canShare({ files: [file] }),
+          );
+        }
+
+        function sharePreviewFile(file) {
+          return navigator.share({
+            files: [file],
+            title: "รายงานความคืบหน้า",
+          });
+        }
+
+        function downloadPreviewFile(file) {
+          const objectUrl = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.download = file.name;
+          link.href = objectUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
+        }
+
+        function getSafeCaptureScale(
+          width,
+          height,
+          requestedScale,
+          isIOS,
+        ) {
+          const maxPixels = isIOS ? 6000000 : 24000000;
+          const maxDimension = isIOS ? 4096 : 8192;
+          const pixelLimitedScale = Math.sqrt(
+            maxPixels / Math.max(width * height, 1),
+          );
+          const dimensionLimitedScale = Math.min(
+            maxDimension / Math.max(width, 1),
+            maxDimension / Math.max(height, 1),
+          );
+          return Math.max(
+            0.55,
+            Math.min(
+              requestedScale,
+              pixelLimitedScale,
+              dimensionLimitedScale,
+            ),
+          );
+        }
+
         function showImagePreview(dataUrl, filename, canvas = null) {
           const previewImg = document.getElementById("previewImageElement");
           const downloadBtn = document.getElementById("previewDownloadBtn");
+          const downloadLabel = document.getElementById(
+            "previewDownloadLabel",
+          );
           const shareBtn = document.getElementById("previewShareBtn");
+          const saveHint = document.getElementById("previewSaveHint");
+          const previewFile = dataUrlToFile(dataUrl, filename);
+          const isIOS = isAppleMobileDevice();
+          const supportsFileShare = canSharePreviewFile(previewFile);
           
           if (previewImg) previewImg.src = dataUrl;
+          const previewScrollContainer = document.getElementById(
+            "preview-scroll-container",
+          );
+          if (previewScrollContainer) {
+            previewScrollContainer.scrollTop = 0;
+          }
           
-          // Set up Download Button
           if (downloadBtn) {
-            downloadBtn.onclick = function() {
-              const link = document.createElement("a");
-              link.download = filename;
-              link.href = dataUrl;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
+            downloadBtn.classList.toggle("ios-native-save", isIOS);
+            if (downloadLabel) {
+              downloadLabel.textContent =
+                isIOS && supportsFileShare
+                  ? "บันทึก / แชร์บน iOS"
+                  : "บันทึกลงเครื่อง";
+            }
+
+            downloadBtn.onclick = function () {
+              if (isIOS && supportsFileShare) {
+                sharePreviewFile(previewFile).catch((error) => {
+                  if (error && error.name !== "AbortError") {
+                    console.error("iOS save/share failed:", error);
+                    downloadPreviewFile(previewFile);
+                  }
+                });
+                return;
+              }
+              downloadPreviewFile(previewFile);
             };
           }
           
-          // Set up Share Button
           if (shareBtn) {
-            if (!(navigator.share && navigator.canShare)) {
+            if (!supportsFileShare || isIOS) {
+              shareBtn.classList.add("hidden");
               shareBtn.style.display = "none";
             } else {
+              shareBtn.classList.remove("hidden");
               shareBtn.style.display = "flex";
-              shareBtn.onclick = function() {
-                if (canvas) {
-                  canvas.toBlob((blob) => {
-                    if (!blob) return;
-                    const file = new File([blob], filename, { type: "image/jpeg" });
-                    if (navigator.canShare({ files: [file] })) {
-                      navigator.share({
-                        files: [file],
-                        title: "รายงานความคืบหน้า",
-                      }).catch((err) => console.error("Share failed:", err));
-                    }
-                  }, "image/jpeg", 0.9);
-                } else {
-                  fetch(dataUrl)
-                    .then(res => res.blob())
-                    .then(blob => {
-                      const file = new File([blob], filename, { type: isUltraHD ? "image/png" : "image/jpeg" });
-                      if (navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                          files: [file],
-                          title: "รายงานความคืบหน้า",
-                        }).catch((err) => console.error("Share failed:", err));
-                      }
-                    });
-                }
+              shareBtn.onclick = function () {
+                sharePreviewFile(previewFile).catch((error) => {
+                  if (error && error.name !== "AbortError") {
+                    console.error("Share failed:", error);
+                  }
+                });
               };
+            }
+          }
+
+          if (saveHint) {
+            if (isIOS && supportsFileShare) {
+              saveHint.innerHTML =
+                "แตะ <strong>บันทึก / แชร์บน iOS</strong> แล้วเลือก <strong>บันทึกรูปภาพ</strong> หรือแอปที่ต้องการได้ทันที";
+            } else if (isIOS) {
+              saveHint.innerHTML =
+                "อุปกรณ์นี้ไม่รองรับเมนูบันทึกโดยตรง ระบบจะเปิดไฟล์ภาพให้บันทึกจากหน้าตัวอย่าง";
+            } else {
+              saveHint.textContent =
+                "ตรวจสอบภาพ แล้วเลือกบันทึกหรือแชร์ด้านล่าง";
             }
           }
           
           openModal("imagePreviewModal");
+          if (window.lucide) lucide.createIcons();
         }
 
         function captureForLine(
@@ -12556,6 +12890,8 @@
           const mainAppContainer =
             document.getElementById("main-app-container");
           const originalMainAppWidth = mainAppContainer.style.width;
+          const originalTableWidth = table ? table.style.width : "";
+          const originalTableMinWidth = table ? table.style.minWidth : "";
 
           const execDashboard = document.getElementById(
             "executive-summary-dashboard",
@@ -12571,6 +12907,10 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
+          if (table && !table.classList.contains("hidden")) {
+            table.style.width = fullWidth + "px";
+            table.style.minWidth = fullWidth + "px";
+          }
           if (execDashboard && currentView === "schedule") {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
@@ -12607,6 +12947,10 @@
               document.body.style.width = originalBodyWidth;
               document.documentElement.style.width = originalHtmlWidth;
               mainAppContainer.style.width = originalMainAppWidth;
+              if (table) {
+                table.style.width = originalTableWidth;
+                table.style.minWidth = originalTableMinWidth;
+              }
               if (execDashboard) {
                 execDashboard.style.width = originalExecWidth;
                 execDashboard.style.maxWidth = originalExecMaxWidth;
@@ -12697,6 +13041,8 @@
           const mainAppContainer =
             document.getElementById("main-app-container");
           const originalMainAppWidth = mainAppContainer.style.width;
+          const originalTableWidth = table ? table.style.width : "";
+          const originalTableMinWidth = table ? table.style.minWidth : "";
 
           const execDashboard = document.getElementById(
             "executive-summary-dashboard",
@@ -12712,6 +13058,10 @@
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
+          if (table && !table.classList.contains("hidden")) {
+            table.style.width = fullWidth + "px";
+            table.style.minWidth = fullWidth + "px";
+          }
           if (execDashboard && currentView === "schedule") {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
@@ -12721,21 +13071,26 @@
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isIOS = isAppleMobileDevice();
             const isMobile = window.innerWidth <= 768;
-            
-            let captureScale = isUltraHD ? (isMobile ? 2.5 : 3.5) : (isMobile ? 1.2 : 1.8);
-            if (isIOS) {
-              const estimatedTotalPixels = finalWidth * finalHeight * (isUltraHD ? 2 : 1.5) * (isUltraHD ? 2 : 1.5);
-              if (estimatedTotalPixels > 9000000) {
-                captureScale = isUltraHD ? 1.0 : 0.8;
-              } else if (estimatedTotalPixels > 5000000) {
-                captureScale = isUltraHD ? 1.2 : 1.0;
-              } else {
-                captureScale = isUltraHD ? 1.5 : 1.2;
-              }
-            }
+            const requestedScale = isUltraHD
+              ? isMobile
+                ? 2.2
+                : 3.2
+              : isMobile
+                ? 1.2
+                : 1.8;
+            const captureScale = getSafeCaptureScale(
+              finalWidth,
+              finalHeight,
+              requestedScale,
+              isIOS,
+            );
+            const outputMime =
+              isUltraHD && !isIOS ? "image/png" : "image/jpeg";
+            const outputExtension =
+              outputMime === "image/png" ? "png" : "jpg";
+            const outputQuality = isUltraHD ? 0.96 : 0.9;
 
             const cleanUpAndRestore = () => {
               document.documentElement.classList.remove("is-line-capturing");
@@ -12746,6 +13101,10 @@
               document.body.style.width = originalBodyWidth;
               document.documentElement.style.width = originalHtmlWidth;
               mainAppContainer.style.width = originalMainAppWidth;
+              if (table) {
+                table.style.width = originalTableWidth;
+                table.style.minWidth = originalTableMinWidth;
+              }
               if (execDashboard) {
                 execDashboard.style.width = originalExecWidth;
                 execDashboard.style.maxWidth = originalExecMaxWidth;
@@ -12770,8 +13129,11 @@
                 scrollY: 0,
               })
                 .then((canvas) => {
-                  const filename = `${getFileExportName()}.${isUltraHD ? 'png' : 'jpg'}`;
-                  const dataUrl = canvas.toDataURL(isUltraHD ? "image/png" : "image/jpeg", isUltraHD ? 1.0 : 0.9);
+                  const filename = `${getFileExportName()}.${outputExtension}`;
+                  const dataUrl = canvas.toDataURL(
+                    outputMime,
+                    outputQuality,
+                  );
                   showImagePreview(dataUrl, filename, canvas);
                   cleanUpAndRestore();
                 })
@@ -12787,7 +13149,7 @@
 
             // Use html-to-image which handles SVGs and scaling much better
             const captureOptions = {
-                quality: isUltraHD ? 1.0 : 0.9,
+                quality: outputQuality,
                 backgroundColor: "#ffffff",
                 pixelRatio: captureScale,
                 width: finalWidth,
@@ -12797,13 +13159,13 @@
                 },
             };
             
-            const capturePromise = isUltraHD 
+            const capturePromise = outputMime === "image/png"
                 ? htmlToImage.toPng(captureArea, captureOptions)
                 : htmlToImage.toJpeg(captureArea, captureOptions);
 
             capturePromise
               .then((dataUrl) => {
-                const filename = `${getFileExportName()}.${isUltraHD ? 'png' : 'jpg'}`;
+                const filename = `${getFileExportName()}.${outputExtension}`;
                 showImagePreview(dataUrl, filename);
                 cleanUpAndRestore();
               })
@@ -15262,7 +15624,10 @@
           document
             .getElementById("captureUltraBtn")
             .addEventListener("click", () => {
-              alert("คำเตือน:\n\nรูปแบบไฟล์ภาพความละเอียดสูง (Ultra HD) ไม่เหมาะสำหรับการส่งผ่านแอปพลิเคชัน LINE เนื่องจากระบบของ LINE จะทำการบีบอัดภาพที่มีขนาดใหญ่เกินไปอย่างหนัก ทำให้ภาพแตกและเบลอ\n\nหากต้องการภาพเพื่อส่งลง LINE Group แนะนำให้ใช้ปุ่ม 'แคปเจอร์' แบบปกติแทน");
+              showToast(
+                "กำลังสร้างภาพ Ultra HD — หากส่งผ่าน LINE แนะนำโหมดปกติเพื่อลดการบีบอัด",
+                4500,
+              );
               captureForLineNew("download", "captureUltraBtn", true);
             });
 
@@ -15320,13 +15685,17 @@
             .getElementById("toggleCaptureModeBtn")
             .addEventListener("click", () => {
               document.documentElement.classList.add("is-line-capturing");
+              document.documentElement.classList.add("is-capture-preview");
               document.body.classList.add("is-line-capturing");
+              document.body.classList.add("is-capture-preview");
             });
           document
             .getElementById("exitCaptureModeFloatingBtn")
             .addEventListener("click", () => {
               document.documentElement.classList.remove("is-line-capturing");
+              document.documentElement.classList.remove("is-capture-preview");
               document.body.classList.remove("is-line-capturing");
+              document.body.classList.remove("is-capture-preview");
             });
           document.addEventListener("keydown", (e) => {
             if (
@@ -15334,7 +15703,9 @@
               document.body.classList.contains("is-line-capturing")
             ) {
               document.documentElement.classList.remove("is-line-capturing");
+              document.documentElement.classList.remove("is-capture-preview");
               document.body.classList.remove("is-line-capturing");
+              document.body.classList.remove("is-capture-preview");
             }
           });
           document.addEventListener("mouseleave", () => {
