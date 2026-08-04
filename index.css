@@ -1607,3 +1607,158 @@ body.is-capture-preview {
     text-overflow: ellipsis;
   }
 }
+
+/* Stable legend geometry for Safari/html2canvas text baselines. */
+.legend-step,
+.legend-step-pill,
+.legend-step-arrow {
+  align-items: center;
+}
+
+.legend-step-pill {
+  display: grid;
+  grid-template-columns: 1.25rem max-content;
+  column-gap: 0.5rem;
+  min-height: 2.125rem;
+  padding: 0 0.75rem 0 0.5rem;
+}
+
+.legend-number-circle {
+  position: relative;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 1.25rem;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+.legend-number-text {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  padding: 0;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+.legend-step-label {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1.25rem;
+}
+
+.legend-step-arrow {
+  display: grid;
+  width: 1rem;
+  height: 2.125rem;
+  place-items: center;
+}
+
+.is-line-capturing #legend .legend-step-pill {
+  display: grid !important;
+  grid-template-columns: 1.25rem max-content !important;
+  align-items: center !important;
+  min-height: 2.125rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.is-line-capturing #legend .legend-number-circle,
+.is-line-capturing #legend .legend-number-text {
+  display: block !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25rem !important;
+  text-align: center !important;
+}
+
+.is-line-capturing #legend .legend-step-label {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25rem !important;
+}
+
+/* Safari/iOS viewport and image-preview stability. */
+html {
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+#previewImageElement {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  -webkit-touch-callout: default;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+#preview-scroll-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+@supports (-webkit-touch-callout: none) {
+  body {
+    width: 100%;
+    min-width: 0;
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  #main-app-container,
+  #unified-controls {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  #capture-area {
+    width: 100%;
+    max-width: 100vw;
+    margin-inline: 0;
+    box-sizing: border-box;
+  }
+
+  #capture-area > main {
+    width: 100%;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #imagePreviewModal {
+    width: 100%;
+    height: 100dvh;
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    box-sizing: border-box;
+  }
+
+  #imagePreviewModal .modal-content {
+    width: 100%;
+    max-width: min(42rem, 100%);
+    max-height: calc(100dvh - 1rem);
+    margin: 0;
+  }
+
+  #imagePreviewModal #previewDownloadBtn,
+  #imagePreviewModal #previewShareBtn {
+    min-height: 3rem;
+    touch-action: manipulation;
+  }
+}

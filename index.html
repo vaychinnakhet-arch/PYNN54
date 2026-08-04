@@ -2,7 +2,10 @@
 <html lang="th">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>PYNN NGAMWONGWAN 54</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -2125,7 +2128,7 @@
           </button>
         </div>
         <div id="preview-scroll-container" class="p-4 overflow-y-auto flex-1 min-h-0 flex flex-col items-center justify-start bg-slate-100">
-          <img id="previewImageElement" src="" class="max-w-full max-h-full object-contain shadow-md rounded border border-slate-300" alt="Preview" />
+          <img id="previewImageElement" src="" class="max-w-full max-h-full object-contain shadow-md rounded border border-slate-300" alt="Preview" draggable="false" />
           <p id="previewSaveHint" class="text-sm text-slate-600 mt-3 text-center font-medium">
             ตรวจสอบภาพ แล้วเลือกบันทึกหรือแชร์ด้านล่าง
           </p>
@@ -2137,7 +2140,7 @@
           </button>
           <button id="previewShareBtn" class="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95">
             <i data-lucide="share-2" class="w-5 h-5" aria-hidden="true"></i>
-            แชร์ / ส่ง LINE
+            <span id="previewShareLabel">แชร์ / ส่ง LINE</span>
           </button>
         </div>
       </div>
@@ -10575,17 +10578,17 @@
           // Helper for sequential steps
           const createStep = (colorClass, text, number, isLast = false) => {
             return `
-                        <div class="flex items-center group flex-shrink-0">
-                            <div class="flex items-center gap-2 bg-white pl-2 pr-3 py-1.5 rounded-full border border-black shadow-sm transition-all hover:shadow-md hover:border-indigo-100">
-                                <div class="w-5 h-5 rounded-full ${colorClass} flex items-center justify-center text-[10px] font-bold text-white shadow-sm ring-1 ring-white legend-number-circle">
-                                    ${number}
+                        <div class="legend-step flex items-center group flex-shrink-0">
+                            <div class="legend-step-pill bg-white rounded-full border border-black shadow-sm transition-all hover:shadow-md hover:border-indigo-100">
+                                <div class="legend-number-circle rounded-full ${colorClass} text-white shadow-sm ring-1 ring-white">
+                                    <span class="legend-number-text">${number}</span>
                                 </div>
-                                <span class="text-slate-700 font-medium text-xs md:text-sm whitespace-nowrap">${text}</span>
+                                <span class="legend-step-label text-slate-700 font-medium text-xs md:text-sm whitespace-nowrap">${text}</span>
                             </div>
                             ${
                               !isLast
                                 ? `
-                                <div class="mx-2 text-black group-hover:text-indigo-300 transition-colors">
+                                <div class="legend-step-arrow mx-2 text-black group-hover:text-indigo-300 transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                                 </div>
                             `
@@ -10703,6 +10706,12 @@
 
           if (modalId === "updateModal" || modalId === "summaryPlanModal")
             clearSelection();
+
+          if (modalId === "imagePreviewModal") {
+            const previewImg = document.getElementById("previewImageElement");
+            if (previewImg) previewImg.removeAttribute("src");
+            releasePreviewObjectUrl();
+          }
         }
 
         let currentSummaryPlanData = { floor: null, room: null, taskKey: null };
@@ -12910,6 +12919,81 @@
           });
         }
 
+        let activePreviewObjectUrl = "";
+
+        function releasePreviewObjectUrl() {
+          if (!activePreviewObjectUrl) return;
+          URL.revokeObjectURL(activePreviewObjectUrl);
+          activePreviewObjectUrl = "";
+        }
+
+        function canvasToPreviewFile(
+          canvas,
+          filename,
+          mimeType = "image/jpeg",
+          quality = 0.9,
+        ) {
+          return new Promise((resolve, reject) => {
+            if (!canvas) {
+              reject(new Error("Capture canvas is unavailable"));
+              return;
+            }
+
+            if (typeof canvas.toBlob !== "function") {
+              try {
+                resolve(
+                  dataUrlToFile(
+                    canvas.toDataURL(mimeType, quality),
+                    filename,
+                  ),
+                );
+              } catch (error) {
+                reject(error);
+              }
+              return;
+            }
+
+            canvas.toBlob(
+              (blob) => {
+                if (!blob || !blob.size) {
+                  reject(new Error("Safari returned an empty capture image"));
+                  return;
+                }
+                resolve(
+                  new File([blob], filename, {
+                    type: blob.type || mimeType,
+                    lastModified: Date.now(),
+                  }),
+                );
+              },
+              mimeType,
+              quality,
+            );
+          });
+        }
+
+        function dataUrlToPreviewFile(dataUrl, filename) {
+          if (typeof fetch !== "function") {
+            return Promise.resolve(dataUrlToFile(dataUrl, filename));
+          }
+
+          return fetch(dataUrl)
+            .then((response) => response.blob())
+            .then((blob) => {
+              if (!blob || !blob.size) {
+                throw new Error("Generated image is empty");
+              }
+              return new File([blob], filename, {
+                type: blob.type || "image/jpeg",
+                lastModified: Date.now(),
+              });
+            })
+            .catch((error) => {
+              console.warn("Native data URL conversion failed:", error);
+              return dataUrlToFile(dataUrl, filename);
+            });
+        }
+
         function canSharePreviewFile(file) {
           if (!navigator.share || !file || !file.size) return false;
           if (!navigator.canShare) return true;
@@ -12931,33 +13015,67 @@
         function openPreviewImageForIOS(file) {
           if (!file || !file.size) return false;
           const objectUrl = URL.createObjectURL(file);
-          let opened = null;
+          let viewerWindow = null;
+          let viewerReady = false;
 
-          // iOS Safari does not reliably honor the download attribute for
-          // blob URLs. Open the image in a user-initiated tab so it can be
-          // saved with the native long-press menu when file sharing is not
-          // available (older iOS versions and in-app browsers).
+          // A blank tab opened from the button click keeps Safari's user
+          // activation. Rendering a small HTML viewer is more reliable than
+          // navigating a new tab directly to a large blob URL on iOS.
           try {
-            opened = window.open(objectUrl, "_blank", "noopener,noreferrer");
+            viewerWindow = window.open("", "_blank");
+            if (viewerWindow) {
+              viewerWindow.opener = null;
+              const viewerDocument = viewerWindow.document;
+              viewerDocument.title = file.name || "Captured report";
+              viewerDocument.head.innerHTML = "";
+              viewerDocument.body.innerHTML = "";
+
+              const viewportMeta = viewerDocument.createElement("meta");
+              viewportMeta.name = "viewport";
+              viewportMeta.content =
+                "width=device-width, initial-scale=1, viewport-fit=cover";
+              viewerDocument.head.appendChild(viewportMeta);
+
+              const viewerStyle = viewerDocument.createElement("style");
+              viewerStyle.textContent =
+                "html,body{margin:0;min-height:100%;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif}body{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));box-sizing:border-box}.hint{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#fff;color:#334155;font-size:14px;text-align:center}.image{display:block;width:100%;height:auto;margin:0 auto;background:#fff;-webkit-touch-callout:default;user-select:auto}";
+              viewerDocument.head.appendChild(viewerStyle);
+
+              const hint = viewerDocument.createElement("p");
+              hint.className = "hint";
+              hint.textContent =
+                "แตะค้างที่ภาพ แล้วเลือก ‘บันทึกรูปภาพ’ หรือใช้ปุ่มแชร์ของ Safari";
+              viewerDocument.body.appendChild(hint);
+
+              const image = viewerDocument.createElement("img");
+              image.className = "image";
+              image.alt = "Captured report";
+              image.src = objectUrl;
+              viewerDocument.body.appendChild(image);
+              viewerReady = true;
+            }
           } catch (error) {
-            console.warn("Could not open iOS image tab:", error);
+            console.warn("Could not build iOS image viewer:", error);
           }
 
-          if (!opened) {
-            const fallbackLink = document.createElement("a");
-            fallbackLink.href = objectUrl;
-            fallbackLink.target = "_blank";
-            fallbackLink.rel = "noopener noreferrer";
-            fallbackLink.setAttribute("aria-label", "Open image to save");
-            document.body.appendChild(fallbackLink);
-            fallbackLink.click();
-            fallbackLink.remove();
+          if (!viewerReady && viewerWindow && !viewerWindow.closed) {
+            try {
+              viewerWindow.location.assign(objectUrl);
+              return true;
+            } catch (error) {
+              console.warn("Could not navigate the iOS image tab:", error);
+            }
           }
 
-          // Keep the object URL alive long enough for Safari to finish
-          // opening the new tab; revoking it immediately produces a blank
-          // tab on some iOS releases.
-          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+          if (!viewerReady) {
+            // Pop-up blockers can reject a new tab. Same-tab navigation still
+            // gives Safari a native image page and the Back button returns to
+            // the report.
+            window.location.assign(objectUrl);
+            return true;
+          }
+
+          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 600000);
           return true;
         }
 
@@ -13002,62 +13120,73 @@
           );
         }
 
-        function showImagePreview(dataUrl, filename, canvas = null) {
+        function showImagePreviewFile(previewFile) {
           const previewImg = document.getElementById("previewImageElement");
           const downloadBtn = document.getElementById("previewDownloadBtn");
           const downloadLabel = document.getElementById(
             "previewDownloadLabel",
           );
           const shareBtn = document.getElementById("previewShareBtn");
+          const shareLabel = document.getElementById("previewShareLabel");
           const saveHint = document.getElementById("previewSaveHint");
-          const previewFile = dataUrlToFile(dataUrl, filename);
           const isIOS = isAppleMobileDevice();
           const supportsFileShare = canSharePreviewFile(previewFile);
-          
-          if (previewImg) previewImg.src = dataUrl;
+
+          releasePreviewObjectUrl();
+          activePreviewObjectUrl = URL.createObjectURL(previewFile);
+          if (previewImg) {
+            previewImg.src = activePreviewObjectUrl;
+            previewImg.alt = previewFile.name || "Captured report";
+          }
           const previewScrollContainer = document.getElementById(
             "preview-scroll-container",
           );
           if (previewScrollContainer) {
             previewScrollContainer.scrollTop = 0;
           }
-          
+
           if (downloadBtn) {
             downloadBtn.classList.toggle("ios-native-save", isIOS);
             if (downloadLabel) {
-              downloadLabel.textContent =
-                isIOS && supportsFileShare
-                  ? "บันทึก / แชร์บน iOS"
-                  : "บันทึกลงเครื่อง";
+              downloadLabel.textContent = isIOS
+                ? "เปิดภาพเต็มเพื่อบันทึก"
+                : "บันทึกลงเครื่อง";
             }
 
             downloadBtn.onclick = function () {
-              if (isIOS && supportsFileShare) {
-                sharePreviewFile(previewFile).catch((error) => {
-                  if (error && error.name !== "AbortError") {
-                    console.error("iOS save/share failed:", error);
-                    downloadPreviewFile(previewFile);
-                  }
-                });
+              if (isIOS) {
+                openPreviewImageForIOS(previewFile);
                 return;
               }
               downloadPreviewFile(previewFile);
             };
           }
-          
+
           if (shareBtn) {
-            if (!supportsFileShare || isIOS) {
+            if (!supportsFileShare) {
               shareBtn.classList.add("hidden");
               shareBtn.style.display = "none";
             } else {
               shareBtn.classList.remove("hidden");
               shareBtn.style.display = "flex";
-              shareBtn.onclick = function () {
-                sharePreviewFile(previewFile).catch((error) => {
+              if (shareLabel) {
+                shareLabel.textContent = isIOS
+                  ? "บันทึก / แชร์ใน iOS"
+                  : "แชร์ / ส่ง LINE";
+              }
+              shareBtn.onclick = async function () {
+                const previousDisabled = shareBtn.disabled;
+                shareBtn.disabled = true;
+                try {
+                  await sharePreviewFile(previewFile);
+                } catch (error) {
                   if (error && error.name !== "AbortError") {
                     console.error("Share failed:", error);
+                    if (isIOS) openPreviewImageForIOS(previewFile);
                   }
-                });
+                } finally {
+                  shareBtn.disabled = previousDisabled;
+                }
               };
             }
           }
@@ -13065,18 +13194,47 @@
           if (saveHint) {
             if (isIOS && supportsFileShare) {
               saveHint.innerHTML =
-                "แตะ <strong>บันทึก / แชร์บน iOS</strong> แล้วเลือก <strong>บันทึกรูปภาพ</strong> หรือแอปที่ต้องการได้ทันที";
+                "เลือก <strong>บันทึก / แชร์ใน iOS</strong> เพื่อเปิดเมนูระบบ หรือเลือก <strong>เปิดภาพเต็มเพื่อบันทึก</strong> แล้วแตะค้างที่ภาพ";
             } else if (isIOS) {
               saveHint.innerHTML =
-                "อุปกรณ์นี้ไม่รองรับเมนูบันทึกโดยตรง ระบบจะเปิดไฟล์ภาพให้บันทึกจากหน้าตัวอย่าง";
+                "เลือก <strong>เปิดภาพเต็มเพื่อบันทึก</strong> แล้วแตะค้างที่ภาพเพื่อเลือก <strong>บันทึกรูปภาพ</strong>";
             } else {
               saveHint.textContent =
                 "ตรวจสอบภาพ แล้วเลือกบันทึกหรือแชร์ด้านล่าง";
             }
           }
-          
+
           openModal("imagePreviewModal");
           if (window.lucide) lucide.createIcons();
+        }
+
+        function showCanvasPreview(
+          canvas,
+          filename,
+          mimeType = "image/jpeg",
+          quality = 0.9,
+        ) {
+          return canvasToPreviewFile(canvas, filename, mimeType, quality)
+            .then((file) => showImagePreviewFile(file))
+            .catch((error) => {
+              console.error("Could not prepare the captured image:", error);
+              showNotificationModal(
+                "ไม่สามารถเตรียมภาพได้",
+                "Safari ไม่สามารถสร้างไฟล์ภาพได้ กรุณาลองแคปอีกครั้งหรือปิดแท็บอื่นเพื่อลดการใช้หน่วยความจำ",
+              );
+            });
+        }
+
+        function showImagePreview(dataUrl, filename) {
+          return dataUrlToPreviewFile(dataUrl, filename)
+            .then((file) => showImagePreviewFile(file))
+            .catch((error) => {
+              console.error("Could not prepare the image preview:", error);
+              showNotificationModal(
+                "ไม่สามารถเปิดภาพได้",
+                "ไฟล์ภาพที่สร้างขึ้นไม่สมบูรณ์ กรุณาลองแคปอีกครั้ง",
+              );
+            });
         }
 
         function captureForLine(
@@ -13231,8 +13389,7 @@
             })
               .then((canvas) => {
                 const filename = `${getFileExportName()}.jpg`;
-                const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-                showImagePreview(dataUrl, filename, canvas);
+                showCanvasPreview(canvas, filename, "image/jpeg", 0.9);
                 cleanUpAndRestore();
               })
               .catch((err) => {
@@ -13362,11 +13519,12 @@
               })
                 .then((canvas) => {
                   const filename = `${getFileExportName()}.${outputExtension}`;
-                  const dataUrl = canvas.toDataURL(
+                  showCanvasPreview(
+                    canvas,
+                    filename,
                     outputMime,
                     outputQuality,
                   );
-                  showImagePreview(dataUrl, filename, canvas);
                   cleanUpAndRestore();
                 })
                 .catch((fallbackErr) => {
@@ -13576,8 +13734,7 @@
               })
                 .then((canvas) => {
                   const filename = `PYNN NGAMWONGWAN 54 DEFECT ${title} ${getThaiDateForFilename()}.jpg`;
-                  const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-                  showImagePreview(dataUrl, filename, canvas);
+                  showCanvasPreview(canvas, filename, "image/jpeg", 0.9);
                   cleanUpAndRestore();
                 })
                 .catch((fallbackErr) => {
@@ -15619,48 +15776,8 @@
             backgroundColor: "#ffffff",
           })
             .then((canvas) => {
-              const dataUrl = canvas.toDataURL("image/png");
               const filename = `infographic-report-${Date.now()}.png`;
-
-              // Show preview modal instead of immediate download
-              const previewImg = document.getElementById("previewImageElement");
-              const dBtn = document.getElementById("previewDownloadBtn");
-              const shareBtn = document.getElementById("previewShareBtn");
-              
-              if (previewImg) previewImg.src = dataUrl;
-              
-              if (dBtn) {
-                dBtn.onclick = function() {
-                  const link = document.createElement("a");
-                  link.download = filename;
-                  link.href = dataUrl;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                };
-              }
-              
-              if (shareBtn) {
-                if (!(navigator.share && navigator.canShare)) {
-                  shareBtn.style.display = "none";
-                } else {
-                  shareBtn.style.display = "flex";
-                  shareBtn.onclick = function() {
-                    canvas.toBlob((blob) => {
-                      if (!blob) return;
-                      const file = new File([blob], filename, { type: "image/png" });
-                      if (navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                          files: [file],
-                          title: "Infographic Report",
-                        }).catch((err) => console.error("Share failed:", err));
-                      }
-                    }, "image/png");
-                  };
-                }
-              }
-              
-              openModal("imagePreviewModal");
+              return showCanvasPreview(canvas, filename, "image/png", 1);
             })
             .catch((err) => {
               console.error("Infographic capture failed:", err);
