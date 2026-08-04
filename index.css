@@ -10,6 +10,40 @@
     linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
 }
 
+/* Keep captured reports in the landscape composition on portrait tablets.
+   The normal responsive layout still stacks these sections for on-screen use. */
+html.is-line-capturing #executive-summary-dashboard .exec-kpi-grid,
+body.is-line-capturing #executive-summary-dashboard .exec-kpi-grid {
+  grid-template-columns: 1.15fr repeat(4, minmax(0, 1fr)) !important;
+}
+
+html.is-line-capturing #executive-summary-dashboard .exec-detail-grid,
+body.is-line-capturing #executive-summary-dashboard .exec-detail-grid {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+}
+
+html.is-line-capturing #executive-summary-dashboard .exec-focus-grid,
+body.is-line-capturing #executive-summary-dashboard .exec-focus-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+html.is-line-capturing #executive-summary-dashboard .exec-signature-row,
+body.is-line-capturing #executive-summary-dashboard .exec-signature-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+html.is-line-capturing #executive-summary-dashboard .exec-signature-box,
+body.is-line-capturing #executive-summary-dashboard .exec-signature-box {
+  border-right: 1px solid #111827 !important;
+  border-bottom: 0 !important;
+}
+
+html.is-line-capturing #executive-summary-dashboard .exec-signature-box:last-child,
+body.is-line-capturing #executive-summary-dashboard .exec-signature-box:last-child {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
 #splash-screen::before {
   inset: 0;
   width: auto;

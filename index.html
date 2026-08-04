@@ -12911,11 +12911,14 @@
         }
 
         function canSharePreviewFile(file) {
-          return Boolean(
-            navigator.share &&
-              navigator.canShare &&
-              navigator.canShare({ files: [file] }),
-          );
+          if (!navigator.share || !file || !file.size) return false;
+          if (!navigator.canShare) return true;
+          try {
+            return Boolean(navigator.canShare({ files: [file] }));
+          } catch (error) {
+            console.warn("File sharing capability check failed:", error);
+            return false;
+          }
         }
 
         function sharePreviewFile(file) {
@@ -12925,7 +12928,45 @@
           });
         }
 
+        function openPreviewImageForIOS(file) {
+          if (!file || !file.size) return false;
+          const objectUrl = URL.createObjectURL(file);
+          let opened = null;
+
+          // iOS Safari does not reliably honor the download attribute for
+          // blob URLs. Open the image in a user-initiated tab so it can be
+          // saved with the native long-press menu when file sharing is not
+          // available (older iOS versions and in-app browsers).
+          try {
+            opened = window.open(objectUrl, "_blank", "noopener,noreferrer");
+          } catch (error) {
+            console.warn("Could not open iOS image tab:", error);
+          }
+
+          if (!opened) {
+            const fallbackLink = document.createElement("a");
+            fallbackLink.href = objectUrl;
+            fallbackLink.target = "_blank";
+            fallbackLink.rel = "noopener noreferrer";
+            fallbackLink.setAttribute("aria-label", "Open image to save");
+            document.body.appendChild(fallbackLink);
+            fallbackLink.click();
+            fallbackLink.remove();
+          }
+
+          // Keep the object URL alive long enough for Safari to finish
+          // opening the new tab; revoking it immediately produces a blank
+          // tab on some iOS releases.
+          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+          return true;
+        }
+
         function downloadPreviewFile(file) {
+          if (isAppleMobileDevice()) {
+            openPreviewImageForIOS(file);
+            return;
+          }
+
           const objectUrl = URL.createObjectURL(file);
           const link = document.createElement("a");
           link.download = file.name;
@@ -13329,6 +13370,21 @@
                   cleanUpAndRestore();
                 })
                 .catch((fallbackErr) => {
+                  if (window.htmlToImage && typeof htmlToImage.toJpeg === "function") {
+                    htmlToImage
+                      .toJpeg(captureArea, captureOptions)
+                      .then((dataUrl) => {
+                        const filename = `${getFileExportName()}.${outputExtension}`;
+                        showImagePreview(dataUrl, filename);
+                        cleanUpAndRestore();
+                      })
+                      .catch((lastErr) => {
+                        console.error("All capture methods failed:", lastErr);
+                        showNotificationModal("Capture failed", "ไม่สามารถสร้างภาพแคปเจอร์ได้");
+                        cleanUpAndRestore();
+                      });
+                    return;
+                  }
                   console.error("All capture methods failed:", fallbackErr);
                   showNotificationModal(
                     "เกิดข้อผิดพลาด",
@@ -13350,20 +13406,29 @@
                 },
             };
             
-            const capturePromise = outputMime === "image/png"
+            const capturePromise = isIOS
+              ? null
+              : outputMime === "image/png"
                 ? htmlToImage.toPng(captureArea, captureOptions)
                 : htmlToImage.toJpeg(captureArea, captureOptions);
 
-            capturePromise
-              .then((dataUrl) => {
-                const filename = `${getFileExportName()}.${outputExtension}`;
-                showImagePreview(dataUrl, filename);
-                cleanUpAndRestore();
-              })
-              .catch((err) => {
-                console.warn("htmlToImage failed, trying html2canvas fallback...", err);
-                runHtml2CanvasFallback();
-              });
+            // html-to-image relies on SVG foreignObject rendering, which is
+            // inconsistent in iOS Safari. Start with html2canvas there and
+            // keep html-to-image as the fallback for desktop/Android.
+            if (isIOS) {
+              runHtml2CanvasFallback();
+            } else {
+              capturePromise
+                .then((dataUrl) => {
+                  const filename = `${getFileExportName()}.${outputExtension}`;
+                  showImagePreview(dataUrl, filename);
+                  cleanUpAndRestore();
+                })
+                .catch((err) => {
+                  console.warn("htmlToImage failed, trying html2canvas fallback...", err);
+                  runHtml2CanvasFallback();
+                });
+            }
           }, 500);
         }
 
