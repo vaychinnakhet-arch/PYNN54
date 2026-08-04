@@ -787,7 +787,6 @@
     <link rel="stylesheet" href="/index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
   </head>
   <body class="p-0 md:p-4 bg-slate-50 relative">
     <!-- Splash Screen -->
@@ -13120,6 +13119,27 @@
           );
         }
 
+        async function waitForCaptureLayout() {
+          if (document.fonts && document.fonts.ready) {
+            await Promise.race([
+              document.fonts.ready.catch(() => undefined),
+              new Promise((resolve) => window.setTimeout(resolve, 1600)),
+            ]);
+          }
+
+          await new Promise((resolve) => {
+            window.requestAnimationFrame(() => {
+              window.requestAnimationFrame(resolve);
+            });
+          });
+        }
+
+        function rejectAfter(milliseconds, message) {
+          return new Promise((_, reject) => {
+            window.setTimeout(() => reject(new Error(message)), milliseconds);
+          });
+        }
+
         function showImagePreviewFile(previewFile) {
           const previewImg = document.getElementById("previewImageElement");
           const downloadBtn = document.getElementById("previewDownloadBtn");
@@ -13552,29 +13572,84 @@
                 });
             };
 
-            // Use html-to-image which handles SVGs and scaling much better
+            // html-to-image lets WebKit lay out the text inside an SVG
+            // foreignObject. This preserves Thai line wrapping and baselines
+            // more accurately than html2canvas on iOS Safari.
             const captureOptions = {
-                quality: outputQuality,
-                backgroundColor: "#ffffff",
-                pixelRatio: captureScale,
-                width: finalWidth,
-                height: finalHeight,
-                style: {
-                  transformOrigin: "top left",
-                },
+              quality: outputQuality,
+              backgroundColor: "#ffffff",
+              pixelRatio: captureScale,
+              width: finalWidth,
+              height: finalHeight,
+              cacheBust: true,
+              style: {
+                transformOrigin: "top left",
+              },
             };
-            
-            const capturePromise = isIOS
-              ? null
-              : outputMime === "image/png"
+
+            const runIOSForeignObjectCapture = async () => {
+              if (
+                !window.htmlToImage ||
+                typeof htmlToImage.toBlob !== "function"
+              ) {
+                runHtml2CanvasFallback();
+                return;
+              }
+
+              try {
+                await waitForCaptureLayout();
+
+                let fontEmbedCSS = "";
+                if (typeof htmlToImage.getFontEmbedCSS === "function") {
+                  try {
+                    fontEmbedCSS = await Promise.race([
+                      htmlToImage.getFontEmbedCSS(captureArea),
+                      rejectAfter(5000, "Font embedding timed out"),
+                    ]);
+                  } catch (fontError) {
+                    console.warn(
+                      "Could not embed capture fonts; using loaded fonts:",
+                      fontError,
+                    );
+                  }
+                }
+
+                const iosCaptureOptions = fontEmbedCSS
+                  ? { ...captureOptions, fontEmbedCSS }
+                  : captureOptions;
+                const blob = await Promise.race([
+                  htmlToImage.toBlob(captureArea, iosCaptureOptions),
+                  rejectAfter(18000, "iOS vector capture timed out"),
+                ]);
+
+                if (!blob || !blob.size) {
+                  throw new Error("iOS vector capture returned an empty image");
+                }
+
+                const filename = `${getFileExportName()}.png`;
+                showImagePreviewFile(
+                  new File([blob], filename, {
+                    type: blob.type || "image/png",
+                    lastModified: Date.now(),
+                  }),
+                );
+                cleanUpAndRestore();
+              } catch (error) {
+                console.warn(
+                  "iOS vector capture failed, using canvas fallback:",
+                  error,
+                );
+                runHtml2CanvasFallback();
+              }
+            };
+
+            const capturePromise =
+              outputMime === "image/png"
                 ? htmlToImage.toPng(captureArea, captureOptions)
                 : htmlToImage.toJpeg(captureArea, captureOptions);
 
-            // html-to-image relies on SVG foreignObject rendering, which is
-            // inconsistent in iOS Safari. Start with html2canvas there and
-            // keep html-to-image as the fallback for desktop/Android.
             if (isIOS) {
-              runHtml2CanvasFallback();
+              runIOSForeignObjectCapture();
             } else {
               capturePromise
                 .then((dataUrl) => {
