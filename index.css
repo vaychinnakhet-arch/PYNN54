@@ -1608,6 +1608,89 @@ body.is-capture-preview {
   }
 }
 
+/* Stable legend geometry for Safari/html2canvas text baselines. */
+.legend-step,
+.legend-step-pill,
+.legend-step-arrow {
+  align-items: center;
+}
+
+.legend-step-pill {
+  display: grid;
+  grid-template-columns: 1.25rem max-content;
+  column-gap: 0.5rem;
+  min-height: 2.125rem;
+  padding: 0 0.75rem 0 0.5rem;
+}
+
+.legend-number-circle {
+  position: relative;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 1.25rem;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+.legend-number-text {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  padding: 0;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+.legend-step-label {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1.25rem;
+}
+
+.legend-step-arrow {
+  display: grid;
+  width: 1rem;
+  height: 2.125rem;
+  place-items: center;
+}
+
+.is-line-capturing #legend .legend-step-pill {
+  display: grid !important;
+  grid-template-columns: 1.25rem max-content !important;
+  align-items: center !important;
+  min-height: 2.125rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.is-line-capturing #legend .legend-number-circle,
+.is-line-capturing #legend .legend-number-text {
+  display: block !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25rem !important;
+  text-align: center !important;
+}
+
+.is-line-capturing #legend .legend-step-label {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25rem !important;
+}
+
 /* Safari/iOS viewport and image-preview stability. */
 html {
   width: 100%;
