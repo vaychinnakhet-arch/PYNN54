@@ -1227,6 +1227,10 @@
                 <i data-lucide="sparkles" class="w-4 h-4"></i>
                 <span>Ultra HD</span>
               </button>
+              <button id="capturePptBtn" class="action-btn px-4 py-2 bg-white border border-indigo-200/80 text-indigo-700 rounded-xl shadow-sm hover:bg-indigo-50 hover:text-indigo-800 focus:outline-none flex items-center justify-center gap-2 transition-all font-bold text-xs whitespace-nowrap min-h-[40px] active:scale-95" title="แคปเฉพาะ KPI ตาราง และขั้นตอน ในสัดส่วนกว้างสำหรับวางใน PowerPoint">
+                <i data-lucide="presentation" class="w-4 h-4"></i>
+                <span>PowerPoint</span>
+              </button>
               <button id="exportPdfBtn" class="action-btn px-5 py-2 bg-rose-600 text-white rounded-xl shadow hover:bg-rose-700 hover:shadow-md focus:outline-none flex items-center justify-center gap-2 transition-all font-bold text-xs whitespace-nowrap min-h-[40px] active:scale-95">
                 <i data-lucide="file-down" class="w-4 h-4"></i>
                 <span>ส่งออก PDF</span>
@@ -13665,6 +13669,237 @@
           }, 500);
         }
 
+        function getPowerPointKpiGrid() {
+          const dashboard = document.getElementById(
+            "executive-summary-dashboard",
+          );
+          if (!dashboard) return null;
+
+          let kpiGrid = dashboard.querySelector(".exec-kpi-grid");
+          if (
+            !kpiGrid &&
+            (currentView === "residential" || currentView === "schedule")
+          ) {
+            const previousSummaryState = showExecutiveSummary;
+            showExecutiveSummary = true;
+            renderExecutiveSummaryDashboard();
+            kpiGrid = dashboard.querySelector(".exec-kpi-grid");
+            showExecutiveSummary = previousSummaryState;
+            if (!previousSummaryState) dashboard.classList.add("hidden");
+          }
+
+          return kpiGrid;
+        }
+
+        function buildPowerPointCaptureStage() {
+          const sourceTable = document.getElementById("main-table");
+          if (
+            !sourceTable ||
+            sourceTable.classList.contains("hidden") ||
+            !sourceTable.rows.length
+          ) {
+            throw new Error("ไม่พบตารางที่พร้อมแคปสำหรับ PowerPoint");
+          }
+
+          const stage = document.createElement("section");
+          stage.className = "ppt-capture-stage";
+          stage.setAttribute("aria-hidden", "true");
+
+          const sourceKpis = getPowerPointKpiGrid();
+          if (sourceKpis) {
+            const kpiArea = document.createElement("div");
+            kpiArea.className = "ppt-capture-kpis";
+            const kpiClone = sourceKpis.cloneNode(true);
+            kpiClone.removeAttribute("id");
+            kpiArea.appendChild(kpiClone);
+            stage.appendChild(kpiArea);
+          } else {
+            stage.classList.add("ppt-capture-without-kpis");
+          }
+
+          const tableViewport = document.createElement("div");
+          tableViewport.className = "ppt-capture-table-viewport";
+          const tableScale = document.createElement("div");
+          tableScale.className = "ppt-capture-table-scale";
+          const tableClone = sourceTable.cloneNode(true);
+          tableClone.removeAttribute("id");
+          tableClone.classList.add("ppt-capture-table-clone");
+          tableClone.removeAttribute("contenteditable");
+          tableClone.querySelectorAll("[contenteditable]").forEach((node) =>
+            node.removeAttribute("contenteditable"),
+          );
+          tableScale.appendChild(tableClone);
+          tableViewport.appendChild(tableScale);
+          stage.appendChild(tableViewport);
+
+          const legendArea = document.createElement("div");
+          legendArea.className = "ppt-capture-legend";
+          const sourceLegend = document.getElementById("legend");
+          if (sourceLegend && !sourceLegend.classList.contains("hidden")) {
+            const legendClone = sourceLegend.cloneNode(true);
+            legendClone.removeAttribute("id");
+            legendArea.appendChild(legendClone);
+          } else {
+            legendArea.classList.add("ppt-capture-legend-empty");
+          }
+          stage.appendChild(legendArea);
+
+          document.body.appendChild(stage);
+          return { stage, tableViewport, tableScale, tableClone };
+        }
+
+        function fitPowerPointTable({ tableViewport, tableScale, tableClone }) {
+          const viewportWidth = tableViewport.clientWidth;
+          const viewportHeight = tableViewport.clientHeight;
+          const sourceTable = document.getElementById("main-table");
+          const sourceWidth = Math.max(
+            sourceTable?.scrollWidth || 0,
+            sourceTable?.getBoundingClientRect().width || 0,
+            tableClone.scrollWidth,
+            tableClone.getBoundingClientRect().width,
+            1,
+          );
+
+          tableClone.style.width = `${sourceWidth}px`;
+          tableClone.style.minWidth = `${sourceWidth}px`;
+          tableScale.style.width = `${sourceWidth}px`;
+          const sourceHeight = Math.max(
+            tableClone.scrollHeight,
+            tableClone.getBoundingClientRect().height,
+            1,
+          );
+          tableScale.style.height = `${sourceHeight}px`;
+
+          const scale = Math.min(
+            viewportWidth / sourceWidth,
+            viewportHeight / sourceHeight,
+            1.25,
+          );
+          const renderedWidth = sourceWidth * scale;
+          const renderedHeight = sourceHeight * scale;
+          tableScale.style.left = `${Math.max(0, (viewportWidth - renderedWidth) / 2)}px`;
+          tableScale.style.top = `${Math.max(0, (viewportHeight - renderedHeight) / 2)}px`;
+          tableScale.style.transform = `scale(${scale})`;
+        }
+
+        async function captureForPowerPoint() {
+          const captureBtn = document.getElementById("capturePptBtn");
+          const originalBtnHTML = captureBtn.innerHTML;
+          let stageParts = null;
+
+          captureBtn.innerHTML = "กำลังจัดหน้าสำหรับสไลด์...";
+          captureBtn.disabled = true;
+
+          try {
+            stageParts = buildPowerPointCaptureStage();
+            await waitForCaptureLayout();
+            fitPowerPointTable(stageParts);
+            await waitForCaptureLayout();
+
+            const width = 1600;
+            const height = 680;
+            const isIOS = isAppleMobileDevice();
+            const pixelRatio = getSafeCaptureScale(
+              width,
+              height,
+              isIOS ? 1.5 : 2,
+              isIOS,
+            );
+            const filename = `${getFileExportName()} PowerPoint.png`;
+            let previewFile = null;
+
+            if (window.htmlToImage && typeof htmlToImage.toBlob === "function") {
+              let fontEmbedCSS = "";
+              if (typeof htmlToImage.getFontEmbedCSS === "function") {
+                try {
+                  fontEmbedCSS = await Promise.race([
+                    htmlToImage.getFontEmbedCSS(stageParts.stage),
+                    rejectAfter(5000, "Font embedding timed out"),
+                  ]);
+                } catch (fontError) {
+                  console.warn(
+                    "PowerPoint capture will use the loaded page fonts:",
+                    fontError,
+                  );
+                }
+              }
+
+              const captureOptions = {
+                backgroundColor: "#ffffff",
+                width,
+                height,
+                pixelRatio,
+                cacheBust: true,
+                style: {
+                  position: "static",
+                  left: "0",
+                  top: "0",
+                  zIndex: "auto",
+                  margin: "0",
+                  transform: "none",
+                },
+                ...(fontEmbedCSS ? { fontEmbedCSS } : {}),
+              };
+
+              try {
+                const blob = await Promise.race([
+                  htmlToImage.toBlob(stageParts.stage, captureOptions),
+                  rejectAfter(20000, "PowerPoint capture timed out"),
+                ]);
+                if (!blob || !blob.size) {
+                  throw new Error("PowerPoint capture returned an empty image");
+                }
+                previewFile = new File([blob], filename, {
+                  type: blob.type || "image/png",
+                  lastModified: Date.now(),
+                });
+              } catch (vectorError) {
+                console.warn(
+                  "PowerPoint vector capture failed; using canvas fallback:",
+                  vectorError,
+                );
+              }
+            }
+
+            if (!previewFile) {
+              const canvas = await html2canvas(stageParts.stage, {
+                scale: Math.min(pixelRatio, isIOS ? 1.25 : 1.75),
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                width,
+                height,
+                windowWidth: width,
+                windowHeight: height,
+                scrollX: 0,
+                scrollY: 0,
+              });
+              previewFile = await canvasToPreviewFile(
+                canvas,
+                filename,
+                "image/png",
+                1,
+              );
+            }
+
+            showImagePreviewFile(previewFile);
+            showToast(
+              "จัดภาพกว้างพร้อมวางใน PowerPoint แล้ว — เหลือเฉพาะ KPI ตาราง และขั้นตอนสำคัญ",
+              4500,
+            );
+          } catch (error) {
+            console.error("PowerPoint capture failed:", error);
+            showNotificationModal(
+              "ไม่สามารถสร้างภาพสำหรับ PowerPoint ได้",
+              error?.message || "กรุณาลองใหม่อีกครั้ง",
+            );
+          } finally {
+            if (stageParts?.stage) stageParts.stage.remove();
+            captureBtn.innerHTML = originalBtnHTML;
+            captureBtn.disabled = false;
+            if (window.lucide) lucide.createIcons();
+          }
+        }
+
         window.captureElement = function(elementId, title, callback) {
           const captureTarget = document.getElementById(elementId);
           if (!captureTarget) {
@@ -16088,6 +16323,9 @@
               );
               captureForLineNew("download", "captureUltraBtn", true);
             });
+          document
+            .getElementById("capturePptBtn")
+            .addEventListener("click", captureForPowerPoint);
 
           document
             .getElementById("exportPdfBtn")
