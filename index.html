@@ -13748,7 +13748,12 @@
           return { stage, tableViewport, tableScale, tableClone };
         }
 
-        function fitPowerPointTable({ tableViewport, tableScale, tableClone }) {
+        function fitPowerPointTable({
+          stage,
+          tableViewport,
+          tableScale,
+          tableClone,
+        }) {
           const viewportWidth = tableViewport.clientWidth;
           const viewportHeight = tableViewport.clientHeight;
           const sourceTable = document.getElementById("main-table");
@@ -13778,8 +13783,16 @@
           const renderedWidth = sourceWidth * scale;
           const renderedHeight = sourceHeight * scale;
           tableScale.style.left = `${Math.max(0, (viewportWidth - renderedWidth) / 2)}px`;
-          tableScale.style.top = `${Math.max(0, (viewportHeight - renderedHeight) / 2)}px`;
+          tableScale.style.top = "0px";
           tableScale.style.transform = `scale(${scale})`;
+
+          const fittedTableHeight = Math.ceil(renderedHeight);
+          tableViewport.style.height = `${fittedTableHeight}px`;
+          stage.style.gridTemplateRows = stage.classList.contains(
+            "ppt-capture-without-kpis",
+          )
+            ? `${fittedTableHeight}px 4rem minmax(0, 1fr)`
+            : `5.7rem ${fittedTableHeight}px 4rem minmax(0, 1fr)`;
         }
 
         async function captureForPowerPoint() {
