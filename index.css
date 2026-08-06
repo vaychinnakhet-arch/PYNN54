@@ -1508,6 +1508,8 @@ th.qc-current-week {
 }
 
 .ppt-capture-kpis {
+  justify-self: end;
+  width: 50%;
   min-width: 0;
   overflow: hidden;
   border: 1px solid #111827;
@@ -1559,6 +1561,14 @@ th.qc-current-week {
 .ppt-capture-table-scale table {
   margin: 0 !important;
   border-collapse: collapse !important;
+}
+
+.ppt-capture-table-scale table,
+.ppt-capture-table-scale th,
+.ppt-capture-table-scale td {
+  border-color: #111827 !important;
+  border-style: solid !important;
+  border-width: 1px !important;
 }
 
 .ppt-capture-legend {
