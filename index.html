@@ -5502,6 +5502,14 @@
         function renderTable() {
           const captureArea = document.getElementById("capture-area");
           const mainTable = document.getElementById("main-table");
+          const mainAppContainer = document.getElementById("main-app-container");
+
+          // Let this wide timeline consume the extra viewport created by
+          // browser zoom-out instead of staying capped at the report width.
+          mainAppContainer?.classList.toggle(
+            "qc-handover-view-active",
+            currentView === "qcHandover",
+          );
 
           renderExecutiveSummaryDashboard();
 
@@ -5518,6 +5526,10 @@
           mainTable.classList.toggle(
             "qc-summary-table",
             currentView === "qcSummary",
+          );
+          mainTable.classList.toggle(
+            "qc-handover-table",
+            currentView === "qcHandover",
           );
 
           const floorSelection = document.getElementById(
@@ -5695,7 +5707,6 @@
             .filter((t) => t.reportName);
 
           const thead = document.createElement("thead");
-          thead.className = "qc-summary-head";
           const { headerColor, stickyHeaderColor } = getHeaderColors();
 
           const headerHTML = `
@@ -5716,7 +5727,6 @@
           mainTable.appendChild(thead);
 
           const tbody = document.createElement("tbody");
-          tbody.className = "qc-summary-body";
           CONFIG.FLOORS.filter((f) =>
             summaryReportSelectedFloors.includes(f),
           ).forEach((floor) => {
@@ -7961,6 +7971,10 @@
           const currentWeekIndex = getCurrentQCHandoverWeekIndex();
           const floors = getVisibleQCHandoverFloors();
           mainTable.classList.add("qc-handover-table");
+          mainTable.style.setProperty(
+            "--qc-handover-min-width",
+            `${430 + visibleWeekEntries.length * 56}px`,
+          );
           mainTable.classList.toggle(
             "qc-handover-compact-capture",
             isQCHandoverCompactCapture,
@@ -8006,7 +8020,7 @@
                               index === currentWeekIndex
                                 ? '<span class="qc-current-week-badge">สัปดาห์นี้</span>'
                                 : "";
-                            return `<th class="border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-2 text-xs font-medium text-slate-600 bg-slate-100 min-w-[70px] ${currentWeekClass}">${week.dates}${currentBadge}</th>`;
+                            return `<th class="qc-handover-week-head border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-2 text-xs font-medium text-slate-600 bg-slate-100 ${currentWeekClass}">${week.dates}${currentBadge}</th>`;
                           })
                           .join("")}
                     </tr>
@@ -8532,6 +8546,149 @@
           }));
         };
 
+        const COMMON_DEFECT_GROUP_ORDER = [
+          "รูปด้านอาคาร",
+          "ดาดฟ้า",
+          "ห้องเครื่อง/พื้นที่ส่วนกลาง",
+          "ห้องเครื่อง/ห้องส่วนกลาง",
+          "โถงทางเดิน",
+          "บันได",
+          "ห้องขยะประจำชั้น",
+          "ห้องไฟฟ้าประจำชั้น",
+        ];
+
+        function escapeCommonDefectText(value) {
+          return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        function getCommonDefectOverview(items) {
+          const overview = {
+            total: 0,
+            fixed: 0,
+            left: 0,
+            pending: 0,
+            groups: {},
+          };
+
+          (items || []).forEach((item) => {
+            const total = Math.max(0, Number(item.tot) || 0);
+            const fixed = Math.min(total, Math.max(0, Number(item.fix) || 0));
+            const left = Math.max(0, total - fixed);
+            const isPendingInspection = item.status === "รอนัดตรวจ";
+            const groupName = item.group || "พื้นที่อื่น ๆ";
+
+            if (!overview.groups[groupName]) {
+              overview.groups[groupName] = {
+                total: 0,
+                fixed: 0,
+                left: 0,
+                pending: 0,
+              };
+            }
+
+            overview.total += total;
+            overview.left += left;
+            overview.groups[groupName].total += total;
+            overview.groups[groupName].left += left;
+
+            if (isPendingInspection) {
+              overview.pending += fixed;
+              overview.groups[groupName].pending += fixed;
+            } else {
+              overview.fixed += fixed;
+              overview.groups[groupName].fixed += fixed;
+            }
+          });
+
+          return overview;
+        }
+
+        function getCommonDefectAreaEntries(overview, key) {
+          return Object.entries(overview.groups)
+            .map(([name, values]) => ({ name, value: values[key] || 0 }))
+            .filter((entry) => entry.value > 0)
+            .sort((a, b) => {
+              if (b.value !== a.value) return b.value - a.value;
+              const orderA = COMMON_DEFECT_GROUP_ORDER.indexOf(a.name);
+              const orderB = COMMON_DEFECT_GROUP_ORDER.indexOf(b.name);
+              if (orderA !== orderB) {
+                return (orderA < 0 ? 999 : orderA) - (orderB < 0 ? 999 : orderB);
+              }
+              return a.name.localeCompare(b.name, "th");
+            });
+        }
+
+        function renderCommonDefectAreaRows(overview, key) {
+          const entries = getCommonDefectAreaEntries(overview, key);
+          if (!entries.length) {
+            return `<div class="common-defect-summary-empty">ยังไม่มีรายการในสถานะนี้</div>`;
+          }
+
+          return entries
+            .map(
+              ({ name, value }) => `
+                <div class="common-defect-area-row">
+                  <span class="common-defect-area-name">${escapeCommonDefectText(name)}</span>
+                  <strong>${value}</strong>
+                </div>
+              `,
+            )
+            .join("");
+        }
+
+        function buildCommonDefectSummaryHTML(items) {
+          const overview = getCommonDefectOverview(items);
+          return `
+            <section id="common-defect-summary-board" class="common-defect-summary-board" aria-label="สรุปสถานะ Defect ส่วนกลาง">
+              <div class="common-defect-summary-intro">
+                <div>
+                  <span class="common-defect-summary-kicker">COMMON AREA DEFECT OVERVIEW</span>
+                  <h2>สรุปจำนวนและพื้นที่</h2>
+                </div>
+                <p>สรุปตามตัวกรองปัจจุบัน · จำนวนในแต่ละสถานะรวมกันเท่ากับ Defect ทั้งหมด</p>
+              </div>
+              <div class="common-defect-summary-flow">
+                <article class="common-defect-total-card">
+                  <span>DEFECT ทั้งหมด</span>
+                  <strong>${overview.total}</strong>
+                  <small>ข้อ</small>
+                </article>
+                <div class="common-defect-summary-branches">
+                  <article class="common-defect-status-card is-fixed">
+                    <div class="common-defect-status-heading">
+                      <span class="common-defect-status-icon">✓</span>
+                      <div><small>ดำเนินการเสร็จ</small><h3>แก้ไขแล้ว</h3></div>
+                      <strong>${overview.fixed}<em>ข้อ</em></strong>
+                    </div>
+                    <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "fixed")}</div>
+                  </article>
+                  <article class="common-defect-status-card is-left">
+                    <div class="common-defect-status-heading">
+                      <span class="common-defect-status-icon">×</span>
+                      <div><small>คงเหลือ</small><h3>ยังไม่แก้ไข</h3></div>
+                      <strong>${overview.left}<em>ข้อ</em></strong>
+                    </div>
+                    <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "left")}</div>
+                  </article>
+                  <article class="common-defect-status-card is-pending">
+                    <div class="common-defect-status-heading">
+                      <span class="common-defect-status-icon">◷</span>
+                      <div><small>รอยืนยันผล</small><h3>แก้ไขแล้วรอตรวจ</h3></div>
+                      <strong>${overview.pending}<em>ข้อ</em></strong>
+                    </div>
+                    <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "pending")}</div>
+                  </article>
+                </div>
+              </div>
+            </section>
+          `;
+        }
+
         window.renderCommonDefectTable = function() {
           const container = document.getElementById("common-defect-container");
           if (!container) return;
@@ -8624,6 +8781,14 @@
                   แคปเจอร์ตารางทั้งหมด
                 </button>
                 <button
+                  onclick="captureForPowerPoint(this)"
+                  class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-slate-500/20 transition-all flex items-center justify-center gap-2"
+                  title="สร้างภาพสรุปแนวนอน 16:9 สำหรับ PowerPoint"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h18v12H3zM8 20h8M12 16.5V20"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 8h4a2 2 0 010 4H8V8zm0 4v2"/></svg>
+                  PowerPoint แนวนอน
+                </button>
+                <button
                   onclick="openAddCommonDefectModal()"
                   class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-indigo-500/20 transition-all flex items-center justify-center gap-2"
                 >
@@ -8669,8 +8834,10 @@
             return matchesSearch && matchesGroup && matchesStatus;
           });
 
+          const summaryHTML = buildCommonDefectSummaryHTML(filtered);
+
           if (filtered.length === 0) {
-            container.innerHTML = `
+            container.innerHTML = summaryHTML + `
               <div class="text-center p-12 bg-white border border-slate-200 rounded-2xl shadow-sm text-slate-500">
                 <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="font-bold text-slate-700">ไม่พบข้อมูล DEFECT ที่ตรงกับเงื่อนไข</span>
@@ -8690,16 +8857,7 @@
           });
 
           // Standard Sort Order for Groups to match the requested design layout
-          const standardOrder = [
-            "รูปด้านอาคาร",
-            "ดาดฟ้า",
-            "ห้องเครื่อง/พื้นที่ส่วนกลาง",
-            "ห้องเครื่อง/ห้องส่วนกลาง",
-            "โถงทางเดิน",
-            "บันได",
-            "ห้องขยะประจำชั้น",
-            "ห้องไฟฟ้าประจำชั้น"
-          ];
+          const standardOrder = COMMON_DEFECT_GROUP_ORDER;
 
           const groupKeys = Object.keys(groups).sort((a, b) => {
             let idxA = standardOrder.indexOf(a);
@@ -8897,7 +9055,7 @@
             </div>
           `;
 
-          container.innerHTML = html;
+          container.innerHTML = summaryHTML + html;
         };
 
         window.openEditCommonDefectModal = function(id) {
@@ -9401,6 +9559,7 @@
           mainTable.appendChild(colgroup);
 
           const thead = document.createElement("thead");
+          thead.className = "qc-summary-head";
           let headerHTML = `
                     <tr>
                         <th class="border border-slate-400 p-2 ${headerColor}" rowspan="2"><span>ชั้น</span></th>
@@ -9422,6 +9581,7 @@
           mainTable.appendChild(thead);
 
           const tbody = document.createElement("tbody");
+          tbody.className = "qc-summary-body";
           const totals = {
             wetWork: { submitted: 0, passed: 0, failed: 0 },
             endProduct: { submitted: 0, passed: 0, failed: 0 },
@@ -9494,12 +9654,12 @@
                             <span class="text-lg">${floor}</span>
                         </td>
                         <td class="qc-type-cell qc-type-wet border border-slate-400 p-2 font-bold text-xs align-middle whitespace-nowrap">
-                            <span class="qc-type-label">Wet Work</span>
+                            <span class="qc-type-label"><strong>งานเปียก</strong><small>WET WORK</small></span>
                         </td>
                     `;
             endProductRow.innerHTML = `
                         <td class="qc-type-cell qc-type-end border border-slate-400 p-2 font-bold text-xs align-middle whitespace-nowrap">
-                            <span class="qc-type-label">End Product</span>
+                            <span class="qc-type-label"><strong>งานส่งมอบ</strong><small>END PRODUCT</small></span>
                         </td>
                     `;
 
@@ -13658,7 +13818,57 @@
           return kpiGrid;
         }
 
+        function buildCommonDefectPowerPointCaptureStage() {
+          const sourceSummary = document.getElementById(
+            "common-defect-summary-board",
+          );
+          if (!sourceSummary) {
+            throw new Error("ไม่พบสรุป DEFECT ส่วนกลางที่พร้อมแคป");
+          }
+
+          const stage = document.createElement("section");
+          stage.className = "ppt-capture-stage ppt-common-defect-stage";
+          stage.setAttribute("aria-hidden", "true");
+
+          const reportDate =
+            document.getElementById("update-date")?.textContent?.trim() || "";
+          const header = document.createElement("header");
+          header.className = "common-defect-ppt-header";
+          header.innerHTML = `
+            <div class="common-defect-ppt-brand">
+              <strong>PYNN NGAMWONGWAN 54</strong>
+              <span>CONSTRUCTION PROGRESS REPORT</span>
+            </div>
+            <div class="common-defect-ppt-title">
+              <small>COMMON AREA QUALITY CONTROL</small>
+              <h1>สรุปงาน DEFECT ส่วนกลาง</h1>
+            </div>
+            <div class="common-defect-ppt-date">
+              <span>วันที่รายงาน</span>
+              <strong>${escapeCommonDefectText(reportDate)}</strong>
+            </div>
+          `;
+          stage.appendChild(header);
+
+          const summaryClone = sourceSummary.cloneNode(true);
+          summaryClone.removeAttribute("id");
+          summaryClone.classList.add("common-defect-summary-ppt");
+          stage.appendChild(summaryClone);
+
+          document.body.appendChild(stage);
+          return {
+            stage,
+            isCommonDefect: true,
+            captureWidth: 1600,
+            captureHeight: 900,
+          };
+        }
+
         function buildPowerPointCaptureStage() {
+          if (currentView === "commonDefect") {
+            return buildCommonDefectPowerPointCaptureStage();
+          }
+
           const sourceTable = document.getElementById("main-table");
           if (
             !sourceTable ||
@@ -13720,7 +13930,10 @@
           tableViewport,
           tableScale,
           tableClone,
+          isCommonDefect,
         }) {
+          if (isCommonDefect) return;
+
           const viewportWidth = tableViewport.clientWidth;
           const viewportHeight = tableViewport.clientHeight;
           const sourceTable = document.getElementById("main-table");
@@ -13762,8 +13975,11 @@
             : `5.7rem ${fittedTableHeight}px 4rem minmax(0, 1fr)`;
         }
 
-        async function captureForPowerPoint() {
-          const captureBtn = document.getElementById("capturePptBtn");
+        async function captureForPowerPoint(triggerButton = null) {
+          const captureBtn =
+            triggerButton instanceof HTMLElement
+              ? triggerButton
+              : document.getElementById("capturePptBtn");
           const originalBtnHTML = captureBtn.innerHTML;
           let stageParts = null;
 
@@ -13776,8 +13992,8 @@
             fitPowerPointTable(stageParts);
             await waitForCaptureLayout();
 
-            const width = 1600;
-            const height = 680;
+            const width = stageParts.captureWidth || 1600;
+            const height = stageParts.captureHeight || 680;
             const isIOS = isAppleMobileDevice();
             const pixelRatio = getSafeCaptureScale(
               width,
@@ -13863,7 +14079,9 @@
 
             showImagePreviewFile(previewFile);
             showToast(
-              "จัดภาพกว้างพร้อมวางใน PowerPoint แล้ว — เหลือเฉพาะ KPI ตาราง และขั้นตอนสำคัญ",
+              currentView === "commonDefect"
+                ? "จัดสรุป DEFECT แนวนอน 16:9 พร้อมวางใน PowerPoint แล้ว"
+                : "จัดภาพกว้างพร้อมวางใน PowerPoint แล้ว — เหลือเฉพาะ KPI ตาราง และขั้นตอนสำคัญ",
               4500,
             );
           } catch (error) {
@@ -13879,6 +14097,7 @@
             if (window.lucide) lucide.createIcons();
           }
         }
+        window.captureForPowerPoint = captureForPowerPoint;
 
         window.captureElement = function(elementId, title, callback) {
           const captureTarget = document.getElementById(elementId);
