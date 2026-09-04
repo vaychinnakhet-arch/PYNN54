@@ -1605,8 +1605,10 @@ th.qc-current-week {
 }
 
 .common-defect-summary-flow {
-  display: grid;
-  gap: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
 }
 
 .common-defect-total-card {
@@ -1625,17 +1627,7 @@ th.qc-current-week {
   border-radius: 0.85rem;
   background: #253047;
   color: #ffffff;
-  box-shadow: 0 10px 22px rgba(37, 48, 71, 0.18);
-}
-
-.common-defect-total-card::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 2px;
-  height: 1.2rem;
-  background: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(37, 48, 71, 0.12);
 }
 
 .common-defect-total-card > span {
@@ -1661,22 +1653,67 @@ th.qc-current-week {
   font-weight: 700;
 }
 
+/* Tree Diagram Connector Lines - Continuous, clean 2px single-bar org tree, zero overlap */
+.common-defect-tree-connector {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  height: 56px;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Single vertical stem coming down from Total card (28px clear spacing) */
+.common-defect-tree-connector .tree-stem-top {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 28px;
+  background: #475569;
+  z-index: 2;
+}
+
+/* Single continuous horizontal crossbar spanning from Card 1 center to Card 3 center */
+.common-defect-tree-connector .tree-bar-horizontal {
+  position: absolute;
+  top: 28px;
+  left: calc((100% - 2.2rem) / 6);
+  right: calc((100% - 2.2rem) / 6);
+  height: 2px;
+  background: #475569;
+  z-index: 1;
+}
+
+.common-defect-tree-connector .tree-col-left,
+.common-defect-tree-connector .tree-col-mid,
+.common-defect-tree-connector .tree-col-right {
+  position: relative;
+  height: 100%;
+}
+
+/* 3 clean vertical drop lines from horizontal bar (y=28px) down to each card */
+.common-defect-tree-connector .tree-drop {
+  position: absolute;
+  top: 28px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: #475569;
+  z-index: 2;
+}
+
 .common-defect-summary-branches {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.1rem;
-  padding-top: 1.2rem;
-}
-
-.common-defect-summary-branches::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 9%;
-  right: 9%;
-  height: 2px;
-  background: #cbd5e1;
+  padding-top: 0;
 }
 
 .common-defect-status-card {
@@ -1770,29 +1807,43 @@ th.qc-current-week {
   display: grid;
   gap: 0.35rem;
   padding: 0.65rem;
+  max-height: 25rem;
+  overflow-y: auto;
 }
 
 .common-defect-area-row {
   min-width: 0;
-  min-height: 2rem;
+  min-height: 2.25rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.38rem 0.45rem 0.38rem 0.65rem;
+  padding: 0.4rem 0.55rem 0.4rem 0.75rem;
   border: 1px solid var(--defect-border);
-  border-radius: 0.55rem;
-  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .common-defect-area-name {
   min-width: 0;
-  overflow: hidden;
-  color: #334155;
-  font-size: 0.67rem;
+  color: #1e293b;
+  font-size: 0.74rem;
   font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+}
+
+.common-defect-floor-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08);
 }
 
 .common-defect-area-row > strong {
@@ -1828,10 +1879,11 @@ th.qc-current-week {
 
   .common-defect-summary-branches {
     grid-template-columns: 1fr;
+    margin-top: 1rem;
+    gap: 0.85rem;
   }
 
-  .common-defect-summary-branches::before,
-  .common-defect-total-card::after {
+  .common-defect-tree-connector {
     display: none;
   }
 }
@@ -1851,7 +1903,7 @@ th.qc-current-week {
   height: 680px;
   box-sizing: border-box;
   padding: 1.75rem 2rem;
-  overflow: hidden;
+  overflow: visible;
   background: #ffffff;
   color: #111827;
   font-family: "Sarabun", "Noto Sans Thai", Arial, sans-serif;
@@ -1859,11 +1911,42 @@ th.qc-current-week {
 }
 
 .ppt-common-defect-stage {
-  grid-template-rows: 4.3rem minmax(0, 1fr) !important;
-  gap: 1rem;
-  height: 900px;
-  padding: 1.25rem 1.5rem;
-  background: #f7f9fc;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 1600px !important;
+  min-width: 1600px !important;
+  height: auto !important;
+  min-height: 900px !important;
+  padding: 1.25rem 1.75rem !important;
+  background: #ffffff !important;
+  overflow: visible !important;
+  gap: 0.65rem !important;
+}
+
+/* Hide scrollbars during capture across all capture stages and elements */
+.ppt-capture-stage,
+.ppt-capture-stage *,
+.ppt-common-defect-stage,
+.ppt-common-defect-stage *,
+.is-line-capturing,
+.is-line-capturing *,
+#common-defect-capture-wrapper,
+#common-defect-capture-wrapper *,
+#common-defect-custom-capture-stage,
+#common-defect-custom-capture-stage * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.ppt-capture-stage *::-webkit-scrollbar,
+.ppt-common-defect-stage *::-webkit-scrollbar,
+.is-line-capturing *::-webkit-scrollbar,
+#common-defect-capture-wrapper *::-webkit-scrollbar,
+#common-defect-custom-capture-stage *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
 }
 
 .common-defect-ppt-header {
@@ -1962,7 +2045,8 @@ th.qc-current-week {
 }
 
 .ppt-common-defect-stage .common-defect-total-card::after,
-.ppt-common-defect-stage .common-defect-summary-branches::before {
+.ppt-common-defect-stage .common-defect-summary-branches::before,
+.ppt-common-defect-stage .common-defect-tree-connector {
   display: none;
 }
 

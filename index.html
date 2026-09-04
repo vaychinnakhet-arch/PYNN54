@@ -201,52 +201,341 @@
         line-height: normal !important;
         padding: 0 !important;
       }
+      /* Executive Summary Dashboard Styles */
+      .executive-summary-compact {
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid #111827;
+        border-radius: 0.75rem;
+        background: #ffffff;
+        box-shadow: none;
+        box-sizing: border-box;
+      }
+      .exec-summary-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.85rem 1.1rem;
+        border-bottom: 1px solid #111827;
+        background: #ffffff;
+      }
+      .exec-summary-heading h2 {
+        margin: 0.08rem 0 0;
+        color: #0f172a;
+        font-size: 1rem;
+        font-weight: 800;
+        user-select: none;
+      }
+      .exec-summary-eyebrow {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+      }
+      .exec-kpi-grid {
+        display: grid;
+        grid-template-columns: 1.15fr repeat(4, 1fr);
+        gap: 0;
+        padding: 0;
+        border-bottom: 1px solid #111827;
+      }
+      .exec-kpi {
+        min-width: 0;
+        padding: 0.65rem 0.8rem;
+        border: 0;
+        border-right: 1px solid #111827;
+        border-radius: 0;
+        background: #ffffff;
+        box-sizing: border-box;
+      }
+      .exec-kpi:last-child {
+        border-right: 0;
+      }
+      .exec-kpi > span,
+      .exec-kpi > small {
+        display: block;
+      }
+      .exec-kpi > span {
+        color: #64748b;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .exec-kpi > strong {
+        display: block;
+        margin-top: 0.08rem;
+        color: #0f172a;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.55rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      .exec-kpi > small {
+        margin-top: 0.16rem;
+        overflow: hidden;
+        color: #94a3b8;
+        font-size: 0.58rem;
+        font-weight: 600;
+        line-height: 1.25;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .exec-kpi-primary {
+        background: #f8fafc;
+      }
+      .exec-kpi-primary > strong {
+        color: #1d4ed8;
+      }
+      .exec-kpi-alert {
+        background: #ffffff;
+      }
+      .exec-kpi-alert > strong {
+        color: #be123c;
+      }
+      .exec-detail-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: 0;
+        padding: 0;
+      }
+      .exec-detail-panel {
+        min-width: 0;
+        padding: 0.7rem 0.85rem;
+        border: 0;
+        border-right: 1px solid #111827;
+        border-radius: 0;
+        background: #ffffff;
+        box-sizing: border-box;
+      }
+      .exec-detail-panel:last-child {
+        border-right: 0;
+      }
+      .exec-panel-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.45rem;
+      }
+      .exec-panel-heading h3 {
+        margin: 0;
+        color: #334155;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+      .exec-panel-heading > span {
+        color: #94a3b8;
+        font-size: 0.54rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .exec-phase-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+      }
+      .exec-phase-topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      .exec-phase-topline strong {
+        overflow: hidden;
+        color: #0f172a;
+        font-size: 0.68rem;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .exec-phase-topline span {
+        color: #2563eb;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 800;
+      }
+      .exec-progress-track {
+        display: flex;
+        height: 0.55rem;
+        margin-top: 0.36rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e2e8f0;
+      }
+      .exec-progress-track span {
+        display: block;
+        height: 100%;
+        flex: 0 0 auto;
+      }
+      .exec-progress-completed {
+        background: #2563eb;
+      }
+      .exec-progress-active {
+        background: #fbbf24;
+      }
+      .exec-progress-legend {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-top: 0.34rem;
+        color: #475569;
+        font-size: 0.53rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .exec-progress-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.24rem;
+      }
+      .exec-progress-legend span::before {
+        width: 0.42rem;
+        height: 0.42rem;
+        flex: 0 0 auto;
+        border-radius: 1px;
+        content: "";
+      }
+      .exec-progress-legend .is-completed::before {
+        background: #2563eb;
+      }
+      .exec-progress-legend .is-active::before {
+        background: #fbbf24;
+      }
+      .exec-focus-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0;
+        border: 1px solid #111827;
+      }
+      .exec-floor-item {
+        min-width: 0;
+        padding: 0.42rem 0.5rem;
+        border-right: 1px solid #111827;
+        border-radius: 0;
+        background: #ffffff;
+        box-sizing: border-box;
+      }
+      .exec-floor-item:last-child {
+        border-right: 0;
+      }
+      .exec-floor-item > span,
+      .exec-floor-item > strong,
+      .exec-floor-item > small {
+        display: block;
+      }
+      .exec-floor-item > span {
+        color: #475569;
+        font-size: 0.57rem;
+        font-weight: 700;
+      }
+      .exec-floor-item > strong {
+        color: #111827;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 800;
+      }
+      .exec-floor-item > small {
+        overflow: hidden;
+        color: #78716c;
+        font-size: 0.49rem;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .exec-all-complete {
+        grid-column: 1 / -1;
+        padding: 0.6rem;
+        border-radius: 0.6rem;
+        background: #ecfdf5;
+        color: #047857;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-align: center;
+      }
+      .exec-signature-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-top: 1px solid #111827;
+        background: #ffffff;
+      }
+      .exec-signature-box {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(2.5rem, 1fr) auto;
+        align-items: stretch;
+        gap: 0.25rem;
+        min-width: 0;
+        min-height: 6.5rem;
+        padding: 0.7rem 1rem 0.55rem;
+        border-right: 1px solid #111827;
+        box-sizing: border-box;
+      }
+      .exec-signature-box:last-child {
+        border-right: 0;
+      }
+      .exec-signature-box > span {
+        color: #111827;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .exec-signature-line {
+        width: min(72%, 24rem);
+        min-width: 10rem;
+        height: 100%;
+        margin: 0 auto;
+        border-bottom: 1px solid #111827;
+      }
+      .exec-signature-box > small {
+        color: #475569;
+        font-size: 0.56rem;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      /* Capture mode styles for Executive Summary */
       .is-line-capturing #executive-summary-dashboard {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
+        display: block !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 1rem !important;
+        box-sizing: border-box !important;
       }
-      .is-line-capturing #executive-summary-dashboard > div {
-        width: auto !important;
-        flex: 1 1 0% !important;
+      .is-line-capturing .executive-summary-compact {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0.35rem !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
       }
-      .is-line-capturing #executive-summary-dashboard .flex-col.lg\:flex-row {
-        flex-direction: row !important;
+      .is-line-capturing #executive-summary-dashboard .exec-kpi-grid {
+        display: grid !important;
+        grid-template-columns: 1.15fr repeat(4, minmax(0, 1fr)) !important;
       }
-      .is-line-capturing #executive-summary-dashboard .w-full.lg\:w-\[320px\] {
-        width: 320px !important;
-        flex: 0 0 320px !important;
+      .is-line-capturing #executive-summary-dashboard .exec-detail-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
       }
-      .is-line-capturing #executive-summary-dashboard .w-full.md\:w-\[40\%\] {
-        width: 40% !important;
+      .is-line-capturing #executive-summary-dashboard .exec-focus-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
       }
-      .is-line-capturing #executive-summary-dashboard .w-full.md\:w-\[60\%\] {
-        width: 60% !important;
-        border-left-width: 1px !important;
-        padding-left: 2rem !important;
-      }
-      .is-line-capturing #executive-summary-dashboard .w-full.lg\:w-1\/3,
-      .is-line-capturing #executive-summary-dashboard .w-full.lg\:w-2\/3 {
-        width: auto !important;
-        flex: 1 1 0% !important;
-      }
-      .is-line-capturing #executive-summary-dashboard .flex-col.md\:flex-row {
-        flex-direction: row !important;
-      }
-      .is-line-capturing
-        #executive-summary-dashboard
-        .grid-cols-1.lg\:grid-cols-12 {
-        grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-      }
-      .is-line-capturing #executive-summary-dashboard .lg\:col-span-4 {
-        grid-column: span 4 / span 4 !important;
-      }
-      .is-line-capturing #executive-summary-dashboard .lg\:col-span-8 {
-        grid-column: span 8 / span 8 !important;
-      }
-      .is-line-capturing
-        #executive-summary-dashboard
-        .grid-cols-1.md\:grid-cols-2 {
+      .is-line-capturing #executive-summary-dashboard .exec-signature-row {
+        display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      .is-line-capturing #executive-summary-dashboard .exec-signature-box {
+        border-right: 1px solid #111827 !important;
+        border-bottom: 0 !important;
+      }
+      .is-line-capturing #executive-summary-dashboard .exec-signature-box:last-child {
+        border-right: 0 !important;
+        border-bottom: 0 !important;
       }
       .is-line-capturing #exitCaptureModeFloatingBtn {
         display: flex !important;
@@ -797,6 +1086,34 @@
       .is-line-capturing #common-defect-container th:last-child,
       .is-line-capturing #common-defect-container tr:not(.bg-indigo-50) td:last-child {
         display: none !important;
+      }
+
+      /* Absolutely suppress all scrollbars during ANY capture mode */
+      html.is-line-capturing *,
+      body.is-line-capturing *,
+      .is-line-capturing,
+      .is-line-capturing *,
+      .ppt-capture-stage,
+      .ppt-capture-stage *,
+      .ppt-common-defect-stage,
+      .ppt-common-defect-stage *,
+      #common-defect-capture-wrapper,
+      #common-defect-capture-wrapper *,
+      #common-defect-custom-capture-stage,
+      #common-defect-custom-capture-stage * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+
+      .is-line-capturing *::-webkit-scrollbar,
+      .ppt-capture-stage *::-webkit-scrollbar,
+      .ppt-common-defect-stage *::-webkit-scrollbar,
+      #common-defect-capture-wrapper *::-webkit-scrollbar,
+      #common-defect-custom-capture-stage *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
       }
     </style>
     <link rel="stylesheet" href="/index.css" />
@@ -2855,6 +3172,14 @@
                   checked
                 />
                 <span class="text-sm font-bold text-slate-700">ใส่หัวกระดาษรายงานโครงการ (PYNN NGAMWONGWAN 54)</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="common-cap-two-columns"
+                  class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer"
+                />
+                <span class="text-sm font-bold text-slate-700">แบ่งตารางเป็น 2 แถวคู่ / 2 คอลัมน์ (โหมด PowerPoint แนวนอน 16:9 สวยงามพอดีจอ)</span>
               </label>
             </div>
           </div>
@@ -8784,77 +9109,193 @@
             .replaceAll("'", "&#039;");
         }
 
+        function parseDefectFloorInfo(item) {
+          const group = String(item.group || "พื้นที่ส่วนกลาง").trim();
+          const rawName = String(item.name || "").trim();
+
+          // Match "Floor 2", "FL 3", "Floor. 4"
+          const flMatch = rawName.match(/^(?:floor|fl\.?)\s*(\d+)$/i);
+          if (flMatch) {
+            return {
+              group,
+              floor: `ชั้น ${flMatch[1]}`,
+              floorNum: parseInt(flMatch[1], 10),
+              rawName
+            };
+          }
+
+          // Thai "ชั้น 2", "ชั้น 3"
+          const thMatch = rawName.match(/^ชั้น\s*(\d+)$/i);
+          if (thMatch) {
+            return {
+              group,
+              floor: `ชั้น ${thMatch[1]}`,
+              floorNum: parseInt(thMatch[1], 10),
+              rawName
+            };
+          }
+
+          // Stairs
+          const stMatch = rawName.match(/^(?:stairs\s*)?(st-?\d+)/i);
+          if (stMatch) {
+            return {
+              group,
+              floor: stMatch[1].toUpperCase(),
+              floorNum: 90,
+              rawName
+            };
+          }
+
+          // Roof Top or Facade
+          const lowerName = rawName.toLowerCase();
+          if (group === "ดาดฟ้า" && (lowerName.includes("roof") || rawName === "ดาดฟ้า")) {
+            return {
+              group,
+              floor: "",
+              floorNum: 100,
+              rawName
+            };
+          }
+          if (group === "รูปด้านอาคาร" && (lowerName.includes("facade") || rawName === "รูปด้านอาคาร")) {
+            return {
+              group,
+              floor: "",
+              floorNum: 101,
+              rawName
+            };
+          }
+
+          // Embedded floor e.g. "ลานจอดชั้น 1", "Pump Room Floor 1"
+          const embeddedMatch = rawName.match(/(?:ชั้น|floor)\s*(\d+)/i);
+          if (embeddedMatch) {
+            return {
+              group,
+              floor: rawName,
+              floorNum: parseInt(embeddedMatch[1], 10),
+              rawName
+            };
+          }
+
+          if (rawName && rawName !== group) {
+            return {
+              group,
+              floor: rawName,
+              floorNum: 50,
+              rawName
+            };
+          }
+
+          return {
+            group,
+            floor: "",
+            floorNum: 50,
+            rawName
+          };
+        }
+
         function getCommonDefectOverview(items) {
           const overview = {
             total: 0,
             fixed: 0,
             left: 0,
             pending: 0,
-            groups: {},
+            entries: {
+              fixed: [],
+              left: [],
+              pending: []
+            }
           };
+
+          const mapFixed = {};
+          const mapLeft = {};
+          const mapPending = {};
 
           (items || []).forEach((item) => {
             const total = Math.max(0, Number(item.tot) || 0);
             const fixed = Math.min(total, Math.max(0, Number(item.fix) || 0));
             const left = Math.max(0, total - fixed);
-            const isPendingInspection = item.status === "รอนัดตรวจ";
-            const groupName = item.group || "พื้นที่อื่น ๆ";
-
-            if (!overview.groups[groupName]) {
-              overview.groups[groupName] = {
-                total: 0,
-                fixed: 0,
-                left: 0,
-                pending: 0,
-              };
-            }
+            const isPending = item.status === "รอนัดตรวจ" || item.status === "รอคะแนน";
+            const info = parseDefectFloorInfo(item);
+            const itemKey = `${info.group}:::${info.floor}`;
 
             overview.total += total;
             overview.left += left;
-            overview.groups[groupName].total += total;
-            overview.groups[groupName].left += left;
 
-            if (isPendingInspection) {
+            if (left > 0) {
+              if (!mapLeft[itemKey]) {
+                mapLeft[itemKey] = {
+                  group: info.group,
+                  floor: info.floor,
+                  floorNum: info.floorNum,
+                  value: 0
+                };
+              }
+              mapLeft[itemKey].value += left;
+            }
+
+            if (isPending) {
               overview.pending += fixed;
-              overview.groups[groupName].pending += fixed;
+              if (fixed > 0) {
+                if (!mapPending[itemKey]) {
+                  mapPending[itemKey] = {
+                    group: info.group,
+                    floor: info.floor,
+                    floorNum: info.floorNum,
+                    value: 0
+                  };
+                }
+                mapPending[itemKey].value += fixed;
+              }
             } else {
               overview.fixed += fixed;
-              overview.groups[groupName].fixed += fixed;
+              if (fixed > 0) {
+                if (!mapFixed[itemKey]) {
+                  mapFixed[itemKey] = {
+                    group: info.group,
+                    floor: info.floor,
+                    floorNum: info.floorNum,
+                    value: 0
+                  };
+                }
+                mapFixed[itemKey].value += fixed;
+              }
             }
           });
+
+          const sorter = (a, b) => {
+            const orderA = COMMON_DEFECT_GROUP_ORDER.indexOf(a.group);
+            const orderB = COMMON_DEFECT_GROUP_ORDER.indexOf(b.group);
+            const valA = orderA < 0 ? 999 : orderA;
+            const valB = orderB < 0 ? 999 : orderB;
+            if (valA !== valB) return valA - valB;
+            if (a.floorNum !== b.floorNum) return a.floorNum - b.floorNum;
+            return a.group.localeCompare(b.group, "th");
+          };
+
+          overview.entries.fixed = Object.values(mapFixed).sort(sorter);
+          overview.entries.left = Object.values(mapLeft).sort(sorter);
+          overview.entries.pending = Object.values(mapPending).sort(sorter);
 
           return overview;
         }
 
-        function getCommonDefectAreaEntries(overview, key) {
-          return Object.entries(overview.groups)
-            .map(([name, values]) => ({ name, value: values[key] || 0 }))
-            .filter((entry) => entry.value > 0)
-            .sort((a, b) => {
-              if (b.value !== a.value) return b.value - a.value;
-              const orderA = COMMON_DEFECT_GROUP_ORDER.indexOf(a.name);
-              const orderB = COMMON_DEFECT_GROUP_ORDER.indexOf(b.name);
-              if (orderA !== orderB) {
-                return (orderA < 0 ? 999 : orderA) - (orderB < 0 ? 999 : orderB);
-              }
-              return a.name.localeCompare(b.name, "th");
-            });
-        }
-
         function renderCommonDefectAreaRows(overview, key) {
-          const entries = getCommonDefectAreaEntries(overview, key);
-          if (!entries.length) {
+          const list = (overview.entries && overview.entries[key]) || [];
+          if (!list.length) {
             return `<div class="common-defect-summary-empty">ยังไม่มีรายการในสถานะนี้</div>`;
           }
 
-          return entries
+          return list
             .map(
-              ({ name, value }) => `
+              ({ group, floor, value }) => `
                 <div class="common-defect-area-row">
-                  <span class="common-defect-area-name">${escapeCommonDefectText(name)}</span>
-                  <strong>${value}</strong>
+                  <span class="common-defect-area-name flex items-center justify-between gap-1.5 w-full pr-1">
+                    <span class="font-bold text-slate-800 truncate">${escapeCommonDefectText(group)}</span>
+                    ${floor ? `<span class="common-defect-floor-badge shrink-0">📍 ${escapeCommonDefectText(floor)}</span>` : ""}
+                  </span>
+                  <strong class="shrink-0 font-black">${value}</strong>
                 </div>
-              `,
+              `
             )
             .join("");
         }
@@ -8876,6 +9317,16 @@
                   <strong>${overview.total}</strong>
                   <small>ข้อ</small>
                 </article>
+
+                <!-- ผังต้นไม้เชื่อมโยง คมชัด ชิ้นเดียว ไร้เส้นซ้อน -->
+                <div class="common-defect-tree-connector" aria-hidden="true">
+                  <span class="tree-stem-top"></span>
+                  <span class="tree-bar-horizontal"></span>
+                  <div class="tree-col-left"><span class="tree-drop"></span></div>
+                  <div class="tree-col-mid"><span class="tree-drop"></span></div>
+                  <div class="tree-col-right"><span class="tree-drop"></span></div>
+                </div>
+
                 <div class="common-defect-summary-branches">
                   <article class="common-defect-status-card is-fixed">
                     <div class="common-defect-status-heading">
@@ -8896,7 +9347,7 @@
                   <article class="common-defect-status-card is-pending">
                     <div class="common-defect-status-heading">
                       <span class="common-defect-status-icon">◷</span>
-                      <div><small>รอยืนยันผล</small><h3>แก้ไขแล้วรอตรวจ</h3></div>
+                      <div><small>รอยืนยันผล</small><h3>แก้ไขแล้วรอคะแนน</h3></div>
                       <strong>${overview.pending}<em>ข้อ</em></strong>
                     </div>
                     <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "pending")}</div>
@@ -9982,7 +10433,7 @@
             let cellText = '<span class="qc-empty-mark">–</span>';
             if (unitData.inInspection) {
               styleClasses = "qc-cell-pending";
-              cellText = '<span class="qc-pending-label">รอตรวจ</span>';
+              cellText = '<span class="qc-pending-label">รอคะแนน</span>';
             } else {
               let scoreToShow = 0,
                 defectToShow = false,
@@ -11156,7 +11607,7 @@
 
           // Logic to populate content
           if (currentView === "qcSummary") {
-            content.innerHTML += createBadge("bg-amber-400", "รอตรวจ / รอคะแนน");
+            content.innerHTML += createBadge("bg-amber-400", "รอคะแนน");
             content.innerHTML += createBadge("bg-emerald-500", "ผ่าน (>= 85)");
             content.innerHTML += createBadge("bg-rose-500", "ไม่ผ่าน (< 85)");
             content.innerHTML += createToggleBadge();
@@ -13512,6 +13963,15 @@
             canvas.toBlob(
               (blob) => {
                 if (!blob || !blob.size) {
+                  try {
+                    const fallbackDataUrl = canvas.toDataURL(mimeType, quality);
+                    if (fallbackDataUrl && fallbackDataUrl.length > 64) {
+                      resolve(dataUrlToFile(fallbackDataUrl, filename));
+                      return;
+                    }
+                  } catch (dataUrlErr) {
+                    console.warn("toDataURL fallback also failed:", dataUrlErr);
+                  }
                   reject(new Error("Safari returned an empty capture image"));
                   return;
                 }
@@ -13820,6 +14280,7 @@
         ) {
           const captureArea = document.getElementById("capture-area");
           const captureBtn = document.getElementById(btnId);
+          if (!captureArea || !captureBtn) return;
           const originalBtnHTML = captureBtn.innerHTML;
           const useCompactQCHandoverWindow =
             currentView === "qcHandover";
@@ -13830,6 +14291,8 @@
 
           captureBtn.innerHTML = "กำลังแคปเจอร์...";
           captureBtn.disabled = true;
+
+          let hasCleanedUp = false;
 
           // Save scroll position
           const scrollX = window.scrollX || window.pageXOffset;
@@ -13847,7 +14310,8 @@
           const originalHtmlWidth = document.documentElement.style.width;
           const mainAppContainer =
             document.getElementById("main-app-container");
-          const originalMainAppWidth = mainAppContainer.style.width;
+          const table = document.getElementById("main-table");
+          const originalMainAppWidth = mainAppContainer ? mainAppContainer.style.width : "";
           const originalTableWidth = table ? table.style.width : "";
           const originalTableMinWidth = table ? table.style.minWidth : "";
 
@@ -13860,135 +14324,169 @@
           const originalExecMaxWidth = execDashboard
             ? execDashboard.style.maxWidth
             : "";
+          const originalExecMinWidth = execDashboard
+            ? execDashboard.style.minWidth
+            : "";
 
-          // Set max-content temporarily so table expands naturally
-          captureArea.style.width = "max-content";
-          document.body.style.width = "max-content";
-          document.documentElement.style.width = "max-content";
-          mainAppContainer.style.width = "max-content";
+          const cleanUpAndRestore = () => {
+            if (hasCleanedUp) return;
+            hasCleanedUp = true;
+            clearTimeout(watchdogTimer);
 
-          const table = document.getElementById("main-table");
-          const fullWidth =
-            table && !table.classList.contains("hidden")
-              ? Math.max(table.scrollWidth, table.offsetWidth, captureArea.scrollWidth, 800)
-              : Math.max(captureArea.scrollWidth, 1200);
+            document.documentElement.classList.remove("is-line-capturing");
+            document.body.classList.remove("is-line-capturing");
 
-          captureArea.style.width = fullWidth + "px";
-          document.body.style.width = fullWidth + "px";
-          document.documentElement.style.width = fullWidth + "px";
-          mainAppContainer.style.width = fullWidth + "px";
-          if (table && !table.classList.contains("hidden")) {
-            table.style.width = fullWidth + "px";
-            table.style.minWidth = fullWidth + "px";
-          }
-          if (execDashboard && currentView === "schedule") {
-            execDashboard.style.width = fullWidth + "px";
-            execDashboard.style.maxWidth = fullWidth + "px";
-          }
-
-          setTimeout(() => {
-            const finalWidth = captureArea.scrollWidth;
-            const finalHeight = captureArea.scrollHeight;
-
-            // iOS Safari is highly sensitive to canvas size limits (crash/silent fail)
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-            const isMobile = window.innerWidth <= 768;
-            
-            let captureScale = isMobile ? 1.2 : 1.8;
-            if (isIOS) {
-              // Strict scaling for iOS Safari to keep total pixels below memory thresholds
-              const estimatedTotalPixels = finalWidth * finalHeight * 1.5 * 1.5;
-              if (estimatedTotalPixels > 9000000) {
-                captureScale = 0.8;
-              } else if (estimatedTotalPixels > 5000000) {
-                captureScale = 1.0;
-              } else {
-                captureScale = 1.2;
-              }
+            // Restore inline widths
+            captureArea.style.width = originalCaptureAreaWidth;
+            document.body.style.width = originalBodyWidth;
+            document.documentElement.style.width = originalHtmlWidth;
+            if (mainAppContainer) mainAppContainer.style.width = originalMainAppWidth;
+            if (table) {
+              table.style.width = originalTableWidth;
+              table.style.minWidth = originalTableMinWidth;
+            }
+            if (execDashboard) {
+              execDashboard.style.width = originalExecWidth;
+              execDashboard.style.maxWidth = originalExecMaxWidth;
+              execDashboard.style.minWidth = originalExecMinWidth;
+            }
+            if (useCompactQCHandoverWindow) {
+              setQCHandoverCompactCapture(false);
             }
 
-            const cleanUpAndRestore = () => {
-              document.documentElement.classList.remove("is-line-capturing");
-              document.body.classList.remove("is-line-capturing");
+            captureBtn.innerHTML = originalBtnHTML;
+            captureBtn.disabled = false;
+            // Restore scroll position
+            window.scrollTo(scrollX, scrollY);
+          };
 
-              // Restore inline widths
-              captureArea.style.width = originalCaptureAreaWidth;
-              document.body.style.width = originalBodyWidth;
-              document.documentElement.style.width = originalHtmlWidth;
-              mainAppContainer.style.width = originalMainAppWidth;
-              if (table) {
-                table.style.width = originalTableWidth;
-                table.style.minWidth = originalTableMinWidth;
-              }
-              if (execDashboard) {
-                execDashboard.style.width = originalExecWidth;
-                execDashboard.style.maxWidth = originalExecMaxWidth;
-              }
-              if (useCompactQCHandoverWindow) {
-                setQCHandoverCompactCapture(false);
+          // Watchdog timer: automatically release UI if capture hangs
+          const watchdogTimer = setTimeout(() => {
+            if (!hasCleanedUp) {
+              console.warn("captureForLine operation timed out, forcing cleanup");
+              cleanUpAndRestore();
+              showToast("การแคปเจอร์ใช้เวลานานเกินไป กรุณาลองใหม่อีกครั้ง", 4000);
+            }
+          }, 15000);
+
+          try {
+            // If executive summary is enabled, refresh its content to ensure it is rendered and visible
+            if (showExecutiveSummary && (currentView === "residential" || currentView === "schedule")) {
+              renderExecutiveSummaryDashboard();
+            }
+
+            // Set max-content temporarily so table expands naturally
+            captureArea.style.width = "max-content";
+            document.body.style.width = "max-content";
+            document.documentElement.style.width = "max-content";
+            if (mainAppContainer) mainAppContainer.style.width = "max-content";
+
+            const fullWidth =
+              table && !table.classList.contains("hidden")
+                ? Math.max(table.scrollWidth, table.offsetWidth, captureArea.scrollWidth, 800)
+                : Math.max(captureArea.scrollWidth, 1200);
+
+            captureArea.style.width = fullWidth + "px";
+            document.body.style.width = fullWidth + "px";
+            document.documentElement.style.width = fullWidth + "px";
+            if (mainAppContainer) mainAppContainer.style.width = fullWidth + "px";
+            if (table && !table.classList.contains("hidden")) {
+              table.style.width = fullWidth + "px";
+              table.style.minWidth = fullWidth + "px";
+            }
+            if (execDashboard && !execDashboard.classList.contains("hidden")) {
+              execDashboard.style.width = fullWidth + "px";
+              execDashboard.style.maxWidth = fullWidth + "px";
+              execDashboard.style.minWidth = fullWidth + "px";
+            }
+
+            setTimeout(() => {
+              const finalWidth = captureArea.scrollWidth;
+              const finalHeight = captureArea.scrollHeight;
+
+              // iOS Safari is highly sensitive to canvas size limits
+              const isIOS = isAppleMobileDevice();
+              const isMobile = window.innerWidth <= 768;
+              
+              let captureScale = isMobile ? 1.2 : 1.8;
+              if (isIOS) {
+                captureScale = getSafeCaptureScale(finalWidth, finalHeight, 1.2, true);
               }
 
-              captureBtn.innerHTML = originalBtnHTML;
-              captureBtn.disabled = false;
-              // Restore scroll position
-              window.scrollTo(scrollX, scrollY);
-            };
-
-            const runHtmlToImageFallback = () => {
-              const fallbackOptions = {
-                quality: 0.9,
-                backgroundColor: "#ffffff",
-                pixelRatio: Math.min(captureScale, 1.2),
-                width: finalWidth,
-                height: finalHeight,
-              };
-              htmlToImage.toJpeg(captureArea, fallbackOptions)
-                .then((dataUrl) => {
-                  const filename = `${getFileExportName()}.jpg`;
-                  showImagePreview(dataUrl, filename);
-                  cleanUpAndRestore();
-                })
-                .catch((fallbackErr) => {
-                  console.error("All capture methods failed:", fallbackErr);
+              const runHtmlToImageFallback = () => {
+                if (!window.htmlToImage || typeof htmlToImage.toJpeg !== "function") {
                   showNotificationModal(
                     "เกิดข้อผิดพลาด",
-                    "ไม่สามารถสร้างไฟล์ภาพได้ (ข้อจำกัดด้านหน่วยความจำของอุปกรณ์ แนะนำให้ลดจำนวนชั้นหรือข้อมูลที่แสดงเพื่อลดขนาดหน้าจอแล้วลองอีกครั้ง)",
+                    "ไม่สามารถสร้างไฟล์ภาพได้ กรุณาลองใหม่อีกครั้ง",
                   );
                   cleanUpAndRestore();
-                });
-            };
+                  return;
+                }
+                const fallbackOptions = {
+                  quality: 0.9,
+                  backgroundColor: "#ffffff",
+                  pixelRatio: Math.min(captureScale, 1.2),
+                  width: finalWidth,
+                  height: finalHeight,
+                  skipFonts: true,
+                };
+                Promise.race([
+                  htmlToImage.toJpeg(captureArea, fallbackOptions),
+                  rejectAfter(5000, "htmlToImage fallback timed out"),
+                ])
+                  .then((dataUrl) => {
+                    const filename = `${getFileExportName()}.jpg`;
+                    showImagePreview(dataUrl, filename);
+                    cleanUpAndRestore();
+                  })
+                  .catch((fallbackErr) => {
+                    console.error("All capture methods failed:", fallbackErr);
+                    showNotificationModal(
+                      "เกิดข้อผิดพลาด",
+                      "ไม่สามารถสร้างไฟล์ภาพได้ (ข้อจำกัดด้านหน่วยความจำของอุปกรณ์ แนะนำให้ลดจำนวนชั้นหรือข้อมูลที่แสดงเพื่อลดขนาดหน้าจอแล้วลองอีกครั้ง)",
+                    );
+                    cleanUpAndRestore();
+                  });
+              };
 
-            html2canvas(captureArea, {
-              scale: captureScale,
-              useCORS: true,
-              backgroundColor: "#ffffff",
-              width: finalWidth,
-              height: finalHeight,
-              windowWidth: finalWidth,
-              windowHeight: finalHeight,
-              scrollX: 0,
-              scrollY: 0,
-            })
-              .then((canvas) => {
-                const filename = `${getFileExportName()}.jpg`;
-                showCanvasPreview(canvas, filename, "image/jpeg", 0.9);
-                cleanUpAndRestore();
+              html2canvas(captureArea, {
+                scale: captureScale,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: "#ffffff",
+                width: finalWidth,
+                height: finalHeight,
+                windowWidth: finalWidth,
+                windowHeight: finalHeight,
+                scrollX: 0,
+                scrollY: 0,
               })
-              .catch((err) => {
-                console.warn("html2canvas failed, trying htmlToImage fallback...", err);
-                runHtmlToImageFallback();
-              });
-          }, 500); // Increased timeout to ensure rendering
+                .then((canvas) => {
+                  const filename = `${getFileExportName()}.jpg`;
+                  showCanvasPreview(canvas, filename, "image/jpeg", 0.9);
+                  cleanUpAndRestore();
+                })
+                .catch((err) => {
+                  console.warn("html2canvas failed, trying htmlToImage fallback...", err);
+                  runHtmlToImageFallback();
+                });
+            }, 300);
+          } catch (err) {
+            console.error("Unexpected error in captureForLine:", err);
+            cleanUpAndRestore();
+          }
         }
 
         function captureForLineNew(mode = "download", btnId = "captureNewBtn", isUltraHD = false) {
           const captureArea = document.getElementById("capture-area");
           const captureBtn = document.getElementById(btnId);
+          if (!captureArea || !captureBtn) return;
           const originalBtnHTML = captureBtn.innerHTML;
 
           captureBtn.innerHTML = "กำลังแคปเจอร์...";
           captureBtn.disabled = true;
+
+          let hasCleanedUp = false;
 
           // Save scroll position
           const scrollX = window.scrollX || window.pageXOffset;
@@ -14006,7 +14504,8 @@
           const originalHtmlWidth = document.documentElement.style.width;
           const mainAppContainer =
             document.getElementById("main-app-container");
-          const originalMainAppWidth = mainAppContainer.style.width;
+          const table = document.getElementById("main-table");
+          const originalMainAppWidth = mainAppContainer ? mainAppContainer.style.width : "";
           const originalTableWidth = table ? table.style.width : "";
           const originalTableMinWidth = table ? table.style.minWidth : "";
 
@@ -14019,219 +14518,184 @@
           const originalExecMaxWidth = execDashboard
             ? execDashboard.style.maxWidth
             : "";
+          const originalExecMinWidth = execDashboard
+            ? execDashboard.style.minWidth
+            : "";
 
-          // Set max-content temporarily so table expands naturally
-          captureArea.style.width = "max-content";
-          document.body.style.width = "max-content";
-          document.documentElement.style.width = "max-content";
-          mainAppContainer.style.width = "max-content";
+          const cleanUpAndRestore = () => {
+            if (hasCleanedUp) return;
+            hasCleanedUp = true;
+            clearTimeout(watchdogTimer);
 
-          const table = document.getElementById("main-table");
-          const fullWidth =
-            table && !table.classList.contains("hidden")
-              ? Math.max(table.scrollWidth, table.offsetWidth, captureArea.scrollWidth, 800)
-              : Math.max(captureArea.scrollWidth, 1200);
+            document.documentElement.classList.remove("is-line-capturing");
+            document.body.classList.remove("is-line-capturing");
 
-          captureArea.style.width = fullWidth + "px";
-          document.body.style.width = fullWidth + "px";
-          document.documentElement.style.width = fullWidth + "px";
-          mainAppContainer.style.width = fullWidth + "px";
-          if (table && !table.classList.contains("hidden")) {
-            table.style.width = fullWidth + "px";
-            table.style.minWidth = fullWidth + "px";
-          }
-          if (execDashboard && currentView === "schedule") {
-            execDashboard.style.width = fullWidth + "px";
-            execDashboard.style.maxWidth = fullWidth + "px";
-          }
+            // Restore inline widths
+            captureArea.style.width = originalCaptureAreaWidth;
+            document.body.style.width = originalBodyWidth;
+            document.documentElement.style.width = originalHtmlWidth;
+            if (mainAppContainer) mainAppContainer.style.width = originalMainAppWidth;
+            if (table) {
+              table.style.width = originalTableWidth;
+              table.style.minWidth = originalTableMinWidth;
+            }
+            if (execDashboard) {
+              execDashboard.style.width = originalExecWidth;
+              execDashboard.style.maxWidth = originalExecMaxWidth;
+              execDashboard.style.minWidth = originalExecMinWidth;
+            }
 
-          setTimeout(() => {
-            const finalWidth = captureArea.scrollWidth;
-            const finalHeight = captureArea.scrollHeight;
+            captureBtn.innerHTML = originalBtnHTML;
+            captureBtn.disabled = false;
+            // Restore scroll position
+            window.scrollTo(scrollX, scrollY);
+          };
 
-            const isIOS = isAppleMobileDevice();
-            const isMobile = window.innerWidth <= 768;
-            const requestedScale = isUltraHD
-              ? isMobile
-                ? 2.2
-                : 3.2
-              : isMobile
-                ? 1.2
-                : 1.8;
-            const captureScale = getSafeCaptureScale(
-              finalWidth,
-              finalHeight,
-              requestedScale,
-              isIOS,
-            );
-            const outputMime =
-              isUltraHD && !isIOS ? "image/png" : "image/jpeg";
-            const outputExtension =
-              outputMime === "image/png" ? "png" : "jpg";
-            const outputQuality = isUltraHD ? 0.96 : 0.9;
+          // Watchdog timer: guarantees button and UI are restored if anything freezes
+          const watchdogTimer = setTimeout(() => {
+            if (!hasCleanedUp) {
+              console.warn("captureForLineNew watchdog triggered, forcing cleanup");
+              cleanUpAndRestore();
+              showToast("การแคปเจอร์ใช้เวลานานเกินไป กรุณาลองใหม่อีกครั้ง", 4000);
+            }
+          }, 15000);
 
-            const cleanUpAndRestore = () => {
-              document.documentElement.classList.remove("is-line-capturing");
-              document.body.classList.remove("is-line-capturing");
+          try {
+            // If executive summary is enabled, refresh its content to ensure it is rendered and visible
+            if (showExecutiveSummary && (currentView === "residential" || currentView === "schedule")) {
+              renderExecutiveSummaryDashboard();
+            }
 
-              // Restore inline widths
-              captureArea.style.width = originalCaptureAreaWidth;
-              document.body.style.width = originalBodyWidth;
-              document.documentElement.style.width = originalHtmlWidth;
-              mainAppContainer.style.width = originalMainAppWidth;
-              if (table) {
-                table.style.width = originalTableWidth;
-                table.style.minWidth = originalTableMinWidth;
-              }
-              if (execDashboard) {
-                execDashboard.style.width = originalExecWidth;
-                execDashboard.style.maxWidth = originalExecMaxWidth;
-              }
+            // Set max-content temporarily so table expands naturally
+            captureArea.style.width = "max-content";
+            document.body.style.width = "max-content";
+            document.documentElement.style.width = "max-content";
+            if (mainAppContainer) mainAppContainer.style.width = "max-content";
 
-              captureBtn.innerHTML = originalBtnHTML;
-              captureBtn.disabled = false;
-              // Restore scroll position
-              window.scrollTo(scrollX, scrollY);
-            };
+            const fullWidth =
+              table && !table.classList.contains("hidden")
+                ? Math.max(table.scrollWidth, table.offsetWidth, captureArea.scrollWidth, 800)
+                : Math.max(captureArea.scrollWidth, 1200);
 
-            const runHtml2CanvasFallback = () => {
-              html2canvas(captureArea, {
-                scale: Math.min(captureScale, 1.2),
-                useCORS: true,
-                backgroundColor: "#ffffff",
-                width: finalWidth,
-                height: finalHeight,
-                windowWidth: finalWidth,
-                windowHeight: finalHeight,
-                scrollX: 0,
-                scrollY: 0,
-              })
-                .then((canvas) => {
-                  const filename = `${getFileExportName()}.${outputExtension}`;
-                  showCanvasPreview(
+            captureArea.style.width = fullWidth + "px";
+            document.body.style.width = fullWidth + "px";
+            document.documentElement.style.width = fullWidth + "px";
+            if (mainAppContainer) mainAppContainer.style.width = fullWidth + "px";
+            if (table && !table.classList.contains("hidden")) {
+              table.style.width = fullWidth + "px";
+              table.style.minWidth = fullWidth + "px";
+            }
+            if (execDashboard && !execDashboard.classList.contains("hidden")) {
+              execDashboard.style.width = fullWidth + "px";
+              execDashboard.style.maxWidth = fullWidth + "px";
+              execDashboard.style.minWidth = fullWidth + "px";
+            }
+
+            setTimeout(() => {
+              const finalWidth = captureArea.scrollWidth;
+              const finalHeight = captureArea.scrollHeight;
+
+              const isIOS = isAppleMobileDevice();
+              const isMobile = window.innerWidth <= 768;
+              const requestedScale = isUltraHD
+                ? isMobile
+                  ? 1.8
+                  : 2.4
+                : isMobile
+                  ? 1.2
+                  : 1.6;
+              const captureScale = getSafeCaptureScale(
+                finalWidth,
+                finalHeight,
+                requestedScale,
+                isIOS,
+              );
+              const outputMime =
+                isUltraHD && !isIOS ? "image/png" : "image/jpeg";
+              const outputExtension =
+                outputMime === "image/png" ? "png" : "jpg";
+              const outputQuality = isUltraHD ? 0.95 : 0.9;
+              const filename = `${getFileExportName()}.${outputExtension}`;
+
+              const runHtml2CanvasEngine = () => {
+                return html2canvas(captureArea, {
+                  scale: Math.min(captureScale, isIOS ? 1.25 : 1.8),
+                  useCORS: true,
+                  allowTaint: false,
+                  backgroundColor: "#ffffff",
+                  width: finalWidth,
+                  height: finalHeight,
+                  windowWidth: finalWidth,
+                  windowHeight: finalHeight,
+                  scrollX: 0,
+                  scrollY: 0,
+                }).then((canvas) => {
+                  return showCanvasPreview(
                     canvas,
                     filename,
                     outputMime,
                     outputQuality,
                   );
+                });
+              };
+
+              const runHtmlToImageEngine = () => {
+                if (!window.htmlToImage) {
+                  return Promise.reject(new Error("htmlToImage is not available"));
+                }
+                const captureOptions = {
+                  quality: outputQuality,
+                  backgroundColor: "#ffffff",
+                  pixelRatio: Math.min(captureScale, 1.3),
+                  width: finalWidth,
+                  height: finalHeight,
+                  cacheBust: true,
+                  skipFonts: true,
+                  style: {
+                    transformOrigin: "top left",
+                  },
+                };
+                const capturePromise =
+                  outputMime === "image/png"
+                    ? htmlToImage.toPng(captureArea, captureOptions)
+                    : htmlToImage.toJpeg(captureArea, captureOptions);
+
+                return Promise.race([
+                  capturePromise,
+                  rejectAfter(5000, "htmlToImage capture timed out"),
+                ]).then((dataUrl) => {
+                  return showImagePreview(dataUrl, filename);
+                });
+              };
+
+              // Capture execution strategy:
+              // html2canvas is extremely fast (~300-600ms), doesn't block on font network fetching,
+              // and avoids WebKit foreignObject canvas restrictions on iOS Safari.
+              // If html2canvas fails, fallback to htmlToImage (with skipFonts: true).
+              runHtml2CanvasEngine()
+                .then(() => {
                   cleanUpAndRestore();
                 })
-                .catch((fallbackErr) => {
-                  if (window.htmlToImage && typeof htmlToImage.toJpeg === "function") {
-                    htmlToImage
-                      .toJpeg(captureArea, captureOptions)
-                      .then((dataUrl) => {
-                        const filename = `${getFileExportName()}.${outputExtension}`;
-                        showImagePreview(dataUrl, filename);
-                        cleanUpAndRestore();
-                      })
-                      .catch((lastErr) => {
-                        console.error("All capture methods failed:", lastErr);
-                        showNotificationModal("Capture failed", "ไม่สามารถสร้างภาพแคปเจอร์ได้");
-                        cleanUpAndRestore();
-                      });
-                    return;
-                  }
-                  console.error("All capture methods failed:", fallbackErr);
-                  showNotificationModal(
-                    "เกิดข้อผิดพลาด",
-                    "ไม่สามารถสร้างไฟล์ภาพได้ (ข้อจำกัดด้านหน่วยความจำของอุปกรณ์ แนะนำให้ลดจำนวนชั้นหรือข้อมูลที่แสดงเพื่อลดขนาดหน้าจอแล้วลองอีกครั้ง)",
-                  );
-                  cleanUpAndRestore();
+                .catch((canvasErr) => {
+                  console.warn("html2canvas failed, attempting htmlToImage fallback...", canvasErr);
+                  return runHtmlToImageEngine()
+                    .then(() => {
+                      cleanUpAndRestore();
+                    })
+                    .catch((imgErr) => {
+                      console.error("All capture methods failed:", imgErr);
+                      showNotificationModal(
+                        "เกิดข้อผิดพลาด",
+                        "ไม่สามารถสร้างไฟล์ภาพได้ (ข้อจำกัดด้านหน่วยความจำของอุปกรณ์ แนะนำให้ลดจำนวนชั้นหรือข้อมูลที่แสดงเพื่อลดขนาดหน้าจอแล้วลองอีกครั้ง)",
+                      );
+                      cleanUpAndRestore();
+                    });
                 });
-            };
-
-            // html-to-image lets WebKit lay out the text inside an SVG
-            // foreignObject. This preserves Thai line wrapping and baselines
-            // more accurately than html2canvas on iOS Safari.
-            const captureOptions = {
-              quality: outputQuality,
-              backgroundColor: "#ffffff",
-              pixelRatio: captureScale,
-              width: finalWidth,
-              height: finalHeight,
-              cacheBust: true,
-              style: {
-                transformOrigin: "top left",
-              },
-            };
-
-            const runIOSForeignObjectCapture = async () => {
-              if (
-                !window.htmlToImage ||
-                typeof htmlToImage.toBlob !== "function"
-              ) {
-                runHtml2CanvasFallback();
-                return;
-              }
-
-              try {
-                await waitForCaptureLayout();
-
-                let fontEmbedCSS = "";
-                if (typeof htmlToImage.getFontEmbedCSS === "function") {
-                  try {
-                    fontEmbedCSS = await Promise.race([
-                      htmlToImage.getFontEmbedCSS(captureArea),
-                      rejectAfter(5000, "Font embedding timed out"),
-                    ]);
-                  } catch (fontError) {
-                    console.warn(
-                      "Could not embed capture fonts; using loaded fonts:",
-                      fontError,
-                    );
-                  }
-                }
-
-                const iosCaptureOptions = fontEmbedCSS
-                  ? { ...captureOptions, fontEmbedCSS }
-                  : captureOptions;
-                const blob = await Promise.race([
-                  htmlToImage.toBlob(captureArea, iosCaptureOptions),
-                  rejectAfter(18000, "iOS vector capture timed out"),
-                ]);
-
-                if (!blob || !blob.size) {
-                  throw new Error("iOS vector capture returned an empty image");
-                }
-
-                const filename = `${getFileExportName()}.png`;
-                showImagePreviewFile(
-                  new File([blob], filename, {
-                    type: blob.type || "image/png",
-                    lastModified: Date.now(),
-                  }),
-                );
-                cleanUpAndRestore();
-              } catch (error) {
-                console.warn(
-                  "iOS vector capture failed, using canvas fallback:",
-                  error,
-                );
-                runHtml2CanvasFallback();
-              }
-            };
-
-            const capturePromise =
-              outputMime === "image/png"
-                ? htmlToImage.toPng(captureArea, captureOptions)
-                : htmlToImage.toJpeg(captureArea, captureOptions);
-
-            if (isIOS) {
-              runIOSForeignObjectCapture();
-            } else {
-              capturePromise
-                .then((dataUrl) => {
-                  const filename = `${getFileExportName()}.${outputExtension}`;
-                  showImagePreview(dataUrl, filename);
-                  cleanUpAndRestore();
-                })
-                .catch((err) => {
-                  console.warn("htmlToImage failed, trying html2canvas fallback...", err);
-                  runHtml2CanvasFallback();
-                });
-            }
-          }, 500);
+            }, 300);
+          } catch (err) {
+            console.error("Unexpected error in captureForLineNew:", err);
+            cleanUpAndRestore();
+          }
         }
 
         function getPowerPointKpiGrid() {
@@ -14257,48 +14721,283 @@
         }
 
         function buildCommonDefectPowerPointCaptureStage() {
-          const sourceSummary = document.getElementById(
-            "common-defect-summary-board",
-          );
-          if (!sourceSummary) {
-            throw new Error("ไม่พบสรุป DEFECT ส่วนกลางที่พร้อมแคป");
+          const defects = projectData.commonDefects || [];
+          if (!defects.length) {
+            throw new Error("ไม่พบข้อมูล DEFECT ส่วนกลางที่พร้อมแคป");
+          }
+
+          // Respect any active filter/search from the UI
+          const searchInput = document.getElementById("defect-search-input");
+          const groupSelect = document.getElementById("defect-filter-group");
+          const statusSelect = document.getElementById("defect-filter-status");
+
+          const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : "";
+          const groupVal = groupSelect ? groupSelect.value : "ALL";
+          const statusVal = statusSelect ? statusSelect.value : "ALL";
+
+          let filtered = defects.filter(item => {
+            const matchesSearch = !searchVal || item.name.toLowerCase().includes(searchVal);
+            const matchesGroup = groupVal === "ALL" || item.group === groupVal;
+            const matchesStatus = statusVal === "ALL" || item.status === statusVal;
+            return matchesSearch && matchesGroup && matchesStatus;
+          });
+          if (!filtered.length) filtered = defects;
+
+          // Group by group name
+          const groups = {};
+          filtered.forEach(item => {
+            const g = item.group || "อื่นๆ";
+            if (!groups[g]) groups[g] = [];
+            groups[g].push(item);
+          });
+
+          // Standard order
+          const standardOrder = typeof COMMON_DEFECT_GROUP_ORDER !== "undefined" ? COMMON_DEFECT_GROUP_ORDER : [];
+          const groupKeys = Object.keys(groups).sort((a, b) => {
+            let idxA = standardOrder.indexOf(a);
+            let idxB = standardOrder.indexOf(b);
+            if (idxA === -1) idxA = 999;
+            if (idxB === -1) idxB = 999;
+            if (idxA !== idxB) return idxA - idxB;
+            return a.localeCompare(b, "th");
+          });
+
+          // Grand totals
+          let grandTot = 0;
+          let grandFix = 0;
+          filtered.forEach(it => {
+            grandTot += Number(it.tot) || 0;
+            grandFix += Number(it.fix) || 0;
+          });
+          const grandLeft = grandTot - grandFix;
+          const grandPercent = grandTot > 0 ? (grandFix / grandTot) * 100 : 100;
+          const grandPercentStr = grandPercent % 1 === 0 ? grandPercent.toFixed(0) : grandPercent.toFixed(1);
+
+          // Split groups into two columns so rows are as evenly balanced as possible
+          let totalRows = 0;
+          groupKeys.forEach(k => { totalRows += (groups[k].length + 1); });
+
+          let leftGroups = [];
+          let rightGroups = [];
+          let currentLeftRows = 0;
+          const halfRows = totalRows / 2;
+
+          groupKeys.forEach(k => {
+            const gRows = groups[k].length + 1;
+            if (leftGroups.length === 0 || (currentLeftRows + gRows <= halfRows + 2 && leftGroups.length < groupKeys.length - 1)) {
+              leftGroups.push(k);
+              currentLeftRows += gRows;
+            } else {
+              rightGroups.push(k);
+            }
+          });
+          if (rightGroups.length === 0 && leftGroups.length > 1) {
+            rightGroups.push(leftGroups.pop());
+          }
+
+          // Calculate left totals
+          let leftTot = 0;
+          let leftFix = 0;
+          leftGroups.forEach(g => {
+            groups[g].forEach(it => {
+              leftTot += Number(it.tot) || 0;
+              leftFix += Number(it.fix) || 0;
+            });
+          });
+          const leftRem = leftTot - leftFix;
+
+          const { headerColor, stickyHeaderColor } = typeof getHeaderColors === "function" ? getHeaderColors() : { headerColor: "bg-slate-200 text-slate-800", stickyHeaderColor: "bg-slate-200" };
+
+          function renderHalfTable(groupList, isRight) {
+            let rowsHTML = "";
+            groupList.forEach(groupName => {
+              const items = groups[groupName] || [];
+              let gTot = 0;
+              let gFix = 0;
+              items.forEach(it => {
+                gTot += Number(it.tot) || 0;
+                gFix += Number(it.fix) || 0;
+              });
+              const gRem = gTot - gFix;
+
+              rowsHTML += `
+                <tr class="bg-slate-100 font-black text-slate-900 border-t border-b border-slate-300">
+                  <td class="py-1.5 px-3 pl-3 text-left border-r border-slate-300 font-black text-slate-900 text-xs">
+                    <span>${escapeCommonDefectText(groupName)}</span>
+                    <span class="text-[11px] text-slate-500 font-normal ml-1">(รวม)</span>
+                  </td>
+                  <td class="py-1.5 px-1.5 text-center font-black text-slate-900 border-r border-slate-300 text-xs">${gTot}</td>
+                  <td class="py-1.5 px-1.5 text-center font-black text-emerald-600 border-r border-slate-300 text-xs">${gFix > 0 ? gFix : ""}</td>
+                  <td class="py-1.5 px-1.5 text-center font-black text-rose-600 border-r border-slate-300 text-xs">${gRem}</td>
+                  <td class="py-1.5 px-1.5 text-center border-r border-slate-300"></td>
+                  <td class="py-1.5 px-1.5 text-center border-slate-300"></td>
+                </tr>
+              `;
+
+              items.forEach(item => {
+                const rem = (Number(item.tot) || 0) - (Number(item.fix) || 0);
+                let statusClass = "text-slate-600 bg-slate-100";
+                if (item.status === "รอดำเนินการ") statusClass = "text-rose-700 bg-rose-100/90";
+                else if (item.status === "รอนัดตรวจ") statusClass = "text-amber-700 bg-amber-100/90";
+                else if (item.status === "แก้ไขเรียบร้อย") statusClass = "text-emerald-700 bg-emerald-100/90";
+                else if (item.status === "ไม่มี Defect") statusClass = "text-slate-600 bg-slate-100";
+                else if (item.status === "ยังไม่ตรวจ") statusClass = "text-indigo-600 bg-indigo-100/90";
+                else if (item.status === "รอคะแนน") statusClass = "text-purple-700 bg-purple-100/90";
+
+                let dateDisplay = "";
+                if (item.target) {
+                  const d = new Date(item.target);
+                  if (!isNaN(d.getTime())) {
+                    dateDisplay = d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
+                  }
+                }
+
+                rowsHTML += `
+                  <tr class="border-b border-slate-200 hover:bg-slate-50/60">
+                    <td class="py-1 px-3 pl-6 text-left border-r border-slate-200 text-slate-700 font-medium text-xs truncate max-w-[240px]" title="${escapeCommonDefectText(item.name)}">
+                      ${escapeCommonDefectText(item.name)}
+                    </td>
+                    <td class="py-1 px-1.5 text-center border-r border-slate-200 font-bold text-slate-800 text-xs">${item.tot > 0 ? item.tot : ""}</td>
+                    <td class="py-1 px-1.5 text-center border-r border-slate-200 font-bold text-emerald-600 text-xs">${item.fix > 0 ? item.fix : ""}</td>
+                    <td class="py-1 px-1.5 text-center border-r border-slate-200 text-rose-600 font-bold text-xs">${rem}</td>
+                    <td class="py-1 px-1.5 text-center border-r border-slate-200 text-slate-500 font-medium text-[11px] whitespace-nowrap">${dateDisplay}</td>
+                    <td class="py-1 px-1.5 text-center border-slate-200 whitespace-nowrap">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold leading-tight ${statusClass}">
+                        ● ${escapeCommonDefectText(item.status)}
+                      </span>
+                    </td>
+                  </tr>
+                `;
+              });
+            });
+
+            let tfootHTML = "";
+            if (isRight) {
+              tfootHTML = `
+                <tfoot class="border-t-2 border-slate-400">
+                  <tr class="bg-slate-200 text-slate-900 font-black text-xs">
+                    <td class="py-2 px-3 pl-3 text-left border-r border-slate-300 font-black text-slate-900 bg-slate-200">
+                      Grand Total (รวมทั้งหมด):
+                    </td>
+                    <td class="py-2 px-1.5 text-center border-r border-slate-300 font-black text-slate-900 bg-slate-200 text-xs">${grandTot}</td>
+                    <td class="py-2 px-1.5 text-center border-r border-slate-300 font-black text-emerald-700 bg-slate-200 text-xs">${grandFix}</td>
+                    <td class="py-2 px-1.5 text-center border-r border-slate-300 font-black text-rose-700 bg-slate-200 text-xs">${grandLeft}</td>
+                    <td colspan="2" class="py-2 px-2 text-center border-slate-300 font-black bg-slate-200">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-indigo-100 text-indigo-800 border border-indigo-200 shadow-xs">
+                        สำเร็จ ${grandPercentStr}%
+                      </span>
+                    </td>
+                  </tr>
+                </tfoot>
+              `;
+            } else {
+              tfootHTML = `
+                <tfoot class="border-t border-slate-300">
+                  <tr class="bg-slate-100 text-slate-700 font-bold text-xs">
+                    <td class="py-1.5 px-3 pl-3 text-left border-r border-slate-300 font-bold text-slate-600">
+                      รวมส่วนที่ 1 (${leftGroups.length} หมวด):
+                    </td>
+                    <td class="py-1.5 px-1.5 text-center border-r border-slate-300 font-bold text-slate-800 text-xs">${leftTot}</td>
+                    <td class="py-1.5 px-1.5 text-center border-r border-slate-300 font-bold text-emerald-600 text-xs">${leftFix}</td>
+                    <td class="py-1.5 px-1.5 text-center border-r border-slate-300 font-bold text-rose-600 text-xs">${leftRem}</td>
+                    <td colspan="2" class="py-1.5 px-2 text-center border-slate-300 text-slate-500 font-semibold text-[11px]">
+                      (ต่อคอลัมน์ขวา ➡)
+                    </td>
+                  </tr>
+                </tfoot>
+              `;
+            }
+
+            return `
+              <table class="w-full border-collapse text-left text-xs border border-slate-300" style="overflow: visible;">
+                <thead>
+                  <tr class="${headerColor} font-black text-center text-xs">
+                    <th class="py-2 px-3 pl-4 text-left border-r border-slate-300/80 min-w-[210px] ${stickyHeaderColor} font-black">Category / Location</th>
+                    <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-22 ${stickyHeaderColor} font-black">จำนวน defect</th>
+                    <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-20 ${stickyHeaderColor} font-black">แก้ไขแล้ว</th>
+                    <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-18 ${stickyHeaderColor} font-black">คงเหลือ</th>
+                    <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-26 ${stickyHeaderColor} font-black">Target Date</th>
+                    <th class="py-2 px-1.5 text-center border-slate-300/80 w-28 ${stickyHeaderColor} font-black">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  ${rowsHTML}
+                </tbody>
+                ${tfootHTML}
+              </table>
+            `;
           }
 
           const stage = document.createElement("section");
           stage.className = "ppt-capture-stage ppt-common-defect-stage";
           stage.setAttribute("aria-hidden", "true");
+          stage.style.cssText = "position: fixed; left: 0px; top: 0px; width: 1600px; min-width: 1600px; max-width: 1600px; z-index: -99999; box-sizing: border-box; padding: 20px 28px; background-color: #ffffff; color: #111827; font-family: 'Sarabun', 'Noto Sans Thai', Arial, sans-serif; overflow: visible; display: flex; flex-direction: column; gap: 12px;";
 
-          const reportDate =
-            document.getElementById("update-date")?.textContent?.trim() || "";
+          const reportDate = document.getElementById("update-date")?.textContent?.trim() || new Date().toLocaleDateString("th-TH");
+
           const header = document.createElement("header");
-          header.className = "common-defect-ppt-header";
+          header.className = "common-defect-ppt-header pb-2.5 border-b-2 border-slate-300 flex items-center justify-between";
+          header.style.cssText = "overflow: visible; width: 100%; display: flex; align-items: center; justify-content: space-between;";
           header.innerHTML = `
-            <div class="common-defect-ppt-brand">
-              <strong>PYNN NGAMWONGWAN 54</strong>
-              <span>CONSTRUCTION PROGRESS REPORT</span>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 bg-indigo-700 text-white rounded-xl shadow flex items-center justify-center font-black text-xl">
+                P
+              </div>
+              <div>
+                <div class="text-[11px] font-black text-indigo-700 tracking-wider uppercase">PYNN NGAMWONGWAN 54 · CONSTRUCTION PROGRESS REPORT</div>
+                <h1 class="text-xl font-black text-slate-900 leading-tight">STATUS สรุปผล DEFECT พื้นที่ส่วนกลาง (Category / Location)</h1>
+              </div>
             </div>
-            <div class="common-defect-ppt-title">
-              <small>COMMON AREA QUALITY CONTROL</small>
-              <h1>สรุปงาน DEFECT ส่วนกลาง</h1>
-            </div>
-            <div class="common-defect-ppt-date">
-              <span>วันที่รายงาน</span>
-              <strong>${escapeCommonDefectText(reportDate)}</strong>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2 bg-slate-50 border border-slate-200/90 px-3.5 py-1.5 rounded-xl text-xs shadow-xs">
+                <span class="text-slate-500 font-bold">หมวดหมู่:</span>
+                <span class="font-black text-slate-800">${groupKeys.length} หมวด</span>
+                <span class="text-slate-300">|</span>
+                <span class="text-slate-500 font-bold">Defect รวม:</span>
+                <span class="font-black text-slate-800">${grandTot}</span>
+                <span class="text-slate-300">|</span>
+                <span class="text-emerald-600 font-bold">แก้ไขแล้ว:</span>
+                <span class="font-black text-emerald-600">${grandFix}</span>
+                <span class="text-slate-300">|</span>
+                <span class="text-rose-600 font-bold">คงเหลือ:</span>
+                <span class="font-black text-rose-600">${grandLeft}</span>
+                <span class="text-slate-300">|</span>
+                <span class="font-black text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-200">ความสำเร็จ ${grandPercentStr}%</span>
+              </div>
+              <div class="text-right pl-3 border-l border-slate-200">
+                <div class="text-[10px] text-slate-400 font-bold">วันที่รายงาน</div>
+                <div class="text-xs font-black text-slate-800">${escapeCommonDefectText(reportDate)}</div>
+              </div>
             </div>
           `;
           stage.appendChild(header);
 
-          const summaryClone = sourceSummary.cloneNode(true);
-          summaryClone.removeAttribute("id");
-          summaryClone.classList.add("common-defect-summary-ppt");
-          stage.appendChild(summaryClone);
+          const gridContainer = document.createElement("div");
+          gridContainer.className = "grid grid-cols-2 gap-4 w-full items-start";
+          gridContainer.style.cssText = "display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; overflow: visible; align-items: start;";
+
+          const leftCard = document.createElement("div");
+          leftCard.className = "bg-white border border-slate-300 rounded-xl shadow-xs overflow-hidden";
+          leftCard.style.cssText = "overflow: visible; width: 100%;";
+          leftCard.innerHTML = renderHalfTable(leftGroups, false);
+
+          const rightCard = document.createElement("div");
+          rightCard.className = "bg-white border border-slate-300 rounded-xl shadow-xs overflow-hidden";
+          rightCard.style.cssText = "overflow: visible; width: 100%;";
+          rightCard.innerHTML = renderHalfTable(rightGroups, true);
+
+          gridContainer.appendChild(leftCard);
+          gridContainer.appendChild(rightCard);
+          stage.appendChild(gridContainer);
 
           document.body.appendChild(stage);
+
+          const measuredHeight = Math.max(900, stage.scrollHeight || 0, stage.offsetHeight || 0);
           return {
             stage,
             isCommonDefect: true,
             captureWidth: 1600,
-            captureHeight: 900,
+            captureHeight: measuredHeight,
           };
         }
 
@@ -14431,7 +15130,15 @@
             await waitForCaptureLayout();
 
             const width = stageParts.captureWidth || 1600;
-            const height = stageParts.captureHeight || 680;
+            const measuredHeight = Math.max(
+              stageParts.stage.scrollHeight || 0,
+              stageParts.stage.offsetHeight || 0,
+              stageParts.captureHeight || 680,
+            );
+            const height = measuredHeight;
+            stageParts.stage.style.height = `${height}px`;
+            stageParts.stage.style.overflow = "visible";
+
             const isIOS = isAppleMobileDevice();
             const pixelRatio = getSafeCaptureScale(
               width,
@@ -14442,28 +15149,14 @@
             const filename = `${getFileExportName()} PowerPoint.png`;
             let previewFile = null;
 
-            if (window.htmlToImage && typeof htmlToImage.toBlob === "function") {
-              let fontEmbedCSS = "";
-              if (typeof htmlToImage.getFontEmbedCSS === "function") {
-                try {
-                  fontEmbedCSS = await Promise.race([
-                    htmlToImage.getFontEmbedCSS(stageParts.stage),
-                    rejectAfter(5000, "Font embedding timed out"),
-                  ]);
-                } catch (fontError) {
-                  console.warn(
-                    "PowerPoint capture will use the loaded page fonts:",
-                    fontError,
-                  );
-                }
-              }
-
+            if (!isIOS && window.htmlToImage && typeof htmlToImage.toBlob === "function") {
               const captureOptions = {
                 backgroundColor: "#ffffff",
                 width,
                 height,
                 pixelRatio,
                 cacheBust: true,
+                skipFonts: true,
                 style: {
                   position: "static",
                   left: "0",
@@ -14471,14 +15164,14 @@
                   zIndex: "auto",
                   margin: "0",
                   transform: "none",
+                  overflow: "visible",
                 },
-                ...(fontEmbedCSS ? { fontEmbedCSS } : {}),
               };
 
               try {
                 const blob = await Promise.race([
                   htmlToImage.toBlob(stageParts.stage, captureOptions),
-                  rejectAfter(20000, "PowerPoint capture timed out"),
+                  rejectAfter(4000, "PowerPoint capture timed out"),
                 ]);
                 if (!blob || !blob.size) {
                   throw new Error("PowerPoint capture returned an empty image");
@@ -14506,6 +15199,17 @@
                 windowHeight: height,
                 scrollX: 0,
                 scrollY: 0,
+                onclone: (clonedDoc) => {
+                  clonedDoc.querySelectorAll("*").forEach((el) => {
+                    if (el.style) {
+                      el.style.scrollbarWidth = "none";
+                      if (el.classList && el.classList.contains("overflow-x-auto")) {
+                        el.style.overflow = "visible";
+                        el.style.overflowX = "visible";
+                      }
+                    }
+                  });
+                },
               });
               previewFile = await canvasToPreviewFile(
                 canvas,
@@ -14612,67 +15316,80 @@
             card.style.maxWidth = "100%";
           });
 
+          let hasCleanedUp = false;
+          const cleanUpAndRestore = () => {
+            if (hasCleanedUp) return;
+            hasCleanedUp = true;
+            clearTimeout(watchdogTimer);
+
+            document.documentElement.classList.remove("is-line-capturing");
+            document.body.classList.remove("is-line-capturing");
+
+            captureTarget.style.padding = originalPadding;
+            captureTarget.style.backgroundColor = originalBackground;
+            captureTarget.style.width = originalWidth;
+            captureTarget.style.maxWidth = originalMaxWidth;
+
+            document.body.style.width = originalBodyWidth;
+            document.documentElement.style.width = originalHtmlWidth;
+
+            // Restore ancestors
+            originalParentStyles.forEach((item) => {
+              item.el.style.width = item.width;
+              item.el.style.maxWidth = item.maxWidth;
+              item.el.style.minWidth = item.minWidth;
+              item.el.style.overflow = item.overflow;
+            });
+
+            // Restore overflow elements
+            originalOverflowStyles.forEach((item) => {
+              item.el.style.overflow = item.overflow;
+              item.el.style.overflowX = item.overflowX;
+            });
+
+            // Restore group cards
+            originalGroupCardWidths.forEach((item) => {
+              item.card.style.width = item.width;
+              item.card.style.maxWidth = item.maxWidth;
+            });
+
+            // Restore scroll position
+            window.scrollTo(scrollX, scrollY);
+
+            if (callback) {
+              try {
+                callback();
+              } catch (e) {
+                console.error("Capture callback error:", e);
+              }
+            }
+          };
+
+          const watchdogTimer = setTimeout(() => {
+            if (!hasCleanedUp) {
+              console.warn("captureElement watchdog triggered, forcing cleanup");
+              cleanUpAndRestore();
+              showToast("การแคปเจอร์ใช้เวลานานเกินไป กรุณาลองใหม่อีกครั้ง", 4000);
+            }
+          }, 12000);
+
           setTimeout(() => {
             const finalWidth = captureTarget.scrollWidth;
             const finalHeight = captureTarget.scrollHeight;
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isIOS = isAppleMobileDevice();
             const isMobile = window.innerWidth <= 768;
             
-            let captureScale = isMobile ? 1.5 : 2.0;
+            let captureScale = isMobile ? 1.4 : 1.8;
             if (isIOS) {
-              captureScale = 1.2;
+              captureScale = getSafeCaptureScale(finalWidth, finalHeight, 1.2, true);
             }
 
-            const cleanUpAndRestore = () => {
-              document.documentElement.classList.remove("is-line-capturing");
-              document.body.classList.remove("is-line-capturing");
-
-              captureTarget.style.padding = originalPadding;
-              captureTarget.style.backgroundColor = originalBackground;
-              captureTarget.style.width = originalWidth;
-              captureTarget.style.maxWidth = originalMaxWidth;
-
-              document.body.style.width = originalBodyWidth;
-              document.documentElement.style.width = originalHtmlWidth;
-
-              // Restore ancestors
-              originalParentStyles.forEach((item) => {
-                item.el.style.width = item.width;
-                item.el.style.maxWidth = item.maxWidth;
-                item.el.style.minWidth = item.minWidth;
-                item.el.style.overflow = item.overflow;
-              });
-
-              // Restore overflow elements
-              originalOverflowStyles.forEach((item) => {
-                item.el.style.overflow = item.overflow;
-                item.el.style.overflowX = item.overflowX;
-              });
-
-              // Restore group cards
-              originalGroupCardWidths.forEach((item) => {
-                item.card.style.width = item.width;
-                item.card.style.maxWidth = item.maxWidth;
-              });
-
-              // Restore scroll position
-              window.scrollTo(scrollX, scrollY);
-
-              if (callback) {
-                try {
-                  callback();
-                } catch (e) {
-                  console.error("Capture callback error:", e);
-                }
-              }
-            };
-
-            const runHtml2CanvasFallback = () => {
+            const runHtml2CanvasExecution = () => {
               html2canvas(captureTarget, {
-                scale: Math.min(captureScale, 1.5),
+                scale: Math.min(captureScale, isIOS ? 1.25 : 1.5),
                 useCORS: true,
+                allowTaint: false,
                 backgroundColor: "#ffffff",
                 width: finalWidth,
                 height: finalHeight,
@@ -14685,7 +15402,31 @@
                   cleanUpAndRestore();
                 })
                 .catch((fallbackErr) => {
-                  console.error("All capture methods failed:", fallbackErr);
+                  console.error("html2canvas capture failed:", fallbackErr);
+                  if (window.htmlToImage && typeof htmlToImage.toJpeg === "function") {
+                    htmlToImage.toJpeg(captureTarget, {
+                      quality: 0.9,
+                      backgroundColor: "#ffffff",
+                      pixelRatio: Math.min(captureScale, 1.2),
+                      width: finalWidth,
+                      height: finalHeight,
+                      skipFonts: true,
+                    })
+                      .then((dataUrl) => {
+                        const filename = `PYNN NGAMWONGWAN 54 DEFECT ${title} ${getThaiDateForFilename()}.jpg`;
+                        showImagePreview(dataUrl, filename);
+                        cleanUpAndRestore();
+                      })
+                      .catch((err) => {
+                        console.error("All capture methods failed:", err);
+                        showNotificationModal(
+                          "เกิดข้อผิดพลาด",
+                          "ไม่สามารถสร้างไฟล์ภาพได้",
+                        );
+                        cleanUpAndRestore();
+                      });
+                    return;
+                  }
                   showNotificationModal(
                     "เกิดข้อผิดพลาด",
                     "ไม่สามารถสร้างไฟล์ภาพได้",
@@ -14694,27 +15435,8 @@
                 });
             };
 
-            const captureOptions = {
-                quality: 0.9,
-                backgroundColor: "#ffffff",
-                pixelRatio: captureScale,
-                width: finalWidth,
-                height: finalHeight,
-                style: {
-                  transformOrigin: "top left",
-                },
-            };
-            
-            htmlToImage.toJpeg(captureTarget, captureOptions)
-              .then((dataUrl) => {
-                const filename = `PYNN NGAMWONGWAN 54 DEFECT ${title} ${getThaiDateForFilename()}.jpg`;
-                showImagePreview(dataUrl, filename);
-                cleanUpAndRestore();
-              })
-              .catch((err) => {
-                console.warn("htmlToImage failed, trying html2canvas fallback...", err);
-                runHtml2CanvasFallback();
-              });
+            // On iOS and Vercel, html2canvas is extremely fast and reliable
+            runHtml2CanvasExecution();
           }, 300);
         };
 
@@ -14910,16 +15632,19 @@
           // Get active theme colors for header
           const { headerColor, stickyHeaderColor } = getHeaderColors();
 
+          const twoColumns = document.getElementById("common-cap-two-columns")?.checked ?? false;
+          const targetWidth = twoColumns ? 1600 : 1280;
+
           // Create wrapper placed at (0, 0) behind body canvas (z-index -99999)
           // Avoid left: -9999px because SVG foreignObject and html2canvas offset their viewport
           const wrapper = document.createElement("div");
           wrapper.id = "common-defect-capture-wrapper";
-          wrapper.style.cssText = "position: fixed; left: 0px; top: 0px; width: 1280px; min-width: 1280px; max-width: 1280px; z-index: -99999; opacity: 1; pointer-events: none; overflow: visible; background-color: #ffffff;";
+          wrapper.style.cssText = `position: fixed; left: 0px; top: 0px; width: ${targetWidth}px; min-width: ${targetWidth}px; max-width: ${targetWidth}px; z-index: -99999; opacity: 1; pointer-events: none; overflow: visible; background-color: #ffffff;`;
 
           const stage = document.createElement("div");
           stage.id = "common-defect-custom-capture-stage";
           stage.className = "p-8 bg-white flex flex-col gap-6 text-slate-800 font-sans";
-          stage.style.cssText = "position: relative; left: 0px; top: 0px; width: 1280px; min-width: 1280px; max-width: 1280px; box-sizing: border-box; background-color: #ffffff; margin: 0; transform: none;";
+          stage.style.cssText = `position: relative; left: 0px; top: 0px; width: ${targetWidth}px; min-width: ${targetWidth}px; max-width: ${targetWidth}px; box-sizing: border-box; background-color: #ffffff; margin: 0; transform: none; overflow: visible;`;
 
           // Optional Header
           if (includeHeader) {
@@ -14989,117 +15714,237 @@
             const grandPercent = grandTot > 0 ? (grandFix / grandTot) * 100 : 100;
             const grandPercentStr = grandPercent % 1 === 0 ? grandPercent.toFixed(0) : grandPercent.toFixed(1);
 
-            let rowsHTML = "";
-            groupKeys.forEach(groupName => {
-              const items = groups[groupName];
-              let groupTot = 0;
-              let groupFix = 0;
-              items.forEach(it => {
-                groupTot += Number(it.tot) || 0;
-                groupFix += Number(it.fix) || 0;
-              });
-              const groupRem = groupTot - groupFix;
+            function buildGroupRows(groupList) {
+              let html = "";
+              groupList.forEach(groupName => {
+                const items = groups[groupName] || [];
+                let groupTot = 0;
+                let groupFix = 0;
+                items.forEach(it => {
+                  groupTot += Number(it.tot) || 0;
+                  groupFix += Number(it.fix) || 0;
+                });
+                const groupRem = groupTot - groupFix;
 
-              rowsHTML += `
-                <tr class="bg-slate-100/90 font-black text-slate-900 border-t border-b border-slate-300">
-                  <td class="py-1.5 px-3 pl-4 text-left border-r border-slate-300">
-                    <span class="text-xs font-black text-slate-900">${escapeCommonDefectText(groupName)}</span>
-                    <span class="text-[11px] text-slate-500 font-medium ml-1.5">(รวม)</span>
-                  </td>
-                  <td class="py-1.5 px-2 text-center font-black text-slate-900 border-r border-slate-300 text-xs">${groupTot}</td>
-                  <td class="py-1.5 px-2 text-center font-black text-emerald-600 border-r border-slate-300 text-xs">${groupFix > 0 ? groupFix : ""}</td>
-                  <td class="py-1.5 px-2 text-center font-black text-rose-600 border-r border-slate-300 text-xs">${groupRem}</td>
-                  <td class="py-1.5 px-2 text-center border-r border-slate-300"></td>
-                  <td class="py-1.5 px-2 text-center border-slate-300"></td>
-                </tr>
-              `;
-
-              items.forEach(item => {
-                const rem = (Number(item.tot) || 0) - (Number(item.fix) || 0);
-                let statusClass = "text-slate-600 bg-slate-100";
-                if (item.status === "รอดำเนินการ") statusClass = "text-rose-700 bg-rose-100/90";
-                else if (item.status === "รอนัดตรวจ") statusClass = "text-amber-700 bg-amber-100/90";
-                else if (item.status === "แก้ไขเรียบร้อย") statusClass = "text-emerald-700 bg-emerald-100/90";
-                else if (item.status === "ไม่มี Defect") statusClass = "text-slate-600 bg-slate-100";
-                else if (item.status === "ยังไม่ตรวจ") statusClass = "text-indigo-600 bg-indigo-100/90";
-
-                let dateDisplay = "";
-                if (item.target) {
-                  const d = new Date(item.target);
-                  if (!isNaN(d.getTime())) {
-                    dateDisplay = d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
-                  }
-                }
-
-                rowsHTML += `
-                  <tr class="border-b border-slate-200 hover:bg-slate-50/50">
-                    <td class="py-1 px-3 pl-8 text-left border-r border-slate-200 text-slate-700 font-medium text-xs">
-                      ${escapeCommonDefectText(item.name)}
+                html += `
+                  <tr class="bg-slate-100 font-black text-slate-900 border-t border-b border-slate-300">
+                    <td class="py-1.5 px-3 pl-4 text-left border-r border-slate-300 font-black text-slate-900 text-xs">
+                      <span>${escapeCommonDefectText(groupName)}</span>
+                      <span class="text-[11px] text-slate-500 font-normal ml-1.5">(รวม)</span>
                     </td>
-                    <td class="py-1 px-2 text-center border-r border-slate-200 font-bold text-slate-800 text-xs">${item.tot > 0 ? item.tot : ""}</td>
-                    <td class="py-1 px-2 text-center border-r border-slate-200 font-bold text-emerald-600 text-xs">${item.fix > 0 ? item.fix : ""}</td>
-                    <td class="py-1 px-2 text-center border-r border-slate-200 text-rose-600 font-bold text-xs">${rem}</td>
-                    <td class="py-1 px-2 text-center border-r border-slate-200 text-slate-500 font-medium text-xs">${dateDisplay}</td>
-                    <td class="py-1 px-2 text-center border-slate-200">
-                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold leading-none ${statusClass}">
-                        ● ${escapeCommonDefectText(item.status)}
-                      </span>
-                    </td>
+                    <td class="py-1.5 px-2 text-center font-black text-slate-900 border-r border-slate-300 text-xs">${groupTot}</td>
+                    <td class="py-1.5 px-2 text-center font-black text-emerald-600 border-r border-slate-300 text-xs">${groupFix > 0 ? groupFix : ""}</td>
+                    <td class="py-1.5 px-2 text-center font-black text-rose-600 border-r border-slate-300 text-xs">${groupRem}</td>
+                    <td class="py-1.5 px-2 text-center border-r border-slate-300"></td>
+                    <td class="py-1.5 px-2 text-center border-slate-300"></td>
                   </tr>
                 `;
-              });
-            });
 
-            let tfootHTML = "";
-            if (includeTotal) {
-              const allKeys = Object.keys(groups);
-              const labelNote = selectedGroups.length >= 7 ? 'รวมทั้งหมด' : 'รวมหัวข้อที่เลือก';
-              tfootHTML = `
-                <tfoot class="border-t-2 border-slate-400">
-                  <tr class="bg-slate-200 text-slate-900 font-black text-xs">
-                    <td class="py-2 px-3 pl-4 text-left border-r border-slate-300 font-black text-slate-900 bg-slate-200">
-                      Grand Total (${labelNote}):
-                    </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-slate-900 bg-slate-200">${grandTot}</td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-emerald-700 bg-slate-200">${grandFix}</td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-rose-700 bg-slate-200">${grandLeft}</td>
-                    <td colspan="2" class="py-2 px-2 text-center border-slate-300 font-black text-xs bg-slate-200">
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-black bg-indigo-100 text-indigo-800 border border-indigo-300 shadow-sm leading-none">สำเร็จ ${grandPercentStr}%</span>
-                    </td>
-                  </tr>
-                </tfoot>
-              `;
+                items.forEach(item => {
+                  const rem = (Number(item.tot) || 0) - (Number(item.fix) || 0);
+                  let statusClass = "text-slate-600 bg-slate-100";
+                  if (item.status === "รอดำเนินการ") statusClass = "text-rose-700 bg-rose-100/90";
+                  else if (item.status === "รอนัดตรวจ") statusClass = "text-amber-700 bg-amber-100/90";
+                  else if (item.status === "แก้ไขเรียบร้อย") statusClass = "text-emerald-700 bg-emerald-100/90";
+                  else if (item.status === "ไม่มี Defect") statusClass = "text-slate-600 bg-slate-100";
+                  else if (item.status === "ยังไม่ตรวจ") statusClass = "text-indigo-600 bg-indigo-100/90";
+                  else if (item.status === "รอคะแนน") statusClass = "text-purple-700 bg-purple-100/90";
+
+                  let dateDisplay = "";
+                  if (item.target) {
+                    const d = new Date(item.target);
+                    if (!isNaN(d.getTime())) {
+                      dateDisplay = d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
+                    }
+                  }
+
+                  html += `
+                    <tr class="border-b border-slate-200 hover:bg-slate-50/50">
+                      <td class="py-1 px-3 pl-7 text-left border-r border-slate-200 text-slate-700 font-medium text-xs">
+                        ${escapeCommonDefectText(item.name)}
+                      </td>
+                      <td class="py-1 px-2 text-center border-r border-slate-200 font-bold text-slate-800 text-xs">${item.tot > 0 ? item.tot : ""}</td>
+                      <td class="py-1 px-2 text-center border-r border-slate-200 font-bold text-emerald-600 text-xs">${item.fix > 0 ? item.fix : ""}</td>
+                      <td class="py-1 px-2 text-center border-r border-slate-200 text-rose-600 font-bold text-xs">${rem}</td>
+                      <td class="py-1 px-2 text-center border-r border-slate-200 text-slate-500 font-medium text-xs whitespace-nowrap">${dateDisplay}</td>
+                      <td class="py-1 px-2 text-center border-slate-200 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold leading-none ${statusClass}">
+                          ● ${escapeCommonDefectText(item.status)}
+                        </span>
+                      </td>
+                    </tr>
+                  `;
+                });
+              });
+              return html;
             }
 
-            tableContainer.innerHTML = `
-              <div class="overflow-x-auto">
-                <table class="w-full border-collapse text-left text-xs border border-slate-300">
+            if (twoColumns && groupKeys.length > 1) {
+              let totalRowCount = 0;
+              groupKeys.forEach(k => { totalRowCount += (groups[k].length + 1); });
+
+              let leftGroups = [];
+              let rightGroups = [];
+              let curLeft = 0;
+              const halfCount = totalRowCount / 2;
+
+              groupKeys.forEach(k => {
+                const gRows = groups[k].length + 1;
+                if (leftGroups.length === 0 || (curLeft + gRows <= halfCount + 2 && leftGroups.length < groupKeys.length - 1)) {
+                  leftGroups.push(k);
+                  curLeft += gRows;
+                } else {
+                  rightGroups.push(k);
+                }
+              });
+              if (rightGroups.length === 0 && leftGroups.length > 1) {
+                rightGroups.push(leftGroups.pop());
+              }
+
+              let leftTot = 0;
+              let leftFix = 0;
+              leftGroups.forEach(g => {
+                groups[g].forEach(it => {
+                  leftTot += Number(it.tot) || 0;
+                  leftFix += Number(it.fix) || 0;
+                });
+              });
+              const leftRem = leftTot - leftFix;
+
+              const gridWrapper = document.createElement("div");
+              gridWrapper.className = "grid grid-cols-2 gap-4 w-full items-start";
+              gridWrapper.style.cssText = "display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; overflow: visible; align-items: start;";
+
+              const leftCard = document.createElement("div");
+              leftCard.className = "bg-white border border-slate-300 rounded-xl shadow-xs overflow-hidden";
+              leftCard.style.cssText = "overflow: visible; width: 100%;";
+              leftCard.innerHTML = `
+                <table class="w-full border-collapse text-left text-xs border border-slate-300" style="overflow: visible;">
                   <thead>
-                    <tr class="${headerColor} font-black text-center">
-                      <th class="py-2 px-3 pl-4 text-left border-r border-slate-300/80 min-w-[240px] ${stickyHeaderColor} font-black">Category / Location</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-24 ${stickyHeaderColor} font-black">จำนวน defect</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-24 ${stickyHeaderColor} font-black">แก้ไขแล้ว</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-20 ${stickyHeaderColor} font-black">คงเหลือ</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-28 ${stickyHeaderColor} font-black">Target Date</th>
-                      <th class="py-2 px-2 text-center border-slate-300/80 w-32 ${stickyHeaderColor} font-black">Status</th>
+                    <tr class="${headerColor} font-black text-center text-xs">
+                      <th class="py-2 px-3 pl-4 text-left border-r border-slate-300/80 min-w-[200px] ${stickyHeaderColor} font-black">Category / Location</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-22 ${stickyHeaderColor} font-black">จำนวน defect</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-20 ${stickyHeaderColor} font-black">แก้ไขแล้ว</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-18 ${stickyHeaderColor} font-black">คงเหลือ</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-26 ${stickyHeaderColor} font-black">Target Date</th>
+                      <th class="py-2 px-1.5 text-center border-slate-300/80 w-28 ${stickyHeaderColor} font-black">Status</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    ${rowsHTML}
+                  <tbody class="divide-y divide-slate-200">
+                    ${buildGroupRows(leftGroups)}
                   </tbody>
-                  ${tfootHTML}
+                  <tfoot class="border-t border-slate-300">
+                    <tr class="bg-slate-100 text-slate-700 font-bold text-xs">
+                      <td class="py-1.5 px-3 pl-4 text-left border-r border-slate-300 font-bold text-slate-600">
+                        รวมส่วนที่ 1 (${leftGroups.length} หมวด):
+                      </td>
+                      <td class="py-1.5 px-1.5 text-center border-r border-slate-300 font-bold text-slate-800 text-xs">${leftTot}</td>
+                      <td class="py-1.5 px-1.5 text-center border-r border-slate-300 font-bold text-emerald-600 text-xs">${leftFix}</td>
+                      <td class="py-1.5 px-1.5 text-center border-r border-slate-300 font-bold text-rose-600 text-xs">${leftRem}</td>
+                      <td colspan="2" class="py-1.5 px-2 text-center border-slate-300 text-slate-500 font-semibold text-[11px]">
+                        (ต่อคอลัมน์ขวา ➡)
+                      </td>
+                    </tr>
+                  </tfoot>
                 </table>
-              </div>
-            `;
+              `;
 
-            stage.appendChild(tableContainer);
+              const rightCard = document.createElement("div");
+              rightCard.className = "bg-white border border-slate-300 rounded-xl shadow-xs overflow-hidden";
+              rightCard.style.cssText = "overflow: visible; width: 100%;";
+              rightCard.innerHTML = `
+                <table class="w-full border-collapse text-left text-xs border border-slate-300" style="overflow: visible;">
+                  <thead>
+                    <tr class="${headerColor} font-black text-center text-xs">
+                      <th class="py-2 px-3 pl-4 text-left border-r border-slate-300/80 min-w-[200px] ${stickyHeaderColor} font-black">Category / Location</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-22 ${stickyHeaderColor} font-black">จำนวน defect</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-20 ${stickyHeaderColor} font-black">แก้ไขแล้ว</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-18 ${stickyHeaderColor} font-black">คงเหลือ</th>
+                      <th class="py-2 px-1.5 text-center border-r border-slate-300/80 w-26 ${stickyHeaderColor} font-black">Target Date</th>
+                      <th class="py-2 px-1.5 text-center border-slate-300/80 w-28 ${stickyHeaderColor} font-black">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    ${buildGroupRows(rightGroups)}
+                  </tbody>
+                  ${includeTotal ? `
+                    <tfoot class="border-t-2 border-slate-400">
+                      <tr class="bg-slate-200 text-slate-900 font-black text-xs">
+                        <td class="py-2 px-3 pl-4 text-left border-r border-slate-300 font-black text-slate-900 bg-slate-200">
+                          Grand Total (${selectedGroups.length >= 7 ? 'รวมทั้งหมด' : 'รวมหัวข้อที่เลือก'}):
+                        </td>
+                        <td class="py-2 px-1.5 text-center border-r border-slate-300 font-black text-slate-900 bg-slate-200 text-xs">${grandTot}</td>
+                        <td class="py-2 px-1.5 text-center border-r border-slate-300 font-black text-emerald-700 bg-slate-200 text-xs">${grandFix}</td>
+                        <td class="py-2 px-1.5 text-center border-r border-slate-300 font-black text-rose-700 bg-slate-200 text-xs">${grandLeft}</td>
+                        <td colspan="2" class="py-2 px-2 text-center border-slate-300 font-black bg-slate-200">
+                          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-indigo-100 text-indigo-800 border border-indigo-200 shadow-xs">
+                            สำเร็จ ${grandPercentStr}%
+                          </span>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  ` : ''}
+                </table>
+              `;
+
+              gridWrapper.appendChild(leftCard);
+              gridWrapper.appendChild(rightCard);
+              stage.appendChild(gridWrapper);
+            } else {
+              const tableContainer = document.createElement("div");
+              tableContainer.className = "bg-white border border-slate-300 rounded-xl shadow-sm";
+              tableContainer.style.cssText = "overflow: visible; width: 100%;";
+
+              let tfootHTML = "";
+              if (includeTotal) {
+                const labelNote = selectedGroups.length >= 7 ? 'รวมทั้งหมด' : 'รวมหัวข้อที่เลือก';
+                tfootHTML = `
+                  <tfoot class="border-t-2 border-slate-400">
+                    <tr class="bg-slate-200 text-slate-900 font-black text-xs">
+                      <td class="py-2 px-3 pl-4 text-left border-r border-slate-300 font-black text-slate-900 bg-slate-200">
+                        Grand Total (${labelNote}):
+                      </td>
+                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-slate-900 bg-slate-200">${grandTot}</td>
+                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-emerald-700 bg-slate-200">${grandFix}</td>
+                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-rose-700 bg-slate-200">${grandLeft}</td>
+                      <td colspan="2" class="py-2 px-2 text-center border-slate-300 font-black text-xs bg-slate-200">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-black bg-indigo-100 text-indigo-800 border border-indigo-300 shadow-sm leading-none">สำเร็จ ${grandPercentStr}%</span>
+                      </td>
+                    </tr>
+                  </tfoot>
+                `;
+              }
+
+              tableContainer.innerHTML = `
+                <div style="overflow: visible; width: 100%;">
+                  <table class="w-full border-collapse text-left text-xs border border-slate-300" style="overflow: visible;">
+                    <thead>
+                      <tr class="${headerColor} font-black text-center">
+                        <th class="py-2 px-3 pl-4 text-left border-r border-slate-300/80 min-w-[240px] ${stickyHeaderColor} font-black">Category / Location</th>
+                        <th class="py-2 px-2 text-center border-r border-slate-300/80 w-24 ${stickyHeaderColor} font-black">จำนวน defect</th>
+                        <th class="py-2 px-2 text-center border-r border-slate-300/80 w-24 ${stickyHeaderColor} font-black">แก้ไขแล้ว</th>
+                        <th class="py-2 px-2 text-center border-r border-slate-300/80 w-20 ${stickyHeaderColor} font-black">คงเหลือ</th>
+                        <th class="py-2 px-2 text-center border-r border-slate-300/80 w-28 ${stickyHeaderColor} font-black">Target Date</th>
+                        <th class="py-2 px-2 text-center border-slate-300/80 w-32 ${stickyHeaderColor} font-black">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      ${buildGroupRows(groupKeys)}
+                    </tbody>
+                    ${tfootHTML}
+                  </table>
+                </div>
+              `;
+
+              stage.appendChild(tableContainer);
+            }
           }
 
           wrapper.appendChild(stage);
           document.body.appendChild(wrapper);
 
           setTimeout(() => {
-            const finalWidth = 1280;
+            const finalWidth = targetWidth;
             const measuredHeight = Math.max(
               stage.scrollHeight || 0,
               stage.offsetHeight || 0,
@@ -15116,7 +15961,7 @@
               if (wrapper && wrapper.parentNode) wrapper.remove();
             };
 
-            const filename = `PYNN NGAMWONGWAN 54 DEFECT สรุปหัวข้อ ${getThaiDateForFilename()}.jpg`;
+            const filename = `PYNN NGAMWONGWAN 54 DEFECT สรุปหัวข้อ ${twoColumns ? 'PowerPoint แนวนอน ' : ''}${getThaiDateForFilename()}.jpg`;
 
             const captureOptions = {
               quality: 0.95,
@@ -15125,6 +15970,7 @@
               width: finalWidth,
               height: finalHeight,
               cacheBust: true,
+              skipFonts: true,
               style: {
                 position: "static",
                 left: "0",
@@ -15132,13 +15978,15 @@
                 zIndex: "auto",
                 margin: "0",
                 transform: "none",
+                overflow: "visible",
               },
             };
 
             const runHtml2CanvasFallback = () => {
               html2canvas(stage, {
-                scale: Math.min(captureScale, 1.5),
+                scale: Math.min(captureScale, isIOS ? 1.25 : 1.5),
                 useCORS: true,
+                allowTaint: false,
                 backgroundColor: "#ffffff",
                 width: finalWidth,
                 height: finalHeight,
@@ -15153,6 +16001,7 @@
                   if (clonedWrapper) {
                     clonedWrapper.style.position = "static";
                     clonedWrapper.style.zIndex = "auto";
+                    clonedWrapper.style.overflow = "visible";
                   }
                   const clonedStage = clonedDoc.getElementById("common-defect-custom-capture-stage");
                   if (clonedStage) {
@@ -15162,7 +16011,17 @@
                     clonedStage.style.zIndex = "auto";
                     clonedStage.style.margin = "0";
                     clonedStage.style.transform = "none";
+                    clonedStage.style.overflow = "visible";
                   }
+                  clonedDoc.querySelectorAll("*").forEach((el) => {
+                    if (el.style) {
+                      el.style.scrollbarWidth = "none";
+                      if (el.classList && el.classList.contains("overflow-x-auto")) {
+                        el.style.overflow = "visible";
+                        el.style.overflowX = "visible";
+                      }
+                    }
+                  });
                 }
               })
               .then(canvas => {
@@ -15176,8 +16035,11 @@
               });
             };
 
-            if (window.htmlToImage && typeof htmlToImage.toJpeg === "function") {
-              htmlToImage.toJpeg(stage, captureOptions)
+            if (!isIOS && window.htmlToImage && typeof htmlToImage.toJpeg === "function") {
+              Promise.race([
+                htmlToImage.toJpeg(stage, captureOptions),
+                rejectAfter(4000, "htmlToImage timed out"),
+              ])
               .then(dataUrl => {
                 showImagePreview(dataUrl, filename);
                 cleanup();
@@ -15230,48 +16092,83 @@
             mainAppWidth: mainAppContainer.style.width,
             execWidth: execDashboard ? execDashboard.style.width : "",
             execMaxWidth: execDashboard ? execDashboard.style.maxWidth : "",
+            execMinWidth: execDashboard ? execDashboard.style.minWidth : "",
           };
+
+          if (showExecutiveSummary && (currentView === "residential" || currentView === "schedule")) {
+            renderExecutiveSummaryDashboard();
+          }
 
           captureArea.style.width = fullWidth + "px";
           document.body.style.width = fullWidth + "px";
           document.documentElement.style.width = fullWidth + "px";
           mainAppContainer.style.width = fullWidth + "px";
-          if (execDashboard && currentView === "schedule") {
+          if (execDashboard && !execDashboard.classList.contains("hidden")) {
             execDashboard.style.width = fullWidth + "px";
             execDashboard.style.maxWidth = fullWidth + "px";
+            execDashboard.style.minWidth = fullWidth + "px";
           }
 
           setTimeout(() => {
             const finalWidth = captureArea.scrollWidth;
             const finalHeight = captureArea.scrollHeight;
-            const captureScale = 2; // For PDF, we want high quality
 
-            htmlToImage
-              .toJpeg(captureArea, {
-                quality: 0.95,
+            const isIOS = isAppleMobileDevice();
+            const captureScale = isIOS ? 1.2 : 1.8;
+
+            const generatePdfFromDataUrl = (dataUrl) => {
+              const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+              if (!jsPDF) {
+                throw new Error("jsPDF library not loaded");
+              }
+              const isLandscape = finalWidth > finalHeight;
+              const pdf = new jsPDF(isLandscape ? "l" : "p", "mm", [finalWidth * 0.264583, finalHeight * 0.264583]);
+              pdf.addImage(dataUrl, "JPEG", 0, 0, finalWidth * 0.264583, finalHeight * 0.264583);
+              const filename = `${getFileExportName()}.pdf`;
+              pdf.save(filename);
+            };
+
+            const runPdfHtml2CanvasFallback = () => {
+              return html2canvas(captureArea, {
+                scale: Math.min(captureScale, 1.5),
+                useCORS: true,
+                allowTaint: false,
                 backgroundColor: "#ffffff",
-                pixelRatio: captureScale,
                 width: finalWidth,
                 height: finalHeight,
-                style: {
-                  transformOrigin: "top left",
-                },
-              })
-              .then((dataUrl) => {
-                const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
-                if (!jsPDF) {
-                    throw new Error("jsPDF library not loaded");
-                }
-                // Calculate orientation
-                const isLandscape = finalWidth > finalHeight;
-                
-                const pdf = new jsPDF(isLandscape ? "l" : "p", "mm", [finalWidth * 0.264583, finalHeight * 0.264583]);
-                
-                pdf.addImage(dataUrl, "JPEG", 0, 0, finalWidth * 0.264583, finalHeight * 0.264583);
-                
-                const filename = `${getFileExportName()}.pdf`;
-                pdf.save(filename);
-              })
+                scrollX: 0,
+                scrollY: 0,
+              }).then((canvas) => {
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+                generatePdfFromDataUrl(dataUrl);
+              });
+            };
+
+            const pdfPromise = (!isIOS && window.htmlToImage && typeof htmlToImage.toJpeg === "function")
+              ? Promise.race([
+                  htmlToImage.toJpeg(captureArea, {
+                    quality: 0.95,
+                    backgroundColor: "#ffffff",
+                    pixelRatio: captureScale,
+                    width: finalWidth,
+                    height: finalHeight,
+                    skipFonts: true,
+                    style: {
+                      transformOrigin: "top left",
+                    },
+                  }),
+                  rejectAfter(5000, "htmlToImage PDF capture timed out"),
+                ])
+                  .then((dataUrl) => {
+                    generatePdfFromDataUrl(dataUrl);
+                  })
+                  .catch((err) => {
+                    console.warn("htmlToImage failed for PDF, falling back to html2canvas:", err);
+                    return runPdfHtml2CanvasFallback();
+                  })
+              : runPdfHtml2CanvasFallback();
+
+            pdfPromise
               .catch((err) => {
                 console.error("PDF generation failed:", err);
                 alert("ไม่สามารถสร้าง PDF ได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง");
@@ -15284,9 +16181,10 @@
                 document.body.style.width = originalStyles.bodyWidth;
                 document.documentElement.style.width = originalStyles.htmlWidth;
                 mainAppContainer.style.width = originalStyles.mainAppWidth;
-                if (execDashboard && currentView === "schedule") {
+                if (execDashboard) {
                   execDashboard.style.width = originalStyles.execWidth;
                   execDashboard.style.maxWidth = originalStyles.execMaxWidth;
+                  execDashboard.style.minWidth = originalStyles.execMinWidth;
                 }
 
                 window.scrollTo(scrollX, scrollY);
