@@ -1,5 +1,8 @@
 {
   "name": "PYNN NGAMWONGWAN 54",
-  "description": "PYNN NGAMWONGWAN 54",
-  "requestFramePermissions": []
+  "description": "PYNN NGAMWONGWAN 54 Defect Tracking & Quality Control Dashboard",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

@@ -947,7 +947,7 @@ th.qc-current-week {
 .qc-summary-table {
   table-layout: fixed;
   overflow: hidden;
-  border: 1px solid #64748b;
+  border: 1px solid #cbd5e1;
   color: #0f172a;
   background: #ffffff;
 }
@@ -957,11 +957,11 @@ th.qc-current-week {
 }
 
 .qc-summary-table .qc-col-type {
-  width: 10%;
+  width: 9.6%;
 }
 
 .qc-summary-table .qc-col-room {
-  width: 5.35%;
+  width: 5.38%;
 }
 
 .qc-summary-table .qc-col-separator {
@@ -972,188 +972,237 @@ th.qc-current-week {
   width: 6.7%;
 }
 
-.qc-summary-table th,
 .qc-summary-table td {
-  border-color: #a8b3c3 !important;
+  border-color: #cbd5e1 !important;
 }
 
+/* Match theme header styles (dark: #1e3a8a blue, light: slate-200 gray) */
 .qc-summary-table .qc-summary-head tr:first-child th {
-  height: 2.65rem;
-  background: #253047 !important;
-  color: #ffffff !important;
-  font-size: 0.72rem;
+  height: 2.7rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
 }
 
 .qc-summary-table .qc-summary-head tr:nth-child(2) th {
-  height: 2.25rem;
-  background: #edf2f5 !important;
-  color: #253047 !important;
-  font-size: 0.68rem;
+  height: 2.2rem;
+  font-size: 0.72rem;
   font-weight: 700 !important;
 }
 
 .qc-summary-table .qc-summary-body tr {
-  height: 2.7rem;
+  height: 2.5rem;
 }
 
 .qc-summary-table .qc-floor-cell {
-  background: #f5f7f4 !important;
-  box-shadow: inset -3px 0 0 #68aeda;
+  background: #fafbfc !important;
+  color: #0f172a !important;
   font-family: "Montserrat", sans-serif;
+  border-right: 2px solid #cbd5e1 !important;
+  font-weight: 800;
+  font-size: 1.05rem;
 }
 
 .qc-summary-table .qc-type-cell {
-  position: relative;
-  padding: 0.35rem 0.6rem !important;
-  text-align: left;
+  padding: 0.25rem 0.4rem !important;
+  text-align: center;
+  background: #ffffff !important;
 }
 
-.qc-summary-table .qc-type-wet {
-  background: #f2f6f8 !important;
-  color: #326887 !important;
-  box-shadow: inset 4px 0 0 #68aeda;
-}
-
-.qc-summary-table .qc-type-end {
-  background: #f2f7f4 !important;
-  color: #247b66 !important;
-  box-shadow: inset 4px 0 0 #62b39d;
-}
-
-.qc-type-label {
-  display: grid;
-  gap: 0.08rem;
-  align-content: center;
-  min-height: 1.85rem;
-  padding-left: 0.15rem;
-  line-height: 1.05;
-  white-space: nowrap;
-}
-
-.qc-type-label strong {
-  color: #253047;
-  font-size: 0.7rem;
-  font-weight: 800;
-}
-
-.qc-type-label small {
-  color: currentColor;
+/* Clean typography for Stage column (no border frame or pill container) */
+.qc-summary-table .qc-type-badge {
+  display: block;
+  text-align: center;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   font-family: "Montserrat", sans-serif;
-  font-size: 0.47rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.qc-summary-table .qc-badge-wet {
+  color: #1e293b !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.qc-summary-table .qc-badge-end {
+  color: #166534 !important;
+  background: transparent !important;
+  border: none !important;
 }
 
 .qc-summary-table .qc-score-cell {
   position: relative;
-  padding: 0.28rem 0.22rem !important;
+  padding: 0.22rem 0.18rem !important;
   text-align: center;
-  transition: filter 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .qc-summary-table .qc-score-cell:hover {
-  filter: brightness(0.96);
+  filter: brightness(0.97);
 }
 
 .qc-summary-table .qc-cell-empty {
-  background: #f8fafc !important;
+  background: #ffffff !important;
   color: #cbd5e1 !important;
 }
 
+.qc-summary-table .qc-empty-mark {
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
 .qc-summary-table .qc-cell-pending {
-  background: #fef3c7 !important;
+  background: #fffbeb !important;
   color: #92400e !important;
+  border-color: #fef3c7 !important;
+}
+
+.qc-summary-table .qc-pending-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #92400e;
 }
 
 .qc-summary-table .qc-cell-excellent {
-  background: #238f82 !important;
-  color: #ffffff !important;
+  background: #ecfdf5 !important;
+  color: #166534 !important;
+  border-color: #bbf7d0 !important;
 }
 
 .qc-summary-table .qc-cell-pass {
-  background: #58b6aa !important;
-  color: #ffffff !important;
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+  border-color: #cbeedd !important;
 }
 
 .qc-summary-table .qc-cell-fail {
-  background: #d76b72 !important;
-  color: #ffffff !important;
+  background: #fef4f4 !important;
+  color: #991b1b !important;
+  border-color: #fecdd3 !important;
+}
+
+.qc-summary-table .qc-cell-pass .qc-score-value {
+  color: #15803d !important;
+}
+
+.qc-summary-table .qc-cell-pass .qc-stage-label {
+  color: #16a34a !important;
+}
+
+.qc-summary-table .qc-cell-excellent .qc-score-value {
+  color: #166534 !important;
+}
+
+.qc-summary-table .qc-cell-excellent .qc-stage-label {
+  color: #15803d !important;
+}
+
+.qc-summary-table .qc-cell-fail .qc-score-value {
+  color: #991b1b !important;
+}
+
+.qc-summary-table .qc-cell-fail .qc-stage-label {
+  color: #dc2626 !important;
 }
 
 .qc-stage-label {
-  display: inline-block;
-  margin-right: 0.18rem;
-  font-size: 0.5rem;
+  display: block;
+  font-size: 0.52rem;
   font-weight: 800;
-  opacity: 0.88;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.08rem;
 }
 
 .qc-score-value {
   font-family: "Montserrat", sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.81rem;
   font-weight: 800;
-}
-
-.qc-pending-label {
-  font-size: 0.6rem;
-  font-weight: 800;
+  line-height: 1.1;
 }
 
 .qc-defect-badge {
   position: absolute;
-  top: 0.15rem;
-  right: 0.2rem;
+  top: 0.12rem;
+  right: 0.15rem;
   display: inline-grid;
-  width: 0.82rem;
-  height: 0.82rem;
+  width: 0.85rem;
+  height: 0.85rem;
   place-items: center;
   border-radius: 50%;
-  background: #facc15;
-  color: #7f1d1d;
+  background: #e11d48;
+  color: #ffffff;
   font-size: 0.55rem;
   font-weight: 900;
+  border: 1px solid #ffffff;
 }
 
 .qc-summary-table .qc-row-wet td {
-  border-bottom-color: #cbd5df !important;
+  border-bottom-color: #e2e8f0 !important;
 }
 
 .qc-summary-table .qc-row-end td {
   border-bottom-width: 2px !important;
-  border-bottom-color: #64748b !important;
+  border-bottom-color: #cbd5e1 !important;
 }
 
 .qc-summary-table .qc-summary-foot td {
-  height: 2.45rem;
-  background: #edf2f5 !important;
-  color: #1e293b !important;
+  height: 2.5rem;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Subtle result cell styling */
+.qc-summary-table .qc-summary-body .qc-res-submitted {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  text-align: center;
+}
+
+.qc-summary-table .qc-summary-body .qc-res-pass {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  text-align: center;
+}
+
+.qc-summary-table .qc-summary-body .qc-res-fail {
+  background: #fef4f4 !important;
+  color: #991b1b !important;
+  font-family: "Montserrat", sans-serif;
   font-weight: 800;
+  text-align: center;
 }
 
-.qc-summary-table .qc-summary-body td:nth-last-child(3) {
-  background: #f5f7f4 !important;
-  color: #334155 !important;
+.qc-summary-table .qc-summary-body .qc-res-zero {
+  background: #ffffff !important;
+  color: #94a3b8 !important;
   font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  text-align: center;
 }
 
-.qc-summary-table .qc-summary-body td:nth-last-child(2) {
-  background: #edf8f4 !important;
-  color: #247b66 !important;
-  font-family: "Montserrat", sans-serif;
-}
-
-.qc-summary-table .qc-summary-body td:last-child {
-  background: #fff1f2 !important;
-  color: #be4454 !important;
-  font-family: "Montserrat", sans-serif;
+.qc-summary-table .separator-cell {
+  background: #f8fafc !important;
+  border-left: 1px solid #cbd5e1 !important;
+  border-right: 1px solid #cbd5e1 !important;
 }
 
 .qc-summary-table .qc-summary-foot .qc-total-summary {
   color: #334155 !important;
-  font-size: 0.65rem;
-  letter-spacing: 0.01em;
+  font-size: 0.72rem;
   text-align: center;
 }
 
