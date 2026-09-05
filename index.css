@@ -2941,7 +2941,7 @@ body:not(.is-line-capturing) #main-header[data-header-style="light"] {
 
 .controls-toolbar {
   display: grid !important;
-  grid-template-columns: minmax(15rem, 0.75fr) minmax(33rem, 2fr) minmax(20rem, 1fr);
+  grid-template-columns: minmax(15rem, 0.8fr) minmax(33rem, 2fr) minmax(18rem, 1fr);
   gap: 0.55rem !important;
 }
 
@@ -2949,81 +2949,406 @@ body:not(.is-line-capturing) #main-header[data-header-style="light"] {
   width: 100%;
   min-height: 4.35rem;
   align-content: end;
-  padding: 1.45rem 0.35rem 0.35rem !important;
-  border: 1px solid var(--play-line) !important;
-  border-radius: 0.75rem !important;
-  background: #f5f7f4 !important;
+  padding: 1.45rem 0.4rem 0.4rem !important;
+  border: 1.5px solid var(--play-line, #d8ded9) !important;
+  border-radius: 0.85rem !important;
+  background: #f4f6f4 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  position: relative;
 }
 
 .control-group-capture {
-  background: #edf4f7 !important;
+  background: #f4f6f4 !important;
 }
 
 .control-group::before {
-  top: 0.34rem;
-  left: 0.55rem;
-  color: var(--play-muted);
+  top: 0.35rem;
+  left: 0.65rem;
+  color: #475569 !important;
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
 }
 
+/* ============================================================ */
+/* Nintendo Ordered Button Design System                        */
+/* ============================================================ */
+
+/* Base Nintendo Action Button - Uniform, Tactile Squircle Card */
 .control-group .action-btn {
-  min-height: 2.45rem !important;
-  border: 1px solid var(--play-line) !important;
-  border-radius: 0.55rem !important;
-  background: var(--play-paper) !important;
-  color: var(--play-ink) !important;
-  box-shadow: 0 2px 0 #cdd3cf !important;
+  min-height: 2.55rem !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 0.65rem !important;
+  background: #ffffff !important;
+  color: var(--play-ink, #253047) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
   transform: none !important;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+  cursor: pointer;
 }
 
 .control-group .action-btn:hover {
-  border-color: var(--play-ink) !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-2px) !important;
+  border-color: #253047 !important;
+  box-shadow: 0 4.5px 0 #94a3b8 !important;
 }
 
+.control-group .action-btn:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #94a3b8 !important;
+}
+
+/* --- Group 1: การแสดงผล (Display Options) --- */
+#overall-progress-toggle-btn,
+#toggleExecutiveSummaryBtn {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
+}
+
+#overall-progress-toggle-btn svg,
+#overall-progress-toggle-btn i,
+#toggleExecutiveSummaryBtn svg,
+#toggleExecutiveSummaryBtn i {
+  color: #6366f1 !important;
+  transition: transform 0.15s ease;
+}
+
+#overall-progress-toggle-btn:hover,
+#toggleExecutiveSummaryBtn:hover {
+  background: #eef2ff !important;
+  border-color: #818cf8 !important;
+  color: #3730a3 !important;
+  box-shadow: 0 4.5px 0 #c7d2fe !important;
+}
+
+#overall-progress-toggle-btn:hover svg,
+#toggleExecutiveSummaryBtn:hover svg {
+  transform: scale(1.12);
+}
+
+/* --- Group 2: บันทึกและรายงาน (Capture & Report Suite) --- */
+
+/* HERO 1: แคปและบันทึก (Primary Mario Coral Red) */
 #captureNewBtn {
-  border-color: #b94f49 !important;
-  background: var(--play-coral) !important;
-  color: white !important;
-  box-shadow: 0 3px 0 #ae4945 !important;
+  border: 1.5px solid #b94f49 !important;
+  background: var(--play-coral, #e96861) !important;
+  color: #ffffff !important;
+  box-shadow: 0 3.5px 0 #ae4945 !important;
+  font-weight: 800 !important;
 }
 
+#captureNewBtn svg,
+#captureNewBtn i {
+  color: #ffffff !important;
+}
+
+#captureNewBtn:hover {
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  box-shadow: 0 5px 0 #9a3412 !important;
+  transform: translateY(-2px) !important;
+}
+
+#captureNewBtn:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #9a3412 !important;
+}
+
+/* HERO 2: ทำรายงาน (Secondary Hero - Nintendo Joy-Con Blue) */
+#openReportModalBtn {
+  border: 1.5px solid #0369a1 !important;
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3.5px 0 #075985 !important;
+  font-weight: 800 !important;
+}
+
+#openReportModalBtn svg,
+#openReportModalBtn i {
+  color: #ffffff !important;
+}
+
+#openReportModalBtn:hover {
+  background: #0369a1 !important;
+  border-color: #075985 !important;
+  box-shadow: 0 5px 0 #0c4a6e !important;
+  transform: translateY(-2px) !important;
+}
+
+#openReportModalBtn:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #0c4a6e !important;
+}
+
+/* Capture Companion: Ultra HD (Sparkle Sky Card) */
 #captureUltraBtn {
-  border-color: #4d91b7 !important;
-  background: var(--play-sky) !important;
-  color: #17394c !important;
-  box-shadow: 0 3px 0 #4d91b7 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
 }
 
+#captureUltraBtn svg,
+#captureUltraBtn i {
+  color: #0284c7 !important;
+  transition: transform 0.15s ease;
+}
+
+#captureUltraBtn:hover {
+  background: #f0f9ff !important;
+  border-color: #38bdf8 !important;
+  color: #0369a1 !important;
+  box-shadow: 0 4.5px 0 #bae6fd !important;
+}
+
+#captureUltraBtn:hover svg {
+  transform: scale(1.15) rotate(8deg);
+}
+
+/* Capture Companion: PowerPoint (Amber Presentation Card) */
 #capturePptBtn {
-  border-color: #bf9c40 !important;
-  background: #f8dc8d !important;
-  color: #5b4718 !important;
-  box-shadow: 0 3px 0 #bf9c40 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
 }
 
+#capturePptBtn svg,
+#capturePptBtn i {
+  color: #d97706 !important;
+  transition: transform 0.15s ease;
+}
+
+#capturePptBtn:hover {
+  background: #fefce8 !important;
+  border-color: #facc15 !important;
+  color: #854d0e !important;
+  box-shadow: 0 4.5px 0 #fde047 !important;
+}
+
+#capturePptBtn:hover svg {
+  transform: scale(1.12);
+}
+
+/* Document Companion: ส่งออก PDF (Rose File-Down Card) */
 #exportPdfBtn {
-  border-color: #9b4561 !important;
-  background: #d76b88 !important;
-  color: white !important;
-  box-shadow: 0 3px 0 #9b4561 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
 }
 
+#exportPdfBtn svg,
+#exportPdfBtn i {
+  color: #e11d48 !important;
+  transition: transform 0.15s ease;
+}
+
+#exportPdfBtn:hover {
+  background: #fff1f2 !important;
+  border-color: #fb7185 !important;
+  color: #9f1239 !important;
+  box-shadow: 0 4.5px 0 #fecdd3 !important;
+}
+
+#exportPdfBtn:hover svg {
+  transform: translateY(1px) scale(1.1);
+}
+
+/* Capture Companion: ดูแบบแคปเจอร์ (Slate Maximize Card) */
+#toggleCaptureModeBtn {
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
+}
+
+#toggleCaptureModeBtn svg,
+#toggleCaptureModeBtn i {
+  color: #475569 !important;
+  transition: transform 0.15s ease;
+}
+
+#toggleCaptureModeBtn:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #1e293b !important;
+  box-shadow: 0 4.5px 0 #cbd5e1 !important;
+}
+
+#toggleCaptureModeBtn:hover svg {
+  transform: scale(1.12);
+}
+
+/* Infographic Tool in Common Area View */
+#openCommonAreaReportModalBtn {
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
+}
+
+#openCommonAreaReportModalBtn svg,
+#openCommonAreaReportModalBtn i {
+  color: #d97706 !important;
+}
+
+#openCommonAreaReportModalBtn:hover {
+  background: #fefce8 !important;
+  border-color: #facc15 !important;
+  color: #854d0e !important;
+  box-shadow: 0 4.5px 0 #fde047 !important;
+}
+
+/* --- Group 3: ข้อมูล (Data Management Suite) --- */
+
+/* HERO 3: ส่งออก Excel (Nintendo Animal Crossing Mint Green) */
 #exportExcelBtn {
-  border-color: #3e8d79 !important;
-  background: var(--play-mint) !important;
-  color: #183f35 !important;
-  box-shadow: 0 3px 0 #3e8d79 !important;
+  border: 1.5px solid #059669 !important;
+  background: var(--play-mint, #10b981) !important;
+  color: #ffffff !important;
+  box-shadow: 0 3.5px 0 #047857 !important;
+  font-weight: 800 !important;
+}
+
+#exportExcelBtn svg,
+#exportExcelBtn i {
+  color: #ffffff !important;
+}
+
+#exportExcelBtn:hover {
+  background: #059669 !important;
+  border-color: #047857 !important;
+  box-shadow: 0 5px 0 #065f46 !important;
+  transform: translateY(-2px) !important;
+}
+
+#exportExcelBtn:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #065f46 !important;
+}
+
+/* Data Utilities: นำเข้า & ส่งออก JSON */
+label[for="import-file"],
+#exportDataBtn {
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
+}
+
+label[for="import-file"] svg,
+label[for="import-file"] i,
+#exportDataBtn svg,
+#exportDataBtn i {
+  color: #0d9488 !important;
+  transition: transform 0.15s ease;
+}
+
+label[for="import-file"]:hover,
+#exportDataBtn:hover {
+  background: #f0fdf4 !important;
+  border-color: #6ee7b7 !important;
+  color: #065f46 !important;
+  box-shadow: 0 4.5px 0 #a7f3d0 !important;
+}
+
+label[for="import-file"]:hover svg,
+#exportDataBtn:hover svg {
+  transform: scale(1.12);
+}
+
+/* Data Danger Tool: ล้างข้อมูล (Trash Clear) */
+#clearDataBtn {
+  border: 1.5px solid #fecdd3 !important;
+  background: #ffffff !important;
+  color: #e11d48 !important;
+  box-shadow: 0 3px 0 #fecdd3 !important;
+}
+
+#clearDataBtn svg,
+#clearDataBtn i {
+  color: #e11d48 !important;
+  transition: transform 0.15s ease;
+}
+
+#clearDataBtn:hover {
+  background: #ffe4e6 !important;
+  border-color: #f43f5e !important;
+  color: #be123c !important;
+  box-shadow: 0 4.5px 0 #fda4af !important;
+}
+
+#clearDataBtn:hover svg {
+  transform: scale(1.15) rotate(-8deg);
 }
 
 .controls-context-row {
-  gap: 0.6rem !important;
+  gap: 0.65rem !important;
   padding-top: 0.65rem !important;
-  border-color: var(--play-line) !important;
+  border-color: var(--play-line, #d8ded9) !important;
+}
+
+#table-scale-mode-toggle,
+#report-header-style-toggle,
+#summary-report-mode-toggle,
+#qc-handover-capture-scope-toggle,
+#summary-report-floor-selection {
+  border: 1.5px solid var(--play-line, #d8ded9) !important;
+  border-radius: 0.75rem !important;
+  background: #f4f6f4 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+#table-scale-mode-toggle .view-toggle-btn.active,
+#report-header-style-toggle .view-toggle-btn.active,
+#summary-report-mode-toggle .view-toggle-btn.active,
+.qc-capture-scope-btn.active {
+  border: 1.5px solid #253047 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 2px 0 #253047 !important;
+  font-weight: 800 !important;
+}
+
+#table-scale-mode-toggle .view-toggle-btn.active svg {
+  color: var(--play-coral, #e96861) !important;
+}
+
+#toggleQCHandoverSettingsBtn {
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #253047 !important;
+  box-shadow: 0 3px 0 #cbd5e1 !important;
+  font-weight: 700 !important;
+}
+
+#toggleQCHandoverSettingsBtn:hover {
+  background: #f8fafc !important;
+  border-color: #253047 !important;
+  box-shadow: 0 4.5px 0 #94a3b8 !important;
+  transform: translateY(-2px) !important;
 }
 
 #task-search-container input {
-  border-radius: 0.6rem !important;
-  background: #f5f7f4 !important;
+  border: 1.5px solid var(--play-line, #d8ded9) !important;
+  border-radius: 0.75rem !important;
+  background: #f4f6f4 !important;
+  box-shadow: inset 0 1px 2px rgba(37, 48, 71, 0.04) !important;
+  color: #253047 !important;
+  font-weight: 600 !important;
+  transition: all 0.15s ease !important;
+}
+
+#task-search-container input:focus {
+  background: #ffffff !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), 0 2px 4px rgba(37, 48, 71, 0.05) !important;
 }
 
 .controls-categories {
@@ -3145,27 +3470,8 @@ body:not(.is-line-capturing) #main-header[data-header-style="light"] {
 }
 
 /* ============================================================ */
-/* Nintendo-inspired interface system — Tools, Modals & Report Center */
+/* Nintendo-inspired interface system — Modals & Report Center */
 /* ============================================================ */
-
-#openReportModalBtn {
-  border-color: #4d91b7 !important;
-  background: var(--play-sky, #68aeda) !important;
-  color: #17394c !important;
-  box-shadow: 0 3px 0 #4d91b7 !important;
-}
-
-#openReportModalBtn:hover {
-  border-color: var(--play-ink, #253047) !important;
-  transform: translateY(-1px) !important;
-}
-
-#openCommonAreaReportModalBtn {
-  border-color: #bf9c40 !important;
-  background: var(--play-butter, #efc96a) !important;
-  color: #5b4718 !important;
-  box-shadow: 0 3px 0 #bf9c40 !important;
-}
 
 /* Base Nintendo Modal Styling */
 body:not(.is-line-capturing) .modal .modal-container,
