@@ -1124,10 +1124,122 @@
         height: 0 !important;
         background: transparent !important;
       }
+
+      /* Professional A4 Print Styling for Document Reports */
+      @media print {
+        html, body {
+          background: #ffffff !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        body > *:not(#reportModal) {
+          display: none !important;
+        }
+        #reportModal {
+          position: static !important;
+          display: block !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          width: 100% !important;
+          height: auto !important;
+          background: transparent !important;
+          z-index: 999999 !important;
+          overflow: visible !important;
+        }
+        #reportModal .modal-container {
+          box-shadow: none !important;
+          border: none !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          height: auto !important;
+          overflow: visible !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+        }
+        #report-modal-header,
+        #report-controls-panel,
+        #report-preview-toolbar,
+        .report-no-print {
+          display: none !important;
+        }
+        #report-content-area {
+          display: block !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: visible !important;
+          background: transparent !important;
+        }
+        #report-preview-pane {
+          display: block !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: visible !important;
+          background: transparent !important;
+        }
+        #report-document-sheet {
+          box-shadow: none !important;
+          border: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          gap: 0 !important;
+        }
+        .a4-sheet {
+          box-shadow: none !important;
+          border: none !important;
+          margin: 0 !important;
+          padding: 10mm 10mm !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-height: 275mm !important;
+          page-break-after: always !important;
+          break-after: page !important;
+        }
+        .a4-sheet:last-child {
+          page-break-after: avoid !important;
+          break-after: avoid !important;
+        }
+        .a4-page-break {
+          page-break-before: always !important;
+          break-before: page !important;
+        }
+        table {
+          page-break-inside: auto !important;
+        }
+        tr {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+        @page {
+          size: A4 portrait;
+          margin: 8mm 8mm;
+        }
+      }
+
+      /* Screen A4 Simulation Styles */
+      .a4-sheet {
+        width: 100%;
+        max-width: 210mm;
+        min-height: 297mm;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        color: #0f172a;
+        padding: 10mm 12mm;
+        box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
+        border: 1px solid #cbd5e1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+      }
     </style>
     <link rel="stylesheet" href="/index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body class="p-0 md:p-4 bg-slate-50 relative">
     <!-- Splash Screen -->
@@ -1971,67 +2083,80 @@
         </div>
       </div>
 
-      <!-- Report Generator & AI Modal -->
+      <!-- Report Generator & Official Document Modal -->
       <div
         id="reportModal"
-        class="modal fixed inset-0 w-full h-full items-center justify-center z-50 p-4 sm:p-6"
+        class="modal fixed inset-0 w-full h-full items-center justify-center z-50 p-2 sm:p-4 lg:p-6"
         role="dialog"
         aria-modal="true"
         aria-labelledby="report-modal-title"
       >
         <div
-          class="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden border border-slate-200"
+          class="modal-container bg-white rounded-2xl shadow-2xl w-full max-w-[1550px] h-[96vh] flex flex-col overflow-hidden border border-slate-200"
         >
+          <!-- Document Modal Header -->
           <div
-            class="flex justify-between items-center p-5 border-b border-slate-200 bg-slate-50/50"
+            id="report-modal-header"
+            class="flex flex-wrap justify-between items-center px-4 md:px-6 py-3.5 border-b border-slate-200 bg-slate-50/90 gap-3 flex-shrink-0"
           >
-            <h2
-              id="report-modal-title"
-              class="text-2xl font-bold inline-flex items-center gap-3 text-slate-800"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-slate-700"
+            <div class="flex items-center gap-3">
+              <div class="report-modal-brand-mark w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-md flex-shrink-0">
+                <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i>
+              </div>
+              <div>
+                <h2
+                  id="report-modal-title"
+                  class="text-base md:text-lg font-bold text-slate-900 flex items-center gap-2"
+                >
+                  <span>ศูนย์จัดทำเอกสารรายงานความก้าวหน้าโครงการ</span>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200/60 hidden sm:inline">Executive Document</span>
+                </h2>
+                <p class="text-xs text-slate-500 font-medium">
+                  PYNN NGAMWONGWAN 54 • จัดทำเอกสารรายงานมาตรฐานระดับมืออาชีพ พิมพ์ A4 / PDF / ภาพ / สรุปส่ง LINE
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                id="quickPrintReportBtn"
+                class="px-3 py-2 bg-slate-900 text-white hover:bg-slate-800 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+                title="พิมพ์เอกสารออกทางเครื่องพิมพ์ หรือ บันทึกเป็น PDF"
               >
-                <path
-                  d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                ></path>
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-              </svg>
-              สร้างรายงาน
-            </h2>
-            <button
-              id="closeReportModalBtn"
-              class="text-slate-400 hover:text-slate-700 hover:bg-slate-200/50 p-2 rounded-full transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">พิมพ์ / PDF</span>
+              </button>
+              <button
+                id="quickDownloadReportImageBtn"
+                class="px-3 py-2 bg-emerald-600 text-white hover:bg-emerald-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+                title="ส่งออกเอกสารเป็นภาพ PNG คมชัดสูง"
               >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+                <i data-lucide="image" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">บันทึกรูปภาพ</span>
+              </button>
+              <button
+                id="quickCopyReportTextBtn"
+                class="px-3 py-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+                title="คัดลอกข้อความสรุปสำหรับส่งใน LINE หรือ อีเมล"
+              >
+                <i data-lucide="copy" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">คัดลอกสรุป</span>
+              </button>
+              <div class="w-px h-6 bg-slate-300 mx-1"></div>
+              <button
+                id="closeReportModalBtn"
+                class="text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 p-2 rounded-full transition-colors flex-shrink-0"
+                title="ปิดหน้าต่าง"
+              >
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
           </div>
 
+          <!-- Document Workspace Area (Left: Settings / Right: Live A4 Document Sheet) -->
           <div
             id="report-content-area"
-            class="flex-grow grid grid-cols-1 xl:grid-cols-3 gap-6 min-h-0 p-6 overflow-y-auto bg-white"
+            class="flex-grow flex flex-col lg:flex-row min-h-0 overflow-hidden bg-slate-100"
           >
             <!-- JS Generated Content -->
           </div>
@@ -3348,6 +3473,7 @@
 
     <script type="module">
       import { GoogleGenAI, Type } from "@google/genai";
+      import { nintendoWorkIcons } from "/src/nintendoIcons.js";
 
       document.addEventListener("DOMContentLoaded", () => {
         // --- SUPABASE SETUP START ---
@@ -4840,11 +4966,13 @@
                 });
                 progress = appCount > 0 ? subTaskTotal / appCount : 0;
               } else if (catDef.type === "inspection") {
-                progress =
-                  unitData.qcScore > 0
-                    ? unitData.qcScore
-                    : unitData.cmScore || 0;
-                // For inspection, we don't really have subtasks in the same way, but let's just use the main tasks
+                const cmScore = unitData.cmScore || 0;
+                const qcScore = unitData.qcScore || 0;
+                progress = Math.max(qcScore, cmScore);
+                const isPassed = progress >= 85;
+                const isInProgress = (progress > 0 && progress < 85) || !!unitData.inInspection;
+
+                // For inspection, score >= 85 means inspected and passed (completed)
                 catDef.tasks.forEach((t) => {
                   subTaskStats[t.key || t.name].total++;
                   floorTaskStatus[floor][t.key || t.name].total++;
@@ -4852,10 +4980,10 @@
                   subTaskStats[t.key || t.name].progressSum += progress;
                   floorTaskStatus[floor][t.key || t.name].progressSum += progress;
 
-                  if (progress >= 100) {
+                  if (isPassed) {
                     subTaskStats[t.key || t.name].count++;
                     floorTaskStatus[floor][t.key || t.name].completed++;
-                  } else if (progress > 0) {
+                  } else if (isInProgress) {
                     subTaskStats[t.key || t.name].inProgress++;
                     floorTaskStatus[floor][t.key || t.name].inProgress++;
                   }
@@ -4864,9 +4992,15 @@
 
               floorTotalProgressPoints += progress;
 
-              if (progress >= 100) {
+              const isInspectionCat = catDef.type === "inspection";
+              const isUnitCompleted = isInspectionCat ? (progress >= 85) : (progress >= 100);
+              const isUnitInProgress = isInspectionCat
+                ? ((progress > 0 && progress < 85) || !!unitData.inInspection)
+                : (progress > 0);
+
+              if (isUnitCompleted) {
                 floorCompleted++;
-              } else if (progress > 0) {
+              } else if (isUnitInProgress) {
                 totalInProgress++;
               } else {
                 totalNotStarted++;
@@ -5676,8 +5810,10 @@
         };
 
         function renderWorkSymbol(catKey, className, isSelected = false) {
-          const position = categoryPictogramPositions[catKey] || "0% 100%";
-          return `<span class="${className} generated-work-icon work-symbol-${catKey} ${isSelected ? "is-selected" : ""}" style="--pictogram-position: ${position}" aria-hidden="true"></span>`;
+          const iconSvg = (typeof nintendoWorkIcons !== "undefined" && nintendoWorkIcons[catKey])
+            ? nintendoWorkIcons[catKey]
+            : ((typeof window !== "undefined" && window.nintendoWorkIcons && window.nintendoWorkIcons[catKey]) || "");
+          return `<span class="${className} nintendo-work-icon work-symbol-${catKey} ${isSelected ? "is-selected" : ""}" aria-hidden="true">${iconSvg}</span>`;
         }
 
         function renderSplashScreen() {
@@ -16679,373 +16815,2332 @@
           }, 500);
         }
 
-        // --- AI & REPORTING FUNCTIONS ---
+        // --- AI & REPORTING FUNCTIONS (PROFESSIONAL DOCUMENT SYSTEM) ---
+        let currentReportExecutiveInsights = null;
+
         function setupAndOpenReportModal(triggerElement) {
           renderReportUI();
           openModal("reportModal", triggerElement);
+
+          // Wire top modal header quick actions
+          const printBtn = document.getElementById("quickPrintReportBtn");
+          const dlBtn = document.getElementById("quickDownloadReportImageBtn");
+          const copyBtn = document.getElementById("quickCopyReportTextBtn");
+
+          if (printBtn) printBtn.onclick = printOfficialDocumentReport;
+          if (dlBtn) dlBtn.onclick = downloadOfficialDocumentImage;
+          if (copyBtn) copyBtn.onclick = copyOfficialDocumentSummary;
+        }
+
+        function switchReportTab(tabName) {
+          const docView = document.getElementById("report-official-document-view");
+          const textView = document.getElementById("report-text-summary-view");
+          const aiView = document.getElementById("report-ai-insights-view");
+
+          const docTabBtn = document.getElementById("tabOfficialDocBtn");
+          const textTabBtn = document.getElementById("tabTextSummaryBtn");
+          const aiTabBtn = document.getElementById("tabAiInsightsBtn");
+
+          if (!docView || !textView || !aiView) return;
+
+          // Reset all
+          docView.classList.add("hidden");
+          textView.classList.add("hidden");
+          aiView.classList.add("hidden");
+
+          [docTabBtn, textTabBtn, aiTabBtn].forEach((btn) => {
+            if (btn) {
+              btn.className = "report-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5";
+              btn.classList.remove("active");
+            }
+          });
+
+          if (tabName === "document") {
+            docView.classList.remove("hidden");
+            if (docTabBtn) {
+              docTabBtn.classList.add("active");
+            }
+          } else if (tabName === "text") {
+            textView.classList.remove("hidden");
+            if (textTabBtn) {
+              textTabBtn.classList.add("active");
+            }
+          } else if (tabName === "ai") {
+            aiView.classList.remove("hidden");
+            if (aiTabBtn) {
+              aiTabBtn.classList.add("active");
+            }
+          }
+          if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
         }
 
         function renderReportUI() {
-          const reportContentArea = document.getElementById(
-            "report-content-area",
-          );
+          const reportContentArea = document.getElementById("report-content-area");
+          if (!reportContentArea) return;
 
-          const controlsHTML = `
-                    <div class="xl:col-span-1 flex flex-col gap-8 pr-2">
-                        <!-- Section 1 -->
-                        <div class="flex flex-col gap-3">
-                             <div class="flex justify-between items-center">
-                                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                                     <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-                                     เลือกและจัดลำดับงาน
-                                 </h3>
-                                 <div class="flex gap-2 bg-slate-100 p-1 rounded-lg">
-                                     <button id="selectAllTasksBtn" class="text-[11px] px-2 py-1 rounded-md text-slate-600 hover:bg-white hover:shadow-sm hover:text-indigo-600 font-medium transition-all">เลือกทั้งหมด</button>
-                                     <button id="deselectAllTasksBtn" class="text-[11px] px-2 py-1 rounded-md text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-800 font-medium transition-all">ล้าง</button>
-                                 </div>
-                             </div>
-                             <div id="report-task-list-container" class="bg-slate-50/50 rounded-2xl p-2 border border-slate-100"></div>
-                        </div>
+          const today = new Date();
+          const todayThaiStr = today.toLocaleDateString("th-TH", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          const docNoStr = `REP-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}-01`;
 
-                        <!-- Section 2 -->
-                        <div class="flex flex-col gap-3">
-                             <div class="flex justify-between items-center">
-                                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                                     <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
-                                     เลือกชั้นที่ต้องการ
-                                 </h3>
-                                 <div class="flex gap-2 bg-slate-100 p-1 rounded-lg">
-                                     <button id="selectAllFloorsBtn" class="text-[11px] px-2 py-1 rounded-md text-slate-600 hover:bg-white hover:shadow-sm hover:text-indigo-600 font-medium transition-all">เลือกทั้งหมด</button>
-                                     <button id="deselectAllFloorsBtn" class="text-[11px] px-2 py-1 rounded-md text-slate-600 hover:bg-white hover:shadow-sm hover:text-slate-800 font-medium transition-all">ล้าง</button>
-                                 </div>
-                             </div>
-                              <div id="report-floor-list-container" class="bg-slate-50/50 rounded-2xl p-3 border border-slate-100"></div>
-                        </div>
-
-                        <!-- Section 3 -->
-                        <div class="flex flex-col gap-3">
-                             <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                                 <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
-                                 ตัวเลือกเพิ่มเติม
-                             </h3>
-                              <div id="report-options-container"></div>
-                        </div>
+          reportContentArea.innerHTML = `
+            <div class="flex flex-col lg:flex-row h-full w-full overflow-hidden bg-slate-100">
+              <!-- LEFT: Configuration & Selection Sidebar -->
+              <div id="report-controls-panel" class="w-full lg:w-[380px] xl:w-[420px] flex-shrink-0 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 md:p-5 overflow-y-auto space-y-4 custom-scrollbar shadow-sm">
+                <!-- Card 1: ข้อมูลหัวเอกสาร (Document Header Settings) -->
+                <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 space-y-3">
+                  <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#253047] flex items-center gap-1.5">
+                      <i data-lucide="file-text" class="w-4 h-4 text-[#e96861]"></i> ข้อมูลหัวเอกสาร
+                    </span>
+                    <span class="text-[10px] bg-[#fee9e4] text-[#b94f49] px-2 py-0.5 rounded font-bold border border-[#e96861]/30">Doc Info</span>
+                  </div>
+                  <div class="space-y-2 text-xs">
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">ชื่อรายงาน / หัวข้อเอกสาร</label>
+                      <input id="report-doc-title" type="text" value="รายงานสรุปความก้าวหน้าโครงการก่อสร้าง" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-[#68aeda]/40 focus:border-[#253047] font-medium">
                     </div>
-                `;
-
-          const outputHTML = `
-                    <div class="xl:col-span-2 flex flex-col xl:border-l xl:border-slate-200 xl:pl-8 min-h-0">
-                        <div class="flex flex-col gap-5 h-full">
-                            <!-- Tabs -->
-                            <div id="report-type-toggle" class="bg-slate-100/80 p-1.5 rounded-xl text-slate-600 text-sm font-semibold flex shadow-inner border border-slate-200/50">
-                                <button id="toggle-simple-report" class="report-type-toggle-btn flex-1 px-4 py-2.5 rounded-lg active transition-all flex items-center justify-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                    สร้างรายงานปกติ
-                                </button>
-                                <button id="toggle-ai-report" class="report-type-toggle-btn flex-1 px-4 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M4.93 19.07l2.83-2.83"></path><path d="M16.24 7.76l2.83-2.83"></path></svg>
-                                    สร้างด้วย AI
-                                </button>
-                            </div>
-
-                            <!-- Simple Report View -->
-                            <div id="simple-report-view" class="flex flex-col gap-4">
-                                 <button id="generateRawReportBtn" class="w-full px-4 py-3.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 hover:shadow-md hover:-translate-y-0.5 transition-all shadow-sm flex items-center justify-center gap-2">
-                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                                     สร้างรายงาน
-                                 </button>
-                            </div>
-
-                            <!-- AI Report View -->
-                            <div id="ai-report-view" class="hidden flex-col gap-4">
-                                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100/50 rounded-2xl p-5 shadow-sm">
-                                    <p class="font-semibold text-indigo-900 mb-3 flex items-center gap-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M4.93 19.07l2.83-2.83"></path><path d="M16.24 7.76l2.83-2.83"></path></svg>
-                                        เลือกรูปแบบรายงาน AI
-                                    </p>
-                                    <div class="grid grid-cols-2 gap-3">
-                                         <button id="generateAITextBtn" class="w-full px-4 py-3 bg-white border border-indigo-200 text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 hover:border-indigo-300 transition-all shadow-sm flex items-center justify-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                                            แบบข้อความ
-                                         </button>
-                                         <button id="generateAIInfographicBtn" class="w-full px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 hover:shadow-md transition-all shadow-sm flex items-center justify-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                                            แบบ Infographic
-                                         </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Shared Output Area -->
-                            <div class="relative flex-grow min-h-0 border border-slate-200 rounded-2xl bg-slate-50/30 shadow-inner overflow-hidden flex flex-col">
-                                <div id="ai-loading-overlay" class="absolute inset-0 items-center justify-center hidden bg-white/90 backdrop-blur-sm z-10">
-                                    <div class="text-center p-8 bg-white rounded-3xl shadow-2xl border border-slate-100 transform transition-all">
-                                        <div class="spinner mx-auto mb-5 border-indigo-100 border-t-indigo-600"></div>
-                                        <p class="font-bold text-indigo-800 text-lg">กำลังประมวลผล...</p>
-                                        <p class="text-sm text-slate-500 mt-2">AI กำลังวิเคราะห์และจัดทำรายงาน</p>
-                                    </div>
-                                </div>
-                                <div class="bg-slate-100/50 border-b border-slate-200 px-4 py-2 flex justify-between items-center">
-                                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">ผลลัพธ์</span>
-                                </div>
-                                <textarea id="ai-output-text" class="w-full h-full p-5 bg-transparent text-sm text-slate-700 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/20 custom-scrollbar" placeholder="ผลลัพธ์จะแสดงที่นี่..."></textarea>
-                                <div id="ai-output-infographic" class="hidden p-5 bg-white h-full overflow-auto custom-scrollbar"></div>
-                            </div>
-
-                            <!-- Actions -->
-                            <div id="report-actions" class="flex-shrink-0 flex gap-3 pt-1">
-                                 <button id="copyReportBtn" class="flex-grow py-3.5 px-4 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm inline-flex items-center justify-center gap-2" title="คัดลอกสรุป">
-                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-                                     <span>คัดลอกผลลัพธ์</span>
-                                 </button>
-                                 <button id="downloadInfographicBtn" class="flex-grow py-3.5 px-4 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 hover:shadow-md transition-all shadow-sm inline-flex items-center justify-center gap-2 hidden" title="ดาวน์โหลด Infographic">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
-                                    <span>ดาวน์โหลดเป็นรูปภาพ</span>
-                                 </button>
-                            </div>
-                        </div>
+                    <div class="grid grid-cols-2 gap-2">
+                      <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">เลขที่เอกสาร</label>
+                        <input id="report-doc-no" type="text" value="${docNoStr}" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-[#68aeda]/40 focus:border-[#253047] font-mono">
+                      </div>
+                      <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">วันที่ออกรายงาน</label>
+                        <input id="report-doc-date" type="text" value="${todayThaiStr}" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-[#68aeda]/40 focus:border-[#253047]">
+                      </div>
                     </div>
-                `;
+                    <div class="grid grid-cols-2 gap-2">
+                      <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">ผู้จัดทำรายงาน (Preparer)</label>
+                        <input id="report-doc-preparer" type="text" value="วิศวกรโครงการ (Site Engineer)" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-[#68aeda]/40 focus:border-[#253047]">
+                      </div>
+                      <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">งวดงาน / ช่วงเวลา</label>
+                        <input id="report-doc-period" type="text" value="ประจำสัปดาห์ / งวดปัจจุบัน" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-[#68aeda]/40 focus:border-[#253047]">
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-          reportContentArea.innerHTML = controlsHTML + outputHTML;
+                <!-- Card 2: เลือกหมวดงาน (Disciplines) -->
+                <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#253047] flex items-center gap-1.5">
+                      <i data-lucide="layers" class="w-4 h-4 text-[#68aeda]"></i> เลือกหมวดงาน
+                    </span>
+                    <button id="deselectAllTasksBtn" class="text-[11px] px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold shadow-2xs">ล้าง</button>
+                  </div>
+                  <!-- Group Selection Buttons -->
+                  <div class="grid grid-cols-5 gap-1">
+                    <button id="selectAllTasksBtn" type="button" class="text-[9px] py-1 px-0.5 rounded-md bg-white hover:bg-slate-50 text-[#253047] border border-slate-200 font-bold shadow-2xs transition-all text-center">
+                      ทั้งหมด
+                    </button>
+                    <button id="selectWetWorkTasksBtn" type="button" class="text-[9px] py-1 px-0.5 rounded-md bg-[#e8f6f1] hover:bg-[#d5eee5] text-[#183f35] border border-[#3e8d79] font-bold shadow-2xs transition-all text-center">
+                      Wet Work
+                    </button>
+                    <button id="selectEndProductTasksBtn" type="button" class="text-[9px] py-1 px-0.5 rounded-md bg-[#edf4f7] hover:bg-[#dce9f0] text-[#17394c] border border-[#4d91b7] font-bold shadow-2xs transition-all text-center">
+                      End Prod
+                    </button>
+                    <button id="selectCommonTasksBtn" type="button" class="text-[9px] py-1 px-0.5 rounded-md bg-[#fff8e1] hover:bg-[#fff0c2] text-[#5b4718] border border-[#bf9c40] font-bold shadow-2xs transition-all text-center">
+                      ส่วนกลาง
+                    </button>
+                    <button id="selectDefectTasksBtn" type="button" class="text-[9px] py-1 px-0.5 rounded-md bg-[#fee9e4] hover:bg-[#fedbd4] text-[#b94f49] border border-[#b94f49] font-bold shadow-2xs transition-all text-center">
+                      Defect
+                    </button>
+                  </div>
+                  <div id="report-task-list-container" class="space-y-1.5 max-h-56 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+
+                <!-- Card 3: เลือกชั้น (Floors) -->
+                <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#253047] flex items-center gap-1.5">
+                      <i data-lucide="building" class="w-4 h-4 text-[#65bfa8]"></i> เลือกชั้นที่ต้องการ
+                    </span>
+                    <div class="flex gap-1">
+                      <button id="selectAllFloorsBtn" class="text-[11px] px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[#253047] border border-slate-200 font-bold shadow-2xs">ทุกชั้น (2-8)</button>
+                      <button id="deselectAllFloorsBtn" class="text-[11px] px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold shadow-2xs">ล้าง</button>
+                    </div>
+                  </div>
+                  <div id="report-floor-list-container" class="grid grid-cols-4 gap-1.5"></div>
+                </div>
+
+                <!-- Card 4: องค์ประกอบเอกสาร (Document Sections Toggles) -->
+                <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 space-y-2.5">
+                  <span class="text-xs font-bold uppercase tracking-wider text-[#253047] flex items-center gap-1.5">
+                    <i data-lucide="layout-template" class="w-4 h-4 text-[#efc96a]"></i> องค์ประกอบเอกสาร
+                  </span>
+                  <div class="grid grid-cols-1 gap-2 text-xs text-slate-700 font-medium">
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-kpi" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>สรุป KPI ผู้บริหาร (Executive KPI Cards)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-disciplines" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>ตารางความก้าวหน้ารวมแยกหมวดงานห้องพัก (Discipline Table)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-floors" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>ตารางแจกแจงความก้าวหน้ารายชั้นห้องพัก (Floor Matrix)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-inspection" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>สรุปผลการตรวจรับห้องชุด (Quality Inspection Matrix - % ส่งมอบแล้วเสร็จ)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-common-areas" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>🏢 สรุปความก้าวหน้างานพื้นที่ส่วนกลาง (Common Areas)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-common-defects" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>🛠️ สรุปและติดตาม DEFECT ส่วนกลาง (Common Defects)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-exterior-painting" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>🖌️ สรุปแผนงานและผลงานสีรูปด้านอาคาร (Exterior Facade)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-[#253047]">
+                      <input type="checkbox" id="report-opt-signatures" checked class="rounded text-[#e96861] focus:ring-[#e96861]">
+                      <span>ส่วนลงนามอนุมัติเอกสารทางการ 3 ฝ่าย (Signatures)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Card 5: Action Buttons -->
+                <div class="space-y-2 pt-1">
+                  <button id="generateDocumentReportBtn" class="w-full py-3 px-4 bg-[#e96861] hover:bg-[#d8554e] text-white font-extrabold rounded-xl shadow-[0_4px_0_#b94f49] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 text-sm border border-[#b94f49]">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    <span>สร้าง / อัปเดตเอกสารรายงาน</span>
+                  </button>
+                  <button id="generateAIEvalBtn" class="w-full py-2.5 px-4 bg-[#68aeda] hover:bg-[#529dc9] text-[#17394c] font-bold rounded-xl border border-[#4d91b7] shadow-[0_3px_0_#4d91b7] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 text-xs">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-[#17394c]"></i>
+                    <span>วิเคราะห์เชิงบริหารด้วย AI</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- RIGHT: Document Workspace -->
+              <div id="report-preview-pane" class="flex-grow flex flex-col min-w-0 bg-slate-200/70 overflow-hidden">
+                <!-- Toolbar -->
+                <div class="bg-white border-b border-slate-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+                  <!-- Tabs -->
+                  <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+                    <button id="tabOfficialDocBtn" class="report-tab-btn active px-3 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+                      <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                      <span>เอกสารทางการ (Official Sheet)</span>
+                    </button>
+                    <button id="tabTextSummaryBtn" class="report-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5">
+                      <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                      <span>ข้อความสรุป (Text)</span>
+                    </button>
+                    <button id="tabAiInsightsBtn" class="report-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                      <span>บทวิเคราะห์ AI</span>
+                    </button>
+                  </div>
+
+                  <!-- Quick Export Actions in Toolbar -->
+                  <div class="flex items-center gap-2">
+                    <button id="toolbarPrintBtn" class="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+                      <i data-lucide="printer" class="w-3.5 h-3.5 text-[#253047]"></i>
+                      <span>พิมพ์ / PDF</span>
+                    </button>
+                    <button id="toolbarSaveImgBtn" class="px-3 py-1.5 bg-[#65bfa8] border border-[#3e8d79] hover:bg-[#52ad96] text-[#183f35] rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-[0_2px_0_#3e8d79] transition-all">
+                      <i data-lucide="image" class="w-3.5 h-3.5 text-[#183f35]"></i>
+                      <span>บันทึกภาพ PNG</span>
+                    </button>
+                    <button id="toolbarCopyTextBtn" class="px-3 py-1.5 bg-[#68aeda] border border-[#4d91b7] hover:bg-[#529dc9] text-[#17394c] rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-[0_2px_0_#4d91b7] transition-all">
+                      <i data-lucide="copy" class="w-3.5 h-3.5 text-[#17394c]"></i>
+                      <span>คัดลอกสรุป</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Workspace Stage -->
+                <div id="report-view-container" class="flex-grow overflow-y-auto p-4 md:p-8 flex justify-center items-start custom-scrollbar">
+                  <!-- 1. Official Document View -->
+                  <div id="report-official-document-view" class="w-full flex justify-center">
+                    <div id="report-document-sheet" class="w-full max-w-[840px] flex flex-col items-center gap-8 print:gap-0 font-sarabun text-slate-900">
+                      <!-- Content generated by generateDocumentReportPreview() -->
+                    </div>
+                  </div>
+
+                  <!-- 2. Text Summary View (hidden by default) -->
+                  <div id="report-text-summary-view" class="w-full max-w-[800px] bg-white rounded-2xl shadow-lg border border-slate-200 p-6 space-y-4 hidden">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <div>
+                        <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                          <i data-lucide="message-square" class="w-5 h-5 text-indigo-600"></i>
+                          ข้อความสรุปสำหรับส่งใน LINE หรือ อีเมล
+                        </h4>
+                        <p class="text-xs text-slate-500">จัดรูปแบบข้อความแบบกระชับ พร้อมแชร์รายงานได้ทันที</p>
+                      </div>
+                      <button id="copySummaryTextBtn" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        <span>คัดลอกข้อความ</span>
+                      </button>
+                    </div>
+                    <textarea id="report-text-summary-output" class="w-full h-[520px] p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs md:text-sm font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 custom-scrollbar" readonly></textarea>
+                  </div>
+
+                  <!-- 3. AI Insights View (hidden by default) -->
+                  <div id="report-ai-insights-view" class="w-full max-w-[800px] bg-white rounded-2xl shadow-lg border border-slate-200 p-6 space-y-5 hidden">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <div>
+                        <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                          <i data-lucide="sparkles" class="w-5 h-5 text-indigo-600"></i>
+                          บทวิเคราะห์และข้อเสนอแนะเชิงบริหาร (AI Executive Insights)
+                        </h4>
+                        <p class="text-xs text-slate-500">วิเคราะห์ข้อมูลความก้าวหน้า จุดเด่น ปัญหา และข้อเสนอแนะอัตโนมัติ</p>
+                      </div>
+                      <button id="applyAiToDocBtn" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        <span>แทรกใส่ในเอกสารรายงาน</span>
+                      </button>
+                    </div>
+                    <div id="ai-loading-indicator" class="hidden items-center justify-center p-8 text-center bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="spinner w-8 h-8 mx-auto mb-3 border-indigo-200 border-t-indigo-600"></div>
+                      <p class="font-bold text-slate-800 text-sm">AI กำลังวิเคราะห์ข้อมูลโครงการ...</p>
+                    </div>
+                    <div id="ai-insights-content" class="space-y-4">
+                      <!-- Filled by AI or default template -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
 
           bindReportButtonListeners();
           populateReportUI();
+          generateDocumentReportPreview();
+
+          if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
         }
 
         function bindReportButtonListeners() {
-          // Main Toggles
-          const simpleToggle = document.getElementById("toggle-simple-report");
-          const aiToggle = document.getElementById("toggle-ai-report");
+          // Tab Switches
+          document.getElementById("tabOfficialDocBtn")?.addEventListener("click", () => switchReportTab("document"));
+          document.getElementById("tabTextSummaryBtn")?.addEventListener("click", () => switchReportTab("text"));
+          document.getElementById("tabAiInsightsBtn")?.addEventListener("click", () => switchReportTab("ai"));
 
-          const simpleView = document.getElementById("simple-report-view");
-          const aiView = document.getElementById("ai-report-view");
+          // Sidebar Action Buttons
+          document.getElementById("generateDocumentReportBtn")?.addEventListener("click", () => {
+            generateDocumentReportPreview();
+            showToast("อัปเดตเอกสารรายงานเรียบร้อยแล้ว");
+          });
 
-          function setActiveView(viewName) {
-            // Reset all
-            simpleToggle.classList.remove("active");
-            aiToggle.classList.remove("active");
+          document.getElementById("generateAIEvalBtn")?.addEventListener("click", () => {
+            generateAIExecutiveEvaluation();
+          });
 
-            simpleView.classList.add("hidden");
-            aiView.classList.add("hidden");
+          // Top Header & Toolbar Buttons
+          document.getElementById("toolbarPrintBtn")?.addEventListener("click", printOfficialDocumentReport);
+          document.getElementById("toolbarSaveImgBtn")?.addEventListener("click", downloadOfficialDocumentImage);
+          document.getElementById("toolbarCopyTextBtn")?.addEventListener("click", copyOfficialDocumentSummary);
+          document.getElementById("copySummaryTextBtn")?.addEventListener("click", copyOfficialDocumentSummary);
+          document.getElementById("applyAiToDocBtn")?.addEventListener("click", applyAiInsightsToDocument);
 
-            // Set active
-            if (viewName === "simple") {
-              simpleToggle.classList.add("active");
-              simpleView.classList.remove("hidden");
-            } else if (viewName === "ai") {
-              aiToggle.classList.add("active");
-              aiView.classList.remove("hidden");
-            }
-          }
+          // Header inputs auto-trigger document preview update
+          ["report-doc-title", "report-doc-no", "report-doc-date", "report-doc-preparer", "report-doc-period"].forEach((id) => {
+            document.getElementById(id)?.addEventListener("input", debounceDocumentUpdate);
+          });
 
-          simpleToggle.addEventListener("click", () => setActiveView("simple"));
-          aiToggle.addEventListener("click", () => setActiveView("ai"));
+          // Section toggles
+          [
+            "report-opt-kpi",
+            "report-opt-disciplines",
+            "report-opt-floors",
+            "report-opt-inspection",
+            "report-opt-common-areas",
+            "report-opt-common-defects",
+            "report-opt-exterior-painting",
+            "report-opt-signatures"
+          ].forEach((id) => {
+            document.getElementById(id)?.addEventListener("change", debounceDocumentUpdate);
+          });
 
-          // Action Buttons
-          document
-            .getElementById("generateRawReportBtn")
-            ?.addEventListener("click", handleGenerateRawReport);
-          document
-            .getElementById("generateAITextBtn")
-            ?.addEventListener("click", handleGenerateAITextReport);
-          document
-            .getElementById("generateAIInfographicBtn")
-            ?.addEventListener("click", handleGenerateAIInfographic);
-          document
-            .getElementById("copyReportBtn")
-            ?.addEventListener("click", () =>
-              copyToClipboard("ai-output-text", "copyReportBtn"),
-            );
-          document
-            .getElementById("downloadInfographicBtn")
-            ?.addEventListener("click", () =>
-              downloadInfographic(
-                "ai-output-infographic",
-                "downloadInfographicBtn",
-              ),
-            );
+          // Select / Deselect Tasks & Groups
+          const WET_WORK_KEYS = [
+            "skimAndPaint", "topping", "electrical", "plumbing", "airCon",
+            "ceiling", "texcaWall", "electricalRoughIn", "plumbingRoughIn",
+            "airConRoughIn", "waterproofing", "tiling", "wetWork"
+          ];
+
+          const END_PRODUCT_KEYS = [
+            "aluminum", "aluminumPaint", "cleaning", "furniture", "paintOnly",
+            "laminate", "door", "showerScreen", "endProduct"
+          ];
+
+          document.getElementById("selectAllTasksBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.checked = true;
+            });
+            generateDocumentReportPreview();
+          });
+
+          document.getElementById("selectWetWorkTasksBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.checked = (cb.dataset.type === "unit" && WET_WORK_KEYS.includes(cb.dataset.catkey));
+            });
+            generateDocumentReportPreview();
+          });
+
+          document.getElementById("selectEndProductTasksBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.checked = (cb.dataset.type === "unit" && END_PRODUCT_KEYS.includes(cb.dataset.catkey));
+            });
+            generateDocumentReportPreview();
+          });
+
+          document.getElementById("selectCommonTasksBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.checked = (cb.dataset.type === "commonArea");
+            });
+            generateDocumentReportPreview();
+          });
+
+          document.getElementById("selectDefectTasksBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.checked = (cb.dataset.type === "commonDefect");
+            });
+            generateDocumentReportPreview();
+          });
+
+          document.getElementById("deselectAllTasksBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.checked = false;
+            });
+            generateDocumentReportPreview();
+          });
+
+          // Select / Deselect Floors
+          document.getElementById("selectAllFloorsBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-floor-checkbox").forEach((cb) => {
+              cb.checked = true;
+            });
+            generateDocumentReportPreview();
+          });
+
+          document.getElementById("deselectAllFloorsBtn")?.addEventListener("click", () => {
+            document.querySelectorAll(".report-floor-checkbox").forEach((cb) => {
+              cb.checked = false;
+            });
+            generateDocumentReportPreview();
+          });
+        }
+
+        let docUpdateTimeout = null;
+        function debounceDocumentUpdate() {
+          if (docUpdateTimeout) clearTimeout(docUpdateTimeout);
+          docUpdateTimeout = setTimeout(() => {
+            generateDocumentReportPreview();
+          }, 200);
         }
 
         function populateReportUI() {
-          const checkIconSVG = `<svg class="icon w-3.5 h-3.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`;
-          const dragIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 mr-3 flex-shrink-0 cursor-grab active:cursor-grabbing hover:text-slate-500 transition-colors"><circle cx="9" cy="12" r="1.5"></circle><circle cx="9" cy="5" r="1.5"></circle><circle cx="9" cy="19" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="15" cy="5" r="1.5"></circle><circle cx="15" cy="19" r="1.5"></circle></svg>`;
+          const WET_WORK_KEYS = [
+            "skimAndPaint", "topping", "electrical", "plumbing", "airCon",
+            "ceiling", "texcaWall", "electricalRoughIn", "plumbingRoughIn",
+            "airConRoughIn", "waterproofing", "tiling", "wetWork"
+          ];
 
-          const taskContainer = document.getElementById(
-            "report-task-list-container",
-          );
-          let tasksHTML =
-            '<div class="task-list-sortable-container space-y-2 max-h-[35vh] overflow-y-auto pr-2 custom-scrollbar">';
-          Object.keys(taskDefinitions).forEach((catKey) => {
-            const catDef = taskDefinitions[catKey];
-            const mainCheckboxId = `report-main-task-${catKey}`;
+          const END_PRODUCT_KEYS = [
+            "aluminum", "aluminumPaint", "cleaning", "furniture", "paintOnly",
+            "laminate", "door", "showerScreen", "endProduct"
+          ];
+
+          const taskContainer = document.getElementById("report-task-list-container");
+          if (taskContainer) {
+            let tasksHTML = "";
+
+            // Group 1: Wet Work (ห้องพัก)
             tasksHTML += `
-                        <div class="report-main-task-container bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 transition-all overflow-hidden" draggable="true">
-                            <input type="checkbox" id="${mainCheckboxId}" data-catkey="${catKey}" class="hidden report-main-task-checkbox">
-                            <label for="${mainCheckboxId}" class="report-selection-label font-semibold text-slate-700 py-3 px-4 w-full flex items-center cursor-pointer">
-                                ${dragIconSVG}
-                                <span class="box bg-white border-2 border-slate-300 rounded-lg w-5 h-5 flex items-center justify-center mr-3 transition-colors shadow-sm">${checkIconSVG}</span>
-                                <span class="text-[15px] flex items-center gap-2"><span class="text-lg">${catDef.reportEmoji}</span> ${catDef.reportName}</span>
-                            </label>
-                            <div id="subtasks-${catKey}" class="hidden pl-14 pr-4 pb-3 space-y-1.5 mt-1 border-t border-slate-100 pt-3">`;
-
-            if (
-              catDef.type === "progress" ||
-              catDef.type === "multi-progress"
-            ) {
-              catDef.tasks.forEach((task, index) => {
-                const id = `report-subtask-${catKey}-${index}`;
-                tasksHTML += `<div><input type="checkbox" id="${id}" data-catkey="${catKey}" data-taskidx="${index}" class="hidden report-subtask-checkbox"><label for="${id}" class="report-selection-label text-sm text-slate-600 py-2 px-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors w-full flex items-center cursor-pointer"><span class="box bg-white border-2 border-slate-300 rounded w-4 h-4 flex items-center justify-center mr-3 transition-colors">${checkIconSVG}</span><span>${task.name}</span></label></div>`;
-              });
-            } else {
-              const id = `report-subtask-${catKey}-summary`;
-              tasksHTML += `<div><input type="checkbox" id="${id}" data-catkey="${catKey}" data-taskidx="0" class="hidden report-subtask-checkbox"><label for="${id}" class="report-selection-label text-sm text-slate-600 py-2 px-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors w-full flex items-center cursor-pointer"><span class="box bg-white border-2 border-slate-300 rounded w-4 h-4 flex items-center justify-center mr-3 transition-colors">${checkIconSVG}</span><span>สรุปผลตรวจ</span></label></div>`;
-            }
-
-            tasksHTML += `</div></div>`;
-          });
-          tasksHTML += "</div>";
-          taskContainer.innerHTML = tasksHTML;
-
-          const floorContainer = document.getElementById(
-            "report-floor-list-container",
-          );
-          let floorsHTML = '<div class="flex flex-wrap gap-2 px-1">';
-          CONFIG.FLOORS.slice()
-            .reverse()
-            .forEach((floor) => {
-              const id = `report-floor-${floor}`;
-              floorsHTML += `<div><input type="checkbox" id="${id}" value="${floor}" class="hidden report-floor-checkbox"><label for="${id}" class="floor-selector-btn bg-white border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-all shadow-sm w-11 h-11 rounded-xl flex items-center justify-center font-semibold text-sm cursor-pointer">${floor}</label></div>`;
-            });
-          floorsHTML += "</div>";
-          floorContainer.innerHTML = floorsHTML;
-
-          const optionsContainer = document.getElementById(
-            "report-options-container",
-          );
-          optionsContainer.innerHTML = `<div class="border border-slate-200 rounded-2xl p-5 space-y-5 bg-white shadow-sm">
-                    <div>
-                        <input type="checkbox" id="report-include-summary" class="hidden">
-                        <label for="report-include-summary" class="report-selection-label text-slate-700 font-medium flex items-center cursor-pointer group">
-                            <span class="box bg-white border-2 border-slate-300 rounded-lg w-5 h-5 flex items-center justify-center mr-3 transition-colors shadow-sm group-hover:border-indigo-400">${checkIconSVG}</span>
-                            <span>แสดงภาพรวมทั้งโครงการ</span>
-                        </label>
-                    </div>
-                    <div class="pt-2 border-t border-slate-100">
-                        <p class="text-sm font-semibold text-slate-600 mb-3 px-1">รูปแบบรายงาน:</p>
-                        <div class="report-toggle-container flex w-full bg-slate-100 rounded-xl p-1.5 shadow-inner border border-slate-200/50">
-                            <input type="radio" id="report-type-short" name="report-type" value="short" class="hidden">
-                            <label for="report-type-short" class="flex-1 text-center py-2.5 rounded-lg cursor-pointer transition-all text-sm font-semibold text-slate-600 hover:text-slate-800">แบบสั้น</label>
-                            <input type="radio" id="report-type-long" name="report-type" value="long" class="hidden" checked>
-                            <label for="report-type-long" class="flex-1 text-center py-2.5 rounded-lg cursor-pointer transition-all text-sm font-semibold text-slate-600 hover:text-slate-800">แบบยาว</label>
-                        </div>
-                    </div>
-                    <div id="room-summary-option-container" class="border-t border-slate-100 pt-4 mt-2 hidden">
-                         <h4 class="font-semibold text-slate-800 mb-3">สรุปคะแนนรายห้อง</h4>
-                         <div>
-                             <input type="checkbox" id="report-room-summary" class="hidden">
-                             <label for="report-room-summary" class="report-selection-label text-slate-700 font-medium flex items-center cursor-pointer group">
-                                  <span class="box bg-white border-2 border-slate-300 rounded-lg w-5 h-5 flex items-center justify-center mr-3 transition-colors shadow-sm group-hover:border-indigo-400">${checkIconSVG}</span><span>แนบสรุปคะแนน (รวมทุกผลตรวจ)</span>
-                             </label>
-                         </div>
-                    </div>
-                    <div id="detailed-grid-option-container" class="border-t border-slate-100 pt-4 mt-2 hidden">
-                         <h4 class="font-semibold text-slate-800 mb-3">รูปแบบตารางละเอียด</h4>
-                         <div>
-                             <input type="checkbox" id="report-detailed-grid" class="hidden">
-                             <label for="report-detailed-grid" class="report-selection-label text-slate-700 font-medium flex items-center cursor-pointer group">
-                                  <span class="box bg-white border-2 border-slate-300 rounded-lg w-5 h-5 flex items-center justify-center mr-3 transition-colors shadow-sm group-hover:border-indigo-400">${checkIconSVG}</span><span>ใช้ตารางแบบละเอียด (Grid) สำหรับงานประตู/กระเบื้อง</span>
-                             </label>
-                         </div>
-                    </div>
-                </div>`;
-
-          document
-            .querySelectorAll(".report-main-task-checkbox")
-            .forEach((checkbox) => {
-              checkbox.addEventListener("change", (e) => {
-                const catKey = e.target.dataset.catkey;
-                const subtasksDiv = document.getElementById(
-                  `subtasks-${catKey}`,
-                );
-                const subtaskCheckboxes = subtasksDiv.querySelectorAll(
-                  ".report-subtask-checkbox",
-                );
-                if (e.target.checked) {
-                  subtasksDiv.classList.remove("hidden");
-                  subtaskCheckboxes.forEach((cb) => (cb.checked = true));
-                } else {
-                  subtasksDiv.classList.add("hidden");
-                  subtaskCheckboxes.forEach((cb) => (cb.checked = false));
-                }
-                updateRoomSummaryVisibility();
-                updateDetailedGridVisibility();
-              });
+              <div class="sticky top-0 bg-slate-50 py-1 z-10 flex items-center justify-between border-b border-emerald-200 mb-1">
+                <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1">
+                  💧 หมวดงาน WET WORK (ห้องพัก)
+                </span>
+                <span class="text-[9px] bg-emerald-100/80 text-emerald-800 px-1.5 py-0.5 rounded font-semibold">งานเปียก & ระบบ</span>
+              </div>
+            `;
+            WET_WORK_KEYS.forEach((catKey) => {
+              const catDef = taskDefinitions[catKey];
+              if (!catDef) return;
+              const checkboxId = `report-task-${catKey}`;
+              const defaultChecked = ["skimAndPaint", "tiling", "wetWork"].includes(catKey) ? "checked" : "";
+              tasksHTML += `
+                <label for="${checkboxId}" class="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200/80 hover:border-emerald-300 hover:bg-emerald-50/30 cursor-pointer transition-all text-xs font-medium text-slate-700">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="${checkboxId}" data-catkey="${catKey}" data-type="unit" ${defaultChecked} class="report-main-task-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                    <span class="text-sm">${catDef.reportEmoji || "📋"}</span>
+                    <span>${catDef.reportName}</span>
+                  </div>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Wet Work</span>
+                </label>
+              `;
             });
 
-          document
-            .getElementById("selectAllTasksBtn")
-            .addEventListener("click", () =>
-              document
-                .querySelectorAll(".report-main-task-checkbox")
-                .forEach((cb) => {
-                  if (!cb.checked) cb.click();
-                }),
-            );
-          document
-            .getElementById("deselectAllTasksBtn")
-            .addEventListener("click", () =>
-              document
-                .querySelectorAll(".report-main-task-checkbox")
-                .forEach((cb) => {
-                  if (cb.checked) cb.click();
-                }),
-            );
-          document
-            .getElementById("selectAllFloorsBtn")
-            .addEventListener("click", () =>
-              document
-                .querySelectorAll(".report-floor-checkbox")
-                .forEach((cb) => (cb.checked = true)),
-            );
-          document
-            .getElementById("deselectAllFloorsBtn")
-            .addEventListener("click", () =>
-              document
-                .querySelectorAll(".report-floor-checkbox")
-                .forEach((cb) => (cb.checked = false)),
-            );
+            // Group 2: End Product (ห้องพัก)
+            tasksHTML += `
+              <div class="sticky top-0 bg-slate-50 py-1 z-10 flex items-center justify-between border-b border-sky-200 mt-2.5 mb-1">
+                <span class="text-[10px] font-bold text-sky-800 uppercase tracking-wider flex items-center gap-1">
+                  🏁 หมวดงาน END PRODUCT (ห้องพัก)
+                </span>
+                <span class="text-[9px] bg-sky-100/80 text-sky-800 px-1.5 py-0.5 rounded font-semibold">งานส่งมอบ & สถาปัตย์</span>
+              </div>
+            `;
+            END_PRODUCT_KEYS.forEach((catKey) => {
+              const catDef = taskDefinitions[catKey];
+              if (!catDef) return;
+              const checkboxId = `report-task-${catKey}`;
+              const defaultChecked = ["door", "aluminum", "endProduct"].includes(catKey) ? "checked" : "";
+              tasksHTML += `
+                <label for="${checkboxId}" class="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200/80 hover:border-sky-300 hover:bg-sky-50/30 cursor-pointer transition-all text-xs font-medium text-slate-700">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="${checkboxId}" data-catkey="${catKey}" data-type="unit" ${defaultChecked} class="report-main-task-checkbox rounded text-sky-600 focus:ring-sky-500">
+                    <span class="text-sm">${catDef.reportEmoji || "📋"}</span>
+                    <span>${catDef.reportName}</span>
+                  </div>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded font-medium bg-sky-50 text-sky-700 border border-sky-200">End Product</span>
+                </label>
+              `;
+            });
 
-          const sortableList = document.querySelector(
-            ".task-list-sortable-container",
-          );
-          const draggables = sortableList.querySelectorAll(
-            ".report-main-task-container",
-          );
+            // Group 3: พื้นที่ส่วนกลาง (Common Areas)
+            tasksHTML += `
+              <div class="sticky top-0 bg-slate-50 py-1 z-10 flex items-center justify-between border-b border-amber-300 mt-2.5 mb-1">
+                <span class="text-[10px] font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1">
+                  🏢 หมวดงานพื้นที่ส่วนกลาง (COMMON AREAS)
+                </span>
+                <span class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-semibold">6 พื้นที่</span>
+              </div>
+            `;
+            const commonAreasList = [
+              { key: "staircase1", name: "บันได ST1", emoji: "🪜", desc: "บันไดหนีไฟ ST-1 (ชั้น 1-8, ดาดฟ้า)" },
+              { key: "staircase2", name: "บันได ST2", emoji: "🪜", desc: "บันไดหนีไฟ ST-2 (ชั้น 1-8, ดาดฟ้า)" },
+              { key: "electricalRoom", name: "ห้องไฟฟ้า", emoji: "⚡", desc: "ห้องไฟฟ้าประจำชั้น (ชั้น 2-8)" },
+              { key: "garbageRoom", name: "ห้องขยะ", emoji: "🗑️", desc: "ห้องขยะประจำชั้น (ชั้น 2-8)" },
+              { key: "lift", name: "โถงลิฟต์ / ปล่องลิฟต์", emoji: "🛗", desc: "โถงลิฟต์และปล่องลิฟต์ (ชั้น 1-8, ดาดฟ้า)" },
+              { key: "hallway", name: "ทางเดินส่วนกลาง", emoji: "🚪", desc: "โถงทางเดินหน้าห้องพัก (ชั้น 2-8)" },
+            ];
+            commonAreasList.forEach((ca) => {
+              const checkboxId = `report-ca-${ca.key}`;
+              tasksHTML += `
+                <label for="${checkboxId}" class="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200/80 hover:border-amber-400 hover:bg-amber-50/30 cursor-pointer transition-all text-xs font-medium text-slate-700">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="${checkboxId}" data-catkey="${ca.key}" data-type="commonArea" checked class="report-main-task-checkbox rounded text-amber-600 focus:ring-amber-500">
+                    <span class="text-sm">${ca.emoji}</span>
+                    <span class="font-semibold text-slate-900">${ca.name}</span>
+                  </div>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded font-medium bg-amber-50 text-amber-800 border border-amber-200">ส่วนกลาง</span>
+                </label>
+              `;
+            });
 
-          draggables.forEach((draggable) => {
-            draggable.addEventListener("dragstart", () =>
-              draggable.classList.add("dragging"),
-            );
-            draggable.addEventListener("dragend", () =>
-              draggable.classList.remove("dragging"),
-            );
+            // Group 4: หมวดติดตาม DEFECT ส่วนกลาง (Common Defects)
+            tasksHTML += `
+              <div class="sticky top-0 bg-slate-50 py-1 z-10 flex items-center justify-between border-b border-rose-300 mt-2.5 mb-1">
+                <span class="text-[10px] font-bold text-rose-900 uppercase tracking-wider flex items-center gap-1">
+                  🛠️ หมวดติดตาม DEFECT ส่วนกลาง
+                </span>
+                <span class="text-[9px] bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded font-semibold">7 โซนหลัก</span>
+              </div>
+            `;
+            const defectGroupsList = [
+              { key: "รูปด้านอาคาร", name: "รูปด้านอาคาร", emoji: "🏢" },
+              { key: "ดาดฟ้า", name: "ดาดฟ้า (Rooftop)", emoji: "☀️" },
+              { key: "ห้องเครื่อง/ห้องส่วนกลาง", name: "ห้องเครื่อง / ห้องส่วนกลาง", emoji: "⚙️" },
+              { key: "โถงทางเดิน", name: "โถงทางเดิน (Floor 2-8)", emoji: "🚶" },
+              { key: "บันได", name: "บันได ST-1 & ST-2", emoji: "🪜" },
+              { key: "ห้องขยะประจำชั้น", name: "ห้องขยะประจำชั้น (Floor 2-8)", emoji: "🗑️" },
+              { key: "ห้องไฟฟ้าประจำชั้น", name: "ห้องไฟฟ้าประจำชั้น (Floor 2-8)", emoji: "⚡" },
+            ];
+            const modalDefectsList = (projectData && Array.isArray(projectData.commonDefects))
+              ? projectData.commonDefects
+              : (typeof getInitialCommonDefects === "function" ? getInitialCommonDefects() : []);
+
+            defectGroupsList.forEach((dg) => {
+              const groupItems = modalDefectsList.filter((d) => d && d.group === dg.key);
+              const groupDefectTot = groupItems.reduce((acc, curr) => acc + (Number(curr.tot) || 0), 0);
+              const groupDefectFix = groupItems.reduce((acc, curr) => acc + (Number(curr.fix) || 0), 0);
+              const checkboxId = `report-defect-${dg.key.replace(/[^a-zA-Z0-9]/g, "_")}`;
+              tasksHTML += `
+                <label for="${checkboxId}" class="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200/80 hover:border-rose-400 hover:bg-rose-50/30 cursor-pointer transition-all text-xs font-medium text-slate-700">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="${checkboxId}" data-catkey="${dg.key}" data-type="commonDefect" checked class="report-main-task-checkbox rounded text-rose-600 focus:ring-rose-500">
+                    <span class="text-sm">${dg.emoji}</span>
+                    <span class="font-semibold text-slate-900">${dg.name}</span>
+                  </div>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${groupDefectTot > 0 ? 'bg-rose-100 text-rose-900 border border-rose-300' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+                    ${groupDefectTot > 0 ? `${groupDefectTot} ข้อ (เสร็จ ${groupDefectFix})` : '0 ข้อ'}
+                  </span>
+                </label>
+              `;
+            });
+
+            // Group 5: งานเก็บสีรูปด้านอาคาร (Exterior Facade Painting)
+            tasksHTML += `
+              <div class="sticky top-0 bg-slate-50 py-1 z-10 flex items-center justify-between border-b border-violet-300 mt-2.5 mb-1">
+                <span class="text-[10px] font-bold text-violet-900 uppercase tracking-wider flex items-center gap-1">
+                  🖌️ งานเก็บสีรูปด้านอาคาร (FACADE)
+                </span>
+                <span class="text-[9px] bg-violet-100 text-violet-800 px-1.5 py-0.5 rounded font-semibold">4 ขั้นตอน (39 โซน)</span>
+              </div>
+            `;
+            const exteriorTasksList = [
+              { key: "joint", name: "ขัดแต่งรอยต่อ (Joint)", emoji: "🧱" },
+              { key: "primer", name: "ทาสีรองพื้น (Primer)", emoji: "🎨" },
+              { key: "waterTest", name: "เทสน้ำ (Water Test)", emoji: "💧" },
+              { key: "topcoat", name: "ทาสีจริง (Topcoat)", emoji: "✨" },
+            ];
+            exteriorTasksList.forEach((et) => {
+              const checkboxId = `report-ext-${et.key}`;
+              tasksHTML += `
+                <label for="${checkboxId}" class="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200/80 hover:border-violet-400 hover:bg-violet-50/30 cursor-pointer transition-all text-xs font-medium text-slate-700">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="${checkboxId}" data-catkey="${et.key}" data-type="exteriorPainting" checked class="report-main-task-checkbox rounded text-violet-600 focus:ring-violet-500">
+                    <span class="text-sm">${et.emoji}</span>
+                    <span class="font-semibold text-slate-900">${et.name}</span>
+                  </div>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded font-medium bg-violet-50 text-violet-800 border border-violet-200">รูปด้าน</span>
+                </label>
+              `;
+            });
+
+            taskContainer.innerHTML = tasksHTML;
+
+            taskContainer.querySelectorAll(".report-main-task-checkbox").forEach((cb) => {
+              cb.addEventListener("change", debounceDocumentUpdate);
+            });
+          }
+
+          const floorContainer = document.getElementById("report-floor-list-container");
+          if (floorContainer) {
+            let floorsHTML = "";
+            CONFIG.FLOORS.slice().reverse().forEach((floor) => {
+              const checkboxId = `report-floor-${floor}`;
+              floorsHTML += `
+                <label for="${checkboxId}" class="flex items-center justify-center gap-1 p-1.5 rounded-lg bg-white border border-slate-200/80 hover:border-indigo-300 hover:bg-indigo-50/40 cursor-pointer transition-all text-xs font-semibold text-slate-700">
+                  <input type="checkbox" id="${checkboxId}" value="${floor}" checked class="report-floor-checkbox rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>ชั้น ${floor}</span>
+                </label>
+              `;
+            });
+            floorContainer.innerHTML = floorsHTML;
+
+            floorContainer.querySelectorAll(".report-floor-checkbox").forEach((cb) => {
+              cb.addEventListener("change", debounceDocumentUpdate);
+            });
+          }
+        }
+
+        function getSelectedReportCategories() {
+          const checkboxes = document.querySelectorAll('.report-main-task-checkbox[data-type="unit"]:checked');
+          return Array.from(checkboxes).map((cb) => cb.dataset.catkey);
+        }
+
+        function getSelectedReportCommonAreas() {
+          const checkboxes = document.querySelectorAll('.report-main-task-checkbox[data-type="commonArea"]:checked');
+          return Array.from(checkboxes).map((cb) => cb.dataset.catkey);
+        }
+
+        function getSelectedReportCommonDefectGroups() {
+          const checkboxes = document.querySelectorAll('.report-main-task-checkbox[data-type="commonDefect"]:checked');
+          return Array.from(checkboxes).map((cb) => cb.dataset.catkey);
+        }
+
+        function getSelectedReportExteriorPaintingTasks() {
+          const checkboxes = document.querySelectorAll('.report-main-task-checkbox[data-type="exteriorPainting"]:checked');
+          return Array.from(checkboxes).map((cb) => cb.dataset.catkey);
+        }
+
+        function getSelectedReportFloors() {
+          const checkboxes = document.querySelectorAll(".report-floor-checkbox:checked");
+          return Array.from(checkboxes).map((cb) => cb.value);
+        }
+
+        function getShortDisciplineName(catKey, name) {
+          const shortNames = {
+            skimAndPaint: "สกิม/สี",
+            topping: "TOPPING",
+            electrical: "ไฟฟ้า",
+            plumbing: "ประปา",
+            airCon: "แอร์",
+            ceiling: "งานฝ้า",
+            texcaWall: "ผนัง TEXCA",
+            electricalRoughIn: "ท่อไฟฝัง",
+            plumbingRoughIn: "ท่อประปา",
+            airConRoughIn: "ท่อแอร์",
+            waterproofing: "กันซึม",
+            tiling: "กระเบื้อง",
+            wetWork: "Wet Work",
+            aluminum: "อลูมิเนียม",
+            aluminumPaint: "สีอลูมิเนียม",
+            cleaning: "ทำความสะอาด",
+            furniture: "เฟอร์ฯ",
+            paintOnly: "งานสี",
+            laminate: "ลามิเนต",
+            door: "ประตู",
+            showerScreen: "ฉากอาบน้ำ",
+            endProduct: "End Product",
+          };
+          return shortNames[catKey] || (name || "").replace("งาน", "").replace("คะแนน", "").trim();
+        }
+
+        // --- Helper calculations and section renderers for New Report Modules ---
+        function buildCommonAreaReportStats(selectedCommonAreas) {
+          if (!selectedCommonAreas || selectedCommonAreas.length === 0) {
+            return { stats: [], averageProgress: 0, totalItems: 0, completedItems: 0 };
+          }
+          const stats = [];
+          let sumProgress = 0;
+          let totalAllItems = 0;
+          let completedAllItems = 0;
+
+          const commonFloors = (typeof CONFIG !== "undefined" && Array.isArray(CONFIG.COMMON_AREA_FLOORS))
+            ? CONFIG.COMMON_AREA_FLOORS
+            : [2, 3, 4, 5, 6, 7, 8];
+
+          (selectedCommonAreas || []).forEach((areaKey) => {
+            const caDef = (typeof commonAreaDefinitions !== "undefined" && commonAreaDefinitions)
+              ? commonAreaDefinitions[areaKey]
+              : null;
+            if (!caDef) return;
+
+            let totalItems = 0;
+            let completedItems = 0;
+            let inProgressItems = 0;
+            let progressSum = 0;
+
+            const tasks = Array.isArray(caDef.tasks) ? caDef.tasks : [];
+
+            commonFloors.forEach((fl) => {
+              tasks.forEach((_, tIdx) => {
+                totalItems++;
+                const p = projectData?.commonArea?.[areaKey]?.tasks?.[tIdx]?.progress?.[fl] || 0;
+                progressSum += p;
+                if (p >= 100) completedItems++;
+                else if (p > 0) inProgressItems++;
+              });
+            });
+
+            const remainingItems = Math.max(0, totalItems - completedItems - inProgressItems);
+            const areaAvg = totalItems > 0 ? Math.round((progressSum / totalItems) * 10) / 10 : 0;
+            sumProgress += areaAvg;
+            totalAllItems += totalItems;
+            completedAllItems += completedItems;
+
+            const floorRangeDesc = commonFloors.length > 0
+              ? `ชั้น ${commonFloors[0]} - ${commonFloors[commonFloors.length - 1]}`
+              : "ทุกชั้น";
+
+            stats.push({
+              key: areaKey,
+              name: caDef.locationName || caDef.name || areaKey,
+              floorDesc: floorRangeDesc,
+              totalItems,
+              completedItems,
+              inProgressItems,
+              remainingItems,
+              progress: areaAvg,
+              statusText: areaAvg >= 90 ? "แล้วเสร็จตามแผน" : (areaAvg > 0 ? "กำลังดำเนินการ" : "รอเข้าดำเนินการ"),
+            });
           });
 
-          sortableList.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            const afterElement = getDragAfterElement(sortableList, e.clientY);
-            const draggingElement = document.querySelector(".dragging");
-            if (draggingElement) {
-              if (afterElement == null) {
-                sortableList.appendChild(draggingElement);
-              } else {
-                sortableList.insertBefore(draggingElement, afterElement);
+          const averageProgress = stats.length > 0 ? Math.round((sumProgress / stats.length) * 10) / 10 : 0;
+          return { stats, averageProgress, totalItems: totalAllItems, completedItems: completedAllItems };
+        }
+
+        function buildCommonDefectReportStats(selectedDefectGroups) {
+          const allDefects = (projectData && Array.isArray(projectData.commonDefects))
+            ? projectData.commonDefects
+            : (typeof getInitialCommonDefects === "function" ? getInitialCommonDefects() : []);
+          const groups = [];
+          let totalDefectsAll = 0;
+          let fixedDefectsAll = 0;
+          let pendingInspectDefectsAll = 0;
+          let remainingDefectsAll = 0;
+          let totalLocationsAll = 0;
+          let inspectedLocationsAll = 0;
+          let noDefectLocationsAll = 0;
+
+          (selectedDefectGroups || []).forEach((groupName) => {
+            const items = allDefects.filter((d) => d && d.group === groupName);
+            if (items.length === 0) return;
+
+            let groupTot = 0;
+            let groupFix = 0;
+            let groupPendingInspect = 0;
+            let groupRem = 0;
+            let locationCount = items.length;
+            let inspectedCount = 0;
+            let noDefectCount = 0;
+            const itemBreakdown = [];
+
+            items.forEach((item) => {
+              if (!item) return;
+              const tot = Math.max(0, Number(item.tot) || 0);
+              const fix = Math.min(tot, Math.max(0, Number(item.fix) || 0));
+              const rem = Math.max(0, tot - fix);
+              const isPendingInspect = item.status === "รอนัดตรวจ" || item.status === "รอคะแนน";
+
+              if (item.status !== "ยังไม่ตรวจ") inspectedCount++;
+              if (item.status === "ไม่มี Defect" || (tot === 0 && item.status !== "ยังไม่ตรวจ")) noDefectCount++;
+
+              groupTot += tot;
+              groupFix += fix;
+              if (isPendingInspect) {
+                groupPendingInspect += (rem > 0 ? rem : fix);
               }
+              groupRem += rem;
+
+              itemBreakdown.push({
+                name: item.name || "",
+                tot,
+                fix,
+                rem,
+                target: item.target || "",
+                status: item.status || "ยังไม่ตรวจ"
+              });
+            });
+
+            let resolutionRate = 0;
+            if (groupTot > 0) {
+              resolutionRate = Math.round((groupFix / groupTot) * 100);
+            } else if (inspectedCount > 0 && noDefectCount === inspectedCount) {
+              resolutionRate = 100;
             }
+
+            let statusText = "ยังไม่ตรวจ";
+            if (groupTot === 0 && inspectedCount > 0) {
+              statusText = "ไร้ข้อบกพร่อง";
+            } else if (resolutionRate >= 100) {
+              statusText = "แก้ไขครบ 100%";
+            } else if (groupPendingInspect > 0) {
+              statusText = "รอนัดตรวจซ้ำ";
+            } else if (groupFix > 0) {
+              statusText = "อยู่ระหว่างแก้ไข";
+            } else if (groupTot > 0) {
+              statusText = "รอเข้าแก้ไข";
+            }
+
+            totalDefectsAll += groupTot;
+            fixedDefectsAll += groupFix;
+            pendingInspectDefectsAll += groupPendingInspect;
+            remainingDefectsAll += groupRem;
+            totalLocationsAll += locationCount;
+            inspectedLocationsAll += inspectedCount;
+            noDefectLocationsAll += noDefectCount;
+
+            groups.push({
+              name: groupName,
+              locationCount,
+              totalDefects: groupTot,
+              fixedDefects: groupFix,
+              pendingInspectDefects: groupPendingInspect,
+              remainingDefects: groupRem,
+              resolutionRate,
+              statusText,
+              items: itemBreakdown,
+              // Backward-compatibility aliases
+              total: groupTot,
+              resolved: groupFix,
+              inProgress: groupPendingInspect,
+              pending: groupRem
+            });
           });
-          updateDetailedGridVisibility();
-          updateRoomSummaryVisibility();
+
+          const overallResolutionRate = totalDefectsAll > 0
+            ? Math.round((fixedDefectsAll / totalDefectsAll) * 100)
+            : (inspectedLocationsAll > 0 && totalDefectsAll === 0 ? 100 : 0);
+
+          return {
+            groups,
+            totalDefects: totalDefectsAll,
+            fixedDefects: fixedDefectsAll,
+            pendingInspectDefects: pendingInspectDefectsAll,
+            remainingDefects: remainingDefectsAll,
+            totalLocations: totalLocationsAll,
+            inspectedLocations: inspectedLocationsAll,
+            overallResolutionRate,
+            // Backward-compatibility aliases
+            totalAll: totalDefectsAll,
+            resolvedAll: fixedDefectsAll,
+            inProgressAll: pendingInspectDefectsAll,
+            pendingAll: remainingDefectsAll
+          };
+        }
+
+        function buildExteriorPaintingReportStats(selectedExteriorTasks) {
+          const taskLabels = {
+            joint: { name: "ขัดแต่งรอยต่อ (Joint)", emoji: "🧱" },
+            primer: { name: "ทาสีรองพื้น (Primer)", emoji: "🎨" },
+            waterTest: { name: "เทสน้ำ (Water Test)", emoji: "💧" },
+            topcoat: { name: "ทาสีจริง (Topcoat)", emoji: "✨" },
+          };
+
+          const stats = [];
+          let sumProgress = 0;
+          const totalZones = 39;
+
+          (selectedExteriorTasks || []).forEach((tKey) => {
+            const meta = taskLabels[tKey];
+            if (!meta) return;
+
+            let completed = 0;
+            let inProgress = 0;
+            let remaining = 0;
+            let progressSum = 0;
+
+            for (let z = 1; z <= totalZones; z++) {
+              const val = projectData?.facadeColors?.[z]?.[tKey] || 0;
+              progressSum += val;
+              if (val >= 100) completed++;
+              else if (val > 0) inProgress++;
+              else remaining++;
+            }
+
+            const avg = Math.round((progressSum / totalZones) * 10) / 10;
+            sumProgress += avg;
+
+            stats.push({
+              key: tKey,
+              name: `${meta.emoji} ${meta.name}`,
+              totalZones,
+              completed,
+              inProgress,
+              remaining,
+              progress: avg,
+              statusText: avg >= 90 ? "แล้วเสร็จตามแผน" : (avg > 0 ? "กำลังดำเนินการ" : "รอเข้าดำเนินการ"),
+            });
+          });
+
+          const averageProgress = stats.length > 0 ? Math.round((sumProgress / stats.length) * 10) / 10 : 0;
+          return { stats, averageProgress, totalZones };
+        }
+
+        function renderCommonAreasReportSection(caData) {
+          if (!caData.stats || caData.stats.length === 0) return "";
+          let html = `
+            <div class="mb-4">
+              <div class="border-b-2 border-slate-800 pb-1 mb-2 flex items-center justify-between">
+                <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                  5. ความก้าวหน้างานพื้นที่ส่วนกลาง (COMMON AREAS PROGRESS)
+                </h2>
+                <span class="text-[11px] text-slate-600 font-mono">
+                  รวม ${caData.stats.length} พื้นที่ส่วนกลาง • เฉลี่ย ${caData.averageProgress}%
+                </span>
+              </div>
+              <table class="w-full text-xs border-collapse border border-slate-400 mb-1 text-center">
+                <thead>
+                  <tr class="bg-amber-50 text-slate-900 font-bold border-b border-slate-400 text-[10px]">
+                    <th class="border border-slate-400 py-1 px-1.5 w-8">ลำดับ</th>
+                    <th class="border border-slate-400 py-1 px-2.5 text-left">พื้นที่ส่วนกลาง (Common Area Location)</th>
+                    <th class="border border-slate-400 py-1 px-2 w-28">ขอบเขตชั้น</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">จำนวนงาน</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">แล้วเสร็จ</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">กำลังทำ</th>
+                    <th class="border border-slate-400 py-1 px-2.5 w-32">ความคืบหน้า (%)</th>
+                    <th class="border border-slate-400 py-1 px-2 text-center w-24">สถานะ</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-300 text-[11px]">
+          `;
+
+          caData.stats.forEach((st, idx) => {
+            html += `
+              <tr class="${idx % 2 === 1 ? 'bg-amber-50/25' : ''}">
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${idx + 1}</td>
+                <td class="border border-slate-300 py-1 px-2.5 text-left font-semibold text-slate-900">${escapeCommonDefectText(st.name)}</td>
+                <td class="border border-slate-300 py-1 px-2 text-slate-700 text-[10px]">${st.floorDesc}</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${st.totalItems}</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono font-bold text-slate-900">${st.completedItems}</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${st.inProgressItems}</td>
+                <td class="border border-slate-300 py-1 px-2">
+                  <div class="flex items-center gap-1.5 justify-center">
+                    <div class="w-14 bg-slate-100 border border-slate-400 h-2 overflow-hidden">
+                      <div class="bg-amber-600 h-full" style="width: ${st.progress}%"></div>
+                    </div>
+                    <span class="font-mono font-bold text-slate-950 w-10 text-right text-[11px]">${st.progress}%</span>
+                  </div>
+                </td>
+                <td class="border border-slate-300 py-1 px-1.5 text-center text-slate-900 font-medium text-[10px]">${st.statusText}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+                  <tr class="bg-amber-100/70 font-bold text-slate-950 border-t-2 border-amber-400">
+                    <td class="border border-slate-400 py-1 px-2.5 text-left" colspan="6">
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold uppercase tracking-wide">ความก้าวหน้าเฉลี่ยพื้นที่ส่วนกลางทั้งหมด</span>
+                        <span class="text-[10px] font-normal text-slate-700 font-mono">แล้วเสร็จ ${caData.completedItems} / ${caData.totalItems} รายการ</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-400 py-1 px-2">
+                      <div class="flex items-center gap-1.5 justify-center">
+                        <div class="w-14 bg-white border border-slate-400 h-2 overflow-hidden">
+                          <div class="bg-amber-800 h-full" style="width: ${caData.averageProgress}%"></div>
+                        </div>
+                        <span class="font-mono font-bold text-amber-950 w-10 text-right text-[11px]">${caData.averageProgress}%</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-400 py-1 px-1.5 text-center text-amber-950 font-bold text-[10px]">
+                      ${caData.averageProgress >= 90 ? "เสร็จสิ้นตามแผน" : "กำลังดำเนินการ"}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          return html;
+        }
+
+        function renderCommonDefectsReportSection(defectData) {
+          if (!defectData.groups || defectData.groups.length === 0) return "";
+          let html = `
+            <div class="mb-4">
+              <div class="border-b-2 border-slate-800 pb-1 mb-2 flex flex-wrap items-center justify-between gap-1.5">
+                <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                  6. สรุปและติดตาม DEFECT พื้นที่ส่วนกลาง (COMMON AREA DEFECTS SUMMARY)
+                </h2>
+                <div class="flex flex-wrap items-center gap-1.5 font-mono text-[10.5px]">
+                  <span class="bg-slate-100 text-slate-900 px-2 py-0.5 rounded border border-slate-300 font-bold">
+                    Defect ทั้งหมด: <strong class="text-rose-950 font-black">${defectData.totalDefects}</strong> ข้อ
+                  </span>
+                  <span class="bg-emerald-50 text-emerald-900 px-2 py-0.5 rounded border border-emerald-300 font-bold">
+                    แก้ไขเสร็จ: <strong>${defectData.fixedDefects}</strong> ข้อ
+                  </span>
+                  <span class="bg-amber-50 text-amber-900 px-2 py-0.5 rounded border border-amber-300 font-bold">
+                    รอนัดตรวจ: <strong>${defectData.pendingInspectDefects}</strong> ข้อ
+                  </span>
+                  <span class="bg-rose-50 text-rose-900 px-2 py-0.5 rounded border border-rose-300 font-bold">
+                    รอแก้ไข: <strong>${defectData.remainingDefects}</strong> ข้อ
+                  </span>
+                  <span class="bg-rose-900 text-white px-2 py-0.5 rounded font-black text-[11px]">
+                    ${defectData.overallResolutionRate}%
+                  </span>
+                </div>
+              </div>
+              <table class="w-full text-xs border-collapse border border-slate-400 mb-1 text-center">
+                <thead>
+                  <tr class="bg-rose-50 text-slate-900 font-bold border-b border-slate-400 text-[10px]">
+                    <th class="border border-slate-400 py-1.5 px-1.5 w-8">ลำดับ</th>
+                    <th class="border border-slate-400 py-1.5 px-2.5 text-left">กลุ่มพื้นที่ส่วนกลาง (Common Area Defect Zone)</th>
+                    <th class="border border-slate-400 py-1.5 px-1.5 w-14">จุดตรวจ</th>
+                    <th class="border border-slate-400 py-1.5 px-1.5 w-20">Defect ทั้งหมด</th>
+                    <th class="border border-slate-400 py-1.5 px-1.5 w-18">แก้ไขเสร็จ</th>
+                    <th class="border border-slate-400 py-1.5 px-1.5 w-18">รอนัดตรวจ</th>
+                    <th class="border border-slate-400 py-1.5 px-1.5 w-18">รอแก้ไข</th>
+                    <th class="border border-slate-400 py-1.5 px-2.5 w-28">อัตราการแก้ไขเสร็จ (%)</th>
+                    <th class="border border-slate-400 py-1.5 px-2 text-center w-24">สถานะควบคุม</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-300 text-[11px]">
+          `;
+
+          defectData.groups.forEach((g, idx) => {
+            const itemsWithDefects = (g.items || []).filter((it) => it.tot > 0);
+            let itemsBreakdownHTML = "";
+            if (itemsWithDefects.length > 0) {
+              itemsBreakdownHTML = `
+                <div class="text-[9px] text-slate-600 font-mono mt-0.5 leading-tight flex flex-wrap gap-x-2 gap-y-0.5">
+                  ${itemsWithDefects
+                    .map(
+                      (it) => `
+                    <span class="inline-flex items-center gap-1 bg-slate-100/90 px-1.5 py-0.5 rounded border border-slate-200">
+                      <span class="font-semibold text-slate-800">${escapeCommonDefectText(it.name)}:</span>
+                      <span class="text-slate-900 font-bold">${it.tot} ข้อ</span>
+                      ${it.fix > 0 ? `<span class="text-emerald-700 font-semibold">(เสร็จ ${it.fix})</span>` : ""}
+                      ${it.rem > 0 ? `<span class="text-rose-700 font-bold">(รอแก้ ${it.rem})</span>` : ""}
+                    </span>
+                  `
+                    )
+                    .join("")}
+                </div>
+              `;
+            } else if (g.totalDefects === 0 && g.locationCount > 0) {
+              itemsBreakdownHTML = `
+                <div class="text-[9px] text-emerald-700 font-mono mt-0.5">
+                  ✓ ตรวจสอบแล้ว ไม่พบรายการ Defect (${g.locationCount} จุดตรวจ)
+                </div>
+              `;
+            }
+
+            html += `
+              <tr class="${idx % 2 === 1 ? "bg-rose-50/20" : ""}">
+                <td class="border border-slate-300 py-1.5 px-1.5 font-mono text-slate-700">${idx + 1}</td>
+                <td class="border border-slate-300 py-1.5 px-2.5 text-left font-semibold text-slate-900">
+                  <div class="font-bold">${escapeCommonDefectText(g.name)}</div>
+                  ${itemsBreakdownHTML}
+                </td>
+                <td class="border border-slate-300 py-1.5 px-1.5 font-mono text-slate-700">${g.locationCount} จุด</td>
+                <td class="border border-slate-300 py-1.5 px-1.5 font-mono font-bold text-slate-950">${g.totalDefects} ข้อ</td>
+                <td class="border border-slate-300 py-1.5 px-1.5 font-mono font-bold text-emerald-800">${g.fixedDefects} ข้อ</td>
+                <td class="border border-slate-300 py-1.5 px-1.5 font-mono font-semibold text-amber-800">${g.pendingInspectDefects} ข้อ</td>
+                <td class="border border-slate-300 py-1.5 px-1.5 font-mono font-bold text-rose-800">${g.remainingDefects} ข้อ</td>
+                <td class="border border-slate-300 py-1.5 px-2">
+                  <div class="flex items-center gap-1.5 justify-center">
+                    <div class="w-14 bg-slate-100 border border-slate-400 h-2 overflow-hidden">
+                      <div class="bg-rose-700 h-full" style="width: ${g.resolutionRate}%"></div>
+                    </div>
+                    <span class="font-mono font-bold text-slate-950 w-9 text-right text-[11px]">${g.resolutionRate}%</span>
+                  </div>
+                </td>
+                <td class="border border-slate-300 py-1.5 px-1.5 text-center text-slate-900 font-medium text-[10px]">${g.statusText}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+                  <tr class="bg-rose-100/80 font-bold text-slate-950 border-t-2 border-rose-500">
+                    <td class="border border-slate-400 py-1.5 px-2.5 text-left" colspan="2">
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold uppercase tracking-wide">สรุปจำนวนข้อ DEFECT พื้นที่ส่วนกลางทั้งหมด</span>
+                        <span class="text-[10px] font-mono text-slate-700 font-normal">(${defectData.totalLocations} จุดตรวจทั่วอาคาร)</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-400 py-1.5 px-1.5 font-mono text-center text-slate-900 font-bold">${defectData.totalLocations} จุด</td>
+                    <td class="border border-slate-400 py-1.5 px-1.5 font-mono text-center text-slate-950 font-black">${defectData.totalDefects} ข้อ</td>
+                    <td class="border border-slate-400 py-1.5 px-1.5 font-mono text-center text-emerald-900 font-black">${defectData.fixedDefects} ข้อ</td>
+                    <td class="border border-slate-400 py-1.5 px-1.5 font-mono text-center text-amber-900 font-bold">${defectData.pendingInspectDefects} ข้อ</td>
+                    <td class="border border-slate-400 py-1.5 px-1.5 font-mono text-center text-rose-950 font-black">${defectData.remainingDefects} ข้อ</td>
+                    <td class="border border-slate-400 py-1.5 px-2">
+                      <div class="flex items-center gap-1.5 justify-center">
+                        <div class="w-14 bg-white border border-slate-400 h-2.5 overflow-hidden">
+                          <div class="bg-rose-900 h-full" style="width: ${defectData.overallResolutionRate}%"></div>
+                        </div>
+                        <span class="font-mono font-bold text-rose-950 w-9 text-right text-[11px]">${defectData.overallResolutionRate}%</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-400 py-1.5 px-1.5 text-center text-rose-950 font-bold text-[10px]">
+                      ${defectData.overallResolutionRate >= 100 ? "แก้ไขครบ 100%" : (defectData.remainingDefects === 0 ? "ผ่านการตรวจสอบ" : "เร่งรัดการแก้ไข")}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          return html;
+        }
+
+        function renderExteriorPaintingReportSection(extData) {
+          if (!extData.stats || extData.stats.length === 0) return "";
+          let html = `
+            <div class="mb-4">
+              <div class="border-b-2 border-slate-800 pb-1 mb-2 flex items-center justify-between">
+                <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                  7. ความก้าวหน้างานเก็บสีรูปด้านอาคาร (EXTERIOR FACADE PAINTING)
+                </h2>
+                <span class="text-[11px] text-slate-600 font-mono">
+                  รวม 39 โซนรูปด้านอาคาร • เฉลี่ย ${extData.averageProgress}%
+                </span>
+              </div>
+              <table class="w-full text-xs border-collapse border border-slate-400 mb-1 text-center">
+                <thead>
+                  <tr class="bg-violet-50 text-slate-900 font-bold border-b border-slate-400 text-[10px]">
+                    <th class="border border-slate-400 py-1 px-1.5 w-8">ลำดับ</th>
+                    <th class="border border-slate-400 py-1 px-2.5 text-left">ขั้นตอนงานสีรูปด้าน (Facade Painting Activity)</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">เป้าหมาย</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">แล้วเสร็จ 100%</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">กำลังดำเนินการ</th>
+                    <th class="border border-slate-400 py-1 px-1.5 w-16">คงเหลือ</th>
+                    <th class="border border-slate-400 py-1 px-2.5 w-32">ความคืบหน้า (%)</th>
+                    <th class="border border-slate-400 py-1 px-2 text-center w-24">สถานะ</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-300 text-[11px]">
+          `;
+
+          extData.stats.forEach((st, idx) => {
+            html += `
+              <tr class="${idx % 2 === 1 ? 'bg-violet-50/20' : ''}">
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${idx + 1}</td>
+                <td class="border border-slate-300 py-1 px-2.5 text-left font-semibold text-slate-900">${st.name}</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-800">${st.totalZones} โซน</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono font-bold text-slate-950">${st.completed} โซน</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${st.inProgress} โซน</td>
+                <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-600">${st.remaining} โซน</td>
+                <td class="border border-slate-300 py-1 px-2">
+                  <div class="flex items-center gap-1.5 justify-center">
+                    <div class="w-14 bg-slate-100 border border-slate-400 h-2 overflow-hidden">
+                      <div class="bg-violet-600 h-full" style="width: ${st.progress}%"></div>
+                    </div>
+                    <span class="font-mono font-bold text-slate-950 w-10 text-right text-[11px]">${st.progress}%</span>
+                  </div>
+                </td>
+                <td class="border border-slate-300 py-1 px-1.5 text-center text-slate-900 font-medium text-[10px]">${st.statusText}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+                  <tr class="bg-violet-100/70 font-bold text-slate-950 border-t-2 border-violet-400">
+                    <td class="border border-slate-400 py-1 px-2.5 text-left" colspan="6">
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold uppercase tracking-wide">ความก้าวหน้าเฉลี่ยงานเก็บสีรูปด้านอาคาร</span>
+                        <span class="text-[10px] font-normal text-slate-700 font-mono">ขอบเขตงานสีรอบอาคาร 39 โซน</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-400 py-1 px-2">
+                      <div class="flex items-center gap-1.5 justify-center">
+                        <div class="w-14 bg-white border border-slate-400 h-2 overflow-hidden">
+                          <div class="bg-violet-900 h-full" style="width: ${extData.averageProgress}%"></div>
+                        </div>
+                        <span class="font-mono font-bold text-violet-950 w-10 text-right text-[11px]">${extData.averageProgress}%</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-400 py-1 px-1.5 text-center text-violet-950 font-bold text-[10px]">
+                      ${extData.averageProgress >= 90 ? "เสร็จสิ้นตามแผน" : "กำลังดำเนินการ"}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          return html;
+        }
+
+        function generateDocumentReportPreview() {
+          const docSheet = document.getElementById("report-document-sheet");
+          const textOutput = document.getElementById("report-text-summary-output");
+          if (!docSheet) return;
+
+          const docTitle = document.getElementById("report-doc-title")?.value || "รายงานสรุปความก้าวหน้าโครงการก่อสร้าง";
+          const docNo = document.getElementById("report-doc-no")?.value || "REP-01";
+          const docDate = document.getElementById("report-doc-date")?.value || new Date().toLocaleDateString("th-TH");
+          const docPreparer = document.getElementById("report-doc-preparer")?.value || "วิศวกรโครงการ";
+          const docPeriod = document.getElementById("report-doc-period")?.value || "ประจำสัปดาห์";
+
+          const optKpi = document.getElementById("report-opt-kpi")?.checked ?? true;
+          const optDisciplines = document.getElementById("report-opt-disciplines")?.checked ?? true;
+          const optFloors = document.getElementById("report-opt-floors")?.checked ?? true;
+          const optInspection = document.getElementById("report-opt-inspection")?.checked ?? true;
+          const optCommonAreas = document.getElementById("report-opt-common-areas")?.checked ?? true;
+          const optCommonDefects = document.getElementById("report-opt-common-defects")?.checked ?? true;
+          const optExteriorPainting = document.getElementById("report-opt-exterior-painting")?.checked ?? true;
+          const optSignatures = document.getElementById("report-opt-signatures")?.checked ?? true;
+
+          const selectedCats = getSelectedReportCategories();
+          const selectedCommonAreas = getSelectedReportCommonAreas();
+          const selectedCommonDefectGroups = getSelectedReportCommonDefectGroups();
+          const selectedExteriorTasks = getSelectedReportExteriorPaintingTasks();
+          const selectedFloors = getSelectedReportFloors();
+
+          // Compute module statistics
+          const commonAreaData = buildCommonAreaReportStats(optCommonAreas ? selectedCommonAreas : []);
+          const commonDefectData = buildCommonDefectReportStats(optCommonDefects ? selectedCommonDefectGroups : []);
+          const exteriorPaintingData = buildExteriorPaintingReportStats(optExteriorPainting ? selectedExteriorTasks : []);
+
+          // Calculate statistics
+          let totalEvaluatedUnits = 0;
+          selectedFloors.forEach((f) => {
+            totalEvaluatedUnits += CONFIG.getRoomsOnFloor(f);
+          });
+
+          // Overall weighted percentage calculation
+          let totalPercentageSum = 0;
+          let activeCategoriesCount = 0;
+          const disciplineStats = [];
+
+          selectedCats.forEach((catKey) => {
+            const catDef = taskDefinitions[catKey];
+            if (!catDef) return;
+
+            let catProgress = 0;
+            let completedRooms = 0;
+            let inProgressRooms = 0;
+            let totalRooms = 0;
+
+            if (catDef.type === "inspection") {
+              const combined = calculateCombinedInspectionStats(catKey, selectedFloors);
+              totalRooms = combined.totalRooms;
+              completedRooms = combined.totalPassed;
+              inProgressRooms = combined.pendingDefects + combined.inInspection;
+              catProgress = combined.passRate;
+            } else if (catDef.type === "multi-progress") {
+              const allSubIdx = catDef.tasks.map((_, i) => i);
+              const status = calculateMultiProgressOverallStatus(catKey, selectedFloors, allSubIdx);
+              totalRooms = status.totalRooms;
+              completedRooms = status.completedRooms;
+              inProgressRooms = status.inProgressRooms;
+              catProgress = calculateMultiProgressOverallPercentage(catKey, selectedFloors, allSubIdx);
+            } else {
+              // Standard progress
+              selectedFloors.forEach((fl) => {
+                const rooms = CONFIG.getRoomsOnFloor(fl);
+                for (let r = 1; r <= rooms; r++) {
+                  totalRooms++;
+                  const u = projectData[catKey]?.[fl]?.[r];
+                  const p = u?.progress || 0;
+                  if (p >= 100) completedRooms++;
+                  else if (p > 0) inProgressRooms++;
+                  catProgress += p;
+                }
+              });
+              catProgress = totalRooms > 0 ? (catProgress / totalRooms) : 0;
+            }
+
+            const remainingRooms = Math.max(0, totalRooms - completedRooms - inProgressRooms);
+            disciplineStats.push({
+              key: catKey,
+              name: catDef.reportName,
+              progress: Math.min(100, Math.round(catProgress * 10) / 10),
+              completedRooms,
+              inProgressRooms,
+              remainingRooms,
+              totalRooms,
+              statusText: catProgress >= 90 ? "แล้วเสร็จตามแผน" : (catProgress > 0 ? "กำลังดำเนินการ" : "รอเข้าดำเนินการ"),
+            });
+
+            totalPercentageSum += catProgress;
+            activeCategoriesCount++;
+          });
+
+          const WET_WORK_KEYS = [
+            "skimAndPaint", "topping", "electrical", "plumbing", "airCon",
+            "ceiling", "texcaWall", "electricalRoughIn", "plumbingRoughIn",
+            "airConRoughIn", "waterproofing", "tiling", "wetWork"
+          ];
+          const END_PRODUCT_KEYS = [
+            "aluminum", "aluminumPaint", "cleaning", "furniture", "paintOnly",
+            "laminate", "door", "showerScreen", "endProduct"
+          ];
+
+          const selectedWetWorkCats = selectedCats.filter((c) => WET_WORK_KEYS.includes(c));
+          const selectedEndProductCats = selectedCats.filter((c) => !WET_WORK_KEYS.includes(c));
+
+          const wetWorkStats = disciplineStats.filter((ds) => WET_WORK_KEYS.includes(ds.key));
+          const endProductStats = disciplineStats.filter((ds) => !WET_WORK_KEYS.includes(ds.key));
+
+          let wetWorkProgressSum = 0;
+          wetWorkStats.forEach((ds) => { wetWorkProgressSum += ds.progress; });
+          const wetWorkAverageProgress = wetWorkStats.length > 0
+            ? Math.round((wetWorkProgressSum / wetWorkStats.length) * 10) / 10
+            : 0;
+
+          let endProductProgressSum = 0;
+          endProductStats.forEach((ds) => { endProductProgressSum += ds.progress; });
+          const endProductAverageProgress = endProductStats.length > 0
+            ? Math.round((endProductProgressSum / endProductStats.length) * 10) / 10
+            : 0;
+
+          // Blended Project Progress
+          let overallSum = 0;
+          let overallModulesCount = 0;
+          if (activeCategoriesCount > 0) {
+            overallSum += (totalPercentageSum / activeCategoriesCount);
+            overallModulesCount++;
+          }
+          if (optCommonAreas && commonAreaData.stats.length > 0) {
+            overallSum += commonAreaData.averageProgress;
+            overallModulesCount++;
+          }
+          if (optExteriorPainting && exteriorPaintingData.stats.length > 0) {
+            overallSum += exteriorPaintingData.averageProgress;
+            overallModulesCount++;
+          }
+
+          const overallProjectProgress = overallModulesCount > 0
+            ? Math.round((overallSum / overallModulesCount) * 10) / 10
+            : 0;
+
+          // Combined Inspection stats (QC & CM combined for Wet Work and End Product)
+          const wetWorkInspection = calculateCombinedInspectionStats("wetWork", selectedFloors);
+          const endProductInspection = calculateCombinedInspectionStats("endProduct", selectedFloors);
+
+          // Totals for disciplines
+          let totalScopeUnits = 0;
+          let totalCompletedUnits = 0;
+          let totalInProgressUnits = 0;
+          let totalRemainingUnits = 0;
+          disciplineStats.forEach((ds) => {
+            totalScopeUnits += ds.totalRooms;
+            totalCompletedUnits += ds.completedRooms;
+            totalInProgressUnits += ds.inProgressRooms;
+            totalRemainingUnits += ds.remainingRooms;
+          });
+
+          // Determine pagination (1, 2, or 3 pages)
+          const hasNewSections = (optCommonAreas && commonAreaData.stats.length > 0) ||
+            (optCommonDefects && commonDefectData.groups.length > 0) ||
+            (optExteriorPainting && exteriorPaintingData.stats.length > 0);
+
+          let totalPages = 1;
+          if (hasNewSections) {
+            totalPages = (optDisciplines || optFloors || optInspection) ? 3 : 2;
+          } else if ((optDisciplines && optFloors) || (disciplineStats.length > 5 && (optFloors || optInspection || optSignatures))) {
+            totalPages = 2;
+          } else {
+            totalPages = 1;
+          }
+
+          // 1. OFFICIAL DOCUMENT HEADER TABLE (แบบฟอร์มหัวเอกสารทางการวิศวกรรม)
+          const headerHTML = `
+            <div class="border-2 border-slate-800 mb-4 bg-white text-xs">
+              <!-- Top Row: Logo, Title, Document Control Box -->
+              <div class="grid grid-cols-12 border-b border-slate-800">
+                <!-- Left: Project Identity & Monogram -->
+                <div class="col-span-3 border-r border-slate-800 p-2.5 flex flex-col items-center justify-center bg-slate-50 text-center">
+                  <div class="text-xl font-bold tracking-widest text-slate-950 font-mono">PYNN</div>
+                  <div class="text-[11px] font-bold text-slate-800 tracking-wider mt-0.5">NGAMWONGWAN 54</div>
+                  <div class="text-[9px] text-slate-500 uppercase tracking-tight mt-0.5">CONSTRUCTION MANAGEMENT</div>
+                </div>
+
+                <!-- Center: Formal Document Title -->
+                <div class="col-span-6 p-2.5 flex flex-col justify-center text-center">
+                  <div class="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">
+                    ฝ่ายบริหารงานก่อสร้างและการควบคุมคุณภาพ (Construction & QA/QC Division)
+                  </div>
+                  <h1 class="text-base font-bold text-slate-950 mt-0.5 leading-tight">
+                    ${escapeCommonDefectText(docTitle)}
+                  </h1>
+                  <div class="text-[11px] text-slate-700 font-medium mt-0.5">
+                    โครงการ ไพน์ งามวงศ์วาน 54 (PYNN Ngamwongwan 54)
+                  </div>
+                </div>
+
+                <!-- Right: Document Control Box (กรอบควบคุมเอกสารทางการ) -->
+                <div class="col-span-3 border-l border-slate-800 text-[11px] divide-y divide-slate-300">
+                  <div class="px-2 py-1 flex justify-between bg-slate-50">
+                    <span class="text-slate-600">เลขที่เอกสาร:</span>
+                    <span class="font-bold font-mono text-slate-950">${escapeCommonDefectText(docNo)}</span>
+                  </div>
+                  <div class="px-2 py-1 flex justify-between">
+                    <span class="text-slate-600">วันที่ออกรายงาน:</span>
+                    <span class="font-bold text-slate-950">${escapeCommonDefectText(docDate)}</span>
+                  </div>
+                  <div class="px-2 py-1 flex justify-between bg-slate-50">
+                    <span class="text-slate-600">งวดงาน / ประจำ:</span>
+                    <span class="font-bold text-slate-950">${escapeCommonDefectText(docPeriod)}</span>
+                  </div>
+                  <div class="px-2 py-1 flex justify-between">
+                    <span class="text-slate-600">สถานะเอกสาร:</span>
+                    <span class="font-bold text-slate-900">ฉบับทางการ (Official)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Metadata Information Matrix Grid -->
+              <div class="grid grid-cols-2 divide-x divide-slate-300 border-b border-slate-300">
+                <div class="px-3 py-1.5 flex gap-2">
+                  <span class="font-bold text-slate-700 w-32 flex-shrink-0">โครงการ (Project):</span>
+                  <span class="text-slate-900">คอนโดมิเนียม PYNN งามวงศ์วาน 54</span>
+                </div>
+                <div class="px-3 py-1.5 flex gap-2">
+                  <span class="font-bold text-slate-700 w-32 flex-shrink-0">ผู้จัดทำ (Prepared By):</span>
+                  <span class="text-slate-900 font-semibold">${escapeCommonDefectText(docPreparer)}</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 divide-x divide-slate-300 bg-slate-50/50">
+                <div class="px-3 py-1.5 flex gap-2">
+                  <span class="font-bold text-slate-700 w-32 flex-shrink-0">ขอบเขตพื้นที่ (Scope):</span>
+                  <span class="text-slate-900 font-medium">ชั้น ${selectedFloors.join(", ")} (จำนวนทั้งหมด ${totalEvaluatedUnits} ห้องพักอาศัย)</span>
+                </div>
+                <div class="px-3 py-1.5 flex gap-2">
+                  <span class="font-bold text-slate-700 w-32 flex-shrink-0">ประเภทเอกสาร:</span>
+                  <span class="text-slate-900">รายงานสรุปความก้าวหน้างานประจำงวด (Progress Report)</span>
+                </div>
+              </div>
+            </div>
+          `;
+
+          // 2. EXECUTIVE SUMMARY & KEY INDICATORS (Separated into Wet Work & End Product)
+          let section1HTML = "";
+          if (optKpi) {
+            section1HTML = `
+              <div class="mb-4">
+                <div class="border-b-2 border-slate-800 pb-1 mb-2 flex items-center justify-between">
+                  <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                    1. ข้อมูลสรุปภาพรวมและดัชนีชี้วัดผลงาน (EXECUTIVE SUMMARY & KEY INDICATORS)
+                  </h2>
+                  <span class="text-[11px] text-slate-600">
+                    ขอบเขตประเมิน: ชั้น ${selectedFloors.join(", ")} (รวม ${totalEvaluatedUnits} ห้องชุด)
+                  </span>
+                </div>
+
+                <table class="w-full text-xs border-collapse border border-slate-400 mb-1">
+                  <thead>
+                    <tr class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400 text-center">
+                      <th class="border border-slate-400 py-1.5 px-3 text-left">หมวดงานและดัชนีชี้วัดผลงาน (Key Performance Indicator)</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-28">เป้าหมาย (Target)</th>
+                      <th class="border border-slate-400 py-1.5 px-3 text-center w-60">ผลการดำเนินงานจริง (Actual Result)</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-28">% ส่งมอบแล้วเสร็จ</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-300">
+                    ${wetWorkStats.length > 0 ? `
+                    <tr class="bg-emerald-50/35">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-950">
+                        <span class="inline-flex items-center gap-1.5 font-bold text-emerald-950">💧 1.1 ความก้าวหน้าเฉลี่ยหมวดงาน WET WORK</span>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">100.0%</td>
+                      <td class="border border-slate-300 py-1.5 px-3">
+                        <div class="flex items-center gap-2">
+                          <div class="flex-grow bg-slate-100 border border-slate-400 h-2.5 overflow-hidden">
+                            <div class="bg-emerald-700 h-full" style="width: ${wetWorkAverageProgress}%"></div>
+                          </div>
+                          <span class="font-mono font-bold text-slate-950 w-12 text-right">${wetWorkAverageProgress}%</span>
+                        </div>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-emerald-900">
+                        ${wetWorkAverageProgress}%
+                      </td>
+                    </tr>
+                    <tr class="bg-emerald-50/15">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-900 pl-6">
+                        └ ผลการตรวจรับคุณภาพงานเปียก WET WORK (QC & CM % ส่งมอบแล้วเสร็จ)
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">${wetWorkInspection.totalRooms} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-3 text-center font-mono font-semibold text-slate-900">
+                        ${wetWorkInspection.totalPassed} / ${wetWorkInspection.totalRooms} ห้อง (ผ่าน: ${wetWorkInspection.passed_clean}, เมเจอร์: ${wetWorkInspection.passed_defect})
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-emerald-900">
+                        ${wetWorkInspection.passRate}%
+                      </td>
+                    </tr>
+                    ` : ''}
+
+                    ${endProductStats.length > 0 ? `
+                    <tr class="bg-sky-50/35">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-950">
+                        <span class="inline-flex items-center gap-1.5 font-bold text-sky-950">🏁 ${wetWorkStats.length > 0 ? '1.2' : '1.1'} ความก้าวหน้าเฉลี่ยหมวดงาน END PRODUCT</span>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">100.0%</td>
+                      <td class="border border-slate-300 py-1.5 px-3">
+                        <div class="flex items-center gap-2">
+                          <div class="flex-grow bg-slate-100 border border-slate-400 h-2.5 overflow-hidden">
+                            <div class="bg-sky-700 h-full" style="width: ${endProductAverageProgress}%"></div>
+                          </div>
+                          <span class="font-mono font-bold text-slate-950 w-12 text-right">${endProductAverageProgress}%</span>
+                        </div>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-sky-900">
+                        ${endProductAverageProgress}%
+                      </td>
+                    </tr>
+                    <tr class="bg-sky-50/15">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-900 pl-6">
+                        └ ผลการตรวจรับคุณภาพส่งมอบ END PRODUCT (QC & CM % ส่งมอบแล้วเสร็จ)
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">${endProductInspection.totalRooms} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-3 text-center font-mono font-semibold text-slate-900">
+                        ${endProductInspection.totalPassed} / ${endProductInspection.totalRooms} ห้อง (ผ่าน: ${endProductInspection.passed_clean}, เมเจอร์: ${endProductInspection.passed_defect})
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-sky-900">
+                        ${endProductInspection.passRate}%
+                      </td>
+                    </tr>
+                    ` : ''}
+
+                    ${optCommonAreas && commonAreaData.stats.length > 0 ? `
+                    <tr class="bg-amber-50/35">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-950">
+                        <span class="inline-flex items-center gap-1.5 font-bold text-amber-950">🏢 ความก้าวหน้าพื้นที่ส่วนกลาง (COMMON AREAS)</span>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">100.0%</td>
+                      <td class="border border-slate-300 py-1.5 px-3">
+                        <div class="flex items-center gap-2">
+                          <div class="flex-grow bg-slate-100 border border-slate-400 h-2.5 overflow-hidden">
+                            <div class="bg-amber-700 h-full" style="width: ${commonAreaData.averageProgress}%"></div>
+                          </div>
+                          <span class="font-mono font-bold text-slate-950 w-12 text-right">${commonAreaData.averageProgress}%</span>
+                        </div>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-amber-900">
+                        ${commonAreaData.averageProgress}%
+                      </td>
+                    </tr>
+                    ` : ''}
+
+                    ${optCommonDefects && commonDefectData.groups.length > 0 ? `
+                    <tr class="bg-rose-50/35">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-950">
+                        <span class="inline-flex items-center gap-1.5 font-bold text-rose-950">🛠️ การแก้ไข Defect ส่วนกลาง (COMMON DEFECTS)</span>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">${commonDefectData.totalDefects} ข้อ</td>
+                      <td class="border border-slate-300 py-1.5 px-3">
+                        <div class="flex items-center gap-2">
+                          <div class="flex-grow bg-slate-100 border border-slate-400 h-2.5 overflow-hidden">
+                            <div class="bg-rose-700 h-full" style="width: ${commonDefectData.overallResolutionRate}%"></div>
+                          </div>
+                          <span class="font-mono font-bold text-slate-950 w-12 text-right">${commonDefectData.overallResolutionRate}%</span>
+                        </div>
+                        <div class="text-[9.5px] text-slate-600 mt-0.5 flex justify-between font-mono">
+                          <span>เสร็จ ${commonDefectData.fixedDefects} ข้อ</span>
+                          <span>รอตรวจ ${commonDefectData.pendingInspectDefects} ข้อ</span>
+                          <span class="text-rose-700 font-bold">รอแก้ ${commonDefectData.remainingDefects} ข้อ</span>
+                        </div>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-rose-900">
+                        ${commonDefectData.overallResolutionRate}%
+                      </td>
+                    </tr>
+                    ` : ''}
+
+                    ${optExteriorPainting && exteriorPaintingData.stats.length > 0 ? `
+                    <tr class="bg-violet-50/35">
+                      <td class="border border-slate-300 py-1.5 px-3 font-semibold text-slate-950">
+                        <span class="inline-flex items-center gap-1.5 font-bold text-violet-950">🎨 งานเก็บสีรูปด้านอาคาร (EXTERIOR FACADE)</span>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-semibold">100.0%</td>
+                      <td class="border border-slate-300 py-1.5 px-3">
+                        <div class="flex items-center gap-2">
+                          <div class="flex-grow bg-slate-100 border border-slate-400 h-2.5 overflow-hidden">
+                            <div class="bg-violet-700 h-full" style="width: ${exteriorPaintingData.averageProgress}%"></div>
+                          </div>
+                          <span class="font-mono font-bold text-slate-950 w-12 text-right">${exteriorPaintingData.averageProgress}%</span>
+                        </div>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-violet-900">
+                        ${exteriorPaintingData.averageProgress}%
+                      </td>
+                    </tr>
+                    ` : ''}
+
+                    <tr class="bg-slate-100 font-bold border-t-2 border-slate-400">
+                      <td class="border border-slate-300 py-1.5 px-3 text-slate-950 font-bold">
+                        ความก้าวหน้าเฉลี่ยรวมทั้งโครงการ (Overall Project Average)
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono">100.0%</td>
+                      <td class="border border-slate-300 py-1.5 px-3">
+                        <div class="flex items-center gap-2">
+                          <div class="flex-grow bg-slate-200 border border-slate-400 h-2 overflow-hidden">
+                            <div class="bg-slate-800 h-full" style="width: ${overallProjectProgress}%"></div>
+                          </div>
+                          <span class="font-mono font-bold text-slate-950 w-12 text-right">${overallProjectProgress}%</span>
+                        </div>
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 text-center font-mono font-bold text-slate-950">
+                        ${overallProjectProgress}%
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+
+          // 3. DISCIPLINE BREAKDOWN TABLE (ตารางความก้าวหน้าแยกตามหมวดงาน WET WORK และ END PRODUCT ชัดเจน)
+          let section2HTML = "";
+          if (optDisciplines) {
+            const renderDisciplineSubTable = (stats, subNo, subTitle, themeBg, themeBorder, themeText, groupAvg) => {
+              if (stats.length === 0) return "";
+              let tableHTML = `
+                <div class="mb-3">
+                  <div class="font-bold text-slate-900 text-xs mb-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5 font-bold">${subNo} ${subTitle}</span>
+                    <span class="text-[11px] font-mono font-bold ${themeText} ${themeBg} px-2 py-0.5 rounded border ${themeBorder}">
+                      เฉลี่ยหมวด: ${groupAvg}%
+                    </span>
+                  </div>
+
+                  <table class="w-full text-xs border-collapse border border-slate-400 mb-1 text-center">
+                    <thead>
+                      <tr class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400 text-[10px]">
+                        <th class="border border-slate-400 py-1 px-1.5 w-8">ลำดับ</th>
+                        <th class="border border-slate-400 py-1 px-2.5 text-left">รายการหมวดงาน (Discipline Description)</th>
+                        <th class="border border-slate-400 py-1 px-1.5 w-16">เป้าหมาย</th>
+                        <th class="border border-slate-400 py-1 px-1.5 w-16">แล้วเสร็จ</th>
+                        <th class="border border-slate-400 py-1 px-1.5 w-20">กำลังดำเนินการ</th>
+                        <th class="border border-slate-400 py-1 px-1.5 w-16">คงเหลือ</th>
+                        <th class="border border-slate-400 py-1 px-2.5 w-32">ความคืบหน้า (%)</th>
+                        <th class="border border-slate-400 py-1 px-2 text-center w-24">สถานะ</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-300 text-[11px]">
+              `;
+
+              stats.forEach((ds, idx) => {
+                tableHTML += `
+                  <tr class="${idx % 2 === 1 ? 'bg-slate-50/40' : ''}">
+                    <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${idx + 1}</td>
+                    <td class="border border-slate-300 py-1 px-2.5 text-left font-semibold text-slate-900">
+                      ${escapeCommonDefectText(ds.name)}
+                    </td>
+                    <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-800">${ds.totalRooms} ห้อง</td>
+                    <td class="border border-slate-300 py-1 px-1.5 font-mono font-bold text-slate-900">${ds.completedRooms} ห้อง</td>
+                    <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-700">${ds.inProgressRooms} ห้อง</td>
+                    <td class="border border-slate-300 py-1 px-1.5 font-mono text-slate-600">${ds.remainingRooms} ห้อง</td>
+                    <td class="border border-slate-300 py-1 px-2">
+                      <div class="flex items-center gap-1.5 justify-center">
+                        <div class="w-14 bg-slate-100 border border-slate-400 h-2 overflow-hidden">
+                          <div class="bg-slate-800 h-full" style="width: ${ds.progress}%"></div>
+                        </div>
+                        <span class="font-mono font-bold text-slate-950 w-10 text-right text-[11px]">${ds.progress}%</span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-300 py-1 px-1.5 text-center text-slate-900 font-medium text-[10px]">
+                      ${ds.statusText}
+                    </td>
+                  </tr>
+                `;
+              });
+
+              // Bottom summary row for this group
+              tableHTML += `
+                      <tr class="${themeBg} font-bold text-slate-950 border-t-2 ${themeBorder}">
+                        <td class="border border-slate-400 py-1 px-2.5 text-left" colspan="6">
+                          <div class="flex items-center justify-between">
+                            <span class="font-bold uppercase tracking-wide">ความก้าวหน้าเฉลี่ย${subTitle}</span>
+                            <span class="text-[10px] font-normal text-slate-700 font-mono">ประเมินรวม ${stats.length} หมวดงาน</span>
+                          </div>
+                        </td>
+                        <td class="border border-slate-400 py-1 px-2">
+                          <div class="flex items-center gap-1.5 justify-center">
+                            <div class="w-14 bg-white border border-slate-400 h-2 overflow-hidden">
+                              <div class="bg-slate-900 h-full" style="width: ${groupAvg}%"></div>
+                            </div>
+                            <span class="font-mono font-bold ${themeText} w-10 text-right text-[11px]">${groupAvg}%</span>
+                          </div>
+                        </td>
+                        <td class="border border-slate-400 py-1 px-1.5 text-center ${themeText} font-bold text-[10px]">
+                          ${groupAvg >= 90 ? "เสร็จสิ้นตามแผน" : "กำลังดำเนินการ"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              `;
+              return tableHTML;
+            };
+
+            section2HTML = `
+              <div class="mb-4">
+                <div class="border-b-2 border-slate-800 pb-1 mb-2 flex items-center justify-between">
+                  <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                    2. ตารางสรุปความก้าวหน้าจำแนกตามหมวดงานก่อสร้าง (DISCIPLINE PROGRESS MATRIX)
+                  </h2>
+                  <span class="text-[11px] text-slate-600 font-mono">
+                    จำนวนหมวดงานที่ประเมิน: ${disciplineStats.length} หมวด
+                  </span>
+                </div>
+                ${renderDisciplineSubTable(wetWorkStats, "💧 2.1", "หมวดงาน WET WORK (งานเปียกและงานระบบ)", "bg-emerald-100/70", "border-emerald-400", "text-emerald-950", wetWorkAverageProgress)}
+                ${renderDisciplineSubTable(endProductStats, "🏁 2.2", "หมวดงาน END PRODUCT (งานส่งมอบห้องชุด / สถาปัตย์สำเร็จรูป)", "bg-sky-100/70", "border-sky-400", "text-sky-950", endProductAverageProgress)}
+              </div>
+            `;
+          }
+
+          // 4. FLOOR MATRIX TABLE (ตารางความก้าวหน้ารายชั้น แยกหมวดงาน WET WORK และ END PRODUCT ชัดเจน)
+          let section3HTML = "";
+          if (optFloors) {
+            const renderFloorSubMatrix = (cats, subNo, subTitle, themeBg, themeBorder, themeText) => {
+              if (cats.length === 0) return "";
+              let html = `
+                <div class="mb-3">
+                  <div class="font-bold text-slate-900 text-xs mb-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5 font-bold">${subNo} ${subTitle}</span>
+                    <span class="text-[10px] text-slate-500 font-mono">หน่วย: ร้อยละ (%)</span>
+                  </div>
+                  <div class="overflow-x-auto print:overflow-visible">
+                    <table class="w-full text-xs border-collapse border border-slate-400 mb-1 text-center">
+                      <thead>
+                        <tr class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400 text-[10px]">
+                          <th class="border border-slate-400 py-1 px-1.5 w-14 whitespace-nowrap">ชั้น</th>
+                          <th class="border border-slate-400 py-1 px-1.5 w-12 whitespace-nowrap">ห้อง</th>
+              `;
+
+              cats.forEach((cKey) => {
+                const cDef = taskDefinitions[cKey];
+                const shortName = getShortDisciplineName(cKey, cDef?.reportName || cKey);
+                html += `<th class="border border-slate-400 py-1 px-1 text-[10px] whitespace-nowrap" title="${cDef?.reportName || cKey}">${shortName}</th>`;
+              });
+
+              html += `
+                          <th class="border border-slate-400 py-1 px-1.5 w-16 ${themeBg} whitespace-nowrap">เฉลี่ยชั้น</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-300 font-mono text-[10px]">
+              `;
+
+              const colTotals = {};
+              cats.forEach((cKey) => { colTotals[cKey] = 0; });
+              let sumFAvg = 0;
+
+              selectedFloors.forEach((fl, fIdx) => {
+                const roomCount = CONFIG.getRoomsOnFloor(fl);
+                html += `
+                  <tr class="${fIdx % 2 === 1 ? 'bg-slate-50/40' : ''}">
+                    <td class="border border-slate-300 py-1 px-1 font-bold text-slate-900 bg-slate-100/60">ชั้น ${fl}</td>
+                    <td class="border border-slate-300 py-1 px-1 text-slate-700">${roomCount}</td>
+                `;
+
+                let floorSum = 0;
+                cats.forEach((cKey) => {
+                  const cDef = taskDefinitions[cKey];
+                  let pFloor = 0;
+                  if (cDef?.type === "inspection") {
+                    const ins = calculateCombinedInspectionStats(cKey, [fl]);
+                    pFloor = ins.passRate;
+                  } else if (cDef?.type === "multi-progress") {
+                    const allIdx = cDef.tasks.map((_, i) => i);
+                    pFloor = Math.round(calculateMultiProgressOverallPercentage(cKey, [fl], allIdx));
+                  } else {
+                    let sumP = 0;
+                    for (let r = 1; r <= roomCount; r++) {
+                      sumP += projectData[cKey]?.[fl]?.[r]?.progress || 0;
+                    }
+                    pFloor = roomCount > 0 ? Math.round(sumP / roomCount) : 0;
+                  }
+
+                  floorSum += pFloor;
+                  colTotals[cKey] += pFloor;
+
+                  const textCls = pFloor >= 100 ? "font-bold text-slate-950 bg-slate-100/50" : (pFloor > 0 ? "font-semibold text-slate-800" : "text-slate-400");
+                  html += `<td class="border border-slate-300 py-1 px-1 ${textCls}">${pFloor}%</td>`;
+                });
+
+                const floorAvg = cats.length > 0 ? Math.round(floorSum / cats.length) : 0;
+                sumFAvg += floorAvg;
+
+                html += `
+                    <td class="border border-slate-300 py-1 px-1.5 font-bold text-slate-950 ${themeBg}">${floorAvg}%</td>
+                  </tr>
+                `;
+              });
+
+              // Column Totals Row
+              html += `
+                        <tr class="${themeBg} font-bold text-slate-950 border-t-2 ${themeBorder}">
+                          <td class="border border-slate-400 py-1.5 px-1 text-left pl-2" colspan="2">เฉลี่ยรวม</td>
+              `;
+
+              cats.forEach((cKey) => {
+                const colAvg = selectedFloors.length > 0 ? Math.round(colTotals[cKey] / selectedFloors.length) : 0;
+                html += `<td class="border border-slate-400 py-1.5 px-1 font-bold text-slate-950">${colAvg}%</td>`;
+              });
+
+              const groupTotalAvg = selectedFloors.length > 0 ? Math.round(sumFAvg / selectedFloors.length) : 0;
+              html += `
+                          <td class="border border-slate-400 py-1.5 px-1.5 font-bold ${themeText} text-xs">${groupTotalAvg}%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              `;
+              return html;
+            };
+
+            section3HTML = `
+              <div class="mb-4">
+                <div class="border-b-2 border-slate-800 pb-1 mb-2 flex items-center justify-between">
+                  <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                    3. ความก้าวหน้าจำแนกตามรายชั้น (FLOOR-BY-FLOOR PROGRESS MATRIX)
+                  </h2>
+                  <span class="text-[11px] text-slate-600 font-mono">
+                    หน่วย: ร้อยละ (%) ของแต่ละหมวดงาน
+                  </span>
+                </div>
+                ${renderFloorSubMatrix(selectedWetWorkCats, "💧 3.1", "ความก้าวหน้ารายชั้น: หมวดงาน WET WORK (งานเปียกและงานระบบ)", "bg-emerald-100/70", "border-emerald-400", "text-emerald-950")}
+                ${renderFloorSubMatrix(selectedEndProductCats, "🏁 3.2", "ความก้าวหน้ารายชั้น: หมวดงาน END PRODUCT (งานส่งมอบห้องชุด / สถาปัตย์สำเร็จรูป)", "bg-sky-100/70", "border-sky-400", "text-sky-950")}
+              </div>
+            `;
+          }
+
+          // 5. QUALITY INSPECTION & DEFECT CONTROL MATRIX (แยก WET WORK และ END PRODUCT ชัดเจน)
+          let section4HTML = "";
+          if (optInspection) {
+            section4HTML = `
+              <div class="mb-4">
+                <div class="border-b-2 border-slate-800 pb-1 mb-2 flex items-center justify-between">
+                  <h2 class="text-xs md:text-sm font-bold text-slate-950 uppercase tracking-wide">
+                    4. สรุปผลการตรวจสอบคุณภาพห้องชุด (QUALITY INSPECTION SUMMARY)
+                  </h2>
+                  <span class="text-[11px] text-slate-600 font-mono">
+                    เกณฑ์ประเมิน: ตรวจรับระดับ QC & CM รวมกัน
+                  </span>
+                </div>
+
+                <table class="w-full text-xs border-collapse border border-slate-400 mb-1 text-center">
+                  <thead>
+                    <tr class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400 text-[10px]">
+                      <th class="border border-slate-400 py-1.5 px-3 text-left">ขั้นตอนการตรวจสอบคุณภาพ</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-20">เป้าหมาย</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-24">ส่งตรวจแล้ว</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-20">ผ่าน</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-32">ผ่านพบเมเจอร์ดีเฟค</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-20">ไม่ผ่าน</th>
+                      <th class="border border-slate-400 py-1.5 px-2 w-28">% ส่งมอบแล้วเสร็จ</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-300 text-[11px]">
+                    ${wetWorkStats.length > 0 || endProductStats.length === 0 ? `
+                    <tr class="bg-emerald-50/25">
+                      <td class="border border-slate-300 py-1.5 px-3 text-left font-semibold text-slate-950">
+                        💧 4.1 ตรวจรับคุณภาพงานเปียก WET WORK (QC & CM Combined)
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono">${wetWorkInspection.totalRooms} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono">${wetWorkInspection.submitted + wetWorkInspection.inInspection} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono font-bold text-slate-950">${wetWorkInspection.passed_clean} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono">${wetWorkInspection.passed_defect} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono text-slate-700">${wetWorkInspection.pendingDefects} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono font-bold text-emerald-800">
+                        ${wetWorkInspection.passRate}%
+                      </td>
+                    </tr>
+                    ` : ''}
+
+                    ${endProductStats.length > 0 || wetWorkStats.length === 0 ? `
+                    <tr class="bg-sky-50/25">
+                      <td class="border border-slate-300 py-1.5 px-3 text-left font-semibold text-slate-950">
+                        🏁 4.2 ตรวจรับคุณภาพส่งมอบห้องชุด END PRODUCT (QC & CM Combined)
+                      </td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono">${endProductInspection.totalRooms} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono">${endProductInspection.submitted + endProductInspection.inInspection} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono font-bold text-slate-950">${endProductInspection.passed_clean} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono">${endProductInspection.passed_defect} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono text-slate-700">${endProductInspection.pendingDefects} ห้อง</td>
+                      <td class="border border-slate-300 py-1.5 px-2 font-mono font-bold text-sky-800">
+                        ${endProductInspection.passRate}%
+                      </td>
+                    </tr>
+                    ` : ''}
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+
+          // 5. COMMON AREAS PROGRESS
+          const section5HTML = optCommonAreas ? renderCommonAreasReportSection(commonAreaData) : "";
+
+          // 6. COMMON DEFECTS SUMMARY
+          const section6HTML = optCommonDefects ? renderCommonDefectsReportSection(commonDefectData) : "";
+
+          // 7. EXTERIOR FACADE PAINTING
+          const section7HTML = optExteriorPainting ? renderExteriorPaintingReportSection(exteriorPaintingData) : "";
+
+          // 8. EXECUTIVE MEMORANDUM & AI ANALYSIS (if loaded)
+          let executiveMemoHTML = "";
+          if (currentReportExecutiveInsights) {
+            executiveMemoHTML = `
+              <div class="mb-4 border border-slate-400 bg-slate-50/40 p-3 text-xs text-slate-900">
+                <div class="font-bold text-slate-950 uppercase tracking-wide mb-1 pb-1 border-b border-slate-300 flex items-center justify-between">
+                  <span>บันทึกบทวิเคราะห์เชิงบริหารและความเห็นทางเทคนิค (EXECUTIVE & TECHNICAL MEMORANDUM)</span>
+                  <span class="text-[10px] font-mono text-slate-500">ENGINEERING NOTE</span>
+                </div>
+                <div class="text-xs text-slate-800 leading-relaxed whitespace-pre-line font-sarabun">
+                  ${currentReportExecutiveInsights}
+                </div>
+              </div>
+            `;
+          }
+
+          // OFFICIAL SIGN-OFF BLOCK (การลงนามรับรองเอกสาร 3 ฝ่าย)
+          let signaturesHTML = "";
+          if (optSignatures) {
+            signaturesHTML = `
+              <div class="border border-slate-800 p-2.5 mt-4 bg-white">
+                <div class="text-center font-bold text-xs text-slate-900 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-300">
+                  การลงนามรับรองรายงานความก้าวหน้าโครงการ (OFFICIAL SIGN-OFF & VERIFICATION)
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-center text-xs">
+                  <!-- Party 1 -->
+                  <div class="border border-slate-300 p-2 flex flex-col justify-between h-32 bg-slate-50/40">
+                    <div class="font-bold text-slate-800 text-[11px]">ผู้จัดทำรายงาน (Prepared By)</div>
+                    <div class="my-1">
+                      <div class="w-36 mx-auto border-b border-slate-400 pb-1 text-slate-400 text-[10px] italic">
+                        ( ลายมือชื่อ )
+                      </div>
+                      <div class="mt-1 font-bold text-slate-900">(${escapeCommonDefectText(docPreparer)})</div>
+                    </div>
+                    <div class="text-[10px] text-slate-600">
+                      <div>วิศวกรโครงการ (Site Engineer)</div>
+                      <div class="font-mono mt-0.5">วันที่: ..... / ..... / ..........</div>
+                    </div>
+                  </div>
+
+                  <!-- Party 2 -->
+                  <div class="border border-slate-300 p-2 flex flex-col justify-between h-32 bg-slate-50/40">
+                    <div class="font-bold text-slate-800 text-[11px]">ผู้ตรวจสอบรายงาน (Checked By)</div>
+                    <div class="my-1">
+                      <div class="w-36 mx-auto border-b border-slate-400 pb-1 text-slate-400 text-[10px] italic">
+                        ( ลายมือชื่อ )
+                      </div>
+                      <div class="mt-1 font-bold text-slate-900">( ผู้จัดการโครงการ / PM )</div>
+                    </div>
+                    <div class="text-[10px] text-slate-600">
+                      <div>ผู้จัดการโครงการ (Project Manager)</div>
+                      <div class="font-mono mt-0.5">วันที่: ..... / ..... / ..........</div>
+                    </div>
+                  </div>
+
+                  <!-- Party 3 -->
+                  <div class="border border-slate-300 p-2 flex flex-col justify-between h-32 bg-slate-50/40">
+                    <div class="font-bold text-slate-800 text-[11px]">ผู้อนุมัติเอกสาร (Approved By)</div>
+                    <div class="my-1">
+                      <div class="w-36 mx-auto border-b border-slate-400 pb-1 text-slate-400 text-[10px] italic">
+                        ( ลายมือชื่อ )
+                      </div>
+                      <div class="mt-1 font-bold text-slate-900">( ตัวแทนที่ปรึกษาควบคุมงาน )</div>
+                    </div>
+                    <div class="text-[10px] text-slate-600">
+                      <div>วิศวกรที่ปรึกษาควบคุมงาน (CM)</div>
+                      <div class="font-mono mt-0.5">วันที่: ..... / ..... / ..........</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          // Page Header & Footer Renderers
+          const renderReportFooter = (pageNo, total) => `
+            <div class="border-t border-slate-400 pt-2 mt-auto flex justify-between items-center text-[10px] text-slate-600 font-mono">
+              <div>โครงการ PYNN NGAMWONGWAN 54 • แบบฟอร์มรายงานความก้าวหน้าโครงการประจำงวด</div>
+              <div>เอกสารควบคุม • หน้า ${pageNo} จาก ${total}</div>
+            </div>
+          `;
+
+          const renderReportHeaderBanner = (pageNo, total) => `
+            <div class="border-b-2 border-slate-800 pb-2 mb-4 flex justify-between items-center text-xs">
+              <div>
+                <span class="font-bold font-mono text-slate-950 text-sm">PYNN NGAMWONGWAN 54</span>
+                <span class="text-slate-600 ml-2 font-medium">| ${escapeCommonDefectText(docTitle)}</span>
+              </div>
+              <div class="font-mono text-slate-600 text-[11px]">
+                เลขที่: <span class="font-bold text-slate-900">${escapeCommonDefectText(docNo)}</span> | วันที่: ${escapeCommonDefectText(docDate)} | หน้า ${pageNo} จาก ${total}
+              </div>
+            </div>
+          `;
+
+          let docHTML = "";
+
+          if (totalPages === 3) {
+            // PAGE 1: Header, Executive Summary, Discipline Matrix
+            docHTML += `
+              <div class="screen-page-indicator print:hidden w-full flex items-center justify-between text-xs text-slate-500 px-1">
+                <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+                  หน้า 1 : ข้อมูลภาพรวมและตารางสรุปหมวดงาน (Page 1 of 3 - A4)
+                </span>
+                <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-mono font-bold text-[11px]">A4 • หน้า 1/3</span>
+              </div>
+              <div class="a4-sheet flex flex-col justify-between">
+                <div>
+                  ${headerHTML}
+                  ${section1HTML}
+                  ${section2HTML}
+                </div>
+                ${renderReportFooter(1, 3)}
+              </div>
+
+              <!-- Page 2 -->
+              <div class="screen-page-indicator print:hidden w-full flex items-center justify-between text-xs text-slate-500 px-1 pt-4">
+                <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+                  หน้า 2 : ตารางความก้าวหน้ารายชั้นและการตรวจรับมอบ (Page 2 of 3 - A4)
+                </span>
+                <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-mono font-bold text-[11px]">A4 • หน้า 2/3</span>
+              </div>
+              <div class="a4-sheet a4-page-break flex flex-col justify-between">
+                <div>
+                  ${renderReportHeaderBanner(2, 3)}
+                  ${section3HTML}
+                  ${section4HTML}
+                </div>
+                ${renderReportFooter(2, 3)}
+              </div>
+
+              <!-- Page 3 -->
+              <div class="screen-page-indicator print:hidden w-full flex items-center justify-between text-xs text-slate-500 px-1 pt-4">
+                <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+                  หน้า 3 : ส่วนกลาง งานสีรูปด้าน และการลงนามรับรอง (Page 3 of 3 - A4)
+                </span>
+                <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-mono font-bold text-[11px]">A4 • หน้า 3/3</span>
+              </div>
+              <div class="a4-sheet a4-page-break flex flex-col justify-between">
+                <div>
+                  ${renderReportHeaderBanner(3, 3)}
+                  ${section5HTML}
+                  ${section6HTML}
+                  ${section7HTML}
+                  ${executiveMemoHTML}
+                  ${signaturesHTML}
+                </div>
+                ${renderReportFooter(3, 3)}
+              </div>
+            `;
+          } else if (totalPages === 2) {
+            docHTML += `
+              <div class="screen-page-indicator print:hidden w-full flex items-center justify-between text-xs text-slate-500 px-1">
+                <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+                  หน้า 1 : ข้อมูลภาพรวมและตารางสรุปหมวดงาน (Page 1 of 2 - A4)
+                </span>
+                <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-mono font-bold text-[11px]">A4 • หน้า 1/2</span>
+              </div>
+              <div class="a4-sheet flex flex-col justify-between">
+                <div>
+                  ${headerHTML}
+                  ${section1HTML}
+                  ${section2HTML}
+                </div>
+                ${renderReportFooter(1, 2)}
+              </div>
+
+              <div class="screen-page-indicator print:hidden w-full flex items-center justify-between text-xs text-slate-500 px-1 pt-4">
+                <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+                  หน้า 2 : ตารางรายละเอียดและการลงนามรับรอง (Page 2 of 2 - A4)
+                </span>
+                <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-mono font-bold text-[11px]">A4 • หน้า 2/2</span>
+              </div>
+              <div class="a4-sheet a4-page-break flex flex-col justify-between">
+                <div>
+                  ${renderReportHeaderBanner(2, 2)}
+                  ${section3HTML}
+                  ${section4HTML}
+                  ${section5HTML}
+                  ${section6HTML}
+                  ${section7HTML}
+                  ${executiveMemoHTML}
+                  ${signaturesHTML}
+                </div>
+                ${renderReportFooter(2, 2)}
+              </div>
+            `;
+          } else {
+            // Single Page
+            docHTML += `
+              <div class="screen-page-indicator print:hidden w-full flex items-center justify-between text-xs text-slate-500 px-1">
+                <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  รายงานสรุปความก้าวหน้าโครงการ (Single Page - A4)
+                </span>
+                <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-mono font-bold text-[11px]">A4 • พอดี 1 หน้า</span>
+              </div>
+              <div class="a4-sheet flex flex-col justify-between">
+                <div>
+                  ${headerHTML}
+                  ${section1HTML}
+                  ${section2HTML}
+                  ${section3HTML}
+                  ${section4HTML}
+                  ${section5HTML}
+                  ${section6HTML}
+                  ${section7HTML}
+                  ${executiveMemoHTML}
+                  ${signaturesHTML}
+                </div>
+                ${renderReportFooter(1, 1)}
+              </div>
+            `;
+          }
+
+          // Inject into document container
+          docSheet.innerHTML = docHTML;
+
+          // Also generate clean formatted text summary for LINE and Email
+          let summaryText = `[รายงานสถานะการก่อสร้างฉบับทางการ]\n`;
+          summaryText += `โครงการ: ไพน์ งามวงศ์วาน 54 (PYNN NGAMWONGWAN 54)\n`;
+          summaryText += `เรื่อง: ${docTitle}\n`;
+          summaryText += `เลขที่เอกสาร: ${docNo} | วันที่: ${docDate}\n`;
+          summaryText += `ผู้จัดทำ: ${docPreparer} | งวดงาน: ${docPeriod}\n`;
+          summaryText += `ขอบเขตพื้นที่: ชั้น ${selectedFloors.join(", ")} (รวม ${totalEvaluatedUnits} ห้องชุด)\n`;
+          summaryText += `====================================\n\n`;
+
+          if (wetWorkStats.length > 0) {
+            summaryText += `💧 1. หมวดงาน WET WORK (งานเปียกและงานระบบ)\n`;
+            summaryText += `• ความก้าวหน้าเฉลี่ยหมวด Wet Work: ${wetWorkAverageProgress}%\n`;
+            summaryText += `• รายการความก้าวหน้าแต่ละงาน:\n`;
+            wetWorkStats.forEach((ds, idx) => {
+              summaryText += `  ${idx + 1}. ${ds.name}: ${ds.progress}% (แล้วเสร็จ ${ds.completedRooms}/${ds.totalRooms} ห้อง, ดำเนินการ ${ds.inProgressRooms} ห้อง)\n`;
+            });
+            summaryText += `• ผลการตรวจรับคุณภาพ WET WORK (QC & CM Combined):\n`;
+            summaryText += `  - ตรวจรับแล้วเสร็จ: ${wetWorkInspection.totalPassed}/${wetWorkInspection.totalRooms} ห้อง (% ส่งมอบแล้วเสร็จ: ${wetWorkInspection.passRate}%)\n`;
+            summaryText += `  - ผ่าน: ${wetWorkInspection.passed_clean} ห้อง | ผ่านพบเมเจอร์ดีเฟค: ${wetWorkInspection.passed_defect} ห้อง\n`;
+            summaryText += `  - ไม่ผ่าน: ${wetWorkInspection.pendingDefects} ห้อง\n`;
+            summaryText += `  - สถานะ: ${wetWorkInspection.passRate >= 100 ? "ส่งมอบแล้วเสร็จ 100%" : (wetWorkInspection.totalPassed > 0 ? `ส่งมอบแล้วเสร็จ ${wetWorkInspection.passRate}%` : "อยู่ระหว่างดำเนินการ")}\n\n`;
+          }
+
+          if (endProductStats.length > 0) {
+            summaryText += `🏁 ${wetWorkStats.length > 0 ? '2' : '1'}. หมวดงาน END PRODUCT (งานส่งมอบห้องชุด)\n`;
+            summaryText += `• ความก้าวหน้าเฉลี่ยหมวด End Product: ${endProductAverageProgress}%\n`;
+            summaryText += `• รายการความก้าวหน้าแต่ละงาน:\n`;
+            endProductStats.forEach((ds, idx) => {
+              summaryText += `  ${idx + 1}. ${ds.name}: ${ds.progress}% (แล้วเสร็จ ${ds.completedRooms}/${ds.totalRooms} ห้อง, ดำเนินการ ${ds.inProgressRooms} ห้อง)\n`;
+            });
+            summaryText += `• ผลการตรวจรับคุณภาพ END PRODUCT (QC & CM Combined):\n`;
+            summaryText += `  - ตรวจรับแล้วเสร็จ: ${endProductInspection.totalPassed}/${endProductInspection.totalRooms} ห้อง (% ส่งมอบแล้วเสร็จ: ${endProductInspection.passRate}%)\n`;
+            summaryText += `  - ผ่าน: ${endProductInspection.passed_clean} ห้อง | ผ่านพบเมเจอร์ดีเฟค: ${endProductInspection.passed_defect} ห้อง\n`;
+            summaryText += `  - ไม่ผ่าน: ${endProductInspection.pendingDefects} ห้อง\n`;
+            summaryText += `  - สถานะ: ${endProductInspection.passRate >= 100 ? "ส่งมอบแล้วเสร็จ 100%" : (endProductInspection.totalPassed > 0 ? `ส่งมอบแล้วเสร็จ ${endProductInspection.passRate}%` : "อยู่ระหว่างดำเนินการ")}\n\n`;
+          }
+
+          if (optCommonAreas && commonAreaData.stats.length > 0) {
+            summaryText += `🏢 พื้นที่ส่วนกลาง (COMMON AREAS)\n`;
+            summaryText += `• ความก้าวหน้าเฉลี่ยส่วนกลาง: ${commonAreaData.averageProgress}% (แล้วเสร็จ ${commonAreaData.completedItems}/${commonAreaData.totalItems} รายการ)\n`;
+            commonAreaData.stats.forEach((st, idx) => {
+              summaryText += `  ${idx + 1}. ${st.name}: ${st.progress}% (${st.statusText}, ขอบเขต ${st.floorDesc})\n`;
+            });
+            summaryText += `\n`;
+          }
+
+          if (optCommonDefects && commonDefectData.groups.length > 0) {
+            summaryText += `🛠️ การแก้ไข DEFECT ส่วนกลาง (COMMON AREA DEFECTS)\n`;
+            summaryText += `• สรุปจำนวน Defect ทั้งหมด: ${commonDefectData.totalDefects} ข้อ (${commonDefectData.totalLocations} จุดตรวจทั่วอาคาร)\n`;
+            summaryText += `• สถานะการแก้ไข: แก้ไขเสร็จ ${commonDefectData.fixedDefects} ข้อ | รอนัดตรวจ ${commonDefectData.pendingInspectDefects} ข้อ | รอแก้ไข ${commonDefectData.remainingDefects} ข้อ (${commonDefectData.overallResolutionRate}%)\n`;
+            commonDefectData.groups.forEach((g, idx) => {
+              summaryText += `  ${idx + 1}. ${g.name}: ${g.totalDefects} ข้อ (เสร็จ ${g.fixedDefects} ข้อ, รอตรวจ ${g.pendingInspectDefects} ข้อ, รอแก้ ${g.remainingDefects} ข้อ | ${g.resolutionRate}%)\n`;
+            });
+            summaryText += `\n`;
+          }
+
+          if (optExteriorPainting && exteriorPaintingData.stats.length > 0) {
+            summaryText += `🎨 งานเก็บสีรูปด้านอาคาร (EXTERIOR FACADE PAINTING)\n`;
+            summaryText += `• ความก้าวหน้าเฉลี่ยสีรูปด้าน: ${exteriorPaintingData.averageProgress}%\n`;
+            exteriorPaintingData.stats.forEach((st, idx) => {
+              summaryText += `  ${idx + 1}. ${st.name}: ${st.progress}% (เสร็จ 100%: ${st.completed}/${st.totalZones} โซน, กำลังทำ: ${st.inProgress} โซน)\n`;
+            });
+            summaryText += `\n`;
+          }
+
+          summaryText += `====================================\n`;
+          summaryText += `📊 สรุปภาพรวมความก้าวหน้าโครงการ (Overall Project Average): ${overallProjectProgress}%\n`;
+          summaryText += `====================================\n`;
+          summaryText += `เอกสารรายงานทางการ ออกโดยฝ่ายบริหารโครงการ PYNN 54`;
+
+          if (textOutput) {
+            textOutput.value = summaryText;
+          }
+
+          if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function printOfficialDocumentReport() {
+          window.print();
+        }
+
+        function downloadOfficialDocumentImage() {
+          const docSheet = document.getElementById("report-document-sheet");
+          if (!docSheet) return;
+
+          const docNo = document.getElementById("report-doc-no")?.value || "REP-01";
+          const filename = `PYNN-Official-Report-${docNo.replace(/[^a-zA-Z0-9_-]/g, "_")}.png`;
+
+          showToast("กำลังประมวลผลและสร้างรูปภาพเอกสาร...");
+
+          html2canvas(docSheet, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            ignoreElements: (el) => el.classList && el.classList.contains("screen-page-indicator"),
+            logging: false,
+          }).then((canvas) => {
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                showNotificationModal("ข้อผิดพลาด", "ไม่สามารถแปลงเอกสารเป็นรูปภาพได้");
+                return;
+              }
+              const file = new File([blob], filename, { type: "image/png" });
+              // Auto-download directly on iOS, Android, and PC with one click!
+              downloadPreviewFile(file);
+              showToast(`ดาวน์โหลดเอกสารรูปภาพสำเร็จ: ${filename}`);
+            }, "image/png");
+          }).catch((err) => {
+            console.error("Official report capture failed:", err);
+            showNotificationModal("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกเอกสารเป็นภาพได้");
+          });
+        }
+
+        function copyOfficialDocumentSummary() {
+          const textOutput = document.getElementById("report-text-summary-output");
+          if (!textOutput || !textOutput.value) {
+            generateDocumentReportPreview();
+          }
+
+          const text = textOutput.value;
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+              showToast("คัดลอกข้อความสรุปเรียบร้อยแล้ว พร้อมส่งใน LINE หรืออีเมล");
+            }).catch(() => {
+              fallbackCopyText(text);
+            });
+          } else {
+            fallbackCopyText(text);
+          }
+        }
+
+        function fallbackCopyText(text) {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          textArea.style.top = "-999999px";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand("copy");
+            showToast("คัดลอกข้อความสรุปเรียบร้อยแล้ว พร้อมส่งใน LINE หรืออีเมล");
+          } catch (err) {
+            showToast("ไม่สามารถคัดลอกข้อความได้");
+          }
+          document.body.removeChild(textArea);
+        }
+
+        function generateAIExecutiveEvaluation() {
+          const textOutput = document.getElementById("report-text-summary-output");
+          const aiContainer = document.getElementById("ai-insights-content");
+          const aiLoader = document.getElementById("ai-loading-indicator");
+
+          if (!textOutput) return;
+          switchReportTab("ai");
+
+          if (aiLoader) aiLoader.classList.remove("hidden");
+          if (aiContainer) aiContainer.innerHTML = "";
+
+          const promptText = `
+            คุณคือผู้อำนวยการฝ่ายบริหารโครงการก่อสร้างระดับสูง (Project Director) ของโครงการ PYNN NGAMWONGWAN 54
+            โปรดวิเคราะห์ข้อมูลรายงานความคืบหน้านี้อย่างเป็นมืออาชีพ:
+            ---
+            ${textOutput.value}
+            ---
+            โปรดให้ข้อมูลในหัวข้อต่อไปนี้:
+            1. การประเมินสถานะภาพรวมและจังหวะเวลา (Executive Assessment & Velocity)
+            2. จุดเด่นและหมวดงานที่มีผลงานโดดเด่น (Key Achievements)
+            3. ความเสี่ยง คอขวด และประเด็นที่ต้องจับตาเป็นพิเศษ (Critical Risks & Bottlenecks)
+            4. แผนปฏิบัติการเร่งรัดและข้อเสนอแนะเชิงกลยุทธ์สำหรับ 7 วันข้างหน้า (7-Day Strategic Action Items)
+          `;
+
+          const request = {
+            model: CONFIG.GEMINI_API_MODEL,
+            contents: [{ parts: [{ text: promptText }] }],
+            config: {
+              systemInstruction: "คุณคือผู้อำนวยการฝ่ายก่อสร้างมืออาชีพ ตอบด้วยภาษาทางการ กระชับ เป็นโครงสร้างข้อๆ มีน้ำหนักน่าเชื่อถือ",
+            },
+          };
+
+          runAIAnalysis(request, (analysisText) => {
+            if (aiLoader) aiLoader.classList.add("hidden");
+            currentReportExecutiveInsights = analysisText;
+
+            if (aiContainer) {
+              aiContainer.innerHTML = `
+                <div class="p-5 bg-indigo-50/60 rounded-xl border border-indigo-200 text-slate-800 text-xs md:text-sm leading-relaxed whitespace-pre-line font-sarabun shadow-sm">
+                  ${analysisText}
+                </div>
+              `;
+            }
+            showToast("AI วิเคราะห์ผลงานเรียบร้อยแล้ว");
+          });
+        }
+
+        function applyAiInsightsToDocument() {
+          if (!currentReportExecutiveInsights) {
+            showToast("กรุณากด 'วิเคราะห์เชิงบริหารด้วย AI' ก่อน");
+            return;
+          }
+          generateDocumentReportPreview();
+          switchReportTab("document");
+          showToast("แทรกบทวิเคราะห์ AI ในเอกสารรายงานเรียบร้อยแล้ว");
         }
 
         function updateRoomSummaryVisibility() {
@@ -17103,11 +19198,14 @@
           let completedSubTasks = 0;
           let inProgressSubTasks = 0;
           const catDef = taskDefinitions[categoryKey];
+          if (!catDef || !catDef.tasks) {
+            return { completedRooms, inProgressRooms, totalRooms, totalSubTaskTargets, completedSubTasks, inProgressSubTasks };
+          }
           const relevantTasks = selectedSubTaskIndexes.map(
             (idx) => catDef.tasks[idx],
-          );
+          ).filter(Boolean);
 
-          floorsToCalc.forEach((floor) => {
+          (floorsToCalc || []).forEach((floor) => {
             const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
             for (let room = 1; room <= roomsOnThisFloor; room++) {
               let applicableTaskCount = 0;
@@ -17117,7 +19215,7 @@
                 if (!t.condition || t.condition(floor, room)) {
                   applicableTaskCount++;
                   totalSubTaskTargets++;
-                  const p = projectData[categoryKey][floor][room]?.[`progress_${t.key}`] || 0;
+                  const p = projectData[categoryKey]?.[floor]?.[room]?.[`progress_${t.key}`] || 0;
                   roomTotalProgress += p;
                   if (p >= 100) completedSubTasks++;
                   else if (p > 0) inProgressSubTasks++;
@@ -17145,18 +19243,19 @@
           let totalProgress = 0,
             totalSubTaskTargets = 0;
           const catDef = taskDefinitions[categoryKey];
+          if (!catDef || !catDef.tasks) return 0;
           const relevantTasks = selectedSubTaskIndexes.map(
             (idx) => catDef.tasks[idx],
-          );
+          ).filter(Boolean);
 
-          floorsToCalc.forEach((floor) => {
+          (floorsToCalc || []).forEach((floor) => {
             const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
             for (let room = 1; room <= roomsOnThisFloor; room++) {
               relevantTasks.forEach((t) => {
                 if (!t.condition || t.condition(floor, room)) {
                   totalSubTaskTargets++;
                   totalProgress +=
-                    projectData[categoryKey][floor][room]?.[
+                    projectData[categoryKey]?.[floor]?.[room]?.[
                       `progress_${t.key}`
                     ] || 0;
                 }
@@ -17175,23 +19274,25 @@
           let totalProgress = 0,
             totalUnitsInvolved = 0;
           const catDef = taskDefinitions[categoryKey];
+          if (!catDef) return 0;
 
-          floorsToCalc.forEach((floor) => {
+          (floorsToCalc || []).forEach((floor) => {
             const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
             for (let room = 1; room <= roomsOnThisFloor; room++) {
               let isApplicable = true;
               if (catDef.type === "multi-progress") {
-                const task = catDef.tasks[subTaskIndex];
+                const task = catDef.tasks?.[subTaskIndex];
+                if (!task) continue;
                 if (task.condition && !task.condition(floor, room))
                   isApplicable = false;
               }
               if (!isApplicable) continue;
               totalUnitsInvolved++;
 
-              const unitData = projectData[categoryKey][floor][room];
+              const unitData = projectData[categoryKey]?.[floor]?.[room] || {};
               if (catDef.type === "multi-progress") {
-                const taskKey = catDef.tasks[subTaskIndex].key;
-                totalProgress += unitData[`progress_${taskKey}`] || 0;
+                const taskKey = catDef.tasks?.[subTaskIndex]?.key;
+                totalProgress += taskKey ? (unitData[`progress_${taskKey}`] || 0) : 0;
               } else {
                 if ((unitData.taskIndex || 0) > subTaskIndex)
                   totalProgress += 100;
@@ -17213,24 +19314,26 @@
             inProgressRooms = 0,
             totalRooms = 0;
           const catDef = taskDefinitions[categoryKey];
+          if (!catDef) return { completedRooms, inProgressRooms, totalRooms };
 
-          floorsToCalc.forEach((floor) => {
+          (floorsToCalc || []).forEach((floor) => {
             const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
             for (let room = 1; room <= roomsOnThisFloor; room++) {
               let isApplicable = true;
               if (catDef.type === "multi-progress") {
-                const task = catDef.tasks[subTaskIndex];
+                const task = catDef.tasks?.[subTaskIndex];
+                if (!task) continue;
                 if (task.condition && !task.condition(floor, room))
                   isApplicable = false;
               }
               if (!isApplicable) continue;
               totalRooms++;
 
-              const unitData = projectData[categoryKey][floor][room];
+              const unitData = projectData[categoryKey]?.[floor]?.[room] || {};
               let isCompleted, isInProgress;
               if (catDef.type === "multi-progress") {
-                const progress =
-                  unitData[`progress_${catDef.tasks[subTaskIndex].key}`] || 0;
+                const taskKey = catDef.tasks?.[subTaskIndex]?.key;
+                const progress = taskKey ? (unitData[`progress_${taskKey}`] || 0) : 0;
                 isCompleted = progress >= 100;
                 isInProgress = progress > 0 && progress < 100;
               } else {
@@ -17258,14 +19361,30 @@
             failed_defect = 0,
             inInspection = 0;
           let totalRooms = 0;
+          if (!categoryKey || !projectData || !projectData[categoryKey]) {
+            if (Array.isArray(floorsToCalc)) {
+              floorsToCalc.forEach((floor) => {
+                totalRooms += CONFIG.getRoomsOnFloor(floor);
+              });
+            }
+            return {
+              submitted,
+              passed_clean,
+              passed_defect,
+              failed_clean,
+              failed_defect,
+              totalRooms,
+              inInspection,
+            };
+          }
           const scoreField = stage === "CM" ? "cmScore" : "qcScore";
           const defectField =
             stage === "CM" ? "cmHasMajorDefect" : "qcHasMajorDefect";
-          floorsToCalc.forEach((floor) => {
+          (floorsToCalc || []).forEach((floor) => {
             const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
             totalRooms += roomsOnThisFloor;
             for (let room = 1; room <= roomsOnThisFloor; room++) {
-              const unitData = projectData[categoryKey][floor][room];
+              const unitData = projectData[categoryKey]?.[floor]?.[room] || {};
               if (unitData.inInspection) {
                 inInspection++;
               }
@@ -17289,6 +19408,82 @@
             failed_defect,
             totalRooms,
             inInspection,
+          };
+        }
+
+        function calculateCombinedInspectionStats(categoryKey, floorsToCalc) {
+          let submitted = 0,
+            passed_clean = 0,
+            passed_defect = 0,
+            failed_clean = 0,
+            failed_defect = 0,
+            inInspection = 0;
+          let totalRooms = 0;
+          if (!categoryKey || !projectData || !projectData[categoryKey]) {
+            if (Array.isArray(floorsToCalc)) {
+              floorsToCalc.forEach((floor) => {
+                totalRooms += CONFIG.getRoomsOnFloor(floor);
+              });
+            }
+            return {
+              submitted,
+              passed_clean,
+              passed_defect,
+              failed_clean,
+              failed_defect,
+              totalRooms,
+              inInspection,
+              totalPassed: 0,
+              pendingDefects: 0,
+              passRate: 0,
+            };
+          }
+
+          (floorsToCalc || []).forEach((floor) => {
+            const roomsOnThisFloor = CONFIG.getRoomsOnFloor(floor);
+            totalRooms += roomsOnThisFloor;
+            for (let room = 1; room <= roomsOnThisFloor; room++) {
+              const unitData = projectData[categoryKey]?.[floor]?.[room] || {};
+              if (unitData.inInspection) {
+                inInspection++;
+              }
+              const cmScore = unitData.cmScore || 0;
+              const qcScore = unitData.qcScore || 0;
+
+              // Combined inspection: evaluated if inspected by either CM or QC
+              if (cmScore > 0 || qcScore > 0) {
+                submitted++;
+                // Combined inspection: evaluated if inspected by either CM or QC
+                // Select the highest score achieved between CM and QC
+                const score = Math.max(cmScore, qcScore);
+                const hasMajorDefect = (qcScore >= cmScore) ? !!unitData.qcHasMajorDefect : !!unitData.cmHasMajorDefect;
+
+                if (score >= 85) {
+                  if (hasMajorDefect) passed_defect++;
+                  else passed_clean++;
+                } else {
+                  if (hasMajorDefect) failed_defect++;
+                  else failed_clean++;
+                }
+              }
+            }
+          });
+
+          const totalPassed = passed_clean + passed_defect;
+          const pendingDefects = failed_clean + failed_defect;
+          const passRate = totalRooms > 0 ? Math.round((totalPassed / totalRooms) * 100) : 0;
+
+          return {
+            submitted,
+            passed_clean,
+            passed_defect,
+            failed_clean,
+            failed_defect,
+            totalRooms,
+            inInspection,
+            totalPassed,
+            pendingDefects,
+            passRate,
           };
         }
 
@@ -17707,24 +19902,44 @@
             return categorySection;
           };
 
+          const appendGroupedCategories = (floorsToCalc, isSummary) => {
+            let res = "";
+            const wetKeys = orderedTaskKeys.filter(
+              (k) => WET_WORK_KEYS.includes(k) && tasks[k] && tasks[k].length > 0
+            );
+            const endKeys = orderedTaskKeys.filter(
+              (k) => !WET_WORK_KEYS.includes(k) && tasks[k] && tasks[k].length > 0
+            );
+
+            if (wetKeys.length > 0) {
+              res += `\n\n💧 [หมวดงาน WET WORK - งานเปียกและงานระบบ]`;
+              wetKeys.forEach((catKey) => {
+                res += processCategory(catKey, floorsToCalc, isSummary);
+              });
+            }
+
+            if (endKeys.length > 0) {
+              res += `\n\n🏁 [หมวดงาน END PRODUCT - งานส่งมอบห้องชุด]`;
+              endKeys.forEach((catKey) => {
+                res += processCategory(catKey, floorsToCalc, isSummary);
+              });
+            }
+
+            return res;
+          };
+
           if (floors.length) {
             floors.forEach((floor) => {
               report += `\n------------------------------------\n`;
               report += `\n🏢 สรุปความคืบหน้า ชั้น ${floor}`;
-              orderedTaskKeys.forEach((catKey) => {
-                if (tasks[catKey] && tasks[catKey].length > 0)
-                  report += processCategory(catKey, [floor], false);
-              });
+              report += appendGroupedCategories([floor], false);
             });
           }
 
           if (includeSummary) {
             report += `\n------------------------------------\n`;
             report += `\n📊 สรุปภาพรวมความก้าวหน้าทั้งโครงการ`;
-            orderedTaskKeys.forEach((catKey) => {
-              if (tasks[catKey] && tasks[catKey].length > 0)
-                report += processCategory(catKey, CONFIG.FLOORS, true);
-            });
+            report += appendGroupedCategories(CONFIG.FLOORS, true);
           }
 
           if (includeRoomSummary && floors.length) {
@@ -17744,7 +19959,7 @@
                   let foundRoom = false;
                   for (let room = 1; room <= roomsOnThisFloor; room++) {
                     const roomNumber = `${floor}${String(room).padStart(2, "0")}`;
-                    const unitData = projectData[catKey][floor][room];
+                    const unitData = projectData[catKey]?.[floor]?.[room] || {};
 
                     let score = 0;
                     let defect = false;
