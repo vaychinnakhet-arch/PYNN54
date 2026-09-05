@@ -561,7 +561,16 @@
       #main-table th,
       #main-table td {
         border-color: #000000 !important;
+      }
+      #main-table th:not(.task-summary-th):not(.allow-wrap-header),
+      #main-table td {
         white-space: nowrap;
+      }
+      #main-table th.task-summary-th,
+      #main-table th.allow-wrap-header,
+      #main-table .task-th-wrap {
+        white-space: normal !important;
+        word-break: break-word;
       }
       #common-defect-unified-table {
         border-collapse: collapse;
@@ -1626,6 +1635,21 @@
               <div class="bg-slate-200/60 p-1 rounded-lg text-slate-500 text-xs font-semibold flex shadow-inner items-center gap-1">
                 <button id="task-view-summary-btn" class="view-toggle-btn px-4 py-1.5 rounded-md active transition-all whitespace-nowrap hover:text-slate-900 border border-transparent">สรุป</button>
                 <button id="task-view-detailed-btn" class="view-toggle-btn px-4 py-1.5 rounded-md transition-all whitespace-nowrap hover:text-slate-900 border border-transparent">ละเอียด</button>
+              </div>
+            </div>
+
+            <!-- Table Fit Mode -->
+            <div id="table-scale-mode-toggle" class="flex items-center bg-slate-50/80 p-1.5 rounded-xl border border-slate-200/70 shadow-sm">
+              <span class="px-3 text-[11px] font-black text-slate-500 uppercase tracking-widest hidden lg:block">ขนาดตาราง</span>
+              <div class="bg-slate-200/60 p-1 rounded-lg text-slate-500 text-xs font-semibold flex shadow-inner items-center gap-1">
+                <button id="table-fit-btn" onclick="toggleTableFit(true)" class="view-toggle-btn px-3 py-1.5 rounded-md active transition-all whitespace-nowrap hover:text-slate-900 border border-transparent flex items-center gap-1.5 font-bold text-xs" title="ปรับขนาดคอลัมน์ให้พอดีหน้าจอ มองเห็นครบทุกคอลัมน์">
+                  <i data-lucide="shrink" class="w-3.5 h-3.5"></i>
+                  <span>พอดีจอ (Fit)</span>
+                </button>
+                <button id="table-normal-btn" onclick="toggleTableFit(false)" class="view-toggle-btn px-3 py-1.5 rounded-md transition-all whitespace-nowrap hover:text-slate-900 border border-transparent flex items-center gap-1.5 text-xs" title="ขนาดมาตรฐานแบบเดิม">
+                  <i data-lucide="expand" class="w-3.5 h-3.5"></i>
+                  <span>ปกติ (100%)</span>
+                </button>
               </div>
             </div>
 
@@ -4042,6 +4066,7 @@
         let currentView = "residential";
         let currentCategory = "skimAndPaint";
         let isDetailedViewActive = false;
+        let isTableFitMode = localStorage.getItem("tableFitMode") !== "false"; // default true (Fit to screen)
         let summaryReportMode = "wetWork"; // 'wetWork' or 'endProduct'
         let reportHeaderStyle = "light"; // 'dark' or 'light'
         let showSignatureBoxes = true;
@@ -4059,6 +4084,29 @@
         let lastFocusedElement;
         let activeModal = null;
         let ai;
+
+        function toggleTableFit(fit) {
+          isTableFitMode = fit;
+          localStorage.setItem("tableFitMode", fit ? "true" : "false");
+          updateTableFitUI();
+        }
+        window.toggleTableFit = toggleTableFit;
+
+        function updateTableFitUI() {
+          const fitBtn = document.getElementById("table-fit-btn");
+          const normBtn = document.getElementById("table-normal-btn");
+          const mainTable = document.getElementById("main-table");
+
+          if (fitBtn && normBtn) {
+            fitBtn.classList.toggle("active", isTableFitMode);
+            normBtn.classList.toggle("active", !isTableFitMode);
+          }
+          if (mainTable) {
+            mainTable.classList.toggle("table-fit-screen", isTableFitMode);
+          }
+          if (window.lucide) lucide.createIcons();
+        }
+        window.updateTableFitUI = updateTableFitUI;
 
         // --- DATA HANDLING (Supabase) ---
         async function setupRealtimeListenerAndInitApp() {
@@ -5882,6 +5930,18 @@
                 .getElementById("task-view-detailed-btn")
                 .classList.toggle("active", isDetailedViewActive);
             }
+          }
+
+          const tableScaleModeToggle = document.getElementById(
+            "table-scale-mode-toggle",
+          );
+          if (tableScaleModeToggle) {
+            const hasMainTable =
+              view === "residential" ||
+              view === "qcSummary" ||
+              view === "summaryReport";
+            tableScaleModeToggle.classList.toggle("hidden", !hasMainTable);
+            updateTableFitUI();
           }
 
           if (reportModeToggle) {
@@ -10685,40 +10745,53 @@
 
           if (isDetailedView) {
             headerHTML = `<tr>
-                        <th class="border p-2 ${headerColor}" rowspan="2"><span>ชั้น</span></th>
-                        <th class="border p-2 ${headerColor}" rowspan="2" style="min-width: 100px;"><span>รายการ</span></th>
-                        <th class="border p-2 ${headerColor}" colspan="${CONFIG.MAX_ROOMS}"><span>ROOM No.</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} floor-col-header text-center" rowspan="2"><span>ชั้น</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} text-center" rowspan="2" style="min-width: 80px;"><span>รายการ</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} text-center" colspan="${CONFIG.MAX_ROOMS}"><span>ROOM No.</span></th>
                         <th class="border-y separator-cell" rowspan="2"></th>
-                        <th class="border p-2 ${headerColor}" rowspan="2"><span>จำนวน</span></th>
-                        <th class="border p-2 bg-teal-200 text-slate-800" rowspan="2"><span>เสร็จ</span></th>
-                        <th class="border p-2 bg-rose-200 text-slate-800" rowspan="2"><span>คงเหลือ</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} text-center" rowspan="2"><span>จำนวน</span></th>
+                        <th class="border p-1 md:p-1.5 bg-teal-200 text-slate-800 text-center font-bold" rowspan="2"><span>เสร็จ</span></th>
+                        <th class="border p-1 md:p-1.5 bg-rose-200 text-slate-800 text-center font-bold" rowspan="2"><span>คงเหลือ</span></th>
                     </tr>
                     <tr>`;
             for (let i = 1; i <= CONFIG.MAX_ROOMS; i++) {
-              headerHTML += `<th class="border p-1 md:p-2 font-normal ${subHeaderColor}"><span>${i}</span></th>`;
+              headerHTML += `<th class="border p-1 md:py-1 md:px-0.5 font-normal ${subHeaderColor} room-col-header text-center text-xs min-w-[34px] max-w-[44px]"><span>${i}</span></th>`;
             }
             headerHTML += "</tr>";
           } else {
             headerHTML = `<tr>
-                        <th class="border p-2 ${headerColor}" rowspan="2"><span>ชั้น</span></th>
-                        <th class="border p-2 ${headerColor}" colspan="${CONFIG.MAX_ROOMS}"><span>ROOM No.</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} floor-col-header text-center" rowspan="2"><span>ชั้น</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} text-center" colspan="${CONFIG.MAX_ROOMS}"><span>ROOM No.</span></th>
                         <th class="border-y separator-cell" rowspan="2"></th>
-                        <th class="border p-2 ${headerColor}" colspan="${isInspection ? 3 : categoryTasks.length}"><span>${isInspection ? "สรุปผลตรวจ" : "จำนวน"}</span></th>
-                        <th class="border p-2 bg-teal-200 text-slate-800" rowspan="2"><span>ผ่าน/เสร็จ</span></th>
-                        <th class="border p-2 bg-rose-200 text-slate-800" rowspan="2"><span>คงเหลือ</span></th>
+                        <th class="border p-1 md:p-1.5 ${headerColor} text-center" colspan="${isInspection ? 3 : categoryTasks.length}"><span>${isInspection ? "สรุปผลตรวจ" : "จำนวน"}</span></th>
+                        <th class="border p-1 md:p-1.5 bg-teal-200 text-slate-800 text-center font-bold text-xs" rowspan="2"><span>ผ่าน/เสร็จ</span></th>
+                        <th class="border p-1 md:p-1.5 bg-rose-200 text-slate-800 text-center font-bold text-xs" rowspan="2"><span>คงเหลือ</span></th>
                     </tr>
                     <tr>`;
             for (let i = 1; i <= CONFIG.MAX_ROOMS; i++) {
-              headerHTML += `<th class="border p-1 md:p-2 font-normal ${subHeaderColor}"><span>${i}</span></th>`;
+              headerHTML += `<th class="border p-1 md:py-1 md:px-0.5 font-normal ${subHeaderColor} room-col-header text-center text-xs min-w-[34px] max-w-[44px]"><span>${i}</span></th>`;
             }
             if (isInspection) {
-              headerHTML += `<th class="border p-2 bg-slate-100 font-semibold"><span>ส่งแล้ว</span></th>`;
-              headerHTML += `<th class="border p-2 bg-teal-100 font-semibold"><span>ผ่าน</span></th>`;
-              headerHTML += `<th class="border p-2 bg-rose-100 font-semibold"><span>ไม่ผ่าน</span></th>`;
+              headerHTML += `<th class="border p-1 md:p-1.5 bg-slate-100 font-semibold text-xs text-center min-w-[48px]"><span>ส่งแล้ว</span></th>`;
+              headerHTML += `<th class="border p-1 md:p-1.5 bg-teal-100 font-semibold text-xs text-center min-w-[48px]"><span>ผ่าน</span></th>`;
+              headerHTML += `<th class="border p-1 md:p-1.5 bg-rose-100 font-semibold text-xs text-center min-w-[48px]"><span>ไม่ผ่าน</span></th>`;
             } else {
               categoryTasks.forEach((task) => {
-                const colorName = task.color.split("-")[1];
-                headerHTML += `<th class="border p-2 bg-${colorName}-100 text-black font-semibold"><span>${task.name}</span></th>`;
+                const colorName = task.color ? task.color.split("-")[1] : "slate";
+                let mainTitle = task.name;
+                let subBadge = "";
+                const parenMatch = task.name.match(/^(.*?)\s*\(([^)]+)\)$/);
+                if (parenMatch) {
+                  mainTitle = parenMatch[1];
+                  subBadge = parenMatch[2];
+                }
+                headerHTML += `
+                  <th class="border p-1 md:px-1.5 md:py-1 bg-${colorName}-100 text-slate-800 font-semibold task-summary-th text-center align-middle" title="${task.name}">
+                    <div class="task-th-wrap flex flex-col items-center justify-center min-w-[48px] max-w-[78px] mx-auto leading-tight">
+                      <span class="text-[11px] font-bold leading-tight text-slate-800 text-center">${mainTitle}</span>
+                      ${subBadge ? `<span class="text-[9px] font-extrabold text-slate-700 bg-black/5 px-1 py-0.2 rounded mt-0.5 whitespace-nowrap">${subBadge}</span>` : ""}
+                    </div>
+                  </th>`;
               });
             }
             headerHTML += "</tr>";
@@ -10846,14 +10919,14 @@
             } else {
               const row = document.createElement("tr");
               const floorCell = document.createElement("td");
-              floorCell.className = "border p-2 font-bold bg-slate-100";
+              floorCell.className = "border p-1 md:p-1.5 font-bold bg-slate-100 text-center text-xs min-w-[34px]";
               floorCell.innerHTML = `<span>${floor}</span>`;
               row.appendChild(floorCell);
 
               for (let room = 1; room <= CONFIG.MAX_ROOMS; room++) {
                 if (room > CONFIG.getRoomsOnFloor(floor)) {
                   const emptyCell = document.createElement("td");
-                  emptyCell.className = "border p-2 bg-slate-200";
+                  emptyCell.className = "border p-1 md:py-1.5 md:px-0.5 bg-slate-200";
                   row.appendChild(emptyCell);
                   continue;
                 }
@@ -10967,7 +11040,7 @@
                   }
                 }
                 const cell = document.createElement("td");
-                cell.className = `border p-2 table-cell ${styleClasses}`;
+                cell.className = `border p-1 md:py-1.5 md:px-0.5 table-cell ${styleClasses} text-center min-w-[34px] max-w-[46px]`;
                 cell.innerHTML = `<span class="percentage-text">${cellText}</span>`;
                 cell.dataset.floor = floor;
                 cell.dataset.room = room;
@@ -10975,7 +11048,7 @@
               }
 
               const separator = document.createElement("td");
-              separator.className = "border-y separator-cell";
+              separator.className = "border-y separator-cell w-2 min-w-[6px] max-w-[8px] p-0";
               row.appendChild(separator);
 
               let floorCompleted = 0;
@@ -11004,17 +11077,17 @@
                 floorCompleted = floorPassed;
 
                 const submittedCell = document.createElement("td");
-                submittedCell.className = "border p-2 summary-cell";
+                submittedCell.className = "border p-1 md:p-1.5 summary-cell text-center text-xs min-w-[44px]";
                 submittedCell.innerHTML = `<span>${floorSubmitted}</span>`;
                 row.appendChild(submittedCell);
 
                 const passedCell = document.createElement("td");
-                passedCell.className = "border p-2 summary-cell bg-teal-50";
+                passedCell.className = "border p-1 md:p-1.5 summary-cell bg-teal-50 text-center text-xs min-w-[44px]";
                 passedCell.innerHTML = `<span>${floorPassed}</span>`;
                 row.appendChild(passedCell);
 
                 const failedCell = document.createElement("td");
-                failedCell.className = "border p-2 summary-cell bg-rose-50";
+                failedCell.className = "border p-1 md:p-1.5 summary-cell bg-rose-50 text-center text-xs min-w-[44px]";
                 failedCell.innerHTML = `<span>${floorFailed}</span>`;
                 row.appendChild(failedCell);
 
@@ -11040,7 +11113,7 @@
                   const bgColor = `bg-${colorName}-50`;
                   const textColor = count > 0 ? `text-${colorName}-700 font-bold` : "";
                   const countCell = document.createElement("td");
-                  countCell.className = `border p-2 summary-cell ${bgColor} ${textColor}`;
+                  countCell.className = `border p-1 md:p-1.5 summary-cell ${bgColor} ${textColor} text-center text-xs min-w-[48px]`;
                   countCell.innerHTML = `<span>${count}</span>`;
                   row.appendChild(countCell);
                   totals[i] += count;
@@ -11069,7 +11142,7 @@
                   const bgColor = `bg-${colorName}-50`;
                   const textColor = count > 0 ? `text-${colorName}-700 font-bold` : "";
                   const countCell = document.createElement("td");
-                  countCell.className = `border p-2 summary-cell ${bgColor} ${textColor}`;
+                  countCell.className = `border p-1 md:p-1.5 summary-cell ${bgColor} ${textColor} text-center text-xs min-w-[48px]`;
                   countCell.innerHTML = `<span>${count}</span>`;
                   row.appendChild(countCell);
                   totals[i] += count;
@@ -11079,13 +11152,13 @@
 
               const completedCell = document.createElement("td");
               completedCell.className =
-                "border p-2 text-green-700 font-semibold summary-cell";
+                "border p-1 md:p-1.5 text-green-700 font-semibold summary-cell text-center text-xs min-w-[48px]";
               completedCell.innerHTML = `<span>${floorCompleted}</span>`;
               row.appendChild(completedCell);
 
               const remainingCell = document.createElement("td");
               remainingCell.className =
-                "border p-2 text-red-700 font-semibold summary-cell";
+                "border p-1 md:p-1.5 text-red-700 font-semibold summary-cell text-center text-xs min-w-[48px]";
               remainingCell.innerHTML = `<span>${floorRemaining}</span>`;
               row.appendChild(remainingCell);
 
@@ -11102,7 +11175,7 @@
           row.className = "font-bold bg-slate-200";
 
           const totalCell = document.createElement("td");
-          totalCell.className = "border p-2";
+          totalCell.className = "border p-1 md:p-1.5 text-center text-xs";
           totalCell.colSpan = isDetailedView
             ? CONFIG.MAX_ROOMS + 3
             : CONFIG.MAX_ROOMS + 2;
@@ -11121,7 +11194,7 @@
                 index === detailedTasks.length - 1
                   ? ""
                   : "border-b border-slate-200";
-              footerTaskCountsHTML += `<div class="grid grid-cols-2 gap-2 py-1 ${borderClass}"><span>${task.name}:</span><span class="font-semibold text-right">${total}</span></div>`;
+            footerTaskCountsHTML += `<div class="grid grid-cols-2 gap-2 py-1 ${borderClass}"><span>${task.name}:</span><span class="font-semibold text-right">${total}</span></div>`;
             });
             footerTaskCountsHTML += "</div>";
             summaryCell.innerHTML = footerTaskCountsHTML;
@@ -11139,25 +11212,26 @@
                 textColor = total > 0 ? `text-${colorName}-800 font-bold` : "";
               }
               const cell = document.createElement("td");
-              cell.className = `border p-2 ${bgColor} ${textColor}`;
+              cell.className = `border p-1 md:p-1.5 ${bgColor} ${textColor} text-center text-xs min-w-[48px]`;
               cell.innerHTML = `<span>${total}</span>`;
               row.appendChild(cell);
             });
           }
 
           const completedCell = document.createElement("td");
-          completedCell.className = "border p-2 bg-teal-100";
+          completedCell.className = "border p-1 md:p-1.5 bg-teal-100 text-center text-xs font-bold text-teal-800 min-w-[48px]";
           completedCell.innerHTML = `<span>${totalCompleted}</span>`;
           row.appendChild(completedCell);
 
           const remainingCell = document.createElement("td");
-          remainingCell.className = "border p-2 bg-rose-100";
+          remainingCell.className = "border p-1 md:p-1.5 bg-rose-100 text-center text-xs font-bold text-rose-800 min-w-[48px]";
           remainingCell.innerHTML = `<span>${totalRemaining}</span>`;
           row.appendChild(remainingCell);
 
           tfoot.appendChild(row);
 
           mainTable.appendChild(tfoot);
+          updateTableFitUI();
         }
 
         function highlightChanges(oldData, newData) {
@@ -12871,12 +12945,16 @@
           openModal("notificationModal");
         }
 
-        function showToast(message, duration = 3000) {
+        function showToast(message, duration = 3000, isHTML = false) {
           const toast = document.getElementById("toast");
           const toastMessage = document.getElementById("toast-message");
           if (!toast || !toastMessage) return;
 
-          toastMessage.textContent = message;
+          if (isHTML) {
+            toastMessage.innerHTML = message;
+          } else {
+            toastMessage.textContent = message;
+          }
           toast.style.transform = "translateX(0)";
 
           clearTimeout(toastTimeout);
@@ -14096,19 +14174,28 @@
         }
 
         function downloadPreviewFile(file) {
-          if (isAppleMobileDevice()) {
+          if (!file) return;
+          const isIOS = isAppleMobileDevice();
+          const isLine = /Line/i.test(navigator.userAgent);
+
+          // In iOS inside LINE in-app browser, direct filesystem downloads are blocked by LINE's sandbox
+          if (isIOS && isLine) {
             openPreviewImageForIOS(file);
             return;
           }
 
           const objectUrl = URL.createObjectURL(file);
           const link = document.createElement("a");
-          link.download = file.name;
+          link.download = file.name || "PYNN_Report.jpg";
           link.href = objectUrl;
+          link.rel = "noopener";
+          if (isIOS) {
+            link.target = "_self";
+          }
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
+          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
         }
 
         function getSafeCaptureScale(
@@ -14157,7 +14244,7 @@
           });
         }
 
-        function showImagePreviewFile(previewFile) {
+        function showImagePreviewFile(previewFile, autoDownload = true) {
           const previewImg = document.getElementById("previewImageElement");
           const downloadBtn = document.getElementById("previewDownloadBtn");
           const downloadLabel = document.getElementById(
@@ -14186,15 +14273,11 @@
             downloadBtn.classList.toggle("ios-native-save", isIOS);
             if (downloadLabel) {
               downloadLabel.textContent = isIOS
-                ? "เปิดภาพเต็มเพื่อบันทึก"
+                ? "ดาวน์โหลดลงเครื่อง"
                 : "บันทึกลงเครื่อง";
             }
 
             downloadBtn.onclick = function () {
-              if (isIOS) {
-                openPreviewImageForIOS(previewFile);
-                return;
-              }
               downloadPreviewFile(previewFile);
             };
           }
@@ -14208,7 +14291,7 @@
               shareBtn.style.display = "flex";
               if (shareLabel) {
                 shareLabel.textContent = isIOS
-                  ? "บันทึก / แชร์ใน iOS"
+                  ? "บันทึกลง Photos / แชร์"
                   : "แชร์ / ส่ง LINE";
               }
               shareBtn.onclick = async function () {
@@ -14231,17 +14314,36 @@
           if (saveHint) {
             if (isIOS && supportsFileShare) {
               saveHint.innerHTML =
-                "เลือก <strong>บันทึก / แชร์ใน iOS</strong> เพื่อเปิดเมนูระบบ หรือเลือก <strong>เปิดภาพเต็มเพื่อบันทึก</strong> แล้วแตะค้างที่ภาพ";
-            } else if (isIOS) {
-              saveHint.innerHTML =
-                "เลือก <strong>เปิดภาพเต็มเพื่อบันทึก</strong> แล้วแตะค้างที่ภาพเพื่อเลือก <strong>บันทึกรูปภาพ</strong>";
+                "ดาวน์โหลดลงเครื่องเรียบร้อยแล้ว หรือเลือก <strong>บันทึกลง Photos / แชร์</strong> เพื่อเปิดเมนูแชร์";
             } else {
               saveHint.textContent =
-                "ตรวจสอบภาพ แล้วเลือกบันทึกหรือแชร์ด้านล่าง";
+                "ดาวน์โหลดลงเครื่องเรียบร้อยแล้ว หรือเลือกแชร์ด้านล่าง";
             }
           }
 
-          openModal("imagePreviewModal");
+          if (autoDownload) {
+            // Auto download immediately for iOS, Android, and PC - no extra click needed!
+            downloadPreviewFile(previewFile);
+
+            const displayName = previewFile.name
+              ? (previewFile.name.length > 28 ? previewFile.name.substring(0, 25) + "..." : previewFile.name)
+              : "ภาพรายงาน";
+
+            showToast(
+              `<div class="flex items-center justify-between gap-3 text-left">
+                 <div class="flex items-center gap-2">
+                   <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                   <span class="text-xs font-semibold text-white">ดาวน์โหลดภาพแล้ว: ${escapeCommonDefectText(displayName)}</span>
+                 </div>
+                 <button type="button" onclick="openModal('imagePreviewModal')" class="text-[11px] font-bold px-2.5 py-1 bg-indigo-500 hover:bg-indigo-400 text-white rounded-md cursor-pointer transition-colors shrink-0 shadow-xs">ดูภาพ / แชร์</button>
+               </div>`,
+              6000,
+              true
+            );
+          } else {
+            openModal("imagePreviewModal");
+          }
+
           if (window.lucide) lucide.createIcons();
         }
 
@@ -15220,12 +15322,6 @@
             }
 
             showImagePreviewFile(previewFile);
-            showToast(
-              currentView === "commonDefect"
-                ? "จัดสรุป DEFECT แนวนอน 16:9 พร้อมวางใน PowerPoint แล้ว"
-                : "จัดภาพกว้างพร้อมวางใน PowerPoint แล้ว — เหลือเฉพาะ KPI ตาราง และขั้นตอนสำคัญ",
-              4500,
-            );
           } catch (error) {
             console.error("PowerPoint capture failed:", error);
             showNotificationModal(
