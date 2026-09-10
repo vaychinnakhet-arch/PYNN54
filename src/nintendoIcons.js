@@ -1,566 +1,512 @@
-// Nintendo-style Hand-Crafted Vector Work Pictograms
-// High contrast, chunky outlines (#253047), vibrant playful Nintendo cel colors, and soft tactile badges
+/**
+ * Paper Mario Nintendo Style Construction & QC Trade Icons
+ * Clean, pure vector SVGs without external filter dependencies:
+ * - Die-cut papercraft sticker aesthetic with clean white silhouette backing
+ * - Bold, expressive ink lineart (Paper Mario 2.5-3px lines)
+ * - Saturated Nintendo color palette (Mario Red, Super Star Gold, Yoshi Green, Sky Blue)
+ * - Playful Paper Mario character touches (cute oval eyes, star sparkles, paper seams)
+ * - All trade keys and aliases fully supported (100% complete, zero missing icons)
+ */
 
-export const nintendoWorkIcons = {
+const icons = {
+  // 1. งานสนิม/ทาสี (Rust Primer & Paint) - skimAndPaint / rustPaint
   skimAndPaint: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Pail Body -->
-      <path d="M12 18 L15 41 C15.2 42.6 16.6 44 18.2 44 L29.8 44 C31.4 44 32.8 42.6 33 41 L36 18 Z" fill="#E2E8F0" stroke="#253047" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M15 18 L17 38 C17.2 39.5 18.5 40.5 20 40.5 L28 40.5 C29.5 40.5 30.8 39.5 31 38 L33 18 Z" fill="#F8FAFC"/>
-      <!-- Paint Inside & Dripping -->
-      <ellipse cx="24" cy="18" rx="12" ry="3.8" fill="#E96861" stroke="#253047" stroke-width="2.2"/>
-      <path d="M18 19 C18 24 20.5 26 20.5 30 C20.5 31.5 19.2 32.5 18 32.5 C16.8 32.5 16 31.5 16 30 L15.5 19" fill="#E96861"/>
-      <path d="M28 19 C28 22 29.5 24 29.5 27 C29.5 28.2 28.7 29 27.8 29 C27 29 26.3 28.2 26.3 27 L26 19" fill="#E96861"/>
-      <!-- Metal Bail Handle -->
-      <path d="M12 18 C12 7 36 7 36 18" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="12" cy="18" r="2.2" fill="#253047"/>
-      <circle cx="36" cy="18" r="2.2" fill="#253047"/>
-      <!-- Angled Paintbrush -->
-      <g transform="rotate(22 30 13)">
-        <rect x="28" y="-4" width="4.8" height="15" rx="2" fill="#D97706" stroke="#253047" stroke-width="1.8"/>
-        <rect x="27" y="10" width="6.8" height="4" rx="1" fill="#94A3B8" stroke="#253047" stroke-width="1.6"/>
-        <path d="M27 14 L27 20 C27 21.5 28.5 22.5 30.5 22.5 C32.5 22.5 34 21.5 34 20 L34 14 Z" fill="#38BDF8" stroke="#253047" stroke-width="1.8"/>
-        <circle cx="28" cy="25" r="1.5" fill="#38BDF8"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Die-cut Paper Sticker Backing -->
+      <path d="M12 21C12 18.5 14 16.5 16.5 16.5H43.5C46 16.5 48 18.5 48 21V46C48 50.5 44.5 54 40 54H20C15.5 54 12 50.5 12 46V21Z" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/>
+      <!-- Paint Bucket Body -->
+      <path d="M14 22C14 20 15.5 18 17.5 18H42.5C44.5 18 46 20 46 22V46C46 49.5 43 52.5 39.5 52.5H20.5C17 52.5 14 49.5 14 46V22Z" fill="#F8FAFC" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- Bucket Rim -->
+      <rect x="12" y="16" width="36" height="6.5" rx="3.2" fill="#E2E8F0" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Rich Mario Red Paint Wave -->
+      <path d="M15.5 24C19 28 23 23 27 26C31 29 36 24 44.5 27V46C44.5 48.5 42.5 50.5 40 50.5H20C17.5 50.5 15.5 48.5 15.5 46V24Z" fill="#EF4444"/>
+      <!-- Drips running down -->
+      <path d="M22 26V34C22 35.5 23.5 36.5 25 36.5C26.5 36.5 28 35.5 28 34V28" fill="#DC2626" stroke="#241E38" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- Paper Mario Cute Bucket Eyes -->
+      <ellipse cx="23" cy="43" rx="2.2" ry="3.5" fill="#241E38"/>
+      <circle cx="22.2" cy="41.5" r="1.1" fill="#FFFFFF"/>
+      <ellipse cx="33" cy="43" rx="2.2" ry="3.5" fill="#241E38"/>
+      <circle cx="32.2" cy="41.5" r="1.1" fill="#FFFFFF"/>
+      <!-- Cheerful Bucket Smile -->
+      <path d="M26 46C27.2 47.5 28.8 47.5 30 46" stroke="#241E38" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="19.5" cy="45" r="1.8" fill="#FCA5A5"/>
+      <circle cx="36.5" cy="45" r="1.8" fill="#FCA5A5"/>
+      <!-- Wire Handle -->
+      <path d="M12.5 19C12.5 9 47.5 9 47.5 19" stroke="#64748B" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Slanted Paint Brush -->
+      <g transform="rotate(32 46 18)">
+        <rect x="42" y="2" width="6" height="15" rx="3" fill="#F59E0B" stroke="#241E38" stroke-width="2.2"/>
+        <rect x="41" y="15" width="8" height="6" rx="1.5" fill="#CBD5E1" stroke="#241E38" stroke-width="2.2"/>
+        <path d="M41 21H49V27C49 29.5 47 31 45 31C43 31 41 29.5 41 27V21Z" fill="#EF4444" stroke="#241E38" stroke-width="2.2"/>
       </g>
-      <!-- Sparkle -->
-      <path d="M8 12 L9.5 7 L11 12 L16 13.5 L11 15 L9.5 20 L8 15 L3 13.5 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
+      <!-- Paper Sparkle Star -->
+      <path d="M49 42L50.5 38.5L54 37L50.5 35.5L49 32L47.5 35.5L44 37L47.5 38.5L49 42Z" fill="#FACC15" stroke="#241E38" stroke-width="1.8"/>
     </svg>
   `,
 
+  // 2. งานเท TOPPING (Concrete Floor Screed Topping)
   topping: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- 3D Slab Layers (Isometric) -->
-      <!-- Bottom Structural Slab -->
-      <path d="M6 31 L24 40 L42 31 L24 22 Z" fill="#64748B" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M6 31 L6 35 L24 44 L24 40 Z" fill="#475569" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M24 40 L24 44 L42 35 L42 31 Z" fill="#334155" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      
-      <!-- Middle Aggregate Concrete -->
-      <path d="M7 27 L24 35.5 L41 27 L24 18.5 Z" fill="#CBD5E1" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M7 27 L7 31 L24 39.5 L24 35.5 Z" fill="#94A3B8" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M24 35.5 L24 39.5 L41 31 L41 27 Z" fill="#64748B" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-
-      <!-- Smooth Topping Finish (Top) -->
-      <path d="M8 22 L24 30 L40 22 L24 14 Z" fill="#F8FAFC" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M8 22 L8 26 L24 34 L24 30 Z" fill="#E2E8F0" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M24 30 L24 34 L40 26 L40 22 Z" fill="#CBD5E1" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      
-      <!-- Concrete Finish Sheen Lines -->
-      <path d="M16 20 L28 26" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M24 17 L34 22" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
-
-      <!-- Hand Screed / Trowel -->
-      <g transform="translate(18, 6) rotate(-15)">
-        <polygon points="4,12 18,12 16,16 2,16" fill="#FACC15" stroke="#253047" stroke-width="1.8" stroke-linejoin="round"/>
-        <path d="M10 12 L10 8 L14 8" stroke="#D97706" stroke-width="2" stroke-linecap="round"/>
-        <rect x="13" y="6" width="6" height="4" rx="1.5" fill="#B45309" stroke="#253047" stroke-width="1.5"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Backing -->
+      <path d="M8 36L32 22L56 36L32 50L8 36Z" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+      <!-- 3D Paper Slab Layer -->
+      <path d="M8 36L32 23L56 36L32 49L8 36Z" fill="#94A3B8" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <path d="M8 36V44L32 57V49L8 36Z" fill="#64748B" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <path d="M56 36V44L32 57V49L56 36Z" fill="#475569" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- Fresh Smooth Screed Top Inset -->
+      <path d="M14 34L32 24L50 34L32 44L14 34Z" fill="#E2E8F0" stroke="#241E38" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- Screed Texture Lines -->
+      <path d="M20 34L44 34" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+      <!-- Cute Paper Mario Concrete Float / Trowel -->
+      <g transform="translate(18, 9)">
+        <path d="M2 20L18 10L30 17L14 26L2 20Z" fill="#38BDF8" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M16 18V12" stroke="#241E38" stroke-width="3" stroke-linecap="round"/>
+        <rect x="10" y="8" width="12" height="5" rx="2.5" fill="#F59E0B" stroke="#241E38" stroke-width="2.2"/>
+        <!-- Little Trowel Eyes -->
+        <ellipse cx="14" cy="18" rx="1.5" ry="2.2" fill="#241E38"/>
+        <ellipse cx="19" cy="21" rx="1.5" ry="2.2" fill="#241E38"/>
       </g>
-      <circle cx="38" cy="12" r="2" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
+      <!-- Paper Mario Level Sparkle Star -->
+      <path d="M48 18L49.5 14.5L53 13L49.5 11.5L48 8L46.5 11.5L43 13L46.5 14.5L48 18Z" fill="#FACC15" stroke="#241E38" stroke-width="1.8"/>
     </svg>
   `,
 
+  // 3. งานฝ้า (Gypsum & Suspension Ceiling)
   ceiling: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Suspended Ceiling Hangers -->
-      <line x1="12" y1="4" x2="12" y2="18" stroke="#64748B" stroke-width="2" stroke-dasharray="2 2" stroke-linecap="round"/>
-      <line x1="36" y1="4" x2="36" y2="18" stroke="#64748B" stroke-width="2" stroke-dasharray="2 2" stroke-linecap="round"/>
-      <circle cx="12" cy="7" r="2.2" fill="#FACC15" stroke="#253047" stroke-width="1.5"/>
-      <circle cx="36" cy="7" r="2.2" fill="#FACC15" stroke="#253047" stroke-width="1.5"/>
-
-      <!-- T-Bar Framework Grid -->
-      <path d="M6 24 L42 24" stroke="#253047" stroke-width="3" stroke-linecap="round"/>
-      <path d="M6 23 L42 23" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
-      
-      <line x1="14" y1="18" x2="14" y2="38" stroke="#253047" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="34" y1="18" x2="34" y2="38" stroke="#253047" stroke-width="2.5" stroke-linecap="round"/>
-
-      <!-- Ceiling Tile Panel being fitted -->
-      <g transform="rotate(-12 24 27)">
-        <rect x="14" y="21" width="20" height="15" rx="1.5" fill="#F8FAFC" stroke="#253047" stroke-width="2"/>
-        <!-- Acoustic perforations / texture -->
-        <circle cx="18" cy="25" r="1" fill="#94A3B8"/>
-        <circle cx="24" cy="25" r="1" fill="#94A3B8"/>
-        <circle cx="30" cy="25" r="1" fill="#94A3B8"/>
-        <circle cx="21" cy="30" r="1" fill="#94A3B8"/>
-        <circle cx="27" cy="30" r="1" fill="#94A3B8"/>
-      </g>
-
-      <!-- Spirit Level Tool -->
-      <rect x="12" y="38" width="24" height="6" rx="2" fill="#FACC15" stroke="#253047" stroke-width="2"/>
-      <rect x="21" y="39.5" width="6" height="3" rx="1" fill="#22C55E" stroke="#253047" stroke-width="1"/>
-      <circle cx="24" cy="41" r="1" fill="#FFFFFF"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <path d="M6 32L32 17L58 32L32 47L6 32Z" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+      <!-- Hanging Suspension Rods with Paper Coil Springs -->
+      <line x1="16" y1="6" x2="16" y2="24" stroke="#64748B" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="48" y1="6" x2="48" y2="24" stroke="#64748B" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Spring Coils -->
+      <circle cx="16" cy="22" r="3" fill="#F59E0B" stroke="#241E38" stroke-width="2"/>
+      <circle cx="48" cy="22" r="3" fill="#F59E0B" stroke="#241E38" stroke-width="2"/>
+      <!-- Main Ceiling Grid Tile -->
+      <path d="M6 32L32 18L58 32L32 46L6 32Z" fill="#FFFFFF" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- T-Bar Cross Lines in Sky Blue -->
+      <path d="M19 25L45 39" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+      <path d="M45 25L19 39" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+      <!-- Smiling Paper Mario Downlight in Center -->
+      <ellipse cx="32" cy="32" rx="7.5" ry="4.5" fill="#FDE047" stroke="#241E38" stroke-width="2.5"/>
+      <circle cx="30" cy="31.5" r="1.2" fill="#241E38"/>
+      <circle cx="34" cy="31.5" r="1.2" fill="#241E38"/>
+      <path d="M31 33.5C31.5 34.2 32.5 34.2 33 33.5" stroke="#241E38" stroke-width="1.2" stroke-linecap="round"/>
+      <!-- Radiating Paper Sunshine Cones -->
+      <path d="M25 36L18 54H46L39 36Z" fill="#FEF08A" fill-opacity="0.55"/>
+      <line x1="24" y1="48" x2="28" y2="40" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/>
+      <line x1="40" y1="48" x2="36" y2="40" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/>
     </svg>
   `,
 
+  // 4. งานผนัง TEXCA (Texca Lightweight Block Masonry) - texcaWall / texca
   texcaWall: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Super Mario Style Precast Wall Blocks -->
-      <!-- Bottom Layer -->
-      <rect x="6" y="28" width="17" height="13" rx="2" fill="#FB923C" stroke="#253047" stroke-width="2.2"/>
-      <rect x="7.5" y="29.5" width="14" height="2" fill="#FED7AA"/>
-      <circle cx="10" cy="35" r="1" fill="#EA580C"/>
-      <circle cx="19" cy="37" r="1" fill="#EA580C"/>
-
-      <rect x="25" y="28" width="17" height="13" rx="2" fill="#F97316" stroke="#253047" stroke-width="2.2"/>
-      <rect x="26.5" y="29.5" width="14" height="2" fill="#FED7AA"/>
-      <circle cx="29" cy="35" r="1" fill="#C2410C"/>
-      <circle cx="38" cy="36" r="1" fill="#C2410C"/>
-
-      <!-- Top Center Block -->
-      <rect x="15" y="14" width="18" height="13" rx="2" fill="#FDBA74" stroke="#253047" stroke-width="2.2"/>
-      <rect x="16.5" y="15.5" width="15" height="2" fill="#FFF7ED"/>
-      <circle cx="19" cy="21" r="1" fill="#EA580C"/>
-      <circle cx="28" cy="22" r="1" fill="#EA580C"/>
-
-      <!-- Mortar Joint Lines -->
-      <path d="M6 28 L42 28" stroke="#F1F5F9" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="24" y1="28" x2="24" y2="41" stroke="#F1F5F9" stroke-width="2" stroke-linecap="round"/>
-
-      <!-- Pointed Bricklayer Trowel -->
-      <g transform="translate(26, 4) rotate(25)">
-        <polygon points="0,14 14,14 7,3" fill="#E2E8F0" stroke="#253047" stroke-width="1.8" stroke-linejoin="round"/>
-        <path d="M7 14 L7 18 L10 18" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
-        <rect x="9" y="17" width="8" height="4" rx="1.5" fill="#D97706" stroke="#253047" stroke-width="1.5"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Silhouette -->
+      <rect x="6" y="20" width="52" height="34" rx="5" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Staggered Texca Lightweight Blocks (Terracotta / Warm Orange) -->
+      <!-- Bottom Layer Blocks -->
+      <rect x="8" y="36" width="22" height="15" rx="3" fill="#FB923C" stroke="#241E38" stroke-width="2.8"/>
+      <rect x="34" y="36" width="22" height="15" rx="3" fill="#F97316" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Block Core Holes -->
+      <ellipse cx="14" cy="43.5" rx="2.5" ry="3" fill="#EA580C"/>
+      <ellipse cx="23" cy="43.5" rx="2.5" ry="3" fill="#EA580C"/>
+      <ellipse cx="40" cy="43.5" rx="2.5" ry="3" fill="#C2410C"/>
+      <ellipse cx="49" cy="43.5" rx="2.5" ry="3" fill="#C2410C"/>
+      <!-- Top Middle Staggered Block -->
+      <rect x="18" y="20" width="28" height="15" rx="3" fill="#FDBA74" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Paper Mario Eyes on the Main Block! -->
+      <ellipse cx="27" cy="27" rx="2" ry="3.2" fill="#241E38"/>
+      <circle cx="26.2" cy="25.5" r="1" fill="#FFFFFF"/>
+      <ellipse cx="37" cy="27" rx="2" ry="3.2" fill="#241E38"/>
+      <circle cx="36.2" cy="25.5" r="1" fill="#FFFFFF"/>
+      <path d="M30 30.5C31 31.5 33 31.5 34 30.5" stroke="#241E38" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="23" cy="29" r="1.5" fill="#F97316"/>
+      <circle cx="41" cy="29" r="1.5" fill="#F97316"/>
+      <!-- Mortar Layer Line -->
+      <line x1="6" y1="35.5" x2="58" y2="35.5" stroke="#F1F5F9" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Cute Paper Trowel on side -->
+      <g transform="translate(36, 4) rotate(18)">
+        <path d="M4 14L16 6L20 18L4 14Z" fill="#E2E8F0" stroke="#241E38" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M16 11L21 8" stroke="#241E38" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="21" y="5" width="8" height="4.5" rx="2" fill="#D97706" stroke="#241E38" stroke-width="1.8"/>
       </g>
-      <!-- Sparkle -->
-      <path d="M10 12 L11 9 L12 12 L15 13 L12 14 L11 17 L10 14 L7 13 Z" fill="#FACC15"/>
     </svg>
   `,
 
+  // 5. งานกันซึม (Waterproofing Membrane & Seal) - waterproofing / waterproof
   waterproofing: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Curved Shield Barrier Membrane -->
-      <path d="M8 32 C12 36 20 38 24 38 C28 38 36 36 40 32 L40 36 C36 41 28 43 24 43 C20 43 12 41 8 36 Z" fill="#1E293B" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M8 28 C12 33 20 35 24 35 C28 35 36 33 40 28 L40 32 C36 37 28 39 24 39 C20 39 12 37 8 32 Z" fill="#0284C7" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M8 24 C12 29 20 31 24 31 C28 31 36 29 40 24 L40 28 C36 33 28 35 24 35 C20 35 12 33 8 28 Z" fill="#38BDF8" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-
-      <!-- Water Ripple Rings -->
-      <ellipse cx="24" cy="27" rx="12" ry="4" stroke="#BAE6FD" stroke-width="1.5" stroke-dasharray="2 3"/>
-
-      <!-- Friendly Chunky Water Droplet Character -->
-      <path d="M24 6 C24 6 14 18 14 23 C14 28.5 18.5 33 24 33 C29.5 33 34 28.5 34 23 C34 18 24 6 24 6 Z" fill="#38BDF8" stroke="#253047" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M24 8 C24 8 16 19 16 23 C16 27.4 19.6 31 24 31 C25.2 31 26.3 30.7 27.3 30.2 C24.5 29.5 22.5 27 22.5 24 C22.5 20.5 25 18 27.5 15 C26 12 24 8 24 8 Z" fill="#0EA5E9"/>
-      <!-- Specular Highlight -->
-      <ellipse cx="20" cy="20" rx="2.5" ry="5" transform="rotate(-25 20 20)" fill="#FFFFFF"/>
-      <circle cx="21" cy="27" r="1.5" fill="#FFFFFF"/>
-
-      <!-- Protection Stars -->
-      <path d="M37 12 L38 9 L39 12 L42 13 L39 14 L38 17 L37 14 L34 13 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
-      <circle cx="10" cy="18" r="1.5" fill="#38BDF8"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <path d="M32 6C32 6 15 23 15 32C15 41.5 22.5 49 32 49C41.5 49 49 41.5 49 32C49 23 32 6 32 6Z" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+      <!-- Concrete Foundation Layer -->
+      <rect x="10" y="44" width="44" height="11" rx="3" fill="#94A3B8" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Blue Waterproof Elastomeric Membrane Band -->
+      <rect x="8" y="38" width="48" height="7" rx="3" fill="#0284C7" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Cheerful Paper Mario Water Drop Mascot -->
+      <path d="M32 9C32 9 17 25 17 33C17 41.2 23.7 48 32 48C40.3 48 47 41.2 47 33C47 25 32 9 32 9Z" fill="#38BDF8" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- Droplet Core Depth Shading -->
+      <path d="M32 15C32 15 22 26 22 33C22 38.5 26.5 43 32 43C37.5 43 42 38.5 42 33C42 26 32 15 32 15Z" fill="#0EA5E9"/>
+      <!-- Paper Mario Cute Vertical Eyes -->
+      <ellipse cx="28" cy="32" rx="2" ry="3.5" fill="#241E38"/>
+      <circle cx="27.2" cy="30.5" r="1.1" fill="#FFFFFF"/>
+      <ellipse cx="36" cy="32" rx="2" ry="3.5" fill="#241E38"/>
+      <circle cx="35.2" cy="30.5" r="1.1" fill="#FFFFFF"/>
+      <!-- Happy Mascot Smile & Cheeks -->
+      <path d="M30 36C31 37.5 33 37.5 34 36" stroke="#241E38" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="24.5" cy="34.5" r="1.8" fill="#7DD3FC"/>
+      <circle cx="39.5" cy="34.5" r="1.8" fill="#7DD3FC"/>
+      <!-- Gloss Specular Highlight Streak -->
+      <path d="M24 22C21 26 21 30 22 34" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Water Splash Drops -->
+      <circle cx="12" cy="28" r="2.8" fill="#38BDF8" stroke="#241E38" stroke-width="2"/>
+      <circle cx="52" cy="30" r="2.2" fill="#38BDF8" stroke="#241E38" stroke-width="2"/>
     </svg>
   `,
 
+  // 6. งานปูกระเบื้อง (Tile Flooring & Grout) - tiling / tile
   tiling: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- 2x2 Ceramic Tiles Grid -->
-      <!-- Tile Top-Left (Mint) -->
-      <rect x="8" y="8" width="14.5" height="14.5" rx="2" fill="#2DD4BF" stroke="#253047" stroke-width="2.2"/>
-      <path d="M9.5 9.5 L21 9.5 L9.5 21 Z" fill="#5EEAD4" opacity="0.6"/>
-      <line x1="11" y1="12" x2="18" y2="19" stroke="#CCFBF1" stroke-width="1.8" stroke-linecap="round"/>
-
-      <!-- Tile Top-Right (Sky) -->
-      <rect x="25.5" y="8" width="14.5" height="14.5" rx="2" fill="#38BDF8" stroke="#253047" stroke-width="2.2"/>
-      <path d="M27 9.5 L38.5 9.5 L27 21 Z" fill="#7DD3FC" opacity="0.6"/>
-      <line x1="28" y1="12" x2="35" y2="19" stroke="#E0F2FE" stroke-width="1.8" stroke-linecap="round"/>
-
-      <!-- Tile Bottom-Left (Sky) -->
-      <rect x="8" y="25.5" width="14.5" height="14.5" rx="2" fill="#38BDF8" stroke="#253047" stroke-width="2.2"/>
-      <path d="M9.5 27 L21 27 L9.5 38.5 Z" fill="#7DD3FC" opacity="0.6"/>
-
-      <!-- Tile Bottom-Right (Mint) -->
-      <rect x="25.5" y="25.5" width="14.5" height="14.5" rx="2" fill="#2DD4BF" stroke="#253047" stroke-width="2.2"/>
-      <path d="M27 27 L38.5 27 L27 38.5 Z" fill="#5EEAD4" opacity="0.6"/>
-
-      <!-- Tile Cross Spacer in Center (+) -->
-      <g transform="translate(24, 24)">
-        <rect x="-1" y="-4" width="2" height="8" rx="0.5" fill="#FFFFFF" stroke="#253047" stroke-width="1"/>
-        <rect x="-4" y="-1" width="8" height="2" rx="0.5" fill="#FFFFFF" stroke="#253047" stroke-width="1"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Silhouette -->
+      <rect x="8" y="8" width="48" height="48" rx="6" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- 4 Vibrant Ceramic Tile Quadrants -->
+      <!-- Tile 1 (Top-Left Bright Teal) -->
+      <rect x="10" y="10" width="20" height="20" rx="3.5" fill="#2DD4BF" stroke="#241E38" stroke-width="2.8"/>
+      <path d="M14 14L26 26" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.75"/>
+      <!-- Tile 2 (Top-Right Mint Green) -->
+      <rect x="34" y="10" width="20" height="20" rx="3.5" fill="#14B8A6" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Tile 3 (Bottom-Left Mint Green) -->
+      <rect x="10" y="34" width="20" height="20" rx="3.5" fill="#14B8A6" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Tile 4 (Bottom-Right Deep Teal) -->
+      <rect x="34" y="34" width="20" height="20" rx="3.5" fill="#0D9488" stroke="#241E38" stroke-width="2.8"/>
+      <path d="M38 38L50 50" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.75"/>
+      <!-- Center Grout Spacer Cross in Nintendo Gold -->
+      <g transform="translate(32, 32)">
+        <circle cx="0" cy="0" r="5.5" fill="#FACC15" stroke="#241E38" stroke-width="2.4"/>
+        <line x1="-3" y1="0" x2="3" y2="0" stroke="#241E38" stroke-width="2" stroke-linecap="round"/>
+        <line x1="0" y1="-3" x2="0" y2="3" stroke="#241E38" stroke-width="2" stroke-linecap="round"/>
       </g>
-
-      <!-- Sparkle Stars -->
-      <path d="M37 6 L38.5 2 L40 6 L44 7.5 L40 9 L38.5 13 L37 9 L33 7.5 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
-      <path d="M12 36 L13 33 L14 36 L17 37 L14 38 L13 41 L12 38 L9 37 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
+      <!-- Dazzling Paper Mario Star Sparkle -->
+      <path d="M46 16L47.5 12L52 10.5L47.5 9L46 5L44.5 9L40 10.5L44.5 12L46 16Z" fill="#FDE047" stroke="#241E38" stroke-width="1.8"/>
+      <circle cx="15" cy="45" r="1.5" fill="#FFFFFF"/>
     </svg>
   `,
 
+  // 7. งานติดตั้งอลูมิเนียม (Aluminum Window Installation)
   aluminum: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Outer Aluminum Frame -->
-      <rect x="6" y="8" width="36" height="32" rx="3" fill="#E2E8F0" stroke="#253047" stroke-width="2.5"/>
-      <rect x="8" y="10" width="32" height="28" rx="1.5" fill="#94A3B8" stroke="#253047" stroke-width="1.5"/>
-
-      <!-- Left Sliding Pane -->
-      <rect x="9.5" y="11.5" width="15.5" height="25" rx="1.5" fill="#38BDF8" stroke="#253047" stroke-width="2"/>
-      <path d="M11 13 L23.5 13 L11 25.5 Z" fill="#7DD3FC" opacity="0.6"/>
-      <line x1="12" y1="20" x2="21" y2="29" stroke="#E0F2FE" stroke-width="2" stroke-linecap="round"/>
-      <line x1="15" y1="16" x2="22" y2="23" stroke="#E0F2FE" stroke-width="1.5" stroke-linecap="round"/>
-
-      <!-- Right Sliding Pane (Overlap) -->
-      <rect x="23" y="11.5" width="15.5" height="25" rx="1.5" fill="#0EA5E9" stroke="#253047" stroke-width="2"/>
-      <path d="M24.5 13 L37 13 L24.5 25.5 Z" fill="#38BDF8" opacity="0.6"/>
-      <line x1="26" y1="20" x2="35" y2="29" stroke="#E0F2FE" stroke-width="2" stroke-linecap="round"/>
-
-      <!-- Center Sash & Modern Handle -->
-      <rect x="22" y="11" width="3" height="26" fill="#CBD5E1" stroke="#253047" stroke-width="1.8"/>
-      <rect x="21" y="21" width="2" height="6" rx="1" fill="#1E293B"/>
-
-      <!-- Corner Sparkle -->
-      <path d="M40 7 L41 4 L42 7 L45 8 L42 9 L41 12 L40 9 L37 8 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Silhouette -->
+      <rect x="6" y="8" width="52" height="48" rx="5" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Deep Charcoal Anodized Aluminum Outer Frame -->
+      <rect x="8" y="10" width="48" height="44" rx="4" fill="#334155" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Window Opening -->
+      <rect x="12" y="14" width="40" height="36" fill="#E2E8F0"/>
+      <!-- Left Glass Sash -->
+      <rect x="13" y="15" width="19" height="34" fill="#BAE6FD" stroke="#241E38" stroke-width="2.4"/>
+      <path d="M16 42L28 20" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"/>
+      <!-- Right Glass Sash (Sliding Forward) -->
+      <rect x="30" y="15" width="21" height="34" fill="#7DD3FC" stroke="#241E38" stroke-width="2.4"/>
+      <path d="M35 44L47 22" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"/>
+      <!-- Cute Flush Handle -->
+      <rect x="46" y="27" width="3.5" height="10" rx="1.7" fill="#0F172A" stroke="#241E38" stroke-width="1.5"/>
+      <!-- Little Paper Mario Star Peeking Through Window! -->
+      <path d="M22 23L23 21L25 20.5L23 20L22 18L21 20L19 20.5L21 21L22 23Z" fill="#FACC15" stroke="#241E38" stroke-width="1.2"/>
+      <!-- Corner Bolts -->
+      <circle cx="10.5" cy="12.5" r="1.2" fill="#94A3B8"/>
+      <circle cx="53.5" cy="12.5" r="1.2" fill="#94A3B8"/>
+      <circle cx="10.5" cy="51.5" r="1.2" fill="#94A3B8"/>
+      <circle cx="53.5" cy="51.5" r="1.2" fill="#94A3B8"/>
     </svg>
   `,
 
+  // 8. คะแนน WET WORK (Wet Work Quality Assurance Pass)
   wetWork: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Golden Clipboard Board -->
-      <rect x="10" y="8" width="28" height="34" rx="3" fill="#F59E0B" stroke="#253047" stroke-width="2.5"/>
-      <rect x="12" y="12" width="24" height="28" rx="1.5" fill="#FFFBEB"/>
-
-      <!-- Clipboard Top Metal Clip -->
-      <rect x="18" y="5" width="12" height="6" rx="2" fill="#94A3B8" stroke="#253047" stroke-width="2"/>
-      <circle cx="24" cy="8" r="1.5" fill="#253047"/>
-
-      <!-- Checklist Rows -->
-      <line x1="16" y1="18" x2="32" y2="18" stroke="#E2E8F0" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="16" y1="24" x2="26" y2="24" stroke="#E2E8F0" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="16" y1="30" x2="24" y2="30" stroke="#E2E8F0" stroke-width="2.5" stroke-linecap="round"/>
-
-      <!-- Triumphant Rosette Ribbon & Star Medal -->
-      <!-- Red Ribbon tails -->
-      <path d="M30 28 L27 41 L32 38 L37 41 L34 28 Z" fill="#E96861" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      <!-- Golden Star Rosette Badge -->
-      <circle cx="32" cy="28" r="8" fill="#FACC15" stroke="#253047" stroke-width="2.2"/>
-      <circle cx="32" cy="28" r="6" fill="#FDE047"/>
-      <!-- Bold Checkmark inside Star Badge -->
-      <path d="M28.5 28 L31 30.5 L35.5 25" stroke="#15803D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      
-      <!-- Sparkle -->
-      <path d="M8 16 L9.5 12 L11 16 L15 17.5 L11 19 L9.5 23 L8 19 L4 17.5 Z" fill="#FACC15"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Die-cut Outline -->
+      <rect x="10" y="10" width="40" height="47" rx="6" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Hardboard Clipboard Body -->
+      <rect x="12" y="12" width="36" height="44" rx="4.5" fill="#F8FAFC" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Top Brass Binder Clip -->
+      <path d="M22 12V8C22 6.5 23.5 5.5 25 5.5H35C36.5 5.5 38 6.5 38 8V12" fill="#F59E0B" stroke="#241E38" stroke-width="2.4"/>
+      <circle cx="30" cy="9" r="2" fill="#241E38"/>
+      <!-- Checklist Ruled Rows -->
+      <line x1="18" y1="21" x2="32" y2="21" stroke="#94A3B8" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="18" y1="29" x2="30" y2="29" stroke="#94A3B8" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="18" y1="37" x2="28" y2="37" stroke="#94A3B8" stroke-width="2.4" stroke-linecap="round"/>
+      <!-- Yoshi-Green Checkmarks -->
+      <path d="M35 19L38 22L44 16" stroke="#16A34A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M35 27L38 30L44 24" stroke="#16A34A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Big Paper Mario Super Star Gold Badge Stamp! -->
+      <g transform="translate(35, 33)">
+        <circle cx="12" cy="12" r="11" fill="#FACC15" stroke="#241E38" stroke-width="2.4"/>
+        <!-- Star with Paper Mario Cute Eyes -->
+        <path d="M12 4.5L14 8.5L18.5 9L15 12.2L16 16.5L12 14.5L8 16.5L9 12.2L5.5 9L10 8.5L12 4.5Z" fill="#FDE047" stroke="#241E38" stroke-width="1.8" stroke-linejoin="round"/>
+        <ellipse cx="10.8" cy="11.5" rx="0.9" ry="1.6" fill="#241E38"/>
+        <ellipse cx="13.2" cy="11.5" rx="0.9" ry="1.6" fill="#241E38"/>
+      </g>
     </svg>
   `,
 
+  // 9. งานติดตั้งเฟอร์นิเจอร์ (Built-in Furniture & Cabinetry)
   furniture: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Animal Crossing Style Wooden Wardrobe / Cabinet -->
-      <!-- Legs -->
-      <rect x="11" y="38" width="4" height="4" rx="1" fill="#92400E" stroke="#253047" stroke-width="2"/>
-      <rect x="33" y="38" width="4" height="4" rx="1" fill="#92400E" stroke="#253047" stroke-width="2"/>
-
-      <!-- Main Body -->
-      <rect x="9" y="11" width="30" height="28" rx="2.5" fill="#F59E0B" stroke="#253047" stroke-width="2.5"/>
-      <rect x="11" y="13" width="13" height="17" rx="1" fill="#FDE68A" stroke="#253047" stroke-width="1.8"/>
-      <rect x="24" y="13" width="13" height="17" rx="1" fill="#FDE68A" stroke="#253047" stroke-width="1.8"/>
-
-      <!-- Pull Knobs -->
-      <circle cx="21" cy="22" r="1.5" fill="#D97706" stroke="#253047" stroke-width="1"/>
-      <circle cx="27" cy="22" r="1.5" fill="#D97706" stroke="#253047" stroke-width="1"/>
-
-      <!-- Bottom Drawers -->
-      <rect x="11" y="31" width="26" height="6.5" rx="1" fill="#FBBF24" stroke="#253047" stroke-width="1.8"/>
-      <rect x="22" y="33" width="4" height="2" rx="0.5" fill="#92400E"/>
-
-      <!-- Cute Potted Succulent Plant on top -->
-      <polygon points="21,11 27,11 26,7 22,7" fill="#F97316" stroke="#253047" stroke-width="1.5"/>
-      <path d="M24 7 C22 3 20 4 20 6 C20 8 23 8 24 7 Z" fill="#22C55E" stroke="#253047" stroke-width="1.2"/>
-      <path d="M24 7 C26 3 28 4 28 6 C28 8 25 8 24 7 Z" fill="#16A34A" stroke="#253047" stroke-width="1.2"/>
-      <path d="M24 7 C24 2 24 2 24 4 C24 6 24 7 24 7 Z" fill="#4ADE80" stroke="#253047" stroke-width="1"/>
-
-      <circle cx="36" cy="8" r="1.5" fill="#FACC15"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <rect x="8" y="8" width="48" height="48" rx="5" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Wooden Plinth Feet -->
+      <rect x="14" y="50" width="7" height="6" rx="2" fill="#78350F" stroke="#241E38" stroke-width="2.4"/>
+      <rect x="43" y="50" width="7" height="6" rx="2" fill="#78350F" stroke="#241E38" stroke-width="2.4"/>
+      <!-- Cabinet Body (Rich Amber Teak) -->
+      <rect x="10" y="10" width="44" height="42" rx="4" fill="#D97706" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Left Door (Warm Maple) -->
+      <rect x="13" y="13" width="18" height="26" rx="2.5" fill="#FDE68A" stroke="#241E38" stroke-width="2.2"/>
+      <!-- Right Door (Warm Maple) -->
+      <rect x="33" y="13" width="18" height="26" rx="2.5" fill="#FCD34D" stroke="#241E38" stroke-width="2.2"/>
+      <!-- Paper Mario Cute Knobs -->
+      <circle cx="27" cy="26" r="2.2" fill="#241E38"/>
+      <circle cx="26.3" cy="25.3" r="0.8" fill="#FFFFFF"/>
+      <circle cx="37" cy="26" r="2.2" fill="#241E38"/>
+      <circle cx="36.3" cy="25.3" r="0.8" fill="#FFFFFF"/>
+      <!-- Bottom Wide Storage Drawer -->
+      <rect x="13" y="41" width="38" height="8.5" rx="2" fill="#FEF3C7" stroke="#241E38" stroke-width="2.2"/>
+      <rect x="28" y="44" width="8" height="2.5" rx="1.2" fill="#241E38"/>
+      <!-- Cute Little Star on Door -->
+      <path d="M22 19L22.8 17.5L24.5 17.2L23.2 16L23.5 14.2L22 15L20.5 14.2L20.8 16L19.5 17.2L21.2 17.5L22 19Z" fill="#F59E0B"/>
     </svg>
   `,
 
+  // 10. งานปูพื้นไม้ลามิเนต (Laminate Wood Planks)
   laminate: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- 3 Staggered Interlocking Laminate Wood Planks -->
-      <!-- Plank 1 (Top) -->
-      <g transform="rotate(-15 24 24)">
-        <rect x="6" y="10" width="34" height="8" rx="1.5" fill="#FBBF24" stroke="#253047" stroke-width="2"/>
-        <line x1="12" y1="13" x2="26" y2="13" stroke="#D97706" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="20" y1="15" x2="34" y2="15" stroke="#D97706" stroke-width="1.2" stroke-linecap="round"/>
-
-        <!-- Plank 2 (Middle) -->
-        <rect x="10" y="19" width="34" height="8" rx="1.5" fill="#F59E0B" stroke="#253047" stroke-width="2"/>
-        <line x1="16" y1="22" x2="30" y2="22" stroke="#B45309" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="24" y1="24" x2="38" y2="24" stroke="#B45309" stroke-width="1.2" stroke-linecap="round"/>
-
-        <!-- Plank 3 (Bottom) -->
-        <rect x="4" y="28" width="34" height="8" rx="1.5" fill="#FBBF24" stroke="#253047" stroke-width="2"/>
-        <line x1="10" y1="31" x2="22" y2="31" stroke="#D97706" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="18" y1="33" x2="32" y2="33" stroke="#D97706" stroke-width="1.2" stroke-linecap="round"/>
-      </g>
-
-      <!-- Rubber Installation Mallet Hammer -->
-      <g transform="translate(24, 6) rotate(30)">
-        <rect x="10" y="1" width="8" height="12" rx="2.5" fill="#1E293B" stroke="#253047" stroke-width="2"/>
-        <rect x="13" y="11" width="2.5" height="16" rx="1" fill="#D97706" stroke="#253047" stroke-width="1.8"/>
-      </g>
-
-      <!-- Sparkle -->
-      <path d="M40 32 L41 29 L42 32 L45 33 L42 34 L41 37 L40 34 L37 33 Z" fill="#FACC15"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <rect x="6" y="10" width="52" height="42" rx="6" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Top Staggered Planks -->
+      <rect x="8" y="12" width="32" height="11.5" rx="2.5" fill="#D97706" stroke="#241E38" stroke-width="2.6"/>
+      <path d="M14 17C18 16 24 18 28 17" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="18" cy="18" r="1.5" fill="#92400E"/>
+      <rect x="42" y="12" width="14" height="11.5" rx="2.5" fill="#B45309" stroke="#241E38" stroke-width="2.6"/>
+      <!-- Middle Staggered Planks (Golden Honey) -->
+      <rect x="8" y="25.5" width="8" height="11.5" rx="2" fill="#D97706" stroke="#241E38" stroke-width="2.6"/>
+      <rect x="18" y="25.5" width="38" height="11.5" rx="2.5" fill="#F59E0B" stroke="#241E38" stroke-width="2.6"/>
+      <path d="M25 31C31 32 38 30 46 31" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- Bottom Staggered Planks -->
+      <rect x="8" y="39" width="30" height="11.5" rx="2.5" fill="#B45309" stroke="#241E38" stroke-width="2.6"/>
+      <path d="M14 44C20 45 26 43 32 44" stroke="#92400E" stroke-width="1.8" stroke-linecap="round"/>
+      <rect x="40" y="39" width="16" height="11.5" rx="2.5" fill="#D97706" stroke="#241E38" stroke-width="2.6"/>
+      <!-- Interlocking Gold Joining Star Sparkle -->
+      <path d="M40 23L41.5 19.5L45 18L41.5 16.5L40 13L38.5 16.5L35 18L38.5 19.5L40 23Z" fill="#FDE047" stroke="#241E38" stroke-width="1.8"/>
     </svg>
   `,
 
+  // 11. งานติดตั้งประตูไม้ (Wooden Door Installation)
   door: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Sturdy Door Frame -->
-      <path d="M10 42 L10 9 C10 7.3 11.3 6 13 6 L35 6 C36.7 6 38 7.3 38 9 L38 42" stroke="#253047" stroke-width="3" stroke-linecap="round"/>
-      <rect x="8" y="41" width="32" height="3" rx="1.5" fill="#64748B" stroke="#253047" stroke-width="2"/>
-
-      <!-- Door Panel (Warm Cedar) -->
-      <rect x="12" y="8" width="24" height="33" rx="2" fill="#F97316" stroke="#253047" stroke-width="2.2"/>
-      
-      <!-- 4 Molded Inset Panels -->
-      <rect x="15" y="11" width="8" height="11" rx="1.5" fill="#FB923C" stroke="#C2410C" stroke-width="1.5"/>
-      <rect x="25" y="11" width="8" height="11" rx="1.5" fill="#FB923C" stroke="#C2410C" stroke-width="1.5"/>
-      
-      <rect x="15" y="25" width="8" height="13" rx="1.5" fill="#FB923C" stroke="#C2410C" stroke-width="1.5"/>
-      <rect x="25" y="25" width="8" height="13" rx="1.5" fill="#FB923C" stroke="#C2410C" stroke-width="1.5"/>
-
-      <!-- Polished Brass Lever Handle -->
-      <rect x="30" y="22.5" width="4" height="2" rx="1" fill="#FACC15" stroke="#253047" stroke-width="1.5"/>
-      <circle cx="30.5" cy="23.5" r="2" fill="#FACC15" stroke="#253047" stroke-width="1.2"/>
-      <circle cx="30.5" cy="27" r="1" fill="#253047"/>
-
-      <!-- Sparkle -->
-      <path d="M37 12 L38 9 L39 12 L42 13 L39 14 L38 17 L37 14 L34 13 Z" fill="#FACC15"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <rect x="10" y="6" width="44" height="52" rx="5" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Dark Walnut Door Frame -->
+      <rect x="12" y="8" width="40" height="48" rx="3.5" fill="#78350F" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Warm Teak Wood Door Slab -->
+      <rect x="17" y="12" width="30" height="44" fill="#D97706" stroke="#241E38" stroke-width="2.4"/>
+      <!-- Upper Shaker Panel -->
+      <rect x="22" y="16" width="20" height="16" rx="2" fill="#F59E0B" stroke="#92400E" stroke-width="2"/>
+      <!-- Lower Shaker Panel -->
+      <rect x="22" y="35" width="20" height="16" rx="2" fill="#F59E0B" stroke="#92400E" stroke-width="2"/>
+      <!-- Cute Paper Mario Golden Lever Handle -->
+      <circle cx="23.5" cy="33" r="3" fill="#FACC15" stroke="#241E38" stroke-width="2"/>
+      <path d="M23.5 33H30C30.8 33 31.5 33.7 31.5 34.5C31.5 35.3 30.8 36 30 36H23.5" fill="#FDE047" stroke="#241E38" stroke-width="1.8"/>
+      <!-- Keyhole -->
+      <ellipse cx="23.5" cy="37.5" rx="1.2" ry="1.8" fill="#241E38"/>
+      <!-- Chrome Hinges -->
+      <rect x="45.5" y="18" width="2.8" height="5" rx="1" fill="#E2E8F0" stroke="#241E38" stroke-width="1.2"/>
+      <rect x="45.5" y="44" width="2.8" height="5" rx="1" fill="#E2E8F0" stroke="#241E38" stroke-width="1.2"/>
     </svg>
   `,
 
+  // 12. งาน SHOWER SCREEN (Frameless Tempered Glass Shower Enclosure)
   showerScreen: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Frameless Shower Glass Enclosure -->
-      <!-- Chrome Top Header Bar -->
-      <rect x="8" y="7" width="32" height="3" rx="1" fill="#CBD5E1" stroke="#253047" stroke-width="2"/>
-      <circle cx="14" cy="8.5" r="1.5" fill="#64748B"/>
-      <circle cx="34" cy="8.5" r="1.5" fill="#64748B"/>
-
-      <!-- Tempered Glass Screen -->
-      <rect x="10" y="9" width="28" height="32" rx="2" fill="#E0F2FE" stroke="#253047" stroke-width="2.2"/>
-      <rect x="10" y="9" width="13" height="32" fill="#BAE6FD" opacity="0.5"/>
-
-      <!-- Diagonal Glass Gloss Sheens -->
-      <line x1="14" y1="13" x2="34" y2="33" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="20" y1="13" x2="34" y2="27" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
-
-      <!-- Vertical Chrome D-Handle -->
-      <rect x="31" y="20" width="3" height="12" rx="1.5" fill="#F8FAFC" stroke="#253047" stroke-width="1.8"/>
-      <rect x="32" y="23" width="1" height="6" fill="#94A3B8"/>
-
-      <!-- Water Droplets & Bubbles -->
-      <circle cx="16" cy="24" r="2" fill="#38BDF8" stroke="#253047" stroke-width="1"/>
-      <circle cx="21" cy="31" r="1.5" fill="#38BDF8" stroke="#253047" stroke-width="1"/>
-      <circle cx="18" cy="35" r="1" fill="#38BDF8"/>
-
-      <!-- Sparkles -->
-      <path d="M37 6 L38.5 2 L40 6 L44 7.5 L40 9 L38.5 13 L37 9 L33 7.5 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <rect x="12" y="8" width="40" height="50" rx="5" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Transparent Cyan Paper Glass Pane -->
+      <rect x="14" y="10" width="36" height="46" rx="3.5" fill="#BAE6FD" fill-opacity="0.8" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Diagonal Paper Reflection Streaks -->
+      <path d="M19 50L43 14" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.95"/>
+      <path d="M27 52L47 22" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-opacity="0.8"/>
+      <!-- Heavy Chrome Wall Clamps -->
+      <rect x="11" y="16" width="6.5" height="7" rx="2" fill="#CBD5E1" stroke="#241E38" stroke-width="2.2"/>
+      <circle cx="14" cy="19.5" r="1.2" fill="#241E38"/>
+      <rect x="11" y="41" width="6.5" height="7" rx="2" fill="#CBD5E1" stroke="#241E38" stroke-width="2.2"/>
+      <circle cx="14" cy="44.5" r="1.2" fill="#241E38"/>
+      <!-- Chrome Shower Door Handle -->
+      <rect x="42" y="24" width="3.5" height="18" rx="1.8" fill="#F8FAFC" stroke="#241E38" stroke-width="2"/>
+      <!-- Playful Water Droplets sliding down -->
+      <ellipse cx="23" cy="24" rx="2" ry="2.8" fill="#0284C7"/>
+      <circle cx="22.2" cy="23" r="0.8" fill="#FFFFFF"/>
+      <ellipse cx="36" cy="38" rx="2.5" ry="3.2" fill="#0284C7"/>
+      <circle cx="35.2" cy="37" r="1" fill="#FFFFFF"/>
     </svg>
   `,
 
+  // 13. งานสี end product (Final Architectural Wall Painting) - paintOnly
   paintOnly: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Fresh Paint Stripe on Wall -->
-      <path d="M12 8 L36 8 L36 26 C36 29 33 31 30 31 L18 31 C15 31 12 29 12 26 Z" fill="#FFE4E6"/>
-      <path d="M14 8 L34 8 L34 22 C34 24 32 26 30 26 L18 26 C16 26 14 24 14 22 Z" fill="#FDA4AF"/>
-      <circle cx="21" cy="33" r="2" fill="#E96861"/>
-      <circle cx="27" cy="30" r="1.5" fill="#E96861"/>
-
-      <!-- Chunky Paint Roller -->
-      <!-- Roller Cylinder -->
-      <rect x="12" y="11" width="24" height="11" rx="4" fill="#E96861" stroke="#253047" stroke-width="2.5"/>
-      <rect x="14" y="13" width="20" height="3" rx="1.5" fill="#FCA5A5"/>
-      <circle cx="12" cy="16.5" r="2" fill="#B91C1C"/>
-      <circle cx="36" cy="16.5" r="2" fill="#B91C1C"/>
-
-      <!-- Metal Rod Frame -->
-      <path d="M36 16.5 L40 16.5 L40 29 L26 29 L26 35" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M36 16.5 L40 16.5 L40 29 L26 29 L26 35" stroke="#253047" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-
-      <!-- Wooden / Rubber Handle Grip -->
-      <rect x="23" y="34" width="6" height="11" rx="2.5" fill="#F59E0B" stroke="#253047" stroke-width="2.2"/>
-      <line x1="24" y1="37" x2="28" y2="37" stroke="#B45309" stroke-width="1.5"/>
-      <line x1="24" y1="41" x2="28" y2="41" stroke="#B45309" stroke-width="1.5"/>
-
-      <!-- Sparkle -->
-      <path d="M8 12 L9.5 8 L11 12 L15 13.5 L11 15 L9.5 19 L8 15 L4 13.5 Z" fill="#FACC15"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <path d="M8 14H40C41 14 42 15 42 16V30C38 32 34 28 28 30C22 32 16 29 10 30V16C10 15 9 14 8 14Z" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Fresh Wall Paint Swatch (Princess Peach Pink/Coral) -->
+      <path d="M10 14H38C39.5 14 40.5 15 40.5 16.5V29C36 31 32 27 26 29C20 31 15 28 10 29V16.5C10 15 10 14 10 14Z" fill="#F43F5E" stroke="#241E38" stroke-width="2.2"/>
+      <!-- Chunky Paper Paint Roller Cylinder -->
+      <rect x="17" y="19" width="32" height="13" rx="4.5" fill="#FB7185" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Fluffy Texture Lines -->
+      <line x1="22" y1="19" x2="22" y2="32" stroke="#E11D48" stroke-width="2.4"/>
+      <line x1="44" y1="19" x2="44" y2="32" stroke="#E11D48" stroke-width="2.4"/>
+      <!-- Roller Wire Armature -->
+      <path d="M49 25.5H55C56.5 25.5 57.5 26.5 57.5 28V37C57.5 38.5 56.5 39.5 55 39.5H34V44" stroke="#241E38" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Cute Blue Ergonomic Handle -->
+      <rect x="30" y="43" width="8.5" height="15" rx="3" fill="#3B82F6" stroke="#241E38" stroke-width="2.8"/>
+      <circle cx="34" cy="53" r="2" fill="#FFFFFF"/>
+      <!-- Fresh Paint Splash Drops -->
+      <circle cx="15" cy="35" r="2.5" fill="#F43F5E" stroke="#241E38" stroke-width="1.8"/>
+      <circle cx="21" cy="41" r="1.8" fill="#F43F5E" stroke="#241E38" stroke-width="1.5"/>
+      <!-- Gold Shine Star -->
+      <path d="M48 12L49 9.5L51.5 8.5L49 7.5L48 5L47 7.5L44.5 8.5L47 9.5L48 12Z" fill="#FDE047" stroke="#241E38" stroke-width="1.5"/>
     </svg>
   `,
 
+  // 14. งานเก็บสีอลูมิเนียม (Aluminum Frame Color Touch-up) - aluminumPaint
   aluminumPaint: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Aluminum Frame Corner Joint -->
-      <path d="M8 8 L32 8 L32 18 L18 18 L18 38 L8 38 Z" fill="#94A3B8" stroke="#253047" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M10 10 L30 10 L30 16 L16 16 L16 36 L10 36 Z" fill="#CBD5E1"/>
-      <line x1="8" y1="8" x2="18" y2="18" stroke="#253047" stroke-width="2"/>
-
-      <!-- Glass Pane inside -->
-      <rect x="18" y="18" width="22" height="20" rx="1.5" fill="#BAE6FD" stroke="#253047" stroke-width="2"/>
-      <line x1="22" y1="22" x2="34" y2="34" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-
-      <!-- Artist Detail Touch-up Paintbrush -->
-      <g transform="translate(18, 12) rotate(-35)">
-        <rect x="14" y="-8" width="3.5" height="22" rx="1.5" fill="#D97706" stroke="#253047" stroke-width="1.8"/>
-        <rect x="13.5" y="12" width="4.5" height="5" rx="1" fill="#94A3B8" stroke="#253047" stroke-width="1.5"/>
-        <path d="M13.5 17 C13.5 20 15 22 15.7 23 C16.5 22 18 20 18 17 Z" fill="#38BDF8" stroke="#253047" stroke-width="1.5"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <path d="M10 10H36V24H24V50H10V10Z" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+      <!-- Aluminum Corner Extrusion Profile -->
+      <path d="M12 12H34V24H24V48H12V12Z" fill="#334155" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <path d="M18 18H28V24H18V18Z" fill="#475569"/>
+      <!-- Cute Touch-up Precision Pen / Brush -->
+      <g transform="translate(20, 12) rotate(24)">
+        <rect x="18" y="2" width="8" height="25" rx="3" fill="#F59E0B" stroke="#241E38" stroke-width="2.4"/>
+        <path d="M18 27L22 35L26 27H18Z" fill="#38BDF8" stroke="#241E38" stroke-width="2" stroke-linejoin="round"/>
       </g>
-
-      <!-- Precision Touchup Stars -->
-      <path d="M30 14 L31 11 L32 14 L35 15 L32 16 L31 19 L30 16 L27 15 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
-      <circle cx="36" cy="12" r="1.5" fill="#38BDF8"/>
+      <!-- Radiant Paper Mario Gold Touch-up Star Burst! -->
+      <g transform="translate(32, 33)">
+        <path d="M0 -9L2.5 -2.5L9 0L2.5 2.5L0 9L-2.5 2.5L-9 0L-2.5 -2.5L0 -9Z" fill="#FACC15" stroke="#241E38" stroke-width="2"/>
+        <circle cx="0" cy="0" r="2.5" fill="#FFFFFF"/>
+      </g>
     </svg>
   `,
 
+  // 15. งานทำความสะอาด (Deep Cleaning & Sparkle Handover) - cleaning
   cleaning: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Sky Blue Dustpan -->
-      <path d="M16 28 L28 28 L30 40 L14 40 Z" fill="#38BDF8" stroke="#253047" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M17 29 L27 29 L28.5 38 L15.5 38 Z" fill="#7DD3FC"/>
-      <rect x="21" y="40" width="4" height="4" rx="1" fill="#FACC15" stroke="#253047" stroke-width="1.5"/>
-
-      <!-- Straw Broom -->
-      <g transform="translate(6, 0) rotate(18 24 24)">
-        <rect x="22" y="2" width="3.5" height="26" rx="1.5" fill="#D97706" stroke="#253047" stroke-width="2"/>
-        <!-- Broom Tied Bristles -->
-        <path d="M20 25 L27 25 L31 38 C31 40 28 41 23.5 41 C19 41 16 40 16 38 Z" fill="#FBBF24" stroke="#253047" stroke-width="2.2" stroke-linejoin="round"/>
-        <!-- Red Binding Ribbon -->
-        <rect x="19" y="27" width="9" height="3" rx="1" fill="#E96861" stroke="#253047" stroke-width="1.5"/>
-        <line x1="20" y1="34" x2="27" y2="34" stroke="#D97706" stroke-width="1.2"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <circle cx="32" cy="32" r="26" stroke="#FFFFFF" stroke-width="5"/>
+      <!-- Window Squeegee -->
+      <g transform="rotate(-20 28 28)">
+        <rect x="10" y="11" width="30" height="6" rx="2.5" fill="#0D9488" stroke="#241E38" stroke-width="2.4"/>
+        <line x1="8" y1="17" x2="42" y2="17" stroke="#241E38" stroke-width="3" stroke-linecap="round"/>
+        <path d="M25 17V33" stroke="#241E38" stroke-width="3.5" stroke-linecap="round"/>
+        <rect x="22" y="24" width="6" height="13" rx="2.5" fill="#FACC15" stroke="#241E38" stroke-width="2.4"/>
       </g>
-
-      <!-- Spray Bottle & Mist Bubbles -->
-      <g transform="translate(2, 6)">
-        <circle cx="10" cy="16" r="2" fill="#BAE6FD" stroke="#253047" stroke-width="1"/>
-        <circle cx="7" cy="22" r="1.5" fill="#BAE6FD"/>
+      <!-- Cute Spray Bottle -->
+      <g transform="translate(34, 23)">
+        <path d="M6 14H18C19.5 14 20.5 15 20.5 16.5V29C20.5 30.5 19.5 31.5 18 31.5H6C4.5 31.5 3.5 30.5 3.5 29V16.5C3.5 15 4.5 14 6 14Z" fill="#38BDF8" stroke="#241E38" stroke-width="2.4"/>
+        <path d="M9 14V8H15V14" fill="#E2E8F0" stroke="#241E38" stroke-width="2"/>
+        <path d="M7 8H2V12L7 10" fill="#EF4444" stroke="#241E38" stroke-width="2"/>
       </g>
-
-      <!-- Bright Twinkling Cleaning Stars -->
-      <path d="M38 12 L39.5 8 L41 12 L45 13.5 L41 15 L39.5 19 L38 15 L34 13.5 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
-      <path d="M12 10 L13 7 L14 10 L17 11 L14 12 L13 15 L12 12 L9 11 Z" fill="#FACC15" stroke="#253047" stroke-width="0.8"/>
+      <!-- Big Twinkling Paper Mario Sparkle Stars! -->
+      <path d="M15 12L17 6L19 12L25 14L19 16L17 22L15 16L9 14L15 12Z" fill="#FACC15" stroke="#241E38" stroke-width="1.8"/>
+      <path d="M49 14L50.5 9.5L52 14L56.5 15.5L52 17L50.5 21.5L49 17L44.5 15.5L49 14Z" fill="#FDE047" stroke="#241E38" stroke-width="1.6"/>
+      <!-- Cute Soap Bubble -->
+      <circle cx="28" cy="18" r="3.5" fill="#CCFBF1" stroke="#241E38" stroke-width="1.8"/>
+      <circle cx="27" cy="16.5" r="1" fill="#FFFFFF"/>
     </svg>
   `,
 
+  // 16. คะแนน END PRODUCT (Final Handover Quality Score & Royal Shield) - endProduct
   endProduct: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Zelda / Mario Royal Knight Shield -->
-      <!-- Outer Golden Rim -->
-      <path d="M24 5 C34 5 40 8 40 18 C40 31 24 43 24 43 C24 43 8 31 8 18 C8 8 14 5 24 5 Z" fill="#FACC15" stroke="#253047" stroke-width="2.8" stroke-linejoin="round"/>
-      
-      <!-- Inner Emerald Shield Plate -->
-      <path d="M24 8 C32 8 37 10.5 37 18 C37 29 24 39.5 24 39.5 C24 39.5 11 29 11 18 C11 10.5 16 8 24 8 Z" fill="#10B981" stroke="#253047" stroke-width="2" stroke-linejoin="round"/>
-      
-      <!-- Shield Sheen Highlight -->
-      <path d="M24 9 C30 9 35 11 35 18 C35 25 27 33 24 36 C24 36 24 16 24 9 Z" fill="#34D399" opacity="0.6"/>
-
-      <!-- Golden Winged Crest / Ribbon -->
-      <path d="M15 17 C19 19 24 16 24 16 C24 16 29 19 33 17 C31 21 27 22 24 20 C21 22 17 21 15 17 Z" fill="#FDE047" stroke="#253047" stroke-width="1.5"/>
-
-      <!-- Triumphant White Checkmark -->
-      <path d="M17 23 L22 28 L31 18" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M17 23 L22 28 L31 18" stroke="#253047" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-
-      <!-- Crown Diamond Star -->
-      <path d="M24 2 L26 5 L24 8 L22 5 Z" fill="#FDE047" stroke="#253047" stroke-width="1"/>
-      <circle cx="8" cy="14" r="1.5" fill="#FACC15"/>
-      <circle cx="40" cy="14" r="1.5" fill="#FACC15"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Die-cut Crest Outline -->
+      <path d="M32 5L52 11.5V28C52 42.5 43.5 51 32 57C20.5 51 12 42.5 12 28V11.5L32 5Z" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+      <!-- Royal Emerald Crest Shield -->
+      <path d="M32 7L50 13V28C50 41.5 42.5 49.5 32 55C21.5 49.5 14 41.5 14 28V13L32 7Z" fill="#10B981" stroke="#241E38" stroke-width="3" stroke-linejoin="round"/>
+      <!-- Inner Gold Inset Border -->
+      <path d="M32 12L45 16.5V28C45 38.5 39 45 32 49.5C25 45 19 38.5 19 28V16.5L32 12Z" fill="#047857" stroke="#FACC15" stroke-width="2"/>
+      <!-- Radiant Paper Mario Super Star Mascot in Center! -->
+      <path d="M32 18L35.8 25.5L44 26.7L38 32.5L39.4 40.7L32 36.8L24.6 40.7L26 32.5L20 26.7L28.2 25.5L32 18Z" fill="#FACC15" stroke="#241E38" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Star Paper Mario Cute Vertical Black Eyes! -->
+      <ellipse cx="30" cy="28.5" rx="1.2" ry="2.4" fill="#241E38"/>
+      <ellipse cx="34" cy="28.5" rx="1.2" ry="2.4" fill="#241E38"/>
+      <circle cx="32" cy="23" r="1.5" fill="#FFFFFF"/>
     </svg>
   `,
 
+  // 17. พื้นที่ส่วนกลาง (Common Area & Clubhouse) - common
   common: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Sunny Cloud Overhead -->
-      <path d="M28 7 C28 5 30 3.5 32 3.5 C34 3.5 35.5 5 35.5 6.5 C37 6.5 38 7.5 38 9 C38 10.5 37 11.5 35.5 11.5 L28 11.5 C26.5 11.5 25.5 10.5 25.5 9 C25.5 7.5 26.5 7 28 7 Z" fill="#FFFFFF" stroke="#253047" stroke-width="1.2"/>
-
-      <!-- Condominium Clubhouse Building -->
-      <!-- Ground Lawn -->
-      <rect x="4" y="38" width="40" height="5" rx="2.5" fill="#4ADE80" stroke="#253047" stroke-width="2"/>
-      
-      <!-- Tower Body -->
-      <rect x="13" y="13" width="22" height="26" rx="2.5" fill="#F8FAFC" stroke="#253047" stroke-width="2.5"/>
-      <rect x="14" y="10" width="20" height="4" rx="1.5" fill="#68AEDA" stroke="#253047" stroke-width="2"/>
-
-      <!-- Windows (2x3 Grid) -->
-      <rect x="16" y="16" width="6.5" height="5" rx="1" fill="#38BDF8" stroke="#253047" stroke-width="1.5"/>
-      <rect x="25.5" y="16" width="6.5" height="5" rx="1" fill="#38BDF8" stroke="#253047" stroke-width="1.5"/>
-      
-      <rect x="16" y="23" width="6.5" height="5" rx="1" fill="#38BDF8" stroke="#253047" stroke-width="1.5"/>
-      <rect x="25.5" y="23" width="6.5" height="5" rx="1" fill="#38BDF8" stroke="#253047" stroke-width="1.5"/>
-
-      <!-- Entrance Door & Coral Awning -->
-      <rect x="20.5" y="31" width="7" height="8" rx="1" fill="#253047"/>
-      <path d="M19 31 C19 29.5 29 29.5 29 31 Z" fill="#E96861" stroke="#253047" stroke-width="1.8"/>
-
-      <!-- Left Round Puff Tree -->
-      <circle cx="9" cy="33" r="5.5" fill="#22C55E" stroke="#253047" stroke-width="2"/>
-      <circle cx="8" cy="31" r="1.2" fill="#FEF08A"/>
-      <rect x="8" y="37" width="2" height="3" fill="#92400E"/>
-
-      <!-- Right Round Puff Tree -->
-      <circle cx="39" cy="33" r="5.5" fill="#16A34A" stroke="#253047" stroke-width="2"/>
-      <circle cx="40" cy="31" r="1.2" fill="#FEF08A"/>
-      <rect x="38" y="37" width="2" height="3" fill="#92400E"/>
-
-      <!-- Sparkle -->
-      <path d="M10 14 L11 11 L12 14 L15 15 L12 16 L11 19 L10 16 L7 15 Z" fill="#FACC15"/>
-    </svg>
-  `,
-
-  electrical: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Mario Thunder Lightning Bolt -->
-      <path d="M26 4 L12 24 L22 24 L18 44 L36 20 L24 20 Z" fill="#FACC15" stroke="#253047" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M25 7 L15 23 L22 23 L19 40 L33 21 L24 21 Z" fill="#FEF08A"/>
-      <!-- Electrical Sparks -->
-      <path d="M8 12 L9.5 8 L11 12 L15 13.5 L11 15 L9.5 19 L8 15 L4 13.5 Z" fill="#F59E0B"/>
-      <path d="M38 32 L39.5 28 L41 32 L45 33.5 L41 35 L39.5 39 L38 35 L34 33.5 Z" fill="#F59E0B"/>
-    </svg>
-  `,
-
-  electricalRoughIn: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Mario Thunder Lightning Bolt -->
-      <path d="M26 4 L12 24 L22 24 L18 44 L36 20 L24 20 Z" fill="#FACC15" stroke="#253047" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M25 7 L15 23 L22 23 L19 40 L33 21 L24 21 Z" fill="#FEF08A"/>
-      <!-- Electrical Sparks -->
-      <path d="M8 12 L9.5 8 L11 12 L15 13.5 L11 15 L9.5 19 L8 15 L4 13.5 Z" fill="#F59E0B"/>
-      <path d="M38 32 L39.5 28 L41 32 L45 33.5 L41 35 L39.5 39 L38 35 L34 33.5 Z" fill="#F59E0B"/>
-    </svg>
-  `,
-
-  plumbing: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- Super Mario Green Water Pipe -->
-      <rect x="8" y="18" width="16" height="22" rx="2" fill="#22C55E" stroke="#253047" stroke-width="2.5"/>
-      <rect x="6" y="14" width="20" height="6" rx="2" fill="#4ADE80" stroke="#253047" stroke-width="2.5"/>
-      <!-- Pipe Shine -->
-      <rect x="9" y="20" width="3" height="18" fill="#86EFAC"/>
-      <!-- Brass Valve Wheel -->
-      <rect x="24" y="26" width="12" height="6" rx="1.5" fill="#F59E0B" stroke="#253047" stroke-width="2"/>
-      <circle cx="36" cy="29" r="6" fill="#FACC15" stroke="#253047" stroke-width="2"/>
-      <circle cx="36" cy="29" r="2" fill="#B45309"/>
-      <!-- Water Droplet -->
-      <path d="M16 6 C16 6 11 12 11 14.5 C11 17 13.2 19 16 19 C18.8 19 21 17 21 14.5 C21 12 16 6 16 6 Z" fill="#38BDF8" stroke="#253047" stroke-width="1.8"/>
-    </svg>
-  `,
-
-  airCon: `
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="nintendo-work-svg">
-      <!-- AC Indoor Unit -->
-      <rect x="6" y="10" width="36" height="18" rx="3" fill="#F8FAFC" stroke="#253047" stroke-width="2.5"/>
-      <line x1="10" y1="22" x2="38" y2="22" stroke="#CBD5E1" stroke-width="2"/>
-      <circle cx="37" cy="15" r="1.5" fill="#22C55E"/>
-      <rect x="10" y="24" width="28" height="3" rx="1" fill="#38BDF8"/>
-      <!-- Cool Breeze Wind Gusts -->
-      <path d="M12 32 C16 32 18 36 22 36 C26 36 28 32 32 32" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
-      <path d="M16 38 C20 38 22 41 26 41 C30 41 32 38 36 38" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
-      <!-- Snowflake -->
-      <g transform="translate(34, 30)">
-        <line x1="0" y1="-4" x2="0" y2="4" stroke="#0284C7" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="-4" y1="0" x2="4" y2="0" stroke="#0284C7" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="-3" y1="-3" x2="3" y2="3" stroke="#0284C7" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="3" y1="-3" x2="-3" y2="3" stroke="#0284C7" stroke-width="1.2" stroke-linecap="round"/>
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- White Sticker Outline -->
+      <path d="M18 12H46V49H18V12Z" stroke="#FFFFFF" stroke-width="6"/>
+      <ellipse cx="32" cy="51" rx="25" ry="6" stroke="#FFFFFF" stroke-width="6"/>
+      <!-- Green Landscaped Paper Hill Pad -->
+      <ellipse cx="32" cy="51" rx="24" ry="5.5" fill="#86EFAC" stroke="#241E38" stroke-width="2.6"/>
+      <!-- Main Clubhouse Tower (Royal Indigo) -->
+      <rect x="20" y="14" width="24" height="36" rx="3.5" fill="#6366F1" stroke="#241E38" stroke-width="2.8"/>
+      <!-- Paper Mario Colorful Roof Eaves -->
+      <path d="M17 16L32 6L47 16H17Z" fill="#EF4444" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- Warm Glowing Arched Windows -->
+      <rect x="24" y="20" width="6" height="5.5" rx="1.5" fill="#FEF08A" stroke="#241E38" stroke-width="1.8"/>
+      <rect x="34" y="20" width="6" height="5.5" rx="1.5" fill="#FEF08A" stroke="#241E38" stroke-width="1.8"/>
+      <rect x="24" y="28" width="6" height="5.5" rx="1.5" fill="#FEF08A" stroke="#241E38" stroke-width="1.8"/>
+      <rect x="34" y="28" width="6" height="5.5" rx="1.5" fill="#FEF08A" stroke="#241E38" stroke-width="1.8"/>
+      <!-- Lobby Glass Arched Entrance -->
+      <path d="M27 50V38C27 36.5 28.5 35 32 35C35.5 35 37 36.5 37 38V50H27Z" fill="#BAE6FD" stroke="#241E38" stroke-width="2.2"/>
+      <!-- Puffy Green Paper Mario Trees -->
+      <g transform="translate(10, 36)">
+        <circle cx="4" cy="4" r="5.5" fill="#22C55E" stroke="#241E38" stroke-width="2.2"/>
+        <line x1="4" y1="9.5" x2="4" y2="15" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
       </g>
+      <g transform="translate(46, 37)">
+        <circle cx="4" cy="4" r="5.5" fill="#16A34A" stroke="#241E38" stroke-width="2.2"/>
+        <line x1="4" y1="9.5" x2="4" y2="14" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    </svg>
+  `,
+
+  // 18. Electrical (Auxiliary)
+  electrical: `
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="32" cy="32" r="24" fill="#FEF08A" stroke="#241E38" stroke-width="2.8"/>
+      <path d="M35 12L20 34H33L29 52L46 28H32L35 12Z" fill="#FACC15" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+    </svg>
+  `,
+
+  // 19. Plumbing (Auxiliary)
+  plumbing: `
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 20H28V36H50V50H14V20Z" fill="#38BDF8" stroke="#241E38" stroke-width="2.8" stroke-linejoin="round"/>
+      <circle cx="44" cy="24" r="4" fill="#0284C7" stroke="#241E38" stroke-width="2"/>
+    </svg>
+  `,
+
+  // 20. AirCon (Auxiliary)
+  airCon: `
+    <svg viewBox="0 0 64 64" class="nintendo-work-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="20" width="44" height="24" rx="4" fill="#E0F2FE" stroke="#241E38" stroke-width="2.8"/>
+      <line x1="16" y1="36" x2="48" y2="36" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M22 46C24 49 28 49 30 46M34 46C36 49 40 49 42 46" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
     </svg>
   `
 };
 
+// Aliases for 100% full compatibility with any key naming convention
+icons.rustPaint = icons.skimAndPaint;
+icons.texca = icons.texcaWall;
+icons.waterproof = icons.waterproofing;
+icons.tile = icons.tiling;
+icons.electricalRoughIn = icons.electrical;
+icons.plumbingRoughIn = icons.plumbing;
+icons.airConRoughIn = icons.airCon;
+
+export const nintendoWorkIcons = icons;
+
 if (typeof window !== "undefined") {
   window.nintendoWorkIcons = nintendoWorkIcons;
 }
+
+export default nintendoWorkIcons;
