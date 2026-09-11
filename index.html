@@ -3394,6 +3394,16 @@
             />
           </div>
 
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">ผู้รับผิดชอบ (ช่าง / บริษัท / ผู้รับเหมา)</label>
+            <input
+              type="text"
+              id="edit-defect-assignee"
+              placeholder="ระบุผู้รับผิดชอบ เช่น ช่างสี, ผู้รับเหมาหลัก, งานระบบ..."
+              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-800"
+            />
+          </div>
+
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-bold text-slate-700 mb-1">จำนวน DEFECT ทั้งหมด (TOT)</label>
@@ -10425,9 +10435,11 @@
             const total = Math.max(0, Number(item.tot) || 0);
             const fixed = Math.min(total, Math.max(0, Number(item.fix) || 0));
             const normalizedStatus = normalizeCommonDefectStatus(item.status);
-            const isNotInspected = normalizedStatus === "ยังไม่ตรวจ";
-            const isPending = normalizedStatus === "รอนัดตรวจ";
             const isPassed = normalizedStatus === "ผ่านการตรวจสอบ";
+            const isPending = normalizedStatus === "รอนัดตรวจ";
+            // If total > 0, defect items must be tracked immediately under "ยังไม่แก้ไข"
+            const isNotInspected = (normalizedStatus === "ยังไม่ตรวจ" || !item.status) && total === 0;
+
             const passed = isPassed ? (fixed > 0 ? fixed : total) : 0;
             const pending = isPending ? (fixed > 0 ? fixed : total) : 0;
             const left = isNotInspected ? 0 : Math.max(0, total - passed - pending);
@@ -10442,7 +10454,7 @@
                   floor: info.floor,
                   floorNum: info.floorNum,
                   value: 1,
-                  displayVal: total > 0 ? `${total} ข้อ (รอตรวจ)` : "ยังไม่ตรวจ"
+                  displayVal: "ยังไม่ตรวจ"
                 };
               } else {
                 mapNotInspected[itemKey].value += 1;
@@ -10515,72 +10527,68 @@
           const g = (groupName || "").toLowerCase();
           const sz = sizeClass || "w-4 h-4";
           
-          // 1. รูปด้านอาคาร / Building Facade / Facade / ผนังภายนอก
+          // 1. รูปด้านอาคาร / Building Facade
           if (g.includes("รูปด้าน") || g.includes("facade") || g.includes("ภายนอก") || g.includes("อาคาร")) {
-            return `<svg class="${sz} inline-block shrink-0 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15a.75.75 0 0 1 .75.75v17.25H3.75V3.75A.75.75 0 0 1 4.5 3ZM8.25 6.75h2.25v2.25H8.25V6.75Zm5.25 0h2.25v2.25h-2.25V6.75Zm-5.25 4.5h2.25v2.25H8.25v-2.25Zm5.25 0h2.25v2.25h-2.25v-2.25Zm-5.25 4.5h2.25V18H8.25v-2.25Zm5.25 0h2.25V18h-2.25v-2.25Z"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path stroke-linecap="round" d="M8 7h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2M10 21v-3h4v3"/></svg>`;
           }
-          // 2. ดาดฟ้า / Rooftop / Roof Slab / Roof Deck / ถังเก็บน้ำบนหลังคา
+          // 2. ดาดฟ้า / Rooftop
           if (g.includes("ดาดฟ้า") || g.includes("roof") || g.includes("หลังคา")) {
-            return `<svg class="${sz} inline-block shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18h19.5M3.75 18V8.25h16.5V18M6.75 8.25V5.25h3v3M14.25 8.25V4.5a1.5 1.5 0 0 1 3 0v3.75M9.75 8.25V6.75m4.5 1.5V6.75M12 3v2.25m6.364.386-1.591 1.591"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-7 9 7M4 11v9a1 1 0 001 1h14a1 1 0 001-1v-9M9 21v-6a1 1 0 011-1h4a1 1 0 011 1v6"/></svg>`;
           }
           // 3. ห้องเครื่อง / ห้องส่วนกลาง / เครื่องกล / Mechanical / Facility / Pump / Transformer
           if (g.includes("ห้องเครื่อง") || g.includes("mechanical") || g.includes("facility") || g.includes("เครื่องกล") || g.includes("ปั๊ม") || g.includes("pump")) {
-            return `<svg class="${sz} inline-block shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m18 0h-1.5M12 4.5V3m0 18v-1.5m6.364-14.864-.707.707M6.343 17.657l-.707.707m12.728 0-.707-.707M6.343 6.343l-.707-.707M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`;
           }
           // 4. โถงทางเดิน / Corridor / Hallway / ทางเดิน
           if (g.includes("โถงทางเดิน") || g.includes("corridor") || g.includes("hallway") || g.includes("ทางเดิน")) {
-            return `<svg class="${sz} inline-block shrink-0 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21 8.25 3h7.5L21 21M7 14.25h10M8.5 9h7M10.25 18h3.5M3 21h18"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 21V9a1 1 0 011-1h4a1 1 0 011 1v12M15 12h.01"/></svg>`;
           }
           // 5. บันได / บันไดหนีไฟ / Stairs / ST-1 / ST-2 / Staircase
           if (g.includes("บันได") || g.includes("stair")) {
-            return `<svg class="${sz} inline-block shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h5v-4.5h5V12h5V7.5H21M5 14l3-3m5-1.5 3-3"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 19h4v-4h4v-4h4V7h4"/></svg>`;
           }
-          // 6. ห้องขยะประจำชั้น / ห้องขยะ / Garbage / Waste / Trash / Chute
+          // 6. ห้องขยะประจำชั้น / ห้องขยะ / Garbage / Waste / Trash
           if (g.includes("ขยะ") || g.includes("garbage") || g.includes("trash") || g.includes("waste")) {
-            return `<svg class="${sz} inline-block shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`;
           }
-          // 7. ห้องไฟฟ้าประจำชั้น / ห้องไฟฟ้า / ไฟฟ้า / Electrical / MDB / DB Floor
+          // 7. ห้องไฟฟ้าประจำชั้น / ตู้ไฟ / Electrical / MDB
           if (g.includes("ไฟฟ้า") || g.includes("electrical") || g.includes("ตู้ไฟ") || g.includes("mdb")) {
-            return `<svg class="${sz} inline-block shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5A1.5 1.5 0 0 1 5.25 3h13.5A1.5 1.5 0 0 1 20.25 4.5v15a1.5 1.5 0 0 1-1.5 1.5H5.25A1.5 1.5 0 0 1 3.75 19.5v-15ZM13 7.5 9 13.5h4.5L11 18"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`;
           }
           // 8. ลิฟต์ / โถงลิฟต์ / Lift / Elevator
           if (g.includes("ลิฟต์") || g.includes("lift") || g.includes("elevator")) {
-            return `<svg class="${sz} inline-block shrink-0 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><rect x="3.75" y="3.75" width="16.5" height="16.5" rx="2.5" stroke="currentColor" stroke-width="2.2"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 3.75v16.5M8 9l-1.5 1.5L8 12M16 15l1.5-1.5L16 12"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 10l3-3 3 3M9 14l3 3 3-3"/></svg>`;
           }
-          // 9. ลานจอดรถ / ที่จอดรถ / Carpark / Parking / รถ
+          // 9. ลานจอดรถ / ที่จอดรถ / Carpark / Parking
           if (g.includes("จอดรถ") || g.includes("parking") || g.includes("carpark")) {
-            return `<svg class="${sz} inline-block shrink-0 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><rect x="3" y="3.5" width="18" height="17" rx="3" stroke="currentColor" stroke-width="2.2"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 16.5V7.5h4.5a3 3 0 0 1 0 6H9"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 16V8h4a3 3 0 010 6H9"/></svg>`;
           }
           // 10. สระว่ายน้ำ / Pool / Swimming
           if (g.includes("สระ") || g.includes("pool") || g.includes("swimming")) {
-            return `<svg class="${sz} inline-block shrink-0 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75c2.25-1.5 4.5 1.5 6.75 0s4.5-1.5 6.75 0 4.5 1.5 6.75 0M2.25 19.5c2.25-1.5 4.5 1.5 6.75 0s4.5-1.5 6.75 0 4.5 1.5 6.75 0M6 4.5v6.75M9.75 4.5v6.75M6 7.5h3.75M6 10.5h3.75"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15c2.5 1.5 5 1.5 7.5 0s5-1.5 7.5 0 3 1 3 1M3 9c2.5 1.5 5 1.5 7.5 0s5-1.5 7.5 0 3 1 3 1"/></svg>`;
           }
-          // 11. ฟิตเนส / Fitness / Gym / ออกกำลังกาย
-          if (g.includes("ฟิตเนส") || g.includes("fitness") || g.includes("gym") || g.includes("ออกกำลัง")) {
-            return `<svg class="${sz} inline-block shrink-0 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5v9M18 7.5v9M3.75 9.75v4.5M20.25 9.75v4.5M3.75 12h16.5"/></svg>`;
+          // 11. ฟิตเนส / Fitness / Gym
+          if (g.includes("ฟิตเนส") || g.includes("fitness") || g.includes("gym")) {
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 5v14M18 5v14M3 9v6M21 9v6M6 12h12"/></svg>`;
           }
           // 12. สวนส่วนกลาง / สวน / Landscape / Garden
-          if (g.includes("สวน") || g.includes("landscape") || g.includes("garden") || g.includes("ต้นไม้")) {
-            return `<svg class="${sz} inline-block shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-7.5m0 0a4.5 4.5 0 1 0-4.5-4.5c0 2.485 2.015 4.5 4.5 4.5Zm0 0a4.5 4.5 0 1 1 4.5-4.5c0 2.485-2.015 4.5-4.5 4.5ZM6 21h12"/></svg>`;
+          if (g.includes("สวน") || g.includes("landscape") || g.includes("garden")) {
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22V12M12 12A6 6 0 006 6c0 3.314 2.686 6 6 6zm0 0a6 6 0 016-6c0 3.314-2.686 6-6 6z"/></svg>`;
           }
           // 13. สุขา / ห้องน้ำ / Restroom / Toilet / WC
           if (g.includes("สุขา") || g.includes("ห้องน้ำ") || g.includes("toilet") || g.includes("wc") || g.includes("restroom")) {
-            return `<svg class="${sz} inline-block shrink-0 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="9" cy="6" r="2" stroke="currentColor" stroke-width="2.2"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 18v-5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5M9 14v7"/><circle cx="16.5" cy="6" r="2" stroke="currentColor" stroke-width="2.2"/><path stroke-linecap="round" stroke-linejoin="round" d="M14 18l1.5-7h2l1.5 7h-5Z"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="5" r="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v7m-3-5l3-2 3 2m-3 5v6m-2 0h4"/></svg>`;
           }
           // 14. รปภ / ป้อมยาม / Security / Guard
           if (g.includes("รปภ") || g.includes("ยาม") || g.includes("security") || g.includes("guard")) {
-            return `<svg class="${sz} inline-block shrink-0 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3.75 4.5 7.5v6c0 4.5 7.5 7.5 7.5 7.5s7.5-3 7.5-7.5v-6L12 3.75ZM12 9v6m-3-3h6"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3s7 3 7 8c0 5-4 8-7 10-3-2-7-5-7-10 0-5 7-8 7-8z"/></svg>`;
           }
           // 15. นิติบุคคล / สำนักงาน / Juristic / Office
           if (g.includes("นิติ") || g.includes("juristic") || g.includes("office") || g.includes("สำนักงาน")) {
-            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5v11.25A1.5 1.5 0 0 1 18.75 20.25H5.25A1.5 1.5 0 0 1 3.75 18.75V7.5M3.75 7.5A1.5 1.5 0 0 1 5.25 6h13.5a1.5 1.5 0 0 1 1.5 1.5M3.75 7.5l8.25 5.25 8.25-5.25M9 6V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V6"/></svg>`;
+            return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 2v4M8 2v4M3 10h18"/></svg>`;
           }
-          // 16. ซักรีด / Laundry
-          if (g.includes("ซักรีด") || g.includes("laundry") || g.includes("ซักผ้า")) {
-            return `<svg class="${sz} inline-block shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2.2"/><circle cx="8" cy="6.5" r="1" fill="currentColor"/><circle cx="11.5" cy="6.5" r="1" fill="currentColor"/></svg>`;
-          }
-          // 17. Default / อื่นๆ / พื้นที่ส่วนกลางทั่วไป
-          return `<svg class="${sz} inline-block shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h12A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6ZM3.75 12h16.5M12 3.75v16.5"/></svg>`;
+          // 16. Default / อื่นๆ / พื้นที่ส่วนกลางทั่วไป
+          return `<svg class="${sz} inline-block shrink-0 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 4v16M4 10h16"/></svg>`;
         }
 
         function getCommonAreaGroupTheme(groupName) {
@@ -10784,30 +10792,30 @@
               const valUnit = isUninspected ? (g.floors.length > 1 ? "พื้นที่" : "จุด") : "ข้อ";
 
               return `
-                <details class="common-defect-group-item" style="border: 2px solid ${theme.border}; background: ${theme.bg}; box-shadow: 2px 2px 0 ${theme.border};">
-                  <summary class="common-defect-group-summary" style="background: ${theme.bg};" title="คลิกเพื่อเปิด/ปิดดูรายละเอียดแยกชั้น">
+                <details class="common-defect-group-item">
+                  <summary class="common-defect-group-summary" title="คลิกเพื่อเปิด/ปิดดูรายละเอียดแยกชั้น">
                     <div class="common-defect-group-title">
-                      <span class="common-defect-accordion-arrow" style="color: ${theme.iconColor};">
+                      <span class="common-defect-accordion-arrow">
                         <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
                           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                         </svg>
                       </span>
-                      <span class="common-defect-group-icon flex items-center justify-center p-1 rounded-lg" style="background: ${theme.badgeBg};">${groupIcon}</span>
-                      <span class="common-defect-group-name" style="color: ${theme.titleColor}; font-size: 0.95rem; font-weight: 900;">${escapeCommonDefectText(g.group)}</span>
-                      <span class="common-defect-floor-count-tag" style="background: ${theme.badgeBg}; color: ${theme.badgeText}; border-color: ${theme.border}; font-weight: 800;">${floorCountText}</span>
+                      <span class="common-defect-group-icon flex items-center justify-center p-1 rounded-md bg-slate-100">${groupIcon}</span>
+                      <span class="common-defect-group-name">${escapeCommonDefectText(g.group)}</span>
+                      <span class="common-defect-floor-count-tag">${floorCountText}</span>
                     </div>
                     <div class="common-defect-group-val">
-                      <strong style="background: ${theme.valBg}; color: ${theme.valText}; border: 1.5px solid ${theme.border}; font-size: 0.95rem; font-weight: 900;">${g.totalValue}</strong>
-                      <small style="color: ${theme.titleColor}; font-weight: 800;">${valUnit}</small>
+                      <strong>${g.totalValue}</strong>
+                      <small>${valUnit}</small>
                     </div>
                   </summary>
 
-                  <div class="common-defect-floors-dropdown" style="background: rgba(255,255,255,0.7); border-top: 1.5px dashed ${theme.border};">
+                  <div class="common-defect-floors-dropdown">
                     ${g.floors.map(f => {
                       const displayStr = f.displayVal ? f.displayVal : `${f.value} <small>ข้อ</small>`;
                       return `
-                        <div class="common-defect-floor-subrow" style="border-color: ${theme.border};">
-                          <span class="common-defect-floor-badge" style="border-color: #0f172a;">
+                        <div class="common-defect-floor-subrow">
+                          <span class="common-defect-floor-badge">
                             <svg class="paper-floor-pipe" viewBox="0 0 20 20" width="15" height="15" fill="none">
                               <rect x="3" y="3" width="14" height="4.5" rx="1.5" fill="${isUninspected ? '#6366F1' : '#22C55E'}" stroke="#0F172A" stroke-width="1.6"/>
                               <rect x="5" y="7.5" width="10" height="9" fill="${isUninspected ? '#4F46E5' : '#16A34A'}" stroke="#0F172A" stroke-width="1.6"/>
@@ -10815,7 +10823,7 @@
                             </svg>
                             <span>${escapeCommonDefectText(f.floor)}</span>
                           </span>
-                          <strong class="common-defect-floor-val" style="color: ${theme.titleColor}; font-size: 0.9rem; font-weight: 900;">${displayStr}</strong>
+                          <strong class="common-defect-floor-val">${displayStr}</strong>
                         </div>
                       `;
                     }).join("")}
@@ -11094,6 +11102,70 @@
           `;
         }
 
+        window.getCommonDefectVisibleCols = function() {
+          const defaults = {
+            location: true,
+            assignee: true,
+            total: true,
+            passed: true,
+            left: true,
+            pending: true,
+            date: true,
+            status: true
+          };
+          try {
+            const saved = localStorage.getItem("common_defect_visible_cols");
+            if (saved) {
+              return Object.assign(defaults, JSON.parse(saved));
+            }
+          } catch (e) {}
+          return defaults;
+        };
+
+        window.toggleCommonDefectCol = function(colKey) {
+          const cols = window.getCommonDefectVisibleCols();
+          cols[colKey] = !cols[colKey];
+          try {
+            localStorage.setItem("common_defect_visible_cols", JSON.stringify(cols));
+          } catch (e) {}
+          if (typeof filterDefectList === "function") {
+            filterDefectList();
+          } else if (typeof renderCommonDefectTable === "function") {
+            renderCommonDefectTable();
+          }
+        };
+
+        window.resetCommonDefectCols = function() {
+          try {
+            localStorage.removeItem("common_defect_visible_cols");
+          } catch (e) {}
+          if (typeof filterDefectList === "function") {
+            filterDefectList();
+          } else if (typeof renderCommonDefectTable === "function") {
+            renderCommonDefectTable();
+          }
+        };
+
+        window.toggleCommonColsDropdown = function(event) {
+          if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+          }
+          const dropdown = document.getElementById("common-cols-dropdown");
+          if (!dropdown) return;
+          dropdown.classList.toggle("hidden");
+        };
+
+        document.addEventListener("click", function(event) {
+          const dropdown = document.getElementById("common-cols-dropdown");
+          const wrap = document.getElementById("common-col-toggle-wrap");
+          if (dropdown && !dropdown.classList.contains("hidden")) {
+            if (wrap && !wrap.contains(event.target)) {
+              dropdown.classList.add("hidden");
+            }
+          }
+        });
+
         window.renderCommonDefectTable = function() {
           const container = document.getElementById("common-defect-container");
           if (!container) return;
@@ -11357,6 +11429,13 @@
 
           window._commonGroupCollapsedState = window._commonGroupCollapsedState || {};
 
+          // Column visibility configuration
+          const visibleCols = typeof window.getCommonDefectVisibleCols === "function" ? window.getCommonDefectVisibleCols() : {
+            location: true, assignee: true, total: true, passed: true, left: true, pending: true, date: true, status: true
+          };
+          const isCol = (key) => visibleCols[key] !== false;
+          const colClass = (key, extra = "") => `${key ? 'col-' + key : ''} ${isCol(key) ? '' : 'hidden'} ${extra}`.trim();
+
           // Build unified table HTML
           let html = `
             <div id="common-defect-unified-container" class="common-defect-excel-shell mb-8">
@@ -11366,6 +11445,56 @@
                   <div><strong>ตารางสรุป DEFECT ส่วนกลาง</strong><small>${groupKeys.length} กลุ่ม / ${filtered.length} รายการ · คลิกเซลล์เพื่อแก้ไข</small></div>
                 </div>
                 <div class="flex items-center gap-1.5">
+                  <div class="relative inline-block text-left" id="common-col-toggle-wrap">
+                    <button
+                      type="button"
+                      onclick="toggleCommonColsDropdown(event)"
+                      class="px-2.5 py-0.5 text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
+                      title="เลือกเปิด/ปิด คอลัมน์ที่ต้องการแสดง"
+                    >
+                      <span>⚙️ ปิด/เปิด คอลัมน์ ▾</span>
+                    </button>
+                    <div id="common-cols-dropdown" class="hidden absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-xl border border-slate-200 z-50 p-2.5 text-xs">
+                      <div class="font-bold text-slate-800 pb-2 border-b border-slate-100 flex items-center justify-between">
+                        <span>แสดง / ซ่อนคอลัมน์</span>
+                        <button type="button" onclick="resetCommonDefectCols()" class="text-[10px] text-indigo-600 hover:underline">รีเซ็ตทั้งหมด</button>
+                      </div>
+                      <div class="py-1.5 flex flex-col gap-1 max-h-64 overflow-y-auto">
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('location') ? 'checked' : ''} onchange="toggleCommonDefectCol('location')" class="rounded text-indigo-600 focus:ring-0">
+                          <span class="text-slate-700">พื้นที่ / รายการ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('assignee') ? 'checked' : ''} onchange="toggleCommonDefectCol('assignee')" class="rounded text-indigo-600 focus:ring-0">
+                          <span class="text-slate-700 font-bold text-indigo-900">ผู้รับผิดชอบ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('total') ? 'checked' : ''} onchange="toggleCommonDefectCol('total')" class="rounded text-indigo-600 focus:ring-0">
+                          <span class="text-slate-700">DEFECT ทั้งหมด</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('passed') ? 'checked' : ''} onchange="toggleCommonDefectCol('passed')" class="rounded text-emerald-600 focus:ring-0">
+                          <span class="text-emerald-700">ผ่านตรวจสอบ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('left') ? 'checked' : ''} onchange="toggleCommonDefectCol('left')" class="rounded text-rose-600 focus:ring-0">
+                          <span class="text-rose-700">ยังไม่แก้ไข</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('pending') ? 'checked' : ''} onchange="toggleCommonDefectCol('pending')" class="rounded text-amber-600 focus:ring-0">
+                          <span class="text-amber-700">แก้ไขแล้วรอตรวจ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('date') ? 'checked' : ''} onchange="toggleCommonDefectCol('date')" class="rounded text-indigo-600 focus:ring-0">
+                          <span class="text-slate-700">กำหนดเสร็จ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('status') ? 'checked' : ''} onchange="toggleCommonDefectCol('status')" class="rounded text-indigo-600 focus:ring-0">
+                          <span class="text-slate-700">STATUS</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                   <button
                     id="toggle-all-common-groups-btn"
                     onclick="toggleAllCommonGroupsCollapse()"
@@ -11380,13 +11509,14 @@
                 <table id="common-defect-unified-table" class="common-defect-excel-table">
                   <thead>
                     <tr>
-                      <th class="is-location">พื้นที่ / รายการ</th>
-                      <th>DEFECT<br>ทั้งหมด</th>
-                      <th class="is-passed">ผ่าน<br>ตรวจสอบ</th>
-                      <th class="is-left">ยังไม่<br>แก้ไข</th>
-                      <th class="is-pending">แก้ไขแล้ว<br>รอตรวจ</th>
-                      <th>กำหนดเสร็จ</th>
-                      <th>STATUS</th>
+                      <th class="${colClass('location', 'is-location')}">พื้นที่ / รายการ</th>
+                      <th class="${colClass('assignee')}">ผู้รับผิดชอบ</th>
+                      <th class="${colClass('total')}">DEFECT<br>ทั้งหมด</th>
+                      <th class="${colClass('passed', 'is-passed')}">ผ่าน<br>ตรวจสอบ</th>
+                      <th class="${colClass('left', 'is-left')}">ยังไม่<br>แก้ไข</th>
+                      <th class="${colClass('pending', 'is-pending')}">แก้ไขแล้ว<br>รอตรวจ</th>
+                      <th class="${colClass('date')}">กำหนดเสร็จ</th>
+                      <th class="${colClass('status')}">STATUS</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-200">
@@ -11409,7 +11539,7 @@
             // Group Divider Row with totals
             html += `
               <tr class="group-header-row group-rows-${groupIdx}" data-group-idx="${groupIdx}" data-group-name="${groupName}">
-                <td class="is-location">
+                <td class="${colClass('location', 'is-location')}">
                   <div class="flex items-center justify-between gap-2">
                     <div
                       class="flex items-center gap-2 cursor-pointer select-none group"
@@ -11454,12 +11584,13 @@
                     </div>
                   </div>
                 </td>
-                <td>${groupTot}</td>
-                <td class="cell-passed">${groupPassed || "—"}</td>
-                <td class="cell-left">${groupRem}</td>
-                <td class="cell-pending">${groupPending || "—"}</td>
-                <td></td>
-                <td></td>
+                <td class="${colClass('assignee')}"></td>
+                <td class="${colClass('total')}">${groupTot}</td>
+                <td class="${colClass('passed', 'cell-passed')}">${groupPassed || "—"}</td>
+                <td class="${colClass('left', 'cell-left')}">${groupRem}</td>
+                <td class="${colClass('pending', 'cell-pending')}">${groupPending || "—"}</td>
+                <td class="${colClass('date')}"></td>
+                <td class="${colClass('status')}"></td>
               </tr>
             `;
 
@@ -11486,15 +11617,18 @@
 
               html += `
                 <tr class="group-subrows-${groupIdx} group-rows-${groupIdx} common-defect-data-row ${isGroupCollapsed ? 'hidden' : ''}" data-item-id="${item.id}">
-                  <td class="is-location defect-editable-cell" onclick="openCommonDefectCellEditor(${item.id}, 'name')" title="คลิกเพื่อแก้ไขรายการนี้">
+                  <td class="${colClass('location', 'is-location defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'name')" title="คลิกเพื่อแก้ไขรายการนี้">
                     <span class="excel-row-arrow">›</span>${escapeCommonDefectText(item.name)}
                   </td>
-                  <td class="defect-editable-cell" onclick="openCommonDefectCellEditor(${item.id}, 'total')">${totDisplay || "—"}</td>
-                  <td class="defect-editable-cell cell-passed" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
-                  <td class="defect-editable-cell cell-left" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left}</td>
-                  <td class="defect-editable-cell cell-pending" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
-                  <td class="defect-editable-cell cell-date" onclick="openCommonDefectCellEditor(${item.id}, 'date')">${dateDisplay || "—"}</td>
-                  <td class="defect-editable-cell" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
+                  <td class="${colClass('assignee', 'defect-editable-cell text-slate-700 text-xs font-semibold truncate max-w-[130px]')}" onclick="openCommonDefectCellEditor(${item.id}, 'assignee')" title="คลิกเพื่อระบุผู้รับผิดชอบ">
+                    ${escapeCommonDefectText(item.assignee || "—")}
+                  </td>
+                  <td class="${colClass('total', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'total')">${totDisplay || "—"}</td>
+                  <td class="${colClass('passed', 'defect-editable-cell cell-passed')}" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
+                  <td class="${colClass('left', 'defect-editable-cell cell-left')}" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left}</td>
+                  <td class="${colClass('pending', 'defect-editable-cell cell-pending')}" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
+                  <td class="${colClass('date', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')">${dateDisplay || "—"}</td>
+                  <td class="${colClass('status', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
                     <span class="paper-status-badge ${statusMeta.className}">
                       <b>${statusMeta.icon}</b>${statusMeta.label}
                     </span>
@@ -11509,12 +11643,14 @@
                   </tbody>
                   <tfoot class="border-t-2 border-slate-400">
                     <tr id="common-defect-grand-total-row">
-                      <td class="is-location">รวมทั้งหมด</td>
-                      <td>${grandTot}</td>
-                      <td class="cell-passed">${grandPassed}</td>
-                      <td class="cell-left">${grandLeft}</td>
-                      <td class="cell-pending">${grandPending}</td>
-                      <td colspan="2"><span class="excel-total-rate">ผ่านตรวจ ${grandPercentStr}%</span></td>
+                      <td class="${colClass('location', 'is-location')}">รวมทั้งหมด</td>
+                      <td class="${colClass('assignee')}"></td>
+                      <td class="${colClass('total')}">${grandTot}</td>
+                      <td class="${colClass('passed', 'cell-passed')}">${grandPassed}</td>
+                      <td class="${colClass('left', 'cell-left')}">${grandLeft}</td>
+                      <td class="${colClass('pending', 'cell-pending')}">${grandPending}</td>
+                      <td class="${colClass('date')}"></td>
+                      <td class="${colClass('status')}"><span class="excel-total-rate">ผ่านตรวจ ${grandPercentStr}%</span></td>
                     </tr>
                   </tfoot>
                 </table>
@@ -11573,6 +11709,8 @@
 
           document.getElementById("edit-defect-id").value = id;
           document.getElementById("edit-defect-name").value = defect.name;
+          const assigneeEl = document.getElementById("edit-defect-assignee");
+          if (assigneeEl) assigneeEl.value = defect.assignee || "";
           document.getElementById("edit-defect-tot").value = defect.tot;
           document.getElementById("edit-defect-fix").value = defect.fix;
           document.getElementById("edit-defect-rem-val").textContent = (Number(defect.tot) || 0) - (Number(defect.fix) || 0);
@@ -11656,6 +11794,7 @@
           const statusMeta = getCommonDefectStatusMeta(defect.status);
           const config = {
             name: { title: "แก้ไขชื่อรายการ", icon: "✎", label: "สถานที่ / รายการ", hint: "แก้เฉพาะชื่อของแถวนี้" },
+            assignee: { title: "ระบุผู้รับผิดชอบ", icon: "👤", label: "ผู้รับผิดชอบ", hint: "เช่น ช่างสี, ผู้รับเหมา A, ทีมระบบ" },
             total: { title: "กรอกจำนวน DEFECT", icon: "#", label: "จำนวน DEFECT ทั้งหมด", hint: "จำนวนรวมต้องไม่น้อยกว่าจำนวนที่ดำเนินการแล้ว" },
             fixed: { title: "กรอกจำนวนผ่านตรวจ", icon: "★", label: "จำนวนที่ผ่านการตรวจสอบ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น ผ่านการตรวจสอบ" },
             left: { title: "กรอกจำนวนยังไม่แก้ไข", icon: "×", label: "จำนวนที่ยังไม่แก้ไข", hint: "ส่วนที่ดำเนินการแล้วจะย้ายไป แก้ไขแล้วรอตรวจ โดยอัตโนมัติ" },
@@ -11674,6 +11813,8 @@
           let controlHTML = "";
           if (field === "name") {
             controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input" type="text" value="${escapeCommonDefectText(defect.name)}" required>`;
+          } else if (field === "assignee") {
+            controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input" type="text" value="${escapeCommonDefectText(defect.assignee || "")}" placeholder="ระบุชื่อผู้รับผิดชอบ หรือทีมงาน">`;
           } else if (field === "date") {
             controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input is-date" type="date" value="${defect.target || ""}">`;
           } else if (field === "status") {
@@ -11736,6 +11877,8 @@
             const value = input.value.trim();
             if (!value) return;
             defect.name = value;
+          } else if (editing.field === "assignee") {
+            defect.assignee = input.value.trim();
           } else if (editing.field === "date") {
             defect.target = input.value;
           } else if (editing.field === "status") {
@@ -11750,6 +11893,11 @@
             if (editing.field === "total") {
               defect.tot = value;
               defect.fix = Math.min(value, Math.max(0, Number(defect.fix) || 0));
+              if (value > 0 && (!defect.status || defect.status === "ยังไม่ตรวจ" || defect.status === "ไม่มี Defect")) {
+                defect.status = "รอดำเนินการ";
+              } else if (value === 0 && defect.status === "รอดำเนินการ") {
+                defect.status = "ยังไม่ตรวจ";
+              }
             } else if (editing.field === "fixed") {
               defect.fix = value;
               defect.status = value > 0 ? "ผ่านการตรวจสอบ" : (total > 0 ? "รอดำเนินการ" : defect.status);
@@ -11783,6 +11931,8 @@
         window.openAddCommonDefectModal = function() {
           document.getElementById("edit-defect-id").value = "NEW";
           document.getElementById("edit-defect-name").value = "";
+          const assigneeEl = document.getElementById("edit-defect-assignee");
+          if (assigneeEl) assigneeEl.value = "";
           document.getElementById("edit-defect-tot").value = 0;
           document.getElementById("edit-defect-fix").value = 0;
           document.getElementById("edit-defect-rem-val").textContent = 0;
@@ -11805,6 +11955,8 @@
           // Pre-fill as new item
           document.getElementById("edit-defect-id").value = "NEW";
           document.getElementById("edit-defect-name").value = "";
+          const assigneeEl = document.getElementById("edit-defect-assignee");
+          if (assigneeEl) assigneeEl.value = "";
           document.getElementById("edit-defect-tot").value = 0;
           document.getElementById("edit-defect-fix").value = 0;
           document.getElementById("edit-defect-rem-val").textContent = 0;
@@ -11953,6 +12105,8 @@
 
           const idVal = document.getElementById("edit-defect-id").value;
           const name = document.getElementById("edit-defect-name").value.trim();
+          const assigneeEl = document.getElementById("edit-defect-assignee");
+          const assignee = assigneeEl ? assigneeEl.value.trim() : "";
           const selectGroup = document.getElementById("edit-defect-group-select").value;
           const customGroup = document.getElementById("edit-defect-group-custom").value.trim();
 
@@ -11983,6 +12137,7 @@
               id: maxId + 1,
               group: group,
               name: name,
+              assignee: assignee,
               tot: tot,
               fix: fix,
               rem: rem,
@@ -11997,6 +12152,7 @@
             if (index !== -1) {
               projectData.commonDefects[index].group = group;
               projectData.commonDefects[index].name = name;
+              projectData.commonDefects[index].assignee = assignee;
               projectData.commonDefects[index].tot = tot;
               projectData.commonDefects[index].fix = fix;
               projectData.commonDefects[index].rem = rem;

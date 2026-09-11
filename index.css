@@ -2473,17 +2473,27 @@ th.qc-current-week {
 .common-defect-excel-table thead th.is-left { background: #c92a2a; }
 .common-defect-excel-table thead th.is-pending { background: #d97706; }
 
-.common-defect-excel-table .is-location {
-  width: 36%;
+.common-defect-excel-table .col-location {
+  width: 28%;
   text-align: left;
 }
 
-.common-defect-excel-table th:not(.is-location):nth-child(2) { width: 9%; }
-.common-defect-excel-table th:not(.is-location):nth-child(3),
-.common-defect-excel-table th:not(.is-location):nth-child(4),
-.common-defect-excel-table th:not(.is-location):nth-child(5) { width: 10%; }
-.common-defect-excel-table th:nth-child(6) { width: 12%; }
-.common-defect-excel-table th:nth-child(7) { width: 13%; }
+.common-defect-excel-table .col-assignee {
+  width: 14%;
+  text-align: left;
+}
+
+.common-defect-excel-table .col-total { width: 8.5%; }
+.common-defect-excel-table .col-passed { width: 9%; }
+.common-defect-excel-table .col-left { width: 9%; }
+.common-defect-excel-table .col-pending { width: 9.5%; }
+.common-defect-excel-table .col-date { width: 10%; }
+.common-defect-excel-table .col-status { width: 12%; }
+
+.common-defect-excel-table th.hidden,
+.common-defect-excel-table td.hidden {
+  display: none !important;
+}
 
 .common-defect-excel-table .group-header-row td {
   background: #dbe4ef;
