@@ -2852,6 +2852,7 @@
     <div
       id="qc-handover-popover"
       class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      onclick="if (event.target === this) closeQCHandoverPopover()"
     >
       <div
         class="bg-white rounded-2xl shadow-2xl w-full max-w-xs overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200"
@@ -3365,7 +3366,7 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-bold text-slate-700 mb-1">แก้ไขแล้ว (FIX)</label>
+              <label class="block text-sm font-bold text-slate-700 mb-1">จำนวนที่ดำเนินการแล้ว / พร้อมตรวจ (FIX)</label>
               <input
                 type="number"
                 id="edit-defect-fix"
@@ -3397,9 +3398,9 @@
               id="edit-defect-status"
               class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-slate-800 bg-white"
             >
-              <option value="รอดำเนินการ" class="text-rose-600 font-bold">รอดำเนินการ</option>
-              <option value="รอนัดตรวจ" class="text-amber-600 font-bold">รอนัดตรวจ</option>
-              <option value="แก้ไขเรียบร้อย" class="text-emerald-600 font-bold">แก้ไขเรียบร้อย</option>
+              <option value="รอดำเนินการ" class="text-rose-600 font-bold">ยังไม่แก้ไข</option>
+              <option value="รอนัดตรวจ" class="text-amber-600 font-bold">แก้ไขแล้วรอตรวจ</option>
+              <option value="ผ่านการตรวจสอบ" class="text-emerald-600 font-bold">ผ่านการตรวจสอบ</option>
               <option value="ไม่มี Defect" class="text-slate-500 font-bold">ไม่มี Defect</option>
               <option value="ยังไม่ตรวจ" class="text-indigo-600 font-bold">ยังไม่ตรวจ</option>
             </select>
@@ -9417,6 +9418,10 @@
         }
 
         function openQCHandoverPopover(floorId, weekIndex, isPlan) {
+          if (weekIndex !== getCurrentQCHandoverWeekIndex()) {
+            showToast("แก้ไขได้เฉพาะช่องของสัปดาห์ปัจจุบัน", 2600);
+            return;
+          }
           currentQCHandoverContext = { floorId, weekIndex, isPlan };
           const popover = document.getElementById("qc-handover-popover");
           const title = document.getElementById("qc-popover-title");
@@ -9442,6 +9447,20 @@
           input.focus();
         }
         window.openQCHandoverPopover = openQCHandoverPopover;
+
+        window.toggleQCHandoverPopover = function (floorId, weekIndex, isPlan) {
+          const popover = document.getElementById("qc-handover-popover");
+          const isOpen = popover && !popover.classList.contains("hidden");
+          const isSameCell = currentQCHandoverContext
+            && currentQCHandoverContext.floorId === floorId
+            && currentQCHandoverContext.weekIndex === weekIndex
+            && currentQCHandoverContext.isPlan === isPlan;
+          if (isOpen && isSameCell) {
+            closeQCHandoverPopover();
+            return;
+          }
+          openQCHandoverPopover(floorId, weekIndex, isPlan);
+        };
 
         function closeQCHandoverPopover() {
           document
@@ -9640,7 +9659,11 @@
               }
               const currentWeekClass =
                 getQCHandoverWeekHighlightClass(weekIndex);
-              planCells += `<td onclick="openQCHandoverPopover(${floorId}, ${weekIndex}, true)" class="border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium cursor-pointer hover:opacity-80 transition-all ${cellClass} ${currentWeekClass}" style="height: 36px;">${cellContent}</td>`;
+              const isCurrentWeek = weekIndex === currentWeekIndex;
+              const planCellBody = isCurrentWeek
+                ? `<button type="button" class="qc-current-week-edit-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, true)" aria-label="เปิดหรือปิดการกรอกแผนงาน ชั้น ${floorId} สัปดาห์ปัจจุบัน">${cellContent}</button>`
+                : cellContent;
+              planCells += `<td class="qc-handover-week-cell border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium ${isCurrentWeek ? "is-editable" : `is-readonly ${cellClass}`} ${currentWeekClass}" style="height: 40px;" ${isCurrentWeek ? 'title="คลิกเพื่อกรอกข้อมูลสัปดาห์ปัจจุบัน"' : 'title="อ่านอย่างเดียว"'}>${planCellBody}</td>`;
             });
 
             planRow.innerHTML = `
@@ -9690,7 +9713,11 @@
 
               const currentWeekClass =
                 getQCHandoverWeekHighlightClass(weekIndex);
-              actualCells += `<td onclick="openQCHandoverPopover(${floorId}, ${weekIndex}, false)" class="border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium cursor-pointer hover:opacity-80 transition-all ${cellClass} ${currentWeekClass}" style="height: 36px;">${cellContent}</td>`;
+              const isCurrentWeek = weekIndex === currentWeekIndex;
+              const actualCellBody = isCurrentWeek
+                ? `<button type="button" class="qc-current-week-edit-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, false)" aria-label="เปิดหรือปิดการกรอกผลงานจริง ชั้น ${floorId} สัปดาห์ปัจจุบัน">${cellContent}</button>`
+                : cellContent;
+              actualCells += `<td class="qc-handover-week-cell border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium ${isCurrentWeek ? "is-editable" : `is-readonly ${cellClass}`} ${currentWeekClass}" style="height: 40px;" ${isCurrentWeek ? 'title="คลิกเพื่อกรอกข้อมูลสัปดาห์ปัจจุบัน"' : 'title="อ่านอย่างเดียว"'}>${actualCellBody}</td>`;
             });
 
             actualRow.innerHTML = `
@@ -10217,28 +10244,55 @@
           };
         }
 
+        function normalizeCommonDefectStatus(status) {
+          if (status === "แก้ไขเรียบร้อย") return "ผ่านการตรวจสอบ";
+          if (status === "รอคะแนน") return "รอนัดตรวจ";
+          return status || "ยังไม่ตรวจ";
+        }
+
+        function getCommonDefectStatusMeta(status) {
+          const normalized = normalizeCommonDefectStatus(status);
+          if (normalized === "ผ่านการตรวจสอบ") {
+            return { normalized, label: "ผ่านการตรวจสอบ", className: "is-passed", icon: "★" };
+          }
+          if (normalized === "รอนัดตรวจ") {
+            return { normalized, label: "แก้ไขแล้วรอตรวจ", className: "is-pending", icon: "⏱" };
+          }
+          if (normalized === "ไม่มี Defect") {
+            return { normalized, label: "ไม่มี Defect", className: "is-clear", icon: "—" };
+          }
+          if (normalized === "ยังไม่ตรวจ") {
+            return { normalized, label: "ยังไม่ตรวจ", className: "is-unchecked", icon: "?" };
+          }
+          return { normalized, label: "ยังไม่แก้ไข", className: "is-left", icon: "×" };
+        }
+
         function getCommonDefectOverview(items) {
           const overview = {
             total: 0,
-            fixed: 0,
+            passed: 0,
             left: 0,
             pending: 0,
             entries: {
-              fixed: [],
+              passed: [],
               left: [],
               pending: []
             }
           };
 
-          const mapFixed = {};
+          const mapPassed = {};
           const mapLeft = {};
           const mapPending = {};
 
           (items || []).forEach((item) => {
             const total = Math.max(0, Number(item.tot) || 0);
             const fixed = Math.min(total, Math.max(0, Number(item.fix) || 0));
-            const left = Math.max(0, total - fixed);
-            const isPending = item.status === "รอนัดตรวจ" || item.status === "รอคะแนน";
+            const normalizedStatus = normalizeCommonDefectStatus(item.status);
+            const isPending = normalizedStatus === "รอนัดตรวจ";
+            const isPassed = normalizedStatus === "ผ่านการตรวจสอบ";
+            const passed = isPassed ? fixed : 0;
+            const pending = isPending ? fixed : 0;
+            const left = Math.max(0, total - passed - pending);
             const info = parseDefectFloorInfo(item);
             const itemKey = `${info.group}:::${info.floor}`;
 
@@ -10258,8 +10312,8 @@
             }
 
             if (isPending) {
-              overview.pending += fixed;
-              if (fixed > 0) {
+              overview.pending += pending;
+              if (pending > 0) {
                 if (!mapPending[itemKey]) {
                   mapPending[itemKey] = {
                     group: info.group,
@@ -10268,20 +10322,20 @@
                     value: 0
                   };
                 }
-                mapPending[itemKey].value += fixed;
+                mapPending[itemKey].value += pending;
               }
-            } else {
-              overview.fixed += fixed;
-              if (fixed > 0) {
-                if (!mapFixed[itemKey]) {
-                  mapFixed[itemKey] = {
+            } else if (isPassed) {
+              overview.passed += passed;
+              if (passed > 0) {
+                if (!mapPassed[itemKey]) {
+                  mapPassed[itemKey] = {
                     group: info.group,
                     floor: info.floor,
                     floorNum: info.floorNum,
                     value: 0
                   };
                 }
-                mapFixed[itemKey].value += fixed;
+                mapPassed[itemKey].value += passed;
               }
             }
           });
@@ -10296,7 +10350,7 @@
             return a.group.localeCompare(b.group, "th");
           };
 
-          overview.entries.fixed = Object.values(mapFixed).sort(sorter);
+          overview.entries.passed = Object.values(mapPassed).sort(sorter);
           overview.entries.left = Object.values(mapLeft).sort(sorter);
           overview.entries.pending = Object.values(mapPending).sort(sorter);
 
@@ -10330,10 +10384,22 @@
           });
         };
 
+        window.handleCommonDefectGroupToggle = function(detail) {
+          if (!detail || !detail.open) return;
+          const list = detail.closest(".common-defect-area-list");
+          if (!list) return;
+          list.querySelectorAll("details.common-defect-group-item[open]").forEach((item) => {
+            if (item !== detail) item.removeAttribute("open");
+          });
+          window.requestAnimationFrame(() => {
+            detail.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          });
+        };
+
         function renderCommonDefectAreaRows(overview, key) {
           const list = (overview.entries && overview.entries[key]) || [];
           if (!list.length) {
-            const mascot = key === "fixed" ? "🌱" : (key === "left" ? "🍄" : "⭐");
+            const mascot = key === "passed" ? "⭐" : (key === "left" ? "🍄" : "⏱️");
             return `
               <div class="common-defect-summary-empty">
                 <span class="common-defect-empty-mascot">${mascot}</span>
@@ -10373,7 +10439,7 @@
               const floorCountText = g.floors.length > 1 ? `${g.floors.length} ชั้น` : (g.floors[0] && g.floors[0].floor ? g.floors[0].floor : "1 พื้นที่");
 
               return `
-                <details class="common-defect-group-item">
+                <details class="common-defect-group-item" ontoggle="handleCommonDefectGroupToggle(this)">
                   <summary class="common-defect-group-summary" title="คลิกเพื่อเปิด/ปิดดูรายละเอียดแยกชั้น">
                     <div class="common-defect-group-title">
                       <span class="common-defect-accordion-arrow">
@@ -10423,17 +10489,11 @@
                   <p>จัดกลุ่มตามพื้นที่หลัก · คลิกที่หัวข้อเพื่อเปิด/ปิดดูรายละเอียดแยกตามรายชั้น</p>
                 </div>
                 <div class="common-defect-intro-actions">
-                  <button type="button" class="common-defect-toggle-btn" onclick="toggleAllCommonDefectGroups(true)" title="ขยายดูรายชั้นทุกกลุ่ม">
-                    <svg viewBox="0 0 20 20" width="13" height="13" fill="currentColor">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                    <span>ขยายทุกชั้น</span>
-                  </button>
                   <button type="button" class="common-defect-toggle-btn" onclick="toggleAllCommonDefectGroups(false)" title="ยุบรวมกลุ่ม">
                     <svg viewBox="0 0 20 20" width="13" height="13" fill="currentColor">
                       <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
                     </svg>
-                    <span>ยุบรวมกลุ่ม</span>
+                    <span>ยุบรายละเอียด</span>
                   </button>
                 </div>
               </div>
@@ -10464,15 +10524,15 @@
                 <div class="common-defect-summary-branches">
                   <article class="common-defect-status-card is-fixed">
                     <div class="common-defect-status-heading">
-                      <span class="common-defect-status-icon" title="แก้ไขแล้วเสร็จ">
+                      <span class="common-defect-status-icon" title="ผ่านการตรวจสอบแล้ว">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                       </span>
-                      <div><small>ดำเนินการเสร็จ</small><h3>แก้ไขแล้ว</h3></div>
-                      <strong>${overview.fixed}<em>ข้อ</em></strong>
+                      <div><small>QC ยืนยันแล้ว</small><h3>ผ่านการตรวจสอบ</h3></div>
+                      <strong>${overview.passed}<em>ข้อ</em></strong>
                     </div>
-                    <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "fixed")}</div>
+                    <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "passed")}</div>
                   </article>
 
                   <article class="common-defect-status-card is-left">
@@ -10491,13 +10551,13 @@
 
                   <article class="common-defect-status-card is-pending">
                     <div class="common-defect-status-heading">
-                      <span class="common-defect-status-icon" title="แก้ไขแล้วรอคะแนน">
+                      <span class="common-defect-status-icon" title="แก้ไขแล้วรอตรวจ">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                           <circle cx="12" cy="12" r="9"></circle>
                           <polyline points="12 7 12 12 15 15"></polyline>
                         </svg>
                       </span>
-                      <div><small>รอยืนยันผล</small><h3>แก้ไขแล้วรอคะแนน</h3></div>
+                      <div><small>รอ QC ยืนยัน</small><h3>แก้ไขแล้วรอตรวจ</h3></div>
                       <strong>${overview.pending}<em>ข้อ</em></strong>
                     </div>
                     <div class="common-defect-area-list">${renderCommonDefectAreaRows(overview, "pending")}</div>
@@ -10541,27 +10601,27 @@
             }, 100);
           }
 
-          window.currentCommonDefectSubTab = window.currentCommonDefectSubTab || "all";
+          window.currentCommonDefectSubTab = ["tree", "table"].includes(window.currentCommonDefectSubTab)
+            ? window.currentCommonDefectSubTab
+            : "tree";
 
           window.setCommonDefectSubTab = function(tab) {
-            window.currentCommonDefectSubTab = tab || "all";
+            window.currentCommonDefectSubTab = tab === "table" ? "table" : "tree";
 
-            const allBtn = document.getElementById("subtab-common-all");
             const treeBtn = document.getElementById("subtab-common-tree");
             const tableBtn = document.getElementById("subtab-common-table");
 
             const updateBtn = (btn, isActive) => {
               if (!btn) return;
               if (isActive) {
-                btn.className = "subtab-common-btn px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-2 cursor-pointer bg-white text-indigo-700 shadow-sm border border-slate-200/90";
+                btn.className = "common-defect-view-btn is-active";
                 btn.setAttribute("aria-selected", "true");
               } else {
-                btn.className = "subtab-common-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/70";
+                btn.className = "common-defect-view-btn";
                 btn.setAttribute("aria-selected", "false");
               }
             };
 
-            updateBtn(allBtn, window.currentCommonDefectSubTab === "all");
             updateBtn(treeBtn, window.currentCommonDefectSubTab === "tree");
             updateBtn(tableBtn, window.currentCommonDefectSubTab === "table");
 
@@ -10569,82 +10629,54 @@
             const unifiedContainer = document.getElementById("common-defect-unified-container");
 
             if (summaryBoard) {
-              if (window.currentCommonDefectSubTab === "table") {
-                summaryBoard.classList.add("hidden");
-              } else {
-                summaryBoard.classList.remove("hidden");
-              }
+              summaryBoard.classList.toggle("hidden", window.currentCommonDefectSubTab !== "tree");
             }
 
             if (unifiedContainer) {
-              if (window.currentCommonDefectSubTab === "tree") {
-                unifiedContainer.classList.add("hidden");
-              } else {
-                unifiedContainer.classList.remove("hidden");
-              }
+              unifiedContainer.classList.toggle("hidden", window.currentCommonDefectSubTab !== "table");
             }
+
+            const tableTools = document.getElementById("common-defect-table-tools");
+            if (tableTools) tableTools.classList.toggle("hidden", window.currentCommonDefectSubTab !== "table");
           };
 
-          const list = projectData.commonDefects;
-
-          // Top Navigation Tabs Header
+          // Two dedicated pages: diagram and spreadsheet table.
           const tabsHTML = `
-            <div class="common-defect-tabs-wrapper mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 border border-slate-200 rounded-2xl shadow-sm">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-black text-slate-400 uppercase tracking-wider pl-1 hidden sm:inline">เลือกมุมมอง:</span>
-                <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200/80 gap-1" role="tablist">
-                  <button
-                    id="subtab-common-all"
-                    type="button"
-                    onclick="setCommonDefectSubTab('all')"
-                    class="subtab-common-btn px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${window.currentCommonDefectSubTab === 'all' ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/90' : 'text-slate-600 hover:text-slate-900 hover:bg-white/70'}"
-                    role="tab"
-                    aria-selected="${window.currentCommonDefectSubTab === 'all'}"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                    <span>แสดงทั้งหมด</span>
-                  </button>
+            <nav class="common-defect-page-switcher" aria-label="เลือกหน้าข้อมูล Defect ส่วนกลาง">
+              <div class="common-defect-page-switcher-label">
+                <span>🍄</span>
+                <div><strong>DEFECT ส่วนกลาง</strong><small>เลือกเปิดดูทีละหน้า</small></div>
+              </div>
+              <div class="common-defect-view-buttons" role="tablist">
                   <button
                     id="subtab-common-tree"
                     type="button"
                     onclick="setCommonDefectSubTab('tree')"
-                    class="subtab-common-btn px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${window.currentCommonDefectSubTab === 'tree' ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/90' : 'text-slate-600 hover:text-slate-900 hover:bg-white/70'}"
+                    class="common-defect-view-btn ${window.currentCommonDefectSubTab === 'tree' ? 'is-active' : ''}"
                     role="tab"
                     aria-selected="${window.currentCommonDefectSubTab === 'tree'}"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
-                    <span>แผนผังภาพรวม (บน)</span>
+                    <span>เปิดหน้าแผนผัง</span>
                   </button>
                   <button
                     id="subtab-common-table"
                     type="button"
                     onclick="setCommonDefectSubTab('table')"
-                    class="subtab-common-btn px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${window.currentCommonDefectSubTab === 'table' ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/90' : 'text-slate-600 hover:text-slate-900 hover:bg-white/70'}"
+                    class="common-defect-view-btn ${window.currentCommonDefectSubTab === 'table' ? 'is-active' : ''}"
                     role="tab"
                     aria-selected="${window.currentCommonDefectSubTab === 'table'}"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                    <span>ตารางสรุปรายการ (ล่าง)</span>
+                    <span>เปิดหน้าตารางสรุป</span>
                   </button>
-                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <button
-                  type="button"
-                  onclick="openCommonDefectCaptureModal()"
-                  class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold text-xs md:text-sm shadow-md hover:shadow-emerald-500/20 transition-all flex items-center gap-2 cursor-pointer active:scale-95"
-                  title="เลือกหัวข้อและส่วนที่ต้องการแคปเจอร์รูปภาพ"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
-                  <span>📸 แคปเจอร์ (เลือกหัวข้อ)</span>
-                </button>
-              </div>
-            </div>
+            </nav>
           `;
 
           // Filter / Action header
           const actionsHTML = `
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white p-4 border border-slate-200 rounded-2xl shadow-sm">
+            <div id="common-defect-table-tools" class="common-defect-table-tools ${window.currentCommonDefectSubTab === 'table' ? '' : 'hidden'}">
               <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
                 <div class="relative w-full sm:w-64">
                   <input
@@ -10676,9 +10708,9 @@
                   onchange="filterDefectList()"
                 >
                   <option value="ALL">สถานะทั้งหมด</option>
-                  <option value="รอดำเนินการ">รอดำเนินการ</option>
-                  <option value="รอนัดตรวจ">รอนัดตรวจ</option>
-                  <option value="แก้ไขเรียบร้อย">แก้ไขเรียบร้อย</option>
+                  <option value="รอดำเนินการ">ยังไม่แก้ไข</option>
+                  <option value="รอนัดตรวจ">แก้ไขแล้วรอตรวจ</option>
+                  <option value="ผ่านการตรวจสอบ">ผ่านการตรวจสอบ</option>
                   <option value="ไม่มี Defect">ไม่มี Defect</option>
                   <option value="ยังไม่ตรวจ">ยังไม่ตรวจ</option>
                 </select>
@@ -10686,37 +10718,11 @@
               <div class="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  onclick="resetCommonDefectsToDefault()"
-                  class="bg-slate-500 hover:bg-slate-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-slate-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
-                  รีเซ็ตตารางมาตรฐาน
-                </button>
-                <button
-                  type="button"
-                  onclick="openCommonDefectCaptureModal()"
-                  class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  title="เลือกหัวข้อและส่วนที่ต้องการแคปเจอร์รูปภาพ"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
-                  แคปเจอร์ (เลือกหัวข้อ)
-                </button>
-                <button
-                  type="button"
-                  onclick="captureForPowerPoint(this)"
-                  class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-slate-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  title="สร้างภาพสรุปแนวนอน 16:9 สำหรับ PowerPoint"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h18v12H3zM8 20h8M12 16.5V20"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 8h4a2 2 0 010 4H8V8zm0 4v2"/></svg>
-                  PowerPoint แนวนอน
-                </button>
-                <button
-                  type="button"
                   onclick="openAddCommonDefectModal()"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  class="common-defect-add-btn"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
-                  เพิ่มรายการใหม่
+                  เพิ่มแถวใหม่
                 </button>
               </div>
             </div>
@@ -10753,7 +10759,7 @@
           const filtered = defects.filter(item => {
             const matchesSearch = item.name.toLowerCase().includes(searchVal);
             const matchesGroup = groupVal === "ALL" || item.group === groupVal;
-            const matchesStatus = statusVal === "ALL" || item.status === statusVal;
+            const matchesStatus = statusVal === "ALL" || normalizeCommonDefectStatus(item.status) === statusVal;
             return matchesSearch && matchesGroup && matchesStatus;
           });
 
@@ -10767,7 +10773,7 @@
                 <p class="text-xs text-slate-400 mt-1">ลองพิมพ์ค้นหาแบบอื่น ปรับตัวเลือก หรือเริ่มกดปุ่ม "เพิ่มรายการใหม่" ด้านบน</p>
               </div>
             `;
-            setCommonDefectSubTab(window.currentCommonDefectSubTab || "all");
+            setCommonDefectSubTab(window.currentCommonDefectSubTab || "tree");
             return;
           }
 
@@ -10793,27 +10799,23 @@
           });
 
           // Calculate grand totals on filtered set
-          let grandTot = 0;
-          let grandFix = 0;
-          filtered.forEach(it => {
-            grandTot += Number(it.tot) || 0;
-            grandFix += Number(it.fix) || 0;
-          });
-          const grandLeft = grandTot - grandFix;
-          const grandPercent = grandTot > 0 ? (grandFix / grandTot) * 100 : 100;
+          const grandOverview = getCommonDefectOverview(filtered);
+          const grandTot = grandOverview.total;
+          const grandPassed = grandOverview.passed;
+          const grandLeft = grandOverview.left;
+          const grandPending = grandOverview.pending;
+          const grandPercent = grandTot > 0 ? (grandPassed / grandTot) * 100 : 100;
           const grandPercentStr = grandPercent % 1 === 0 ? grandPercent.toFixed(0) : grandPercent.toFixed(1);
 
           window._commonGroupCollapsedState = window._commonGroupCollapsedState || {};
 
-          const { headerColor, subHeaderColor, stickyHeaderColor } = getHeaderColors();
-
           // Build unified table HTML
           let html = `
-            <div id="common-defect-unified-container" class="bg-white border border-slate-300 rounded-xl shadow-sm overflow-hidden mb-8">
-              <div class="px-3.5 py-1.5 bg-slate-100/90 border-b border-slate-300 flex flex-wrap items-center justify-between gap-2 capture-hide">
+            <div id="common-defect-unified-container" class="common-defect-excel-shell mb-8">
+              <div class="common-defect-excel-titlebar capture-hide">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-slate-800">📋 ตารางสรุปรายการความคืบหน้ารายพื้นที่</span>
-                  <span class="text-[11px] text-slate-500 font-medium">(${groupKeys.length} กลุ่ม / ${filtered.length} รายการ)</span>
+                  <span class="common-defect-excel-icon">▦</span>
+                  <div><strong>ตารางสรุป DEFECT ส่วนกลาง</strong><small>${groupKeys.length} กลุ่ม / ${filtered.length} รายการ · คลิกเซลล์เพื่อแก้ไข</small></div>
                 </div>
                 <div class="flex items-center gap-1.5">
                   <button
@@ -10826,17 +10828,17 @@
                   </button>
                 </div>
               </div>
-              <div class="overflow-x-auto">
-                <table id="common-defect-unified-table" class="w-full border-collapse text-left text-xs border border-slate-300">
+              <div class="common-defect-excel-scroll">
+                <table id="common-defect-unified-table" class="common-defect-excel-table">
                   <thead>
-                    <tr class="${headerColor} font-black text-center text-xs">
-                      <th class="py-2 px-3 pl-4 text-left border-r border-slate-300/80 min-w-[240px] ${stickyHeaderColor} font-black">Category / Location</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-24 ${stickyHeaderColor} font-black">จำนวน defect</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-24 ${stickyHeaderColor} font-black">แก้ไขแล้ว</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-20 ${stickyHeaderColor} font-black">คงเหลือ</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-28 ${stickyHeaderColor} font-black">Target Date</th>
-                      <th class="py-2 px-2 text-center border-r border-slate-300/80 w-32 ${stickyHeaderColor} font-black">Status</th>
-                      <th class="py-2 px-1 text-center w-20 ${stickyHeaderColor} font-black capture-hide">Actions</th>
+                    <tr>
+                      <th class="is-location">พื้นที่ / รายการ</th>
+                      <th>DEFECT<br>ทั้งหมด</th>
+                      <th class="is-passed">ผ่าน<br>ตรวจสอบ</th>
+                      <th class="is-left">ยังไม่<br>แก้ไข</th>
+                      <th class="is-pending">แก้ไขแล้ว<br>รอตรวจ</th>
+                      <th>กำหนดเสร็จ</th>
+                      <th>STATUS</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-200">
@@ -10849,19 +10851,17 @@
             groupIdx++;
 
             // Group metrics
-            let groupTot = 0;
-            let groupFix = 0;
-            items.forEach(it => {
-              groupTot += Number(it.tot) || 0;
-              groupFix += Number(it.fix) || 0;
-            });
-            const groupRem = groupTot - groupFix;
+            const groupOverview = getCommonDefectOverview(items);
+            const groupTot = groupOverview.total;
+            const groupPassed = groupOverview.passed;
+            const groupRem = groupOverview.left;
+            const groupPending = groupOverview.pending;
             const isGroupCollapsed = !!window._commonGroupCollapsedState[groupName];
 
             // Group Divider Row with totals
             html += `
-              <tr class="group-header-row group-rows-${groupIdx} bg-slate-100/90 hover:bg-slate-200/60 transition-colors font-black text-slate-900 border-t border-b border-slate-300" data-group-idx="${groupIdx}" data-group-name="${groupName}">
-                <td class="py-1.5 px-3 pl-3 text-left border-r border-slate-300">
+              <tr class="group-header-row group-rows-${groupIdx}" data-group-idx="${groupIdx}" data-group-name="${groupName}">
+                <td class="is-location">
                   <div class="flex items-center justify-between gap-2">
                     <div
                       class="flex items-center gap-1.5 cursor-pointer select-none group"
@@ -10905,32 +10905,19 @@
                     </div>
                   </div>
                 </td>
-                <td class="py-1.5 px-2 text-center font-black text-slate-900 border-r border-slate-300 text-xs">${groupTot}</td>
-                <td class="py-1.5 px-2 text-center font-black text-emerald-600 border-r border-slate-300 text-xs">${groupFix > 0 ? groupFix : ""}</td>
-                <td class="py-1.5 px-2 text-center font-black text-rose-600 border-r border-slate-300 text-xs">${groupRem}</td>
-                <td class="py-1.5 px-2 text-center border-r border-slate-300"></td>
-                <td class="py-1.5 px-2 text-center border-r border-slate-300"></td>
-                <td class="py-1.5 px-1 text-center capture-hide"></td>
+                <td>${groupTot}</td>
+                <td class="cell-passed">${groupPassed || "—"}</td>
+                <td class="cell-left">${groupRem}</td>
+                <td class="cell-pending">${groupPending || "—"}</td>
+                <td></td>
+                <td></td>
               </tr>
             `;
 
             // Sub-item rows inside this group
             items.forEach(item => {
-              const rem = (Number(item.tot) || 0) - (Number(item.fix) || 0);
-
-              // Status badges (clean soft chips without harsh borders around text)
-              let statusClass = "text-slate-600 bg-slate-100";
-              if (item.status === "รอดำเนินการ") {
-                statusClass = "text-rose-700 bg-rose-100/90";
-              } else if (item.status === "รอนัดตรวจ") {
-                statusClass = "text-amber-700 bg-amber-100/90";
-              } else if (item.status === "แก้ไขเรียบร้อย") {
-                statusClass = "text-emerald-700 bg-emerald-100/90";
-              } else if (item.status === "ไม่มี Defect") {
-                statusClass = "text-slate-600 bg-slate-100";
-              } else if (item.status === "ยังไม่ตรวจ") {
-                statusClass = "text-indigo-600 bg-indigo-100/90";
-              }
+              const rowOverview = getCommonDefectOverview([item]);
+              const statusMeta = getCommonDefectStatusMeta(item.status);
 
               // Date display
               let dateDisplay = "";
@@ -10949,36 +10936,19 @@
               const fixDisplay = item.fix > 0 ? item.fix : "";
 
               html += `
-                <tr class="group-subrows-${groupIdx} group-rows-${groupIdx} hover:bg-slate-50/70 transition-colors ${isGroupCollapsed ? 'hidden' : ''}">
-                  <td class="py-1 px-3 pl-7 text-left border-r border-slate-200 text-slate-700 font-medium text-xs">
-                    ${item.name}
+                <tr class="group-subrows-${groupIdx} group-rows-${groupIdx} common-defect-data-row ${isGroupCollapsed ? 'hidden' : ''}" data-item-id="${item.id}">
+                  <td class="is-location defect-editable-cell" onclick="openCommonDefectCellEditor(${item.id}, 'name')" title="คลิกเพื่อแก้ไขรายการนี้">
+                    <span class="excel-row-arrow">›</span>${escapeCommonDefectText(item.name)}
                   </td>
-                  <td class="py-1 px-2 text-center border-r border-slate-200 font-bold text-slate-800 text-xs">${totDisplay}</td>
-                  <td class="py-1 px-2 text-center border-r border-slate-200 font-bold text-emerald-600 text-xs">${fixDisplay}</td>
-                  <td class="py-1 px-2 text-center border-r border-slate-200 text-rose-600 font-bold text-xs">${rem}</td>
-                  <td class="py-1 px-2 text-center border-r border-slate-200 text-slate-500 font-medium text-xs">${dateDisplay}</td>
-                  <td class="py-1 px-2 text-center border-r border-slate-200">
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold leading-none ${statusClass}">
-                      ● ${item.status}
+                  <td class="defect-editable-cell" onclick="openCommonDefectCellEditor(${item.id}, 'total')">${totDisplay || "—"}</td>
+                  <td class="defect-editable-cell cell-passed" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
+                  <td class="defect-editable-cell cell-left" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left}</td>
+                  <td class="defect-editable-cell cell-pending" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
+                  <td class="defect-editable-cell cell-date" onclick="openCommonDefectCellEditor(${item.id}, 'date')">${dateDisplay || "—"}</td>
+                  <td class="defect-editable-cell" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
+                    <span class="paper-status-badge ${statusMeta.className}">
+                      <b>${statusMeta.icon}</b>${statusMeta.label}
                     </span>
-                  </td>
-                  <td class="py-1 px-1 text-center capture-hide">
-                    <div class="flex items-center justify-center gap-1">
-                      <button
-                        onclick="openEditCommonDefectModal(${item.id})"
-                        class="p-0.5 px-1 hover:bg-indigo-100 text-indigo-600 rounded transition-colors text-[11px] font-bold cursor-pointer"
-                        title="แก้ไขข้อมูลย่อย"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onclick="deleteCommonDefectRowDirectly(${item.id})"
-                        class="p-0.5 px-1 hover:bg-rose-100 text-rose-600 rounded transition-colors text-[11px] font-bold cursor-pointer"
-                        title="ลบข้อมูลย่อย"
-                      >
-                        🗑️
-                      </button>
-                    </div>
                   </td>
                 </tr>
               `;
@@ -10989,15 +10959,13 @@
           html += `
                   </tbody>
                   <tfoot class="border-t-2 border-slate-400">
-                    <tr id="common-defect-grand-total-row" class="bg-slate-200/90 text-slate-900 font-black text-xs">
-                      <td class="py-2 px-3 pl-4 text-left border-r border-slate-300 font-black text-slate-900 bg-slate-200">Grand Total (รวมทั้งหมด):</td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-slate-900 bg-slate-200">${grandTot}</td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-emerald-700 bg-slate-200">${grandFix}</td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-rose-700 bg-slate-200">${grandLeft}</td>
-                      <td colspan="2" class="py-2 px-2 text-center border-r border-slate-300 font-black text-xs bg-slate-200">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-black bg-indigo-100 text-indigo-800 border border-indigo-300 shadow-sm leading-none">สำเร็จ ${grandPercentStr}%</span>
-                      </td>
-                      <td class="py-2 px-1 text-center bg-slate-200 capture-hide"></td>
+                    <tr id="common-defect-grand-total-row">
+                      <td class="is-location">รวมทั้งหมด</td>
+                      <td>${grandTot}</td>
+                      <td class="cell-passed">${grandPassed}</td>
+                      <td class="cell-left">${grandLeft}</td>
+                      <td class="cell-pending">${grandPending}</td>
+                      <td colspan="2"><span class="excel-total-rate">ผ่านตรวจ ${grandPercentStr}%</span></td>
                     </tr>
                   </tfoot>
                 </table>
@@ -11006,7 +10974,7 @@
           `;
 
           container.innerHTML = summaryHTML + html;
-          setCommonDefectSubTab(window.currentCommonDefectSubTab || "all");
+          setCommonDefectSubTab(window.currentCommonDefectSubTab || "tree");
         };
 
         window.toggleCommonGroupCollapse = function(groupIdx, groupName) {
@@ -11060,7 +11028,7 @@
           document.getElementById("edit-defect-fix").value = defect.fix;
           document.getElementById("edit-defect-rem-val").textContent = (Number(defect.tot) || 0) - (Number(defect.fix) || 0);
           document.getElementById("edit-defect-target-date").value = defect.target || "";
-          document.getElementById("edit-defect-status").value = defect.status;
+          document.getElementById("edit-defect-status").value = normalizeCommonDefectStatus(defect.status);
 
           // Set up group selector
           const select = document.getElementById("edit-defect-group-select");
@@ -11081,6 +11049,175 @@
           document.getElementById("edit-defect-delete-btn").classList.remove("hidden");
 
           openModal("commonDefectEditModal");
+        };
+
+        function ensureCommonDefectQuickEditModal() {
+          let modal = document.getElementById("common-defect-quick-modal");
+          if (modal) return modal;
+          modal = document.createElement("div");
+          modal.id = "common-defect-quick-modal";
+          modal.className = "common-defect-quick-modal";
+          modal.hidden = true;
+          modal.innerHTML = `
+            <section class="common-defect-quick-card" role="dialog" aria-modal="true" aria-labelledby="common-defect-quick-title">
+              <header class="common-defect-quick-header">
+                <span id="common-defect-quick-icon" class="common-defect-quick-icon">★</span>
+                <div>
+                  <small>QUICK EDIT</small>
+                  <h3 id="common-defect-quick-title">แก้ไขข้อมูล</h3>
+                </div>
+                <button type="button" class="common-defect-quick-close" onclick="closeCommonDefectQuickEdit()" aria-label="ปิด">×</button>
+              </header>
+              <form id="common-defect-quick-form" class="common-defect-quick-form" onsubmit="saveCommonDefectQuickEdit(event)">
+                <div id="common-defect-quick-context" class="common-defect-quick-context"></div>
+                <div id="common-defect-quick-field"></div>
+                <p id="common-defect-quick-hint" class="common-defect-quick-hint"></p>
+                <footer class="common-defect-quick-actions">
+                  <button type="button" class="paper-quick-btn is-cancel" onclick="closeCommonDefectQuickEdit()">ยกเลิก</button>
+                  <button type="submit" class="paper-quick-btn is-save">★ บันทึก</button>
+                </footer>
+              </form>
+            </section>
+          `;
+          modal.addEventListener("mousedown", (event) => {
+            if (event.target === modal) closeCommonDefectQuickEdit();
+          });
+          document.body.appendChild(modal);
+          return modal;
+        }
+
+        window.closeCommonDefectQuickEdit = function() {
+          const modal = document.getElementById("common-defect-quick-modal");
+          if (modal) modal.hidden = true;
+          document.body.classList.remove("quick-defect-modal-open");
+          window._commonDefectQuickEdit = null;
+        };
+
+        window.openCommonDefectCellEditor = function(id, field) {
+          const defect = (projectData.commonDefects || []).find((item) => item.id === id);
+          if (!defect) return;
+
+          const modal = ensureCommonDefectQuickEditModal();
+          const title = document.getElementById("common-defect-quick-title");
+          const icon = document.getElementById("common-defect-quick-icon");
+          const context = document.getElementById("common-defect-quick-context");
+          const fieldWrap = document.getElementById("common-defect-quick-field");
+          const hint = document.getElementById("common-defect-quick-hint");
+          const overview = getCommonDefectOverview([defect]);
+          const statusMeta = getCommonDefectStatusMeta(defect.status);
+          const config = {
+            name: { title: "แก้ไขชื่อรายการ", icon: "✎", label: "สถานที่ / รายการ", hint: "แก้เฉพาะชื่อของแถวนี้" },
+            total: { title: "กรอกจำนวน DEFECT", icon: "#", label: "จำนวน DEFECT ทั้งหมด", hint: "จำนวนรวมต้องไม่น้อยกว่าจำนวนที่ดำเนินการแล้ว" },
+            fixed: { title: "กรอกจำนวนผ่านตรวจ", icon: "★", label: "จำนวนที่ผ่านการตรวจสอบ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น ผ่านการตรวจสอบ" },
+            left: { title: "กรอกจำนวนยังไม่แก้ไข", icon: "×", label: "จำนวนที่ยังไม่แก้ไข", hint: "ส่วนที่ดำเนินการแล้วจะย้ายไป แก้ไขแล้วรอตรวจ โดยอัตโนมัติ" },
+            pending: { title: "กรอกจำนวนรอตรวจ", icon: "⏱", label: "จำนวนที่แก้ไขแล้วรอตรวจ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น แก้ไขแล้วรอตรวจ" },
+            date: { title: "กำหนดวันที่", icon: "▣", label: "กำหนดเสร็จ / วันตรวจ", hint: "เลือกวันที่สำหรับรายการนี้" },
+            status: { title: "เปลี่ยนสถานะ", icon: "旗", label: "สถานะปัจจุบัน", hint: "จำนวนจะถูกจัดเข้าช่องสีตามสถานะที่เลือก" }
+          };
+          const selected = config[field] || config.name;
+          window._commonDefectQuickEdit = { id, field: config[field] ? field : "name" };
+
+          title.textContent = selected.title;
+          icon.textContent = selected.icon;
+          context.innerHTML = `<span>${getCommonAreaGroupIcon(defect.group)}</span><strong>${escapeCommonDefectText(defect.name)}</strong><small>${escapeCommonDefectText(defect.group)}</small>`;
+          hint.textContent = selected.hint;
+
+          let controlHTML = "";
+          if (field === "name") {
+            controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input" type="text" value="${escapeCommonDefectText(defect.name)}" required>`;
+          } else if (field === "date") {
+            controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input is-date" type="date" value="${defect.target || ""}">`;
+          } else if (field === "status") {
+            controlHTML = `
+              <label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label>
+              <select id="common-defect-quick-input" class="paper-quick-input paper-quick-select">
+                <option value="รอดำเนินการ" ${statusMeta.normalized === "รอดำเนินการ" ? "selected" : ""}>🍄 ยังไม่แก้ไข</option>
+                <option value="รอนัดตรวจ" ${statusMeta.normalized === "รอนัดตรวจ" ? "selected" : ""}>⏱ แก้ไขแล้วรอตรวจ</option>
+                <option value="ผ่านการตรวจสอบ" ${statusMeta.normalized === "ผ่านการตรวจสอบ" ? "selected" : ""}>★ ผ่านการตรวจสอบ</option>
+                <option value="ไม่มี Defect" ${statusMeta.normalized === "ไม่มี Defect" ? "selected" : ""}>— ไม่มี Defect</option>
+                <option value="ยังไม่ตรวจ" ${statusMeta.normalized === "ยังไม่ตรวจ" ? "selected" : ""}>? ยังไม่ตรวจ</option>
+              </select>`;
+          } else {
+            const numericValue = field === "total"
+              ? Number(defect.tot) || 0
+              : field === "fixed"
+                ? overview.passed
+                : field === "pending"
+                  ? overview.pending
+                  : overview.left;
+            const numericMax = field === "total" ? 999999 : Math.max(0, Number(defect.tot) || 0);
+            controlHTML = `
+              <label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label>
+              <div class="paper-quick-number-wrap">
+                <button type="button" onclick="stepCommonDefectQuickNumber(-1)" aria-label="ลดจำนวน">−</button>
+                <input id="common-defect-quick-input" class="paper-quick-input is-number" type="number" min="0" max="${numericMax}" step="1" value="${numericValue}" required>
+                <button type="button" onclick="stepCommonDefectQuickNumber(1)" aria-label="เพิ่มจำนวน">+</button>
+              </div>
+              <div class="paper-quick-total-note">DEFECT ทั้งหมด <strong>${Number(defect.tot) || 0}</strong> ข้อ</div>`;
+          }
+          fieldWrap.innerHTML = controlHTML;
+          modal.hidden = false;
+          document.body.classList.add("quick-defect-modal-open");
+          window.setTimeout(() => {
+            const input = document.getElementById("common-defect-quick-input");
+            if (!input) return;
+            input.focus();
+            if (input.type !== "date" && input.tagName !== "SELECT" && typeof input.select === "function") input.select();
+          }, 80);
+        };
+
+        window.stepCommonDefectQuickNumber = function(delta) {
+          const input = document.getElementById("common-defect-quick-input");
+          if (!input || input.type !== "number") return;
+          const min = Number(input.min || 0);
+          const max = Number(input.max || Number.MAX_SAFE_INTEGER);
+          input.value = String(Math.min(max, Math.max(min, (Number(input.value) || 0) + delta)));
+          input.focus();
+        };
+
+        window.saveCommonDefectQuickEdit = function(event) {
+          if (event) event.preventDefault();
+          const editing = window._commonDefectQuickEdit;
+          const input = document.getElementById("common-defect-quick-input");
+          const defect = editing && (projectData.commonDefects || []).find((item) => item.id === editing.id);
+          if (!editing || !input || !defect) return;
+
+          const total = Math.max(0, Number(defect.tot) || 0);
+          if (editing.field === "name") {
+            const value = input.value.trim();
+            if (!value) return;
+            defect.name = value;
+          } else if (editing.field === "date") {
+            defect.target = input.value;
+          } else if (editing.field === "status") {
+            defect.status = input.value;
+          } else {
+            const value = Math.max(0, Math.round(Number(input.value) || 0));
+            if (editing.field !== "total" && value > total) {
+              showToast("จำนวนต้องไม่เกิน DEFECT ทั้งหมด", 3000);
+              input.focus();
+              return;
+            }
+            if (editing.field === "total") {
+              defect.tot = value;
+              defect.fix = Math.min(value, Math.max(0, Number(defect.fix) || 0));
+            } else if (editing.field === "fixed") {
+              defect.fix = value;
+              defect.status = value > 0 ? "ผ่านการตรวจสอบ" : (total > 0 ? "รอดำเนินการ" : defect.status);
+            } else if (editing.field === "pending") {
+              defect.fix = value;
+              defect.status = value > 0 ? "รอนัดตรวจ" : (total > 0 ? "รอดำเนินการ" : defect.status);
+            } else if (editing.field === "left") {
+              defect.fix = Math.max(0, total - value);
+              defect.status = value < total ? "รอนัดตรวจ" : "รอดำเนินการ";
+            }
+          }
+
+          defect.rem = Math.max(0, (Number(defect.tot) || 0) - (Number(defect.fix) || 0));
+          saveProjectDataToDB();
+          closeCommonDefectQuickEdit();
+          renderCommonDefectTable();
+          showToast("บันทึกข้อมูลเรียบร้อย!");
         };
 
         window.resetCommonDefectsToDefault = function() {
@@ -11279,7 +11416,7 @@
           let fix = Number(document.getElementById("edit-defect-fix").value) || 0;
 
           if (fix > tot) {
-            showToast("จำนวนที่แก้ไขเสร็จแล้วห้ามเกินจำนวน DEFECT ทั้งหมด!", 3000);
+            showToast("จำนวนที่ดำเนินการแล้วห้ามเกินจำนวน DEFECT ทั้งหมด!", 3000);
             return;
           }
 
@@ -19505,26 +19642,28 @@
               if (!item) return;
               const tot = Math.max(0, Number(item.tot) || 0);
               const fix = Math.min(tot, Math.max(0, Number(item.fix) || 0));
-              const rem = Math.max(0, tot - fix);
-              const isPendingInspect = item.status === "รอนัดตรวจ" || item.status === "รอคะแนน";
+              const normalizedStatus = normalizeCommonDefectStatus(item.status);
+              const isPendingInspect = normalizedStatus === "รอนัดตรวจ";
+              const isPassed = normalizedStatus === "ผ่านการตรวจสอบ";
+              const passed = isPassed ? fix : 0;
+              const pendingInspect = isPendingInspect ? fix : 0;
+              const rem = Math.max(0, tot - passed - pendingInspect);
 
-              if (item.status !== "ยังไม่ตรวจ") inspectedCount++;
-              if (item.status === "ไม่มี Defect" || (tot === 0 && item.status !== "ยังไม่ตรวจ")) noDefectCount++;
+              if (normalizedStatus !== "ยังไม่ตรวจ") inspectedCount++;
+              if (normalizedStatus === "ไม่มี Defect" || (tot === 0 && normalizedStatus !== "ยังไม่ตรวจ")) noDefectCount++;
 
               groupTot += tot;
-              groupFix += fix;
-              if (isPendingInspect) {
-                groupPendingInspect += (rem > 0 ? rem : fix);
-              }
+              groupFix += passed;
+              groupPendingInspect += pendingInspect;
               groupRem += rem;
 
               itemBreakdown.push({
                 name: item.name || "",
                 tot,
-                fix,
+                fix: passed,
                 rem,
                 target: item.target || "",
-                status: item.status || "ยังไม่ตรวจ"
+                status: getCommonDefectStatusMeta(normalizedStatus).label
               });
             });
 
@@ -19539,11 +19678,11 @@
             if (groupTot === 0 && inspectedCount > 0) {
               statusText = "ไร้ข้อบกพร่อง";
             } else if (resolutionRate >= 100) {
-              statusText = "แก้ไขครบ 100%";
+              statusText = "ผ่านตรวจครบ 100%";
             } else if (groupPendingInspect > 0) {
-              statusText = "รอนัดตรวจซ้ำ";
+              statusText = "แก้ไขแล้วรอตรวจ";
             } else if (groupFix > 0) {
-              statusText = "อยู่ระหว่างแก้ไข";
+              statusText = "ผ่านการตรวจสอบบางส่วน";
             } else if (groupTot > 0) {
               statusText = "รอเข้าแก้ไข";
             }

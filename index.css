@@ -1622,7 +1622,109 @@ th.qc-current-week {
 
 /* Common-area defect overview: a presentation-ready hierarchy that keeps
    the total, status totals, and affected areas readable in one glance. */
+.common-defect-page-switcher {
+  width: 100%;
+  margin: 0 0 1.15rem;
+  padding: 0.75rem 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 2px solid #0f172a;
+  border-radius: 1rem;
+  background: #fffdf5;
+  box-shadow: 0 4px 0 #0f172a;
+}
+
+.common-defect-page-switcher-label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #0f172a;
+}
+
+.common-defect-page-switcher-label > span {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 2px solid #0f172a;
+  border-radius: 50%;
+  background: #fde047;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.common-defect-page-switcher-label strong,
+.common-defect-page-switcher-label small {
+  display: block;
+}
+
+.common-defect-page-switcher-label strong {
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.common-defect-page-switcher-label small {
+  margin-top: 0.05rem;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.common-defect-view-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(10rem, 1fr));
+  gap: 0.55rem;
+}
+
+.common-defect-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.65rem;
+  padding: 0.45rem 1rem;
+  border: 2px solid #0f172a;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #334155;
+  box-shadow: 2px 2px 0 #0f172a;
+  font-size: 0.8rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.common-defect-view-btn:hover {
+  transform: translateY(-1px);
+  background: #eff6ff;
+  box-shadow: 3px 3px 0 #0f172a;
+}
+
+.common-defect-view-btn.is-active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: inset 0 -3px 0 #1e40af, 2px 2px 0 #0f172a;
+}
+
+.common-defect-table-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.85rem;
+  background: #ffffff;
+}
+
 .common-defect-summary-board {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   margin-bottom: 1.75rem;
   padding: 1.5rem;
   border: 2.5px solid #0f172a;
@@ -1632,6 +1734,7 @@ th.qc-current-week {
   background-size: 24px 24px;
   box-shadow: 0 6px 0 #0f172a;
   position: relative;
+  overflow: hidden;
 }
 
 .common-defect-summary-intro {
@@ -1711,6 +1814,8 @@ th.qc-current-week {
 }
 
 .common-defect-summary-flow {
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -1793,6 +1898,8 @@ th.qc-current-week {
 
 /* Tree Diagram Connector Lines - Bold 3.5px Paper Mario black ink connector */
 .common-defect-tree-connector {
+  width: 100%;
+  min-width: 0;
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1858,6 +1965,8 @@ th.qc-current-week {
 }
 
 .common-defect-summary-branches {
+  width: 100%;
+  min-width: 0;
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1961,12 +2070,14 @@ th.qc-current-week {
 }
 
 .common-defect-area-list {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
   padding: 0.75rem;
-  max-height: 26rem;
+  max-height: min(48vh, 30rem);
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
 }
 
@@ -1982,6 +2093,14 @@ th.qc-current-week {
 
 .common-defect-group-item[open] {
   box-shadow: 2.5px 3px 0 #0f172a;
+}
+
+.common-defect-group-item[open] .common-defect-floors-dropdown {
+  max-height: 10.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #f1f5f9;
 }
 
 .common-defect-group-summary {
@@ -2170,7 +2289,612 @@ th.qc-current-week {
   line-height: 1;
 }
 
+/* Excel-like editable summary. Grid lines stay crisp while the status chips
+   keep the playful paper-cut visual language used by the diagram. */
+.common-defect-excel-shell {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 2px solid #0f172a;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  box-shadow: 0 4px 0 #0f172a;
+}
+
+.common-defect-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border: 2px solid #0f172a;
+  border-radius: 0.65rem;
+  background: #4f46e5;
+  color: #ffffff;
+  box-shadow: 2px 2px 0 #0f172a;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.common-defect-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 3px 3px 0 #0f172a;
+}
+
+.common-defect-excel-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.85rem;
+  border-bottom: 2px solid #0f172a;
+  background: #e8eef7;
+}
+
+.common-defect-excel-titlebar > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.common-defect-excel-titlebar strong,
+.common-defect-excel-titlebar small {
+  display: block;
+}
+
+.common-defect-excel-titlebar strong {
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.common-defect-excel-titlebar small {
+  margin-top: 0.08rem;
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+.common-defect-excel-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #0f172a;
+  border-radius: 0.4rem;
+  background: #22c55e;
+  color: #ffffff;
+  box-shadow: 2px 2px 0 #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.common-defect-excel-scroll {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+.common-defect-excel-table {
+  width: 100%;
+  min-width: 930px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  color: #0f172a;
+  font-size: 0.72rem;
+}
+
+.common-defect-excel-table th,
+.common-defect-excel-table td {
+  height: 2.3rem;
+  padding: 0.42rem 0.55rem;
+  border-right: 1px solid #64748b;
+  border-bottom: 1px solid #94a3b8;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.common-defect-excel-table th:last-child,
+.common-defect-excel-table td:last-child {
+  border-right: 0;
+}
+
+.common-defect-excel-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 3rem;
+  background: #26344b;
+  color: #ffffff;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+.common-defect-excel-table thead th.is-passed { background: #087f5b; }
+.common-defect-excel-table thead th.is-left { background: #c92a2a; }
+.common-defect-excel-table thead th.is-pending { background: #d97706; }
+
+.common-defect-excel-table .is-location {
+  width: 36%;
+  text-align: left;
+}
+
+.common-defect-excel-table th:not(.is-location):nth-child(2) { width: 9%; }
+.common-defect-excel-table th:not(.is-location):nth-child(3),
+.common-defect-excel-table th:not(.is-location):nth-child(4),
+.common-defect-excel-table th:not(.is-location):nth-child(5) { width: 10%; }
+.common-defect-excel-table th:nth-child(6) { width: 12%; }
+.common-defect-excel-table th:nth-child(7) { width: 13%; }
+
+.common-defect-excel-table .group-header-row td {
+  background: #dbe4ef;
+  color: #0f172a;
+  font-weight: 900;
+  border-top: 2px solid #64748b;
+}
+
+.common-defect-excel-table .common-defect-data-row:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.common-defect-excel-table .cell-passed { color: #047857; font-weight: 900; }
+.common-defect-excel-table .cell-left { color: #dc2626; font-weight: 900; }
+.common-defect-excel-table .cell-pending { color: #b45309; font-weight: 900; }
+.common-defect-excel-table .cell-date { color: #475569; white-space: nowrap; }
+
+.defect-editable-cell {
+  position: relative;
+  cursor: pointer;
+  transition: background 0.1s ease, box-shadow 0.1s ease;
+}
+
+.common-defect-excel-table .defect-editable-cell:hover {
+  background: #fff2a8 !important;
+  box-shadow: inset 0 0 0 2px #2563eb;
+}
+
+.excel-row-arrow {
+  display: inline-block;
+  margin-right: 0.45rem;
+  color: #2563eb;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.paper-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  max-width: 100%;
+  padding: 0.22rem 0.5rem;
+  border: 1.5px solid #0f172a;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #334155;
+  box-shadow: 1.5px 1.5px 0 #0f172a;
+  font-size: 0.64rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.qc-handover-week-cell.is-readonly {
+  cursor: default;
+}
+
+.qc-handover-week-cell.is-editable {
+  padding: 3px !important;
+  overflow: visible;
+  background-color: #fff7ed !important;
+}
+
+/* Only the live week behaves like the raised score cards in the QC summary. */
+.qc-current-week-edit-btn {
+  position: relative;
+  z-index: 2;
+  width: calc(100% - 2px);
+  min-width: 2.75rem;
+  height: 31px;
+  margin: 0 1px 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #0f172a;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.9),
+    0 4px 0 #0f172a;
+  font-family: "Montserrat", "Prompt", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s ease, filter 0.14s ease;
+}
+
+.qc-current-week-edit-btn.is-empty {
+  width: 100%;
+  height: 100%;
+  min-height: 32px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.qc-current-week-edit-btn.is-empty:hover {
+  background: rgba(254, 215, 170, 0.35) !important;
+  box-shadow: inset 0 0 0 1px #fdba74 !important;
+  transform: none !important;
+}
+
+.qc-current-week-edit-btn.is-empty:active {
+  background: rgba(253, 186, 116, 0.5) !important;
+  box-shadow: inset 0 0 0 2px #fb923c !important;
+  transform: none !important;
+}
+
+.qc-current-week-edit-btn:hover {
+  z-index: 5;
+  transform: translateY(-2px) rotate(-1deg) scale(1.04);
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    0 6px 0 #0f172a,
+    0 9px 8px rgba(15, 23, 42, 0.2);
+  filter: saturate(1.08);
+}
+
+.qc-current-week-edit-btn:active {
+  transform: translateY(3px) scale(0.97);
+  box-shadow: inset 0 0 0 1px #ffffff, 0 1px 0 #0f172a;
+  transition-duration: 0.05s;
+}
+
+.qc-current-week-edit-btn:focus-visible {
+  outline: 3px solid #facc15;
+  outline-offset: 2px;
+}
+
+.is-line-capturing .qc-current-week-edit-btn {
+  margin-bottom: 0;
+  border-width: 1px;
+  box-shadow: none;
+  transform: none;
+}
+
+.paper-status-badge b {
+  display: inline-grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.62rem;
+}
+
+.paper-status-badge.is-passed { background: #dcfce7; color: #047857; }
+.paper-status-badge.is-left { background: #ffe4e6; color: #dc2626; }
+.paper-status-badge.is-pending { background: #fef3c7; color: #b45309; }
+.paper-status-badge.is-unchecked { background: #e0e7ff; color: #4338ca; }
+.paper-status-badge.is-clear { background: #f1f5f9; color: #475569; }
+
+.common-defect-excel-table tfoot td {
+  height: 2.7rem;
+  border-top: 3px double #0f172a;
+  border-bottom: 0;
+  background: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.excel-total-rate {
+  display: inline-flex;
+  padding: 0.22rem 0.6rem;
+  border: 1.5px solid #0f172a;
+  border-radius: 9999px;
+  background: #fde047;
+  box-shadow: 1.5px 1.5px 0 #0f172a;
+  font-weight: 900;
+}
+
+body.quick-defect-modal-open {
+  overflow: hidden;
+}
+
+.common-defect-quick-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(5px);
+}
+
+.common-defect-quick-modal[hidden] {
+  display: none !important;
+}
+
+.common-defect-quick-card {
+  position: relative;
+  width: min(27rem, 100%);
+  max-height: calc(100vh - 2.5rem);
+  overflow: hidden auto;
+  border: 3px solid #0f172a;
+  border-radius: 1.15rem;
+  background-color: #fffdf5;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 18px 18px;
+  box-shadow: 0 8px 0 #0f172a, 0 18px 45px rgba(15, 23, 42, 0.35);
+  animation: common-defect-card-pop 0.18s cubic-bezier(0.2, 0.9, 0.25, 1.2);
+}
+
+.common-defect-quick-card::before {
+  content: "";
+  position: absolute;
+  inset: 0.65rem;
+  z-index: -1;
+  border: 1px dashed rgba(100, 116, 139, 0.35);
+  border-radius: 0.75rem;
+  pointer-events: none;
+}
+
+@keyframes common-defect-card-pop {
+  from { opacity: 0; transform: translateY(10px) scale(0.94) rotate(-0.5deg); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+
+.common-defect-quick-header {
+  position: relative;
+  min-height: 5.5rem;
+  padding: 1rem 3.25rem 0.9rem 4.8rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid #0f172a;
+  background: #fde047;
+}
+
+.common-defect-quick-header small {
+  display: block;
+  color: #7c2d12;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.common-defect-quick-header h3 {
+  margin: 0.1rem 0 0;
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.common-defect-quick-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  width: 2.9rem;
+  height: 2.9rem;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%) rotate(-4deg);
+  border: 2.5px solid #0f172a;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 3px 3px 0 #0f172a;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.common-defect-quick-close {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border: 2px solid #0f172a;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 1.5px 1.5px 0 #0f172a;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.common-defect-quick-form {
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.common-defect-quick-context {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.55rem 0.7rem;
+  border: 2px solid #0f172a;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.common-defect-quick-context strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #0f172a;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.common-defect-quick-context small {
+  padding: 0.12rem 0.4rem;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 0.58rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.paper-quick-label {
+  display: block;
+  margin: 0 0 0.45rem;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.paper-quick-input {
+  width: 100%;
+  height: 3.3rem;
+  padding: 0 0.9rem;
+  border: 2.5px solid #0f172a;
+  border-radius: 0.7rem;
+  outline: none;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: inset 0 -3px 0 #e2e8f0, 2px 2px 0 #0f172a;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.paper-quick-input:focus {
+  border-color: #2563eb;
+  box-shadow: inset 0 -3px 0 #bfdbfe, 3px 3px 0 #0f172a;
+}
+
+.paper-quick-select {
+  cursor: pointer;
+}
+
+.paper-quick-number-wrap {
+  display: grid;
+  grid-template-columns: 3.3rem minmax(0, 1fr) 3.3rem;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.paper-quick-number-wrap button {
+  width: 3.3rem;
+  height: 3.3rem;
+  border: 2.5px solid #0f172a;
+  border-radius: 0.7rem;
+  background: #60a5fa;
+  color: #0f172a;
+  box-shadow: 2px 2px 0 #0f172a;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.45rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.paper-quick-number-wrap button:last-child {
+  background: #4ade80;
+}
+
+.paper-quick-input.is-number {
+  padding: 0;
+  text-align: center;
+  font-family: "Montserrat", "Prompt", sans-serif;
+  font-size: 1.45rem;
+}
+
+.paper-quick-input.is-number::-webkit-inner-spin-button,
+.paper-quick-input.is-number::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.paper-quick-total-note {
+  margin-top: 0.65rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.paper-quick-total-note strong {
+  color: #0f172a;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.common-defect-quick-hint {
+  min-height: 1rem;
+  margin: 0.75rem 0 0;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.common-defect-quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 2px dashed #cbd5e1;
+}
+
+.paper-quick-btn {
+  min-height: 2.75rem;
+  border: 2px solid #0f172a;
+  border-radius: 0.7rem;
+  box-shadow: 2px 2px 0 #0f172a;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.paper-quick-btn.is-cancel {
+  background: #ffffff;
+  color: #475569;
+}
+
+.paper-quick-btn.is-save {
+  background: #22c55e;
+  color: #0f172a;
+}
+
+.paper-quick-btn:active,
+.paper-quick-number-wrap button:active,
+.common-defect-quick-close:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 #0f172a;
+}
+
 @media (max-width: 900px) {
+  .common-defect-page-switcher {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .common-defect-view-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .common-defect-summary-intro {
     align-items: start;
     flex-direction: column;
