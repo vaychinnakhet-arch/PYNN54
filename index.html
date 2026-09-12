@@ -11211,12 +11211,63 @@
           return defaults;
         };
 
+        window.renderCommonDefectColBar = function() {
+          const bar = document.getElementById("common-defect-col-bar-container");
+          if (!bar) return;
+
+          const visibleCols = typeof window.getCommonDefectVisibleCols === "function" ? window.getCommonDefectVisibleCols() : {
+            location: true, assignee: true, total: true, passed: true, left: true, pending: true, date: true, inspectDate: true, status: true
+          };
+          const isCol = (key) => visibleCols[key] !== false;
+
+          bar.innerHTML = `
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <div class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 border border-slate-300 rounded-lg font-bold text-xs sm:text-sm mr-1 shadow-2xs">
+                <span class="tracking-tight">แสดงคอลัมน์:</span>
+              </div>
+              <button type="button" onclick="toggleCommonDefectCol('location')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('location') ? 'bg-slate-100 text-slate-800 border-slate-300 shadow-xs hover:bg-slate-200' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('location') ? '✓ ' : '+ '}พื้นที่/รายการ
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('assignee')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('assignee') ? 'bg-indigo-50 text-indigo-900 border-indigo-200 shadow-xs hover:bg-indigo-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('assignee') ? '✓ ' : '+ '}ผู้รับผิดชอบ
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('total')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('total') ? 'bg-blue-50 text-blue-900 border-blue-200 shadow-xs hover:bg-blue-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('total') ? '✓ ' : '+ '}ทั้งหมด
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('passed')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('passed') ? 'bg-emerald-50 text-emerald-900 border-emerald-300 shadow-xs hover:bg-emerald-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('passed') ? '✓ ' : '+ '}ผ่าน
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('left')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('left') ? 'bg-rose-50 text-rose-900 border-rose-300 shadow-xs hover:bg-rose-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('left') ? '✓ ' : '+ '}ยังไม่แก้
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('pending')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('pending') ? 'bg-amber-50 text-amber-900 border-amber-300 shadow-xs hover:bg-amber-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('pending') ? '✓ ' : '+ '}รอตรวจ
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('inspectDate') ? 'bg-sky-50 text-sky-900 border-sky-300 shadow-xs hover:bg-sky-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('inspectDate') ? '✓ ' : '+ '}กำหนดตรวจ
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('date')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('date') ? 'bg-teal-50 text-teal-900 border-teal-300 shadow-xs hover:bg-teal-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('date') ? '✓ ' : '+ '}กำหนดเสร็จ
+              </button>
+              <button type="button" onclick="toggleCommonDefectCol('status')" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold border transition-all cursor-pointer ${isCol('status') ? 'bg-violet-50 text-violet-900 border-violet-300 shadow-xs hover:bg-violet-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                ${isCol('status') ? '✓ ' : '+ '}สถานะ
+              </button>
+            </div>
+            <button type="button" onclick="resetCommonDefectCols()" class="px-3 py-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg text-xs sm:text-sm font-bold shadow-2xs hover:border-slate-400 transition-all cursor-pointer inline-flex items-center gap-1 shrink-0" title="เปิดแสดงคอลัมน์ทั้งหมด">
+              <span>เปิดทั้งหมด</span>
+            </button>
+          `;
+        };
+
         window.toggleCommonDefectCol = function(colKey) {
           const cols = window.getCommonDefectVisibleCols();
           cols[colKey] = !cols[colKey];
           try {
             localStorage.setItem("common_defect_visible_cols", JSON.stringify(cols));
           } catch (e) {}
+          if (typeof renderCommonDefectColBar === "function") {
+            renderCommonDefectColBar();
+          }
           if (typeof filterDefectList === "function") {
             filterDefectList();
           } else if (typeof renderCommonDefectTable === "function") {
@@ -11228,6 +11279,9 @@
           try {
             localStorage.removeItem("common_defect_visible_cols");
           } catch (e) {}
+          if (typeof renderCommonDefectColBar === "function") {
+            renderCommonDefectColBar();
+          }
           if (typeof filterDefectList === "function") {
             filterDefectList();
           } else if (typeof renderCommonDefectTable === "function") {
@@ -11374,65 +11428,71 @@
             </nav>
           `;
 
-          // Filter / Action header
+          // Filter / Action header + Quick Column Toggle Bar
           const actionsHTML = `
             <div id="common-defect-table-tools" class="common-defect-table-tools ${window.currentCommonDefectSubTab === 'table' ? '' : 'hidden'}">
-              <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <div class="relative w-full sm:w-64">
-                  <input
-                    id="defect-search-input"
-                    type="text"
-                    placeholder="ค้นหาตามรายการ/สถานที่..."
-                    class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
-                    oninput="filterDefectList()"
-                  />
-                  <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <div class="flex flex-wrap items-center justify-between gap-3 w-full">
+                <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                  <div class="relative w-full sm:w-64">
+                    <input
+                      id="defect-search-input"
+                      type="text"
+                      placeholder="ค้นหาตามรายการ/สถานที่..."
+                      class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                      oninput="filterDefectList()"
+                    />
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  </div>
+                  <select
+                    id="defect-filter-group"
+                    class="p-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700 bg-white"
+                    onchange="filterDefectList()"
+                  >
+                    <option value="ALL">กลุ่มพื้นที่ทั้งหมด</option>
+                    <option value="ดาดฟ้า">ดาดฟ้า</option>
+                    <option value="โถงทางเดิน">โถงทางเดิน</option>
+                    <option value="ห้องขยะประจำชั้น">ห้องขยะประจำชั้น</option>
+                    <option value="ห้องไฟฟ้าประจำชั้น">ห้องไฟฟ้าประจำชั้น</option>
+                    <option value="บันได">บันได</option>
+                    <option value="ห้องเครื่อง/ห้องส่วนกลาง">ห้องเครื่อง/ห้องส่วนกลาง</option>
+                    <option value="รูปด้านอาคาร">รูปด้านอาคาร</option>
+                  </select>
+                  <select
+                    id="defect-filter-status"
+                    class="p-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700 bg-white"
+                    onchange="filterDefectList()"
+                  >
+                    <option value="ALL">สถานะทั้งหมด</option>
+                    <option value="รอดำเนินการ">ยังไม่แก้ไข</option>
+                    <option value="รอนัดตรวจ">แก้ไขแล้วรอตรวจ</option>
+                    <option value="ผ่านการตรวจสอบ">ผ่านการตรวจสอบ</option>
+                    <option value="ไม่มี Defect">ไม่มี Defect</option>
+                    <option value="ยังไม่ตรวจ">ยังไม่ตรวจ</option>
+                  </select>
                 </div>
-                <select
-                  id="defect-filter-group"
-                  class="p-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700 bg-white"
-                  onchange="filterDefectList()"
-                >
-                  <option value="ALL">กลุ่มพื้นที่ทั้งหมด</option>
-                  <option value="ดาดฟ้า">ดาดฟ้า</option>
-                  <option value="โถงทางเดิน">โถงทางเดิน</option>
-                  <option value="ห้องขยะประจำชั้น">ห้องขยะประจำชั้น</option>
-                  <option value="ห้องไฟฟ้าประจำชั้น">ห้องไฟฟ้าประจำชั้น</option>
-                  <option value="บันได">บันได</option>
-                  <option value="ห้องเครื่อง/ห้องส่วนกลาง">ห้องเครื่อง/ห้องส่วนกลาง</option>
-                  <option value="รูปด้านอาคาร">รูปด้านอาคาร</option>
-                </select>
-                <select
-                  id="defect-filter-status"
-                  class="p-2 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700 bg-white"
-                  onchange="filterDefectList()"
-                >
-                  <option value="ALL">สถานะทั้งหมด</option>
-                  <option value="รอดำเนินการ">ยังไม่แก้ไข</option>
-                  <option value="รอนัดตรวจ">แก้ไขแล้วรอตรวจ</option>
-                  <option value="ผ่านการตรวจสอบ">ผ่านการตรวจสอบ</option>
-                  <option value="ไม่มี Defect">ไม่มี Defect</option>
-                  <option value="ยังไม่ตรวจ">ยังไม่ตรวจ</option>
-                </select>
+                <div class="flex items-center gap-3 ml-auto">
+                  <button
+                    type="button"
+                    onclick="openCommonDefectCaptureModal()"
+                    class="common-defect-capture-btn"
+                    title="เปิดโหมดแคปเจอร์ภาพตาราง"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
+                    <span>📸 แคปเจอร์ตาราง</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick="openAddCommonDefectModal()"
+                    class="common-defect-add-btn"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+                    เพิ่มแถวใหม่
+                  </button>
+                </div>
               </div>
-              <div class="flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onclick="openCommonDefectCaptureModal()"
-                  class="common-defect-capture-btn"
-                  title="เปิดโหมดแคปเจอร์ภาพตาราง"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
-                  <span>📸 แคปเจอร์ตาราง</span>
-                </button>
-                <button
-                  type="button"
-                  onclick="openAddCommonDefectModal()"
-                  class="common-defect-add-btn"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
-                  เพิ่มแถวใหม่
-                </button>
+
+              <!-- Quick Column Toggle Bar (Moved Up) -->
+              <div id="common-defect-col-bar-container" class="w-full pt-2.5 mt-0.5 border-t border-slate-200/90 flex items-center justify-between gap-2 flex-wrap text-sm select-none">
               </div>
             </div>
           `;
@@ -11451,6 +11511,9 @@
         };
 
         window.filterDefectList = function() {
+          if (typeof renderCommonDefectColBar === "function") {
+            renderCommonDefectColBar();
+          }
           const searchInput = document.getElementById("defect-search-input");
           const groupSelect = document.getElementById("defect-filter-group");
           const statusSelect = document.getElementById("defect-filter-status");
@@ -11533,109 +11596,6 @@
                   <span class="common-defect-excel-icon">▦</span>
                   <div><strong>ตารางสรุป DEFECT ส่วนกลาง</strong><small>${groupKeys.length} กลุ่ม / ${filtered.length} รายการ · คลิกเซลล์เพื่อแก้ไข</small></div>
                 </div>
-                <div class="flex items-center gap-1.5">
-                  <div class="relative inline-block text-left" id="common-col-toggle-wrap">
-                    <button
-                      type="button"
-                      onclick="toggleCommonColsDropdown(event)"
-                      class="px-2.5 py-0.5 text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
-                      title="เลือกเปิด/ปิด คอลัมน์ที่ต้องการแสดง"
-                    >
-                      <span>⚙️ ปิด/เปิด คอลัมน์ ▾</span>
-                    </button>
-                    <div id="common-cols-dropdown" class="hidden absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-xl border border-slate-200 z-50 p-2.5 text-xs">
-                      <div class="font-bold text-slate-800 pb-2 border-b border-slate-100 flex items-center justify-between">
-                        <span>แสดง / ซ่อนคอลัมน์</span>
-                        <button type="button" onclick="resetCommonDefectCols()" class="text-[10px] text-indigo-600 hover:underline">รีเซ็ตทั้งหมด</button>
-                      </div>
-                      <div class="py-1.5 flex flex-col gap-1 max-h-64 overflow-y-auto">
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('location') ? 'checked' : ''} onchange="toggleCommonDefectCol('location')" class="rounded text-indigo-600 focus:ring-0">
-                          <span class="text-slate-700">พื้นที่ / รายการ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('assignee') ? 'checked' : ''} onchange="toggleCommonDefectCol('assignee')" class="rounded text-indigo-600 focus:ring-0">
-                          <span class="text-slate-700 font-bold text-indigo-900">ผู้รับผิดชอบ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('total') ? 'checked' : ''} onchange="toggleCommonDefectCol('total')" class="rounded text-indigo-600 focus:ring-0">
-                          <span class="text-slate-700">DEFECT ทั้งหมด</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('passed') ? 'checked' : ''} onchange="toggleCommonDefectCol('passed')" class="rounded text-emerald-600 focus:ring-0">
-                          <span class="text-emerald-700">ผ่านตรวจสอบ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('left') ? 'checked' : ''} onchange="toggleCommonDefectCol('left')" class="rounded text-rose-600 focus:ring-0">
-                          <span class="text-rose-700">ยังไม่แก้ไข</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('pending') ? 'checked' : ''} onchange="toggleCommonDefectCol('pending')" class="rounded text-amber-600 focus:ring-0">
-                          <span class="text-amber-700">แก้ไขแล้วรอตรวจ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('inspectDate') ? 'checked' : ''} onchange="toggleCommonDefectCol('inspectDate')" class="rounded text-teal-600 focus:ring-0">
-                          <span class="text-teal-800 font-bold">กำหนดตรวจ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('date') ? 'checked' : ''} onchange="toggleCommonDefectCol('date')" class="rounded text-indigo-600 focus:ring-0">
-                          <span class="text-slate-700">กำหนดเสร็จ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('status') ? 'checked' : ''} onchange="toggleCommonDefectCol('status')" class="rounded text-indigo-600 focus:ring-0">
-                          <span class="text-slate-700">STATUS</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    id="toggle-all-common-groups-btn"
-                    onclick="toggleAllCommonGroupsCollapse()"
-                    class="px-2.5 py-0.5 text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
-                    title="ย่อหรือขยายรายการย่อยทั้งหมด"
-                  >
-                    <span>🔼 ย่อทั้งหมด</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Quick Column Toggle Bar on Table Header (Clean Executive Style) -->
-              <div class="px-3.5 py-2 bg-slate-50 border-b border-slate-300 flex items-center justify-between gap-2 flex-wrap text-xs capture-hide select-none">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <div class="inline-flex items-center px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-300 rounded-lg font-bold text-[11px] sm:text-xs mr-1 shadow-2xs">
-                    <span class="tracking-tight">แสดงคอลัมน์:</span>
-                  </div>
-                  <button type="button" onclick="toggleCommonDefectCol('location')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('location') ? 'bg-slate-100 text-slate-800 border-slate-300 shadow-xs hover:bg-slate-200' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('location') ? '✓ ' : '+ '}พื้นที่/รายการ
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('assignee')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('assignee') ? 'bg-indigo-50 text-indigo-900 border-indigo-200 shadow-xs hover:bg-indigo-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('assignee') ? '✓ ' : '+ '}ผู้รับผิดชอบ
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('total')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('total') ? 'bg-blue-50 text-blue-900 border-blue-200 shadow-xs hover:bg-blue-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('total') ? '✓ ' : '+ '}ทั้งหมด
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('passed')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('passed') ? 'bg-emerald-50 text-emerald-900 border-emerald-300 shadow-xs hover:bg-emerald-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('passed') ? '✓ ' : '+ '}ผ่าน
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('left')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('left') ? 'bg-rose-50 text-rose-900 border-rose-300 shadow-xs hover:bg-rose-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('left') ? '✓ ' : '+ '}ยังไม่แก้
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('pending')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('pending') ? 'bg-amber-50 text-amber-900 border-amber-300 shadow-xs hover:bg-amber-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('pending') ? '✓ ' : '+ '}รอตรวจ
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('inspectDate') ? 'bg-sky-50 text-sky-900 border-sky-300 shadow-xs hover:bg-sky-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('inspectDate') ? '✓ ' : '+ '}กำหนดตรวจ
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('date')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('date') ? 'bg-teal-50 text-teal-900 border-teal-300 shadow-xs hover:bg-teal-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('date') ? '✓ ' : '+ '}กำหนดเสร็จ
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('status')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('status') ? 'bg-violet-50 text-violet-900 border-violet-300 shadow-xs hover:bg-violet-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('status') ? '✓ ' : '+ '}สถานะ
-                  </button>
-                </div>
-                <button type="button" onclick="resetCommonDefectCols()" class="px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold shadow-2xs hover:border-slate-400 transition-all cursor-pointer inline-flex items-center gap-1" title="เปิดแสดงคอลัมน์ทั้งหมด">
-                  <span>เปิดทั้งหมด</span>
-                </button>
               </div>
 
               <div class="common-defect-excel-scroll">
@@ -11644,55 +11604,55 @@
                     <tr>
                       <th class="${colClass('location', 'is-location')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-black text-slate-900">พื้นที่ / รายการ</span>
+                          <span class="font-black text-slate-900 text-sm sm:text-[15px]">พื้นที่ / รายการ</span>
                         </div>
                       </th>
                       <th class="${colClass('assignee')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-slate-800">ผู้รับผิดชอบ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('assignee')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผู้รับผิดชอบ">✕</button>
+                          <span class="font-bold text-slate-800 text-xs sm:text-sm">ผู้รับผิดชอบ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('assignee')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผู้รับผิดชอบ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('total')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-black text-slate-900">DEFECT<br>ทั้งหมด</span>
-                          <button type="button" onclick="toggleCommonDefectCol('total')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ทั้งหมด">✕</button>
+                          <span class="font-black text-slate-900 text-xs sm:text-sm leading-tight">DEFECT<br>ทั้งหมด</span>
+                          <button type="button" onclick="toggleCommonDefectCol('total')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ทั้งหมด">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('passed', 'is-passed')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-emerald-800">ผ่านตรวจ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('passed')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผ่านตรวจสอบ">✕</button>
+                          <span class="font-bold text-emerald-800 text-xs sm:text-sm">ผ่านตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('passed')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผ่านตรวจสอบ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('left', 'is-left')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-rose-800">ยังไม่แก้ไข</span>
-                          <button type="button" onclick="toggleCommonDefectCol('left')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ยังไม่แก้ไข">✕</button>
+                          <span class="font-bold text-rose-800 text-xs sm:text-sm">ยังไม่แก้ไข</span>
+                          <button type="button" onclick="toggleCommonDefectCol('left')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ยังไม่แก้ไข">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('pending', 'is-pending')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-amber-800">แก้ไขแล้วรอตรวจ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('pending')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์รอตรวจ">✕</button>
+                          <span class="font-bold text-amber-800 text-xs sm:text-sm leading-tight">แก้ไขแล้ว<br>รอตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('pending')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์รอตรวจ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('inspectDate')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-slate-800">กำหนดตรวจ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดตรวจ">✕</button>
+                          <span class="font-bold text-slate-800 text-xs sm:text-sm">กำหนดตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดตรวจ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('date')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-slate-800">กำหนดเสร็จ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('date')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดเสร็จ">✕</button>
+                          <span class="font-bold text-slate-800 text-xs sm:text-sm">กำหนดเสร็จ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('date')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดเสร็จ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('status')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="font-bold text-slate-800">STATUS</span>
-                          <button type="button" onclick="toggleCommonDefectCol('status')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์สถานะ">✕</button>
+                          <span class="font-bold text-slate-800 text-xs sm:text-sm">STATUS</span>
+                          <button type="button" onclick="toggleCommonDefectCol('status')" class="w-4.5 h-4.5 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[11px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์สถานะ">✕</button>
                         </div>
                       </th>
                     </tr>
@@ -11724,10 +11684,10 @@
                       onclick="toggleCommonGroupCollapse(${groupIdx}, '${groupName.replace(/'/g, "\\'")}')"
                       title="คลิกเพื่อย่อ/ขยายกลุ่มนี้"
                     >
-                      <span id="group-arrow-${groupIdx}" class="text-[10px] text-slate-500 font-black transition-transform w-3.5 text-center">${isGroupCollapsed ? '▶' : '▼'}</span>
-                      <span class="w-4 h-4 inline-flex items-center justify-center shrink-0">${getCommonAreaGroupIcon(groupName, "w-4 h-4")}</span>
-                      <span class="text-xs font-black text-slate-900 group-hover:text-indigo-700 transition-colors">${groupName}</span>
-                      <span class="text-[11px] text-slate-400 font-medium">(รวม ${items.length})</span>
+                      <span id="group-arrow-${groupIdx}" class="text-xs text-slate-500 font-black transition-transform w-4 text-center">${isGroupCollapsed ? '▶' : '▼'}</span>
+                      <span class="w-5 h-5 inline-flex items-center justify-center shrink-0">${getCommonAreaGroupIcon(groupName, "w-5 h-5")}</span>
+                      <span class="text-sm sm:text-base font-black text-slate-900 group-hover:text-indigo-700 transition-colors">${groupName}</span>
+                      <span class="text-xs sm:text-sm text-slate-500 font-bold">(รวม ${items.length})</span>
                     </div>
                     <!-- Group actions hidden in capture -->
                     <div class="flex items-center gap-1 capture-hide">
@@ -11736,37 +11696,37 @@
                         class="p-1 hover:bg-slate-200 text-slate-500 hover:text-slate-800 rounded transition-colors cursor-pointer inline-flex items-center justify-center"
                         title="แก้ไขชื่อหัวข้อใหญ่"
                       >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/></svg>
                       </button>
                       <button
                         onclick="openAddSubItemInGroupModal('${groupName.replace(/'/g, "\\'")}')"
                         class="p-1 hover:bg-indigo-100 text-indigo-600 rounded transition-colors cursor-pointer inline-flex items-center justify-center"
                         title="เพิ่มหัวข้อย่อย"
                       >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                       </button>
                       <button
                         onclick="deleteCommonGroupAndItemsDirectly('${groupName.replace(/'/g, "\\'")}')"
                         class="p-1 hover:bg-rose-100 text-rose-600 rounded transition-colors cursor-pointer inline-flex items-center justify-center"
                         title="ลบกลุ่มพื้นที่พร้อมข้อมูลย่อยทั้งหมด"
                       >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg>
                       </button>
                       <button
                         onclick="openCommonDefectCaptureModal('${groupName.replace(/'/g, "\\'")}')"
                         class="p-1 hover:bg-emerald-100 text-emerald-600 rounded transition-colors cursor-pointer inline-flex items-center justify-center"
                         title="แคปเจอร์เฉพาะกลุ่มนี้"
                       >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
                       </button>
                     </div>
                   </div>
                 </td>
                 <td class="${colClass('assignee')}"></td>
-                <td class="${colClass('total')}">${groupTot}</td>
-                <td class="${colClass('passed', 'cell-passed')}">${groupPassed || "—"}</td>
-                <td class="${colClass('left', 'cell-left')}">${groupRem}</td>
-                <td class="${colClass('pending', 'cell-pending')}">${groupPending || "—"}</td>
+                <td class="${colClass('total', 'text-base font-black text-slate-900')}">${groupTot}</td>
+                <td class="${colClass('passed', 'cell-passed text-base font-black')}">${groupPassed || "—"}</td>
+                <td class="${colClass('left', 'cell-left text-base font-black')}">${groupRem}</td>
+                <td class="${colClass('pending', 'cell-pending text-base font-black')}">${groupPending || "—"}</td>
                 <td class="${colClass('inspectDate')}"></td>
                 <td class="${colClass('date')}"></td>
                 <td class="${colClass('status')}"></td>
@@ -11814,18 +11774,18 @@
 
               html += `
                 <tr class="group-subrows-${groupIdx} group-rows-${groupIdx} common-defect-data-row ${isGroupCollapsed ? 'hidden' : ''}" data-item-id="${item.id}">
-                  <td class="${colClass('location', 'is-location defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'name')" title="คลิกเพื่อแก้ไขรายการนี้">
+                  <td class="${colClass('location', 'is-location defect-editable-cell font-bold text-slate-900 text-sm sm:text-[15px]')}" onclick="openCommonDefectCellEditor(${item.id}, 'name')" title="คลิกเพื่อแก้ไขรายการนี้">
                     <span class="excel-row-arrow">›</span>${escapeCommonDefectText(item.name)}
                   </td>
-                  <td class="${colClass('assignee', 'defect-editable-cell text-slate-700 text-xs font-semibold truncate max-w-[130px]')}" onclick="openCommonDefectCellEditor(${item.id}, 'assignee')" title="คลิกเพื่อระบุผู้รับผิดชอบ">
+                  <td class="${colClass('assignee', 'defect-editable-cell text-slate-700 text-sm font-bold truncate')}" onclick="openCommonDefectCellEditor(${item.id}, 'assignee')" title="คลิกเพื่อระบุผู้รับผิดชอบ">
                     ${escapeCommonDefectText(item.assignee || "—")}
                   </td>
-                  <td class="${colClass('total', 'defect-editable-cell font-bold')}" onclick="openCommonDefectCellEditor(${item.id}, 'total')">${totDisplay || "—"}</td>
-                  <td class="${colClass('passed', 'defect-editable-cell cell-passed')}" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
-                  <td class="${colClass('left', 'defect-editable-cell cell-left')}" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left > 0 ? `<span class="font-black text-rose-600">${rowOverview.left}</span>` : (rowOverview.passed > 0 ? "—" : "0")}</td>
-                  <td class="${colClass('pending', 'defect-editable-cell cell-pending')}" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
-                  <td class="${colClass('inspectDate', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'inspectDate')" title="คลิกเพื่อกำหนดวันตรวจ">${inspectDateDisplay || "—"}</td>
-                  <td class="${colClass('date', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
+                  <td class="${colClass('total', 'defect-editable-cell font-black text-base text-slate-900')}" onclick="openCommonDefectCellEditor(${item.id}, 'total')">${totDisplay || "—"}</td>
+                  <td class="${colClass('passed', 'defect-editable-cell cell-passed font-black text-base')}" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
+                  <td class="${colClass('left', 'defect-editable-cell cell-left font-black text-base')}" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left > 0 ? `<span class="font-black text-rose-600">${rowOverview.left}</span>` : (rowOverview.passed > 0 ? "—" : "0")}</td>
+                  <td class="${colClass('pending', 'defect-editable-cell cell-pending font-black text-base')}" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
+                  <td class="${colClass('inspectDate', 'defect-editable-cell cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}" onclick="openCommonDefectCellEditor(${item.id}, 'inspectDate')" title="คลิกเพื่อกำหนดวันตรวจ">${inspectDateDisplay || "—"}</td>
+                  <td class="${colClass('date', 'defect-editable-cell cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
                   <td class="${colClass('status', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
                     <span class="paper-status-badge ${statusMeta.className}">
                       <b>${statusMeta.icon}</b>${statusMeta.label}
@@ -11841,12 +11801,12 @@
                   </tbody>
                   <tfoot class="border-t-2 border-slate-400">
                     <tr id="common-defect-grand-total-row">
-                      <td class="${colClass('location', 'is-location')}">รวมทั้งหมด</td>
+                      <td class="${colClass('location', 'is-location font-black text-sm sm:text-base')}">รวมทั้งหมด</td>
                       <td class="${colClass('assignee')}"></td>
-                      <td class="${colClass('total')}">${grandTot}</td>
-                      <td class="${colClass('passed', 'cell-passed')}">${grandPassed}</td>
-                      <td class="${colClass('left', 'cell-left')}">${grandLeft}</td>
-                      <td class="${colClass('pending', 'cell-pending')}">${grandPending}</td>
+                      <td class="${colClass('total', 'font-black text-base sm:text-lg text-slate-950')}">${grandTot}</td>
+                      <td class="${colClass('passed', 'cell-passed font-black text-base sm:text-lg')}">${grandPassed}</td>
+                      <td class="${colClass('left', 'cell-left font-black text-base sm:text-lg')}">${grandLeft}</td>
+                      <td class="${colClass('pending', 'cell-pending font-black text-base sm:text-lg')}">${grandPending}</td>
                       <td class="${colClass('inspectDate')}"></td>
                       <td class="${colClass('date')}"></td>
                       <td class="${colClass('status')}"><span class="excel-total-rate">ผ่านตรวจ ${grandPercentStr}%</span></td>
@@ -22687,75 +22647,164 @@
           // Inject into document container
           docSheet.innerHTML = docHTML;
 
-          // Also generate clean formatted text summary for LINE and Email
-          let summaryText = `[รายงานสถานะการก่อสร้างฉบับทางการ]\n`;
-          summaryText += `โครงการ: ไพน์ งามวงศ์วาน 54 (PYNN NGAMWONGWAN 54)\n`;
-          summaryText += `เรื่อง: ${docTitle}\n`;
-          summaryText += `เลขที่เอกสาร: ${docNo} | วันที่: ${docDate}\n`;
-          summaryText += `ผู้จัดทำ: ${docPreparer} | งวดงาน: ${docPeriod}\n`;
-          summaryText += `ขอบเขตพื้นที่: ชั้น ${selectedFloors.join(", ")} (รวม ${totalEvaluatedUnits} ห้องชุด)\n`;
-          summaryText += `====================================\n\n`;
+          // Calculate Floor-by-Floor progress for selected categories and floors
+          const floorStatsList = selectedFloors.map((fl) => {
+            const roomCount = CONFIG.getRoomsOnFloor(fl);
 
-          if (wetWorkStats.length > 0) {
-            summaryText += `💧 1. หมวดงาน WET WORK (งานเปียกและงานระบบ)\n`;
-            summaryText += `• ความก้าวหน้าเฉลี่ยหมวด Wet Work: ${wetWorkAverageProgress}%\n`;
-            summaryText += `• รายการความก้าวหน้าแต่ละงาน:\n`;
-            wetWorkStats.forEach((ds, idx) => {
-              summaryText += `  ${idx + 1}. ${ds.name}: ${ds.progress}% (แล้วเสร็จ ${ds.completedRooms}/${ds.totalRooms} ห้อง, ดำเนินการ ${ds.inProgressRooms} ห้อง)\n`;
+            // Compute progress for each selected category specifically on this floor
+            const taskStatsOnFloor = selectedCats.map((cKey) => {
+              const cDef = taskDefinitions[cKey];
+              const taskName = cDef?.reportName || cKey;
+              let pFloor = 0;
+              let doneRooms = 0;
+              let inProgRooms = 0;
+
+              if (cDef?.type === "inspection") {
+                const ins = calculateCombinedInspectionStats(cKey, [fl]);
+                pFloor = ins.passRate;
+                doneRooms = ins.totalPassed;
+                inProgRooms = ins.pendingDefects + ins.inInspection;
+              } else if (cDef?.type === "multi-progress") {
+                const allSubIdx = cDef.tasks.map((_, i) => i);
+                const status = calculateMultiProgressOverallStatus(cKey, [fl], allSubIdx);
+                pFloor = Math.round(calculateMultiProgressOverallPercentage(cKey, [fl], allSubIdx) * 10) / 10;
+                doneRooms = status.completedRooms;
+                inProgRooms = status.inProgressRooms;
+              } else {
+                let sumP = 0;
+                for (let r = 1; r <= roomCount; r++) {
+                  const p = projectData[cKey]?.[fl]?.[r]?.progress || 0;
+                  sumP += p;
+                  if (p >= 100) doneRooms++;
+                  else if (p > 0) inProgRooms++;
+                }
+                pFloor = roomCount > 0 ? Math.round((sumP / roomCount) * 10) / 10 : 0;
+              }
+
+              return {
+                key: cKey,
+                name: taskName,
+                progress: pFloor,
+                doneRooms,
+                inProgRooms,
+                roomCount
+              };
             });
-            summaryText += `• ผลการตรวจรับคุณภาพ WET WORK (QC & CM Combined):\n`;
-            summaryText += `  - ตรวจรับแล้วเสร็จ: ${wetWorkInspection.totalPassed}/${wetWorkInspection.totalRooms} ห้อง (% ส่งมอบแล้วเสร็จ: ${wetWorkInspection.passRate}%)\n`;
-            summaryText += `  - ผ่าน: ${wetWorkInspection.passed_clean} ห้อง | ผ่านพบเมเจอร์ดีเฟค: ${wetWorkInspection.passed_defect} ห้อง\n`;
-            summaryText += `  - ไม่ผ่าน: ${wetWorkInspection.pendingDefects} ห้อง\n`;
-            summaryText += `  - สถานะ: ${wetWorkInspection.passRate >= 100 ? "ส่งมอบแล้วเสร็จ 100%" : (wetWorkInspection.totalPassed > 0 ? `ส่งมอบแล้วเสร็จ ${wetWorkInspection.passRate}%` : "อยู่ระหว่างดำเนินการ")}\n\n`;
+
+            let floorSum = 0;
+            taskStatsOnFloor.forEach((t) => { floorSum += t.progress; });
+            const floorOverallProgress = taskStatsOnFloor.length > 0
+              ? Math.round((floorSum / taskStatsOnFloor.length) * 10) / 10
+              : 0;
+
+            let statusDesc = "รอเข้าดำเนินการ";
+            if (floorOverallProgress >= 100) statusDesc = "แล้วเสร็จสมบูรณ์ 100%";
+            else if (floorOverallProgress >= 85) statusDesc = "ใกล้แล้วเสร็จตามแผน";
+            else if (floorOverallProgress > 0) statusDesc = "อยู่ระหว่างดำเนินการ";
+
+            return {
+              floor: fl,
+              roomCount,
+              taskStatsOnFloor,
+              floorOverallProgress,
+              statusDesc
+            };
+          });
+
+          // Average across all evaluated floors for selected categories
+          let sumFloorsProgress = 0;
+          floorStatsList.forEach((f) => { sumFloorsProgress += f.floorOverallProgress; });
+          const evaluatedFloorsAverage = floorStatsList.length > 0
+            ? Math.round((sumFloorsProgress / floorStatsList.length) * 10) / 10
+            : 0;
+
+          // Generate clean, neat, highly organized executive formatted text summary for LINE and Email
+          let summaryText = `📋 [รายงานสรุปความก้าวหน้าโครงการก่อสร้าง]\n`;
+          summaryText += `โครงการ: ไพน์ งามวงศ์วาน 54 (PYNN NGAMWONGWAN 54)\n`;
+          summaryText += `════════════════════════════════════════\n`;
+          summaryText += `• เรื่อง: ${docTitle}\n`;
+          summaryText += `• รหัสเอกสาร: ${docNo} | วันที่: ${docDate}\n`;
+          summaryText += `• ผู้จัดทำ: ${docPreparer} | งวดงาน: ${docPeriod}\n`;
+          summaryText += `• ขอบเขตประเมิน: ชั้น ${selectedFloors.join(", ")} (รวม ${totalEvaluatedUnits} ห้องชุด)\n`;
+          summaryText += `• ดัชนีความก้าวหน้าโครงการภาพรวม: ${overallProjectProgress}%\n`;
+          summaryText += `════════════════════════════════════════\n\n`;
+
+          // --- SECTION: สรุปความก้าวหน้ารายชั้น (Clean Floor-by-Floor Summary) ---
+          if (floorStatsList.length > 0 && selectedCats.length > 0) {
+            if (selectedCats.length === 1) {
+              const singleTask = disciplineStats[0];
+              summaryText += `🏢 สรุปความก้าวหน้ารายชั้น: ${singleTask?.name || "งานที่เลือก"}\n`;
+              summaryText += `(เฉลี่ยรวมทุกชั้น: ${singleTask?.progress || 0}% | แล้วเสร็จ ${singleTask?.completedRooms}/${totalEvaluatedUnits} ห้อง)\n`;
+              summaryText += `────────────────────────────────────────\n`;
+              floorStatsList.forEach((f) => {
+                const t = f.taskStatsOnFloor[0] || { progress: 0, doneRooms: 0, inProgRooms: 0 };
+                const extra = t.doneRooms === f.roomCount
+                  ? `[เสร็จ 100% (${t.doneRooms}/${f.roomCount})]`
+                  : `[เสร็จ ${t.doneRooms}/${f.roomCount} ห้อง${t.inProgRooms > 0 ? `, กำลังทำ ${t.inProgRooms}` : ''}]`;
+                summaryText += `• ชั้น ${f.floor} (${f.roomCount} ห้อง) : ${t.progress}% ${extra}\n`;
+              });
+              summaryText += `────────────────────────────────────────\n\n`;
+            } else {
+              summaryText += `🏢 สรุปความก้าวหน้ารายชั้นและแยกตามหมวดงาน (${selectedCats.length} งาน)\n`;
+              summaryText += `────────────────────────────────────────\n`;
+              floorStatsList.forEach((f) => {
+                summaryText += `▶ ชั้น ${f.floor} (${f.roomCount} ห้อง) : ค่าเฉลี่ย ${f.floorOverallProgress}%\n`;
+                f.taskStatsOnFloor.forEach((t) => {
+                  const doneStatus = t.doneRooms === f.roomCount 
+                    ? `เสร็จ 100% (${t.doneRooms}/${f.roomCount})`
+                    : `เสร็จ ${t.doneRooms}/${f.roomCount}${t.inProgRooms > 0 ? ` (กำลังทำ ${t.inProgRooms})` : ''}`;
+                  summaryText += `   - ${t.name}: ${t.progress}% [${doneStatus}]\n`;
+                });
+                summaryText += `\n`;
+              });
+              summaryText += `────────────────────────────────────────\n`;
+              summaryText += `📊 ค่าเฉลี่ยความก้าวหน้ารวมทุกชั้น: ${evaluatedFloorsAverage}%\n`;
+              summaryText += `────────────────────────────────────────\n\n`;
+            }
           }
 
-          if (endProductStats.length > 0) {
-            summaryText += `🏁 ${wetWorkStats.length > 0 ? '2' : '1'}. หมวดงาน END PRODUCT (งานส่งมอบห้องชุด)\n`;
-            summaryText += `• ความก้าวหน้าเฉลี่ยหมวด End Product: ${endProductAverageProgress}%\n`;
-            summaryText += `• รายการความก้าวหน้าแต่ละงาน:\n`;
-            endProductStats.forEach((ds, idx) => {
-              summaryText += `  ${idx + 1}. ${ds.name}: ${ds.progress}% (แล้วเสร็จ ${ds.completedRooms}/${ds.totalRooms} ห้อง, ดำเนินการ ${ds.inProgressRooms} ห้อง)\n`;
+          // --- SECTION: จำแนกความก้าวหน้าตามหมวดงานที่เลือกประเมิน (Discipline Breakdown) ---
+          if (disciplineStats.length > 1) {
+            summaryText += `📊 สรุปภาพรวมตามหมวดงานที่ประเมิน (เฉลี่ยทุกชั้น):\n`;
+            summaryText += `────────────────────────────────────────\n`;
+            disciplineStats.forEach((ds, idx) => {
+              const unitLabel = ds.key === "wetWork" || ds.key === "endProduct" ? "ตรวจผ่าน" : "แล้วเสร็จ";
+              summaryText += `${idx + 1}. ${ds.name}: ${ds.progress}% (${unitLabel} ${ds.completedRooms}/${ds.totalRooms} ห้อง)\n`;
             });
-            summaryText += `• ผลการตรวจรับคุณภาพ END PRODUCT (QC & CM Combined):\n`;
-            summaryText += `  - ตรวจรับแล้วเสร็จ: ${endProductInspection.totalPassed}/${endProductInspection.totalRooms} ห้อง (% ส่งมอบแล้วเสร็จ: ${endProductInspection.passRate}%)\n`;
-            summaryText += `  - ผ่าน: ${endProductInspection.passed_clean} ห้อง | ผ่านพบเมเจอร์ดีเฟค: ${endProductInspection.passed_defect} ห้อง\n`;
-            summaryText += `  - ไม่ผ่าน: ${endProductInspection.pendingDefects} ห้อง\n`;
-            summaryText += `  - สถานะ: ${endProductInspection.passRate >= 100 ? "ส่งมอบแล้วเสร็จ 100%" : (endProductInspection.totalPassed > 0 ? `ส่งมอบแล้วเสร็จ ${endProductInspection.passRate}%` : "อยู่ระหว่างดำเนินการ")}\n\n`;
+            summaryText += `────────────────────────────────────────\n\n`;
           }
 
           if (optCommonAreas && commonAreaData.stats.length > 0) {
             summaryText += `🏢 พื้นที่ส่วนกลาง (COMMON AREAS)\n`;
-            summaryText += `• ความก้าวหน้าเฉลี่ยส่วนกลาง: ${commonAreaData.averageProgress}% (แล้วเสร็จ ${commonAreaData.completedItems}/${commonAreaData.totalItems} รายการ)\n`;
+            summaryText += `• ความก้าวหน้าเฉลี่ย: ${commonAreaData.averageProgress}% (แล้วเสร็จ ${commonAreaData.completedItems}/${commonAreaData.totalItems} รายการ)\n`;
             commonAreaData.stats.forEach((st, idx) => {
-              summaryText += `  ${idx + 1}. ${st.name}: ${st.progress}% (${st.statusText}, ขอบเขต ${st.floorDesc})\n`;
+              summaryText += `  ${idx + 1}. ${st.name}: ${st.progress}% [${st.statusText}]\n`;
             });
             summaryText += `\n`;
           }
 
           if (optCommonDefects && commonDefectData.groups.length > 0) {
             summaryText += `🛠️ การแก้ไข DEFECT ส่วนกลาง (COMMON AREA DEFECTS)\n`;
-            summaryText += `• สรุปจำนวน Defect ทั้งหมด: ${commonDefectData.totalDefects} ข้อ (${commonDefectData.totalLocations} จุดตรวจทั่วอาคาร)\n`;
-            summaryText += `• สถานะการแก้ไข: แก้ไขเสร็จ ${commonDefectData.fixedDefects} ข้อ | รอนัดตรวจ ${commonDefectData.pendingInspectDefects} ข้อ | รอแก้ไข ${commonDefectData.remainingDefects} ข้อ (${commonDefectData.overallResolutionRate}%)\n`;
+            summaryText += `• อัตราแก้ไขเสร็จ: ${commonDefectData.overallResolutionRate}% (ผ่านตรวจ ${commonDefectData.fixedDefects}/${commonDefectData.totalDefects} ข้อ, รอตรวจ ${commonDefectData.pendingInspectDefects} ข้อ, รอแก้ ${commonDefectData.remainingDefects} ข้อ)\n`;
             commonDefectData.groups.forEach((g, idx) => {
-              summaryText += `  ${idx + 1}. ${g.name}: ${g.totalDefects} ข้อ (เสร็จ ${g.fixedDefects} ข้อ, รอตรวจ ${g.pendingInspectDefects} ข้อ, รอแก้ ${g.remainingDefects} ข้อ | ${g.resolutionRate}%)\n`;
+              summaryText += `  ${idx + 1}. ${g.name}: ${g.resolutionRate}% (ผ่าน ${g.fixedDefects}/${g.totalDefects} ข้อ)\n`;
             });
             summaryText += `\n`;
           }
 
           if (optExteriorPainting && exteriorPaintingData.stats.length > 0) {
             summaryText += `🎨 งานเก็บสีรูปด้านอาคาร (EXTERIOR FACADE PAINTING)\n`;
-            summaryText += `• ความก้าวหน้าเฉลี่ยสีรูปด้าน: ${exteriorPaintingData.averageProgress}%\n`;
+            summaryText += `• ความก้าวหน้าเฉลี่ย: ${exteriorPaintingData.averageProgress}%\n`;
             exteriorPaintingData.stats.forEach((st, idx) => {
-              summaryText += `  ${idx + 1}. ${st.name}: ${st.progress}% (เสร็จ 100%: ${st.completed}/${st.totalZones} โซน, กำลังทำ: ${st.inProgress} โซน)\n`;
+              summaryText += `  ${idx + 1}. ${st.name}: ${st.progress}% (เสร็จ ${st.completed}/${st.totalZones} โซน)\n`;
             });
             summaryText += `\n`;
           }
 
-          summaryText += `====================================\n`;
-          summaryText += `📊 สรุปภาพรวมความก้าวหน้าโครงการ (Overall Project Average): ${overallProjectProgress}%\n`;
-          summaryText += `====================================\n`;
-          summaryText += `เอกสารรายงานทางการ ออกโดยฝ่ายบริหารโครงการ PYNN 54`;
+          summaryText += `════════════════════════════════════════\n`;
+          summaryText += `📊 ดัชนีความก้าวหน้ารวมทั้งโครงการ (Overall): ${overallProjectProgress}%\n`;
+          summaryText += `════════════════════════════════════════\n`;
+          summaryText += `ฝ่ายบริหารและควบคุมงานก่อสร้าง PYNN 54`;
 
           if (textOutput) {
             textOutput.value = summaryText;
