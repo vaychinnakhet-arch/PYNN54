@@ -11574,12 +11574,12 @@
                           <span class="text-amber-700">แก้ไขแล้วรอตรวจ</span>
                         </label>
                         <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
-                          <input type="checkbox" ${isCol('date') ? 'checked' : ''} onchange="toggleCommonDefectCol('date')" class="rounded text-indigo-600 focus:ring-0">
-                          <span class="text-slate-700">กำหนดเสร็จ</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
                           <input type="checkbox" ${isCol('inspectDate') ? 'checked' : ''} onchange="toggleCommonDefectCol('inspectDate')" class="rounded text-teal-600 focus:ring-0">
                           <span class="text-teal-800 font-bold">กำหนดตรวจ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('date') ? 'checked' : ''} onchange="toggleCommonDefectCol('date')" class="rounded text-indigo-600 focus:ring-0">
+                          <span class="text-slate-700">กำหนดเสร็จ</span>
                         </label>
                         <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
                           <input type="checkbox" ${isCol('status') ? 'checked' : ''} onchange="toggleCommonDefectCol('status')" class="rounded text-indigo-600 focus:ring-0">
@@ -11599,43 +11599,41 @@
                 </div>
               </div>
 
-              <!-- Quick Column Toggle Bar on Table Header (2D Layer Paper Mario Nintendo Style) -->
-              <div class="px-3.5 py-2 bg-[#fdfbf7] border-b-2 border-slate-800 flex items-center justify-between gap-2 flex-wrap text-xs capture-hide select-none shadow-[inset_0_-2px_0_rgba(0,0,0,0.03)]">
+              <!-- Quick Column Toggle Bar on Table Header (Clean Executive Style) -->
+              <div class="px-3.5 py-2 bg-slate-50 border-b border-slate-300 flex items-center justify-between gap-2 flex-wrap text-xs capture-hide select-none">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 text-slate-900 border-2 border-slate-800 rounded-lg font-black text-[11px] sm:text-xs shadow-[2px_2px_0px_#1e293b] mr-1">
-                    <span class="text-xs leading-none">📜</span>
+                  <div class="inline-flex items-center px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-300 rounded-lg font-bold text-[11px] sm:text-xs mr-1 shadow-2xs">
                     <span class="tracking-tight">แสดงคอลัมน์:</span>
                   </div>
-                  <button type="button" onclick="toggleCommonDefectCol('location')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('location') ? 'bg-white text-slate-900 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('location')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('location') ? 'bg-slate-100 text-slate-800 border-slate-300 shadow-xs hover:bg-slate-200' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('location') ? '✓ ' : '+ '}พื้นที่/รายการ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('assignee')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('assignee') ? 'bg-indigo-100 text-indigo-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('assignee')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('assignee') ? 'bg-indigo-50 text-indigo-900 border-indigo-200 shadow-xs hover:bg-indigo-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('assignee') ? '✓ ' : '+ '}ผู้รับผิดชอบ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('total')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('total') ? 'bg-amber-100 text-amber-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('total')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('total') ? 'bg-blue-50 text-blue-900 border-blue-200 shadow-xs hover:bg-blue-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('total') ? '✓ ' : '+ '}ทั้งหมด
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('passed')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('passed') ? 'bg-emerald-100 text-emerald-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('passed')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('passed') ? 'bg-emerald-50 text-emerald-900 border-emerald-300 shadow-xs hover:bg-emerald-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('passed') ? '✓ ' : '+ '}ผ่าน
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('left')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('left') ? 'bg-rose-100 text-rose-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('left')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('left') ? 'bg-rose-50 text-rose-900 border-rose-300 shadow-xs hover:bg-rose-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('left') ? '✓ ' : '+ '}ยังไม่แก้
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('pending')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('pending') ? 'bg-amber-200 text-amber-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('pending')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('pending') ? 'bg-amber-50 text-amber-900 border-amber-300 shadow-xs hover:bg-amber-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('pending') ? '✓ ' : '+ '}รอตรวจ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('date')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('date') ? 'bg-sky-100 text-sky-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
-                    ${isCol('date') ? '✓ ' : '+ '}กำหนดเสร็จ
-                  </button>
-                  <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('inspectDate') ? 'bg-teal-100 text-teal-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('inspectDate') ? 'bg-sky-50 text-sky-900 border-sky-300 shadow-xs hover:bg-sky-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('inspectDate') ? '✓ ' : '+ '}กำหนดตรวจ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('status')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('status') ? 'bg-violet-100 text-violet-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                  <button type="button" onclick="toggleCommonDefectCol('date')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('date') ? 'bg-teal-50 text-teal-900 border-teal-300 shadow-xs hover:bg-teal-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
+                    ${isCol('date') ? '✓ ' : '+ '}กำหนดเสร็จ
+                  </button>
+                  <button type="button" onclick="toggleCommonDefectCol('status')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isCol('status') ? 'bg-violet-50 text-violet-900 border-violet-300 shadow-xs hover:bg-violet-100' : 'bg-white/60 text-slate-400 border-dashed border-slate-300 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('status') ? '✓ ' : '+ '}สถานะ
                   </button>
                 </div>
-                <button type="button" onclick="resetCommonDefectCols()" class="px-3 py-1 bg-white hover:bg-amber-50 text-slate-900 border-2 border-slate-900 rounded-lg text-xs font-black shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1.5" title="เปิดแสดงคอลัมน์ทั้งหมด">
-                  <span>✨</span>
+                <button type="button" onclick="resetCommonDefectCols()" class="px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold shadow-2xs hover:border-slate-400 transition-all cursor-pointer inline-flex items-center gap-1" title="เปิดแสดงคอลัมน์ทั้งหมด">
                   <span>เปิดทั้งหมด</span>
                 </button>
               </div>
@@ -11646,55 +11644,55 @@
                     <tr>
                       <th class="${colClass('location', 'is-location')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-amber-950"><span class="text-xs">📋</span> พื้นที่ / รายการ</span>
+                          <span class="font-black text-slate-900">พื้นที่ / รายการ</span>
                         </div>
                       </th>
                       <th class="${colClass('assignee')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-indigo-950"><span class="text-xs">👤</span> ผู้รับผิดชอบ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('assignee')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผู้รับผิดชอบ">✕</button>
+                          <span class="font-bold text-slate-800">ผู้รับผิดชอบ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('assignee')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผู้รับผิดชอบ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('total')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-amber-950"><span class="text-xs">⭐</span> DEFECT<br>ทั้งหมด</span>
-                          <button type="button" onclick="toggleCommonDefectCol('total')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ทั้งหมด">✕</button>
+                          <span class="font-black text-slate-900">DEFECT<br>ทั้งหมด</span>
+                          <button type="button" onclick="toggleCommonDefectCol('total')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ทั้งหมด">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('passed', 'is-passed')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-emerald-950"><span class="text-xs">✔</span> ผ่าน<br>ตรวจสอบ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('passed')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผ่านตรวจสอบ">✕</button>
+                          <span class="font-bold text-emerald-800">ผ่านตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('passed')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผ่านตรวจสอบ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('left', 'is-left')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-rose-950"><span class="text-xs">✖</span> ยังไม่<br>แก้ไข</span>
-                          <button type="button" onclick="toggleCommonDefectCol('left')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ยังไม่แก้ไข">✕</button>
+                          <span class="font-bold text-rose-800">ยังไม่แก้ไข</span>
+                          <button type="button" onclick="toggleCommonDefectCol('left')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ยังไม่แก้ไข">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('pending', 'is-pending')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-amber-950"><span class="text-xs">⏱</span> แก้ไขแล้ว<br>รอตรวจ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('pending')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์รอตรวจ">✕</button>
-                        </div>
-                      </th>
-                      <th class="${colClass('date')}">
-                        <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-teal-950"><span class="text-xs">🏁</span> กำหนดเสร็จ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('date')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดเสร็จ">✕</button>
+                          <span class="font-bold text-amber-800">แก้ไขแล้วรอตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('pending')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์รอตรวจ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('inspectDate')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-sky-950"><span class="text-xs">🔍</span> กำหนดตรวจ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดตรวจ">✕</button>
+                          <span class="font-bold text-slate-800">กำหนดตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดตรวจ">✕</button>
+                        </div>
+                      </th>
+                      <th class="${colClass('date')}">
+                        <div class="flex items-center justify-between gap-1">
+                          <span class="font-bold text-slate-800">กำหนดเสร็จ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('date')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดเสร็จ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('status')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span class="flex items-center gap-1 font-black text-purple-950"><span class="text-xs">🎖️</span> STATUS</span>
-                          <button type="button" onclick="toggleCommonDefectCol('status')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์สถานะ">✕</button>
+                          <span class="font-bold text-slate-800">STATUS</span>
+                          <button type="button" onclick="toggleCommonDefectCol('status')" class="w-4 h-4 rounded bg-slate-200 hover:bg-rose-500 hover:text-white text-slate-600 text-[10px] font-bold inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์สถานะ">✕</button>
                         </div>
                       </th>
                     </tr>
@@ -11769,8 +11767,8 @@
                 <td class="${colClass('passed', 'cell-passed')}">${groupPassed || "—"}</td>
                 <td class="${colClass('left', 'cell-left')}">${groupRem}</td>
                 <td class="${colClass('pending', 'cell-pending')}">${groupPending || "—"}</td>
-                <td class="${colClass('date')}"></td>
                 <td class="${colClass('inspectDate')}"></td>
+                <td class="${colClass('date')}"></td>
                 <td class="${colClass('status')}"></td>
               </tr>
             `;
@@ -11826,8 +11824,8 @@
                   <td class="${colClass('passed', 'defect-editable-cell cell-passed')}" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
                   <td class="${colClass('left', 'defect-editable-cell cell-left')}" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left > 0 ? `<span class="font-black text-rose-600">${rowOverview.left}</span>` : (rowOverview.passed > 0 ? "—" : "0")}</td>
                   <td class="${colClass('pending', 'defect-editable-cell cell-pending')}" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
-                  <td class="${colClass('date', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
                   <td class="${colClass('inspectDate', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'inspectDate')" title="คลิกเพื่อกำหนดวันตรวจ">${inspectDateDisplay || "—"}</td>
+                  <td class="${colClass('date', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
                   <td class="${colClass('status', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
                     <span class="paper-status-badge ${statusMeta.className}">
                       <b>${statusMeta.icon}</b>${statusMeta.label}
@@ -11849,8 +11847,8 @@
                       <td class="${colClass('passed', 'cell-passed')}">${grandPassed}</td>
                       <td class="${colClass('left', 'cell-left')}">${grandLeft}</td>
                       <td class="${colClass('pending', 'cell-pending')}">${grandPending}</td>
-                      <td class="${colClass('date')}"></td>
                       <td class="${colClass('inspectDate')}"></td>
+                      <td class="${colClass('date')}"></td>
                       <td class="${colClass('status')}"><span class="excel-total-rate">ผ่านตรวจ ${grandPercentStr}%</span></td>
                     </tr>
                   </tfoot>
@@ -19191,54 +19189,54 @@
               const groupPercent = groupTot > 0 ? (groupPassed / groupTot) * 100 : 0;
               const groupPercentStr = groupPercent % 1 === 0 ? groupPercent.toFixed(0) : groupPercent.toFixed(1);
 
-              // Excel Group Header Row (Paper Mario warm amber accent)
+              // Excel Group Header Row (Formal Executive Style with crisp hierarchy)
               html += `
-                <tr class="bg-amber-100/85 font-black text-slate-900 border-t-2 border-b-2 border-slate-400">
-                  <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-slate-700 text-xs whitespace-nowrap bg-amber-200/60">
+                <tr class="bg-slate-100/95 font-black text-slate-900 border-t-2 border-b-2 border-slate-400">
+                  <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-700 text-sm whitespace-nowrap bg-slate-200/80">
                     §${gIdx + 1}
                   </td>
-                  <td class="py-2.5 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap">
+                  <td class="py-3 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-base whitespace-nowrap">
                     <div class="flex items-center gap-2 flex-nowrap">
                       <span class="w-5 h-5 inline-flex items-center justify-center shrink-0 drop-shadow-xs">${getCommonAreaGroupIcon(groupName, "w-5 h-5")}</span>
-                      <span class="font-black text-slate-950 text-sm tracking-tight">${escapeCommonDefectText(groupName)}</span>
-                      <span class="text-[11px] bg-white text-slate-800 font-black px-2.5 py-0.5 rounded-full border border-slate-400 shadow-2xs whitespace-nowrap shrink-0 ml-1">${items.length} รายการ</span>
+                      <span class="font-black text-slate-950 text-base tracking-tight">${escapeCommonDefectText(groupName)}</span>
+                      <span class="text-xs bg-white text-slate-800 font-bold px-2.5 py-0.5 rounded-full border border-slate-300 shadow-2xs whitespace-nowrap shrink-0 ml-1">${items.length} รายการ</span>
                     </div>
                   </td>
-                  <td class="py-2.5 px-2 text-center border-r border-slate-300 font-bold text-slate-400 text-xs whitespace-nowrap bg-amber-50/50">-</td>
-                  <td class="py-2.5 px-2 text-center font-black text-slate-950 border-r border-slate-300 text-sm whitespace-nowrap bg-slate-100/60">
+                  <td class="py-3 px-2 text-center border-r border-slate-300 font-bold text-slate-400 text-xs whitespace-nowrap bg-slate-50">-</td>
+                  <td class="py-3 px-2 text-center font-black text-slate-950 border-r border-slate-300 text-base whitespace-nowrap bg-slate-200/60">
                     ${groupTot > 0 ? `<span class="font-black text-slate-950">${groupTot}</span>` : `<span class="text-slate-400 font-normal">0</span>`}
                   </td>
-                  <td class="py-2.5 px-2 text-center font-black text-emerald-800 border-r border-slate-300 text-sm bg-emerald-100/60 whitespace-nowrap">
+                  <td class="py-3 px-2 text-center font-black text-emerald-800 border-r border-slate-300 text-base bg-emerald-100/50 whitespace-nowrap">
                     ${groupPassed > 0 ? `<span class="font-black text-emerald-800">${groupPassed}</span>` : `<span class="text-slate-300">-</span>`}
                   </td>
-                  <td class="py-2.5 px-2 text-center font-black text-rose-800 border-r border-slate-300 text-sm bg-rose-100/60 whitespace-nowrap">
+                  <td class="py-3 px-2 text-center font-black text-rose-800 border-r border-slate-300 text-base bg-rose-100/50 whitespace-nowrap">
                     ${groupLeft > 0 ? `<span class="font-black text-rose-800">${groupLeft}</span>` : `<span class="text-slate-300">-</span>`}
                   </td>
-                  <td class="py-2.5 px-2 text-center font-black text-amber-900 border-r border-slate-300 text-sm bg-amber-100/60 whitespace-nowrap">
+                  <td class="py-3 px-2 text-center font-black text-amber-900 border-r border-slate-300 text-base bg-amber-100/50 whitespace-nowrap">
                     ${groupPending > 0 ? `<span class="font-black text-amber-900">${groupPending}</span>` : `<span class="text-slate-300">-</span>`}
                   </td>
-                  <td class="py-2.5 px-2 text-center border-r border-slate-300 text-slate-400 font-bold text-xs whitespace-nowrap bg-amber-50/50">-</td>
-                  <td class="py-2.5 px-2 text-center border-r border-slate-300 text-slate-400 font-bold text-xs whitespace-nowrap bg-amber-50/50">-</td>
-                  <td class="py-2.5 px-2 text-center border-slate-300 font-black text-xs text-slate-900 whitespace-nowrap bg-amber-50/50">
-                    ${groupTot > 0 ? `<span class="text-blue-900 font-black text-xs bg-blue-100 px-2.5 py-0.5 rounded-md border border-blue-300 whitespace-nowrap">ผ่าน ${groupPercentStr}%</span>` : `<span class="text-slate-400 font-bold text-xs whitespace-nowrap">-</span>`}
+                  <td class="py-3 px-2 text-center border-r border-slate-300 text-slate-400 font-bold text-xs whitespace-nowrap bg-slate-50">-</td>
+                  <td class="py-3 px-2 text-center border-r border-slate-300 text-slate-400 font-bold text-xs whitespace-nowrap bg-slate-50">-</td>
+                  <td class="py-3 px-2 text-center border-slate-300 font-black text-xs text-slate-900 whitespace-nowrap bg-slate-50">
+                    ${groupTot > 0 ? `<span class="text-blue-900 font-black text-xs bg-blue-100 px-3 py-1 rounded border border-blue-300 whitespace-nowrap">ผ่าน ${groupPercentStr}%</span>` : `<span class="text-slate-400 font-bold text-xs whitespace-nowrap">-</span>`}
                   </td>
                 </tr>
               `;
 
-              // Item Rows (Excel gridlines)
+              // Item Rows (Crisp typography, larger text for crystal clear readability in captures)
               items.forEach((item, itIdx) => {
                 const bd = getRowBreakdown(item);
                 let statusBadge = "";
                 if (bd.isNotInspected) {
-                  statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black bg-sky-50 text-sky-800 border border-sky-300 shadow-2xs whitespace-nowrap">○ ยังไม่ตรวจ</span>`;
+                  statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-sky-50 text-sky-800 border border-sky-300 shadow-2xs whitespace-nowrap">○ ยังไม่ตรวจ</span>`;
                 } else if (bd.status === "รอนัดตรวจ") {
-                  statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black bg-amber-50 text-amber-900 border border-amber-400 shadow-2xs whitespace-nowrap">⏱ รอตรวจ</span>`;
+                  statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-amber-50 text-amber-900 border border-amber-400 shadow-2xs whitespace-nowrap">⏱ รอตรวจ</span>`;
                 } else if (bd.status === "ผ่านการตรวจสอบ") {
-                  statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black bg-emerald-50 text-emerald-800 border border-emerald-400 shadow-2xs whitespace-nowrap">★ ผ่านตรวจ</span>`;
+                  statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-400 shadow-2xs whitespace-nowrap">✔ ผ่านตรวจ</span>`;
                 } else if (bd.status === "ไม่มี Defect") {
-                  statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black bg-slate-50 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">— ไม่มี Defect</span>`;
+                  statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-slate-50 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">— ไม่มี Defect</span>`;
                 } else {
-                  statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black bg-rose-50 text-rose-800 border border-rose-300 shadow-2xs whitespace-nowrap">× ยังไม่แก้ไข</span>`;
+                  statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-rose-50 text-rose-800 border border-rose-300 shadow-2xs whitespace-nowrap">✖ ยังไม่แก้ไข</span>`;
                 }
 
                 let dateDisplay = "";
@@ -19259,34 +19257,34 @@
                 const rowBg = itIdx % 2 === 0 ? "bg-white" : "bg-slate-50/70";
 
                 html += `
-                  <tr class="border-b border-slate-300 ${rowBg} hover:bg-amber-50/30">
-                    <td class="py-2 px-1 text-center border-r border-slate-300 text-slate-500 font-bold text-xs whitespace-nowrap">
+                  <tr class="border-b border-slate-300 ${rowBg} hover:bg-slate-100/60">
+                    <td class="py-2.5 px-1.5 text-center border-r border-slate-300 text-slate-500 font-bold text-sm whitespace-nowrap">
                       ${itemSeq++}
                     </td>
-                    <td class="py-2 px-3 text-left border-r border-slate-300 text-slate-900 text-xs font-semibold whitespace-nowrap">
+                    <td class="py-2.5 px-3 text-left border-r border-slate-300 text-slate-900 text-sm font-semibold whitespace-nowrap">
                       <div class="flex items-center gap-1.5 flex-nowrap">
                         <span class="text-slate-400 text-xs font-normal">▪</span>
-                        <span class="text-slate-900 font-bold text-xs">${escapeCommonDefectText(item.name)}</span>
+                        <span class="text-slate-950 font-bold text-[14px] leading-snug">${escapeCommonDefectText(item.name)}</span>
                       </div>
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 text-xs whitespace-nowrap">
-                      ${item.assignee ? `<span class="text-[11px] font-bold text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 whitespace-nowrap">${escapeCommonDefectText(item.assignee)}</span>` : `<span class="text-slate-400 text-xs">-</span>`}
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 text-xs whitespace-nowrap">
+                      ${item.assignee ? `<span class="text-xs font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded border border-slate-300 whitespace-nowrap">${escapeCommonDefectText(item.assignee)}</span>` : `<span class="text-slate-400 text-xs">-</span>`}
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 font-bold text-slate-900 text-xs whitespace-nowrap">
-                      ${bd.isNotInspected ? `<span class="text-slate-400 font-normal">—</span>` : (bd.tot > 0 ? `<span class="font-black text-slate-900">${bd.tot}</span>` : `<span class="text-slate-400 font-normal">0</span>`)}
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 font-bold text-slate-900 text-base whitespace-nowrap">
+                      ${bd.isNotInspected ? `<span class="text-slate-400 font-normal">—</span>` : (bd.tot > 0 ? `<span class="font-black text-slate-950">${bd.tot}</span>` : `<span class="text-slate-400 font-normal">0</span>`)}
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 font-bold text-emerald-700 text-xs whitespace-nowrap bg-emerald-50/30">
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 font-bold text-emerald-700 text-base whitespace-nowrap bg-emerald-50/25">
                       ${bd.passed > 0 ? `<span class="font-black text-emerald-700">${bd.passed}</span>` : `<span class="text-slate-300">-</span>`}
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 text-rose-700 font-bold text-xs whitespace-nowrap bg-rose-50/30">
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 text-rose-700 font-bold text-base whitespace-nowrap bg-rose-50/25">
                       ${bd.left > 0 ? `<span class="font-black text-rose-700">${bd.left}</span>` : `<span class="text-slate-300">-</span>`}
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 text-amber-800 font-bold text-xs whitespace-nowrap bg-amber-50/30">
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 text-amber-800 font-bold text-base whitespace-nowrap bg-amber-50/25">
                       ${bd.pending > 0 ? `<span class="font-black text-amber-800">${bd.pending}</span>` : `<span class="text-slate-300">-</span>`}
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 text-slate-700 font-medium text-xs whitespace-nowrap">${dateDisplay || "-"}</td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 text-slate-700 font-medium text-xs whitespace-nowrap">${inspectDateDisplay || "-"}</td>
-                    <td class="py-2 px-2 text-center border-slate-300 whitespace-nowrap">
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 text-slate-700 font-bold text-xs whitespace-nowrap font-mono">${inspectDateDisplay || "-"}</td>
+                    <td class="py-2.5 px-2 text-center border-r border-slate-300 text-slate-700 font-bold text-xs whitespace-nowrap font-mono">${dateDisplay || "-"}</td>
+                    <td class="py-2.5 px-2 text-center border-slate-300 whitespace-nowrap">
                       ${statusBadge}
                     </td>
                   </tr>
@@ -19409,105 +19407,105 @@
                 : `หน้า 1 จาก 1`;
 
               headerDiv.innerHTML = `
-                <!-- Top Row: Logo, Title, Document Control Box -->
+                <!-- Top Row: Logo, Title, Document Control Box (Formal Executive Header) -->
                 <div class="flex items-stretch border-b border-slate-400 bg-white">
-                  <!-- Brand / Logo (Paper Mario tactile badge) -->
-                  <div class="w-72 p-3.5 border-r border-slate-400 flex items-center gap-3.5 bg-amber-50/60">
-                    <div class="w-13 h-13 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 text-slate-950 font-black text-2xl flex items-center justify-center border-2 border-amber-600 shadow-xs shrink-0">
+                  <!-- Brand / Logo (Formal Executive Badge) -->
+                  <div class="w-80 p-3.5 border-r border-slate-400 flex items-center gap-3.5 bg-slate-50">
+                    <div class="w-14 h-14 rounded-xl bg-slate-900 text-amber-400 font-black text-2xl flex items-center justify-center border border-slate-700 shadow-xs shrink-0">
                       P
                     </div>
                     <div>
-                      <div class="text-[11px] font-black text-blue-800 tracking-wider">PYNN CONDOMINIUM</div>
-                      <div class="text-base font-black text-slate-900 leading-tight">PYNN NGAMWONGWAN 54</div>
-                      <div class="text-[10px] font-bold text-slate-500">โครงการคอนโดมิเนียม งามวงศ์วาน 54</div>
+                      <div class="text-xs font-black text-blue-900 tracking-wider">PYNN CONDOMINIUM</div>
+                      <div class="text-lg font-black text-slate-950 leading-tight">PYNN NGAMWONGWAN 54</div>
+                      <div class="text-xs font-bold text-slate-600">โครงการคอนโดมิเนียม งามวงศ์วาน 54</div>
                     </div>
                   </div>
 
                   <!-- Center Form Title Block (Formal Title) -->
-                  <div class="flex-1 p-3 text-center flex flex-col justify-center items-center bg-slate-50/80 border-r border-slate-400">
-                    <div class="text-[11px] font-black text-blue-900 uppercase tracking-widest mb-0.5">แบบฟอร์มตรวจสอบและควบคุมคุณภาพงาน (QC INSPECTION FORM)</div>
-                    <h1 class="text-xl font-black text-slate-950 tracking-tight leading-snug">รายงานสรุปผลการตรวจสอบ DEFECT งานพื้นที่ส่วนกลาง</h1>
-                    <div class="text-[10px] font-bold text-slate-600 tracking-wide uppercase">COMMON AREA DEFECT INSPECTION & HANDOVER QUALITY REPORT</div>
+                  <div class="flex-1 p-3 text-center flex flex-col justify-center items-center bg-white border-r border-slate-400">
+                    <div class="text-xs font-black text-blue-950 uppercase tracking-wider mb-1">แบบฟอร์มตรวจสอบและควบคุมคุณภาพงาน (QC INSPECTION FORM)</div>
+                    <h1 class="text-2xl font-black text-slate-950 tracking-tight leading-snug">รายงานสรุปผลการตรวจสอบ DEFECT งานพื้นที่ส่วนกลาง</h1>
+                    <div class="text-xs font-bold text-slate-600 tracking-wide uppercase mt-0.5">COMMON AREA DEFECT INSPECTION & HANDOVER QUALITY REPORT</div>
                   </div>
 
                   <!-- Right: Excel Document Control Grid (ตารางควบคุมเอกสาร) -->
-                  <div class="w-68 text-xs divide-y divide-slate-300">
+                  <div class="w-72 text-xs divide-y divide-slate-300">
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-2.5 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-[11px]">เลขที่เอกสาร:</div>
-                      <div class="flex-1 py-1.5 px-2.5 font-black text-slate-900 text-[11px]">QC-PYNN54-COM</div>
+                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">เลขที่เอกสาร:</div>
+                      <div class="flex-1 py-1.5 px-3 font-black text-slate-900 text-xs">QC-PYNN54-COM</div>
                     </div>
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-2.5 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-[11px]">วันที่รายงาน:</div>
-                      <div class="flex-1 py-1.5 px-2.5 font-black text-slate-900 text-[11px]">${escapeCommonDefectText(reportDate)}</div>
+                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">วันที่รายงาน:</div>
+                      <div class="flex-1 py-1.5 px-3 font-black text-slate-900 text-xs">${escapeCommonDefectText(reportDate)}</div>
                     </div>
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-2.5 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-[11px]">รอบการตรวจ:</div>
-                      <div class="flex-1 py-1.5 px-2.5 font-black text-amber-900 text-[11px]">รอบที่ 2 (Final QC)</div>
+                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">รอบการตรวจ:</div>
+                      <div class="flex-1 py-1.5 px-3 font-black text-slate-900 text-xs">รอบที่ 2 (Final QC)</div>
                     </div>
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-2.5 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-[11px]">หน้าเอกสาร:</div>
-                      <div class="flex-1 py-1.5 px-2.5 font-black text-blue-900 text-[11px]">
+                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">หน้าเอกสาร:</div>
+                      <div class="flex-1 py-1.5 px-3 font-black text-blue-900 text-xs">
                         ${partBadgeText}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Meta Strip: 4 Excel Columns -->
-                <div class="grid grid-cols-4 text-xs divide-x divide-slate-300 bg-slate-50/90 text-slate-800">
-                  <div class="py-1.5 px-3">
-                    <span class="font-bold text-slate-500 text-[11px]">โครงการ:</span>
-                    <strong class="font-black text-slate-900 ml-1">PYNN Ngamwongwan 54</strong>
+                <!-- Meta Strip: 4 Formal Excel Columns -->
+                <div class="grid grid-cols-4 text-xs divide-x divide-slate-300 bg-slate-100 text-slate-800">
+                  <div class="py-2 px-3.5">
+                    <span class="font-bold text-slate-600 text-xs">โครงการ:</span>
+                    <strong class="font-black text-slate-950 text-sm ml-1.5">PYNN Ngamwongwan 54</strong>
                   </div>
-                  <div class="py-1.5 px-3">
-                    <span class="font-bold text-slate-500 text-[11px]">หมวดในหน้านี้:</span>
-                    <strong class="font-black text-slate-900 ml-1">${curGroupList.length} หมวด (${partTot} ข้อ)</strong>
+                  <div class="py-2 px-3.5">
+                    <span class="font-bold text-slate-600 text-xs">หมวดในหน้านี้:</span>
+                    <strong class="font-black text-slate-950 text-sm ml-1.5">${curGroupList.length} หมวด (${partTot} ข้อ)</strong>
                   </div>
-                  <div class="py-1.5 px-3">
-                    <span class="font-bold text-slate-500 text-[11px]">สถานะหน้านี้:</span>
-                    <strong class="font-black text-blue-800 ml-1">${isSplitMode ? `ส่วนที่ ${partIndex} จาก ${totalParts}` : 'สรุปครบทุกหมวด'}</strong>
+                  <div class="py-2 px-3.5">
+                    <span class="font-bold text-slate-600 text-xs">สถานะหน้านี้:</span>
+                    <strong class="font-black text-blue-900 text-sm ml-1.5">${isSplitMode ? `ส่วนที่ ${partIndex} จาก ${totalParts}` : 'สรุปครบทุกหมวด'}</strong>
                   </div>
-                  <div class="py-1.5 px-3">
-                    <span class="font-bold text-slate-500 text-[11px]">อัตราผ่านรวมทั้งโครงการ:</span>
-                    <strong class="font-black text-emerald-800 ml-1">${grandTotals.percentStr}% (${grandTotals.passed}/${grandTotals.tot} ข้อ)</strong>
+                  <div class="py-2 px-3.5">
+                    <span class="font-bold text-slate-600 text-xs">อัตราผ่านรวมทั้งโครงการ:</span>
+                    <strong class="font-black text-emerald-800 text-sm ml-1.5">${grandTotals.percentStr}% (${grandTotals.passed}/${grandTotals.tot} ข้อ)</strong>
                   </div>
                 </div>
               `;
               stage.appendChild(headerDiv);
             }
 
-            // 2. Formal Excel Summary Grid (เปลี่ยนจากการ์ดลอยสไตล์ AI เป็นตารางเซลล์ Excel แท้)
+            // 2. Formal Excel Summary Grid (Large readable metrics)
             if (includeTable) {
               const kpiRow = document.createElement("div");
-              kpiRow.className = "bg-white border-2 border-slate-600 rounded-lg overflow-hidden shadow-2xs";
+              kpiRow.className = "bg-white border-2 border-slate-700 rounded-lg overflow-hidden shadow-2xs";
               const passPctThisPart = partTot > 0 ? ((partPassed / partTot) * 100).toFixed(1) : "0.0";
 
               kpiRow.innerHTML = `
                 <table class="w-full border-collapse text-center text-xs">
                   <thead>
                     <tr class="bg-slate-100 border-b border-slate-400 divide-x divide-slate-300 text-slate-800">
-                      <th class="py-2 px-3 font-bold text-[11px]">DEFECT ในหน้านี้ทั้งหมด</th>
-                      <th class="py-2 px-3 font-bold text-[11px] text-emerald-900 bg-emerald-50/50">ผ่านการตรวจสอบ (Passed)</th>
-                      <th class="py-2 px-3 font-bold text-[11px] text-rose-900 bg-rose-50/50">คงเหลือยังไม่แก้ไข (Remaining)</th>
-                      <th class="py-2 px-3 font-bold text-[11px] text-amber-900 bg-amber-50/50">แก้ไขแล้วรอนัดตรวจ (Pending)</th>
-                      <th class="py-2 px-3 font-bold text-[11px] text-slate-900 bg-slate-200/80">อัตราผ่านการตรวจหน้านี้ (Pass Rate)</th>
+                      <th class="py-2.5 px-3 font-bold text-xs">DEFECT ในหน้านี้ทั้งหมด</th>
+                      <th class="py-2.5 px-3 font-bold text-xs text-emerald-900 bg-emerald-50/60">ผ่านการตรวจสอบ (Passed)</th>
+                      <th class="py-2.5 px-3 font-bold text-xs text-rose-900 bg-rose-50/60">คงเหลือยังไม่แก้ไข (Remaining)</th>
+                      <th class="py-2.5 px-3 font-bold text-xs text-amber-900 bg-amber-50/60">แก้ไขแล้วรอนัดตรวจ (Pending)</th>
+                      <th class="py-2.5 px-3 font-bold text-xs text-slate-900 bg-slate-200/80">อัตราผ่านการตรวจหน้านี้ (Pass Rate)</th>
                     </tr>
                   </thead>
                   <tbody class="divide-x divide-slate-300 font-mono">
                     <tr class="bg-white">
-                      <td class="py-2.5 px-3 font-black text-slate-900 text-base">
-                        ${partTot} <span class="text-xs font-normal text-slate-500 font-sans">รายการ</span>
+                      <td class="py-3 px-3 font-black text-slate-950 text-xl">
+                        ${partTot} <span class="text-xs font-bold text-slate-600 font-sans">รายการ</span>
                       </td>
-                      <td class="py-2.5 px-3 font-black text-emerald-700 text-base bg-emerald-50/20">
-                        ${partPassed} <span class="text-xs font-normal text-emerald-600 font-sans">รายการ</span>
+                      <td class="py-3 px-3 font-black text-emerald-800 text-xl bg-emerald-50/20">
+                        ${partPassed} <span class="text-xs font-bold text-emerald-700 font-sans">รายการ</span>
                       </td>
-                      <td class="py-2.5 px-3 font-black text-rose-700 text-base bg-rose-50/20">
-                        ${partLeft} <span class="text-xs font-normal text-rose-600 font-sans">รายการ</span>
+                      <td class="py-3 px-3 font-black text-rose-800 text-xl bg-rose-50/20">
+                        ${partLeft} <span class="text-xs font-bold text-rose-700 font-sans">รายการ</span>
                       </td>
-                      <td class="py-2.5 px-3 font-black text-amber-800 text-base bg-amber-50/20">
-                        ${partPending} <span class="text-xs font-normal text-amber-700 font-sans">รายการ</span>
+                      <td class="py-3 px-3 font-black text-amber-900 text-xl bg-amber-50/20">
+                        ${partPending} <span class="text-xs font-bold text-amber-800 font-sans">รายการ</span>
                       </td>
-                      <td class="py-2.5 px-3 font-black text-slate-950 text-base bg-slate-100/70">
+                      <td class="py-3 px-3 font-black text-slate-950 text-xl bg-slate-100/80">
                         ${passPctThisPart}%
                       </td>
                     </tr>
@@ -19532,26 +19530,26 @@
               }
             }
 
-            // 4. Defect Table (Formal Excel Gridlines with Paper Mario styling)
+            // 4. Defect Table (Formal Executive Gridlines with Crystal Clear Readable Fonts)
             if (includeTable && curGroupList.length > 0) {
               const tableContainer = document.createElement("div");
-              tableContainer.className = "bg-white border-2 border-slate-900 rounded-xl shadow-xs overflow-hidden";
-              tableContainer.style.cssText = "overflow: visible; width: 100%; border: 2.5px solid #0f172a;";
+              tableContainer.className = "bg-white border-2 border-slate-800 rounded-xl shadow-xs overflow-hidden";
+              tableContainer.style.cssText = "overflow: visible; width: 100%; border: 2px solid #1e293b;";
 
               let tfootHTML = "";
               if (isSplitMode && partIndex === 1) {
                 tfootHTML = `
                   <tfoot class="border-t-2 border-slate-500 bg-slate-100">
-                    <tr class="font-black text-slate-900 text-xs">
-                      <td class="py-2.5 px-2 text-center border-r border-slate-300 bg-slate-200">Σ</td>
-                      <td colspan="2" class="py-2.5 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-xs whitespace-nowrap">
+                    <tr class="font-black text-slate-900 text-sm">
+                      <td class="py-3 px-2 text-center border-r border-slate-300 bg-slate-200 font-black">Σ</td>
+                      <td colspan="2" class="py-3 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap">
                         รวมย่อยส่วนที่ 1 (Subtotal Part 1: ${curGroupList.length} หมวด):
                       </td>
-                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-xs whitespace-nowrap bg-slate-200">${partTot}</td>
-                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-xs whitespace-nowrap bg-emerald-100/70">${partPassed}</td>
-                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-xs whitespace-nowrap bg-rose-100/70">${partLeft}</td>
-                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-xs whitespace-nowrap bg-amber-100/70">${partPending}</td>
-                      <td colspan="3" class="py-2.5 px-2 text-center border-slate-300 text-blue-900 font-black text-xs whitespace-nowrap bg-blue-50">
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-base whitespace-nowrap bg-slate-200">${partTot}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-base whitespace-nowrap bg-emerald-100/60">${partPassed}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-base whitespace-nowrap bg-rose-100/60">${partLeft}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-base whitespace-nowrap bg-amber-100/60">${partPending}</td>
+                      <td colspan="3" class="py-3 px-2 text-center border-slate-300 text-blue-900 font-black text-xs whitespace-nowrap bg-blue-50/80">
                         (มีต่อในเอกสารหน้า 2 ➡)
                       </td>
                     </tr>
@@ -19560,31 +19558,31 @@
               } else if (isSplitMode && partIndex === 2) {
                 tfootHTML = `
                   <tfoot class="border-t-2 border-slate-500 bg-slate-100">
-                    <tr class="font-black text-slate-900 text-xs">
-                      <td class="py-2 px-2 text-center border-r border-slate-300 bg-slate-200">Σ</td>
-                      <td colspan="2" class="py-2 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-xs whitespace-nowrap">
+                    <tr class="font-black text-slate-900 text-sm">
+                      <td class="py-2.5 px-2 text-center border-r border-slate-300 bg-slate-200 font-black">Σ</td>
+                      <td colspan="2" class="py-2.5 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap">
                         รวมย่อยส่วนที่ 2 (Subtotal Part 2: ${curGroupList.length} หมวด):
                       </td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-xs whitespace-nowrap bg-slate-200">${partTot}</td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-xs whitespace-nowrap bg-emerald-100/70">${partPassed}</td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-xs whitespace-nowrap bg-rose-100/70">${partLeft}</td>
-                      <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-xs whitespace-nowrap bg-amber-100/70">${partPending}</td>
-                      <td colspan="3" class="py-2 px-2 text-center border-slate-300 text-slate-600 font-bold text-xs whitespace-nowrap">
+                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-base whitespace-nowrap bg-slate-200">${partTot}</td>
+                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-base whitespace-nowrap bg-emerald-100/60">${partPassed}</td>
+                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-base whitespace-nowrap bg-rose-100/60">${partLeft}</td>
+                      <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-base whitespace-nowrap bg-amber-100/60">${partPending}</td>
+                      <td colspan="3" class="py-2.5 px-2 text-center border-slate-300 text-slate-600 font-bold text-xs whitespace-nowrap">
                         จบส่วนที่ 2
                       </td>
                     </tr>
                     ${includeTotal ? `
-                    <tr class="bg-amber-100/90 text-slate-950 font-black text-xs border-t-2 border-slate-800" style="border-bottom: 3px double #0f172a;">
-                      <td class="py-3 px-2 text-center border-r border-slate-400 bg-amber-200 font-black">Σ</td>
-                      <td colspan="2" class="py-3 px-3 text-left border-r border-slate-400 font-black text-slate-950 text-xs whitespace-nowrap">
+                    <tr class="bg-slate-200 text-slate-950 font-black text-sm border-t-2 border-slate-800" style="border-bottom: 3px double #0f172a;">
+                      <td class="py-3 px-2 text-center border-r border-slate-400 bg-slate-300 font-black">Σ</td>
+                      <td colspan="2" class="py-3 px-3 text-left border-r border-slate-400 font-black text-slate-950 text-sm whitespace-nowrap">
                         Grand Total สรุปรวมทั้งสิ้นทั้งโครงการ (${selectedGroups.length} หมวด):
                       </td>
-                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-slate-950 text-sm whitespace-nowrap bg-amber-200/80">${grandTotals.tot}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-emerald-900 text-sm whitespace-nowrap bg-emerald-200/80">${grandTotals.passed}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-rose-900 text-sm whitespace-nowrap bg-rose-200/80">${grandTotals.left}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-amber-950 text-sm whitespace-nowrap bg-amber-200/80">${grandTotals.pending}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-slate-950 text-base whitespace-nowrap bg-slate-300/80">${grandTotals.tot}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-emerald-900 text-base whitespace-nowrap bg-emerald-200/80">${grandTotals.passed}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-rose-900 text-base whitespace-nowrap bg-rose-200/80">${grandTotals.left}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-amber-950 text-base whitespace-nowrap bg-amber-200/80">${grandTotals.pending}</td>
                       <td colspan="3" class="py-3 px-2 text-center border-slate-400 font-black text-xs whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-amber-300 text-slate-950 border border-amber-500 shadow-2xs whitespace-nowrap">
+                        <span class="inline-flex items-center px-3.5 py-1 rounded-md text-xs font-black bg-slate-900 text-white shadow-2xs whitespace-nowrap">
                           ผ่านรวม ${grandTotals.percentStr}%
                         </span>
                       </td>
@@ -19594,18 +19592,18 @@
                 `;
               } else if (includeTotal) {
                 tfootHTML = `
-                  <tfoot class="border-t-2 border-slate-500 bg-amber-100/90">
-                    <tr class="font-black text-slate-950 text-xs" style="border-bottom: 3px double #0f172a;">
-                      <td class="py-3 px-2 text-center border-r border-slate-300 bg-amber-200">Σ</td>
-                      <td colspan="2" class="py-3 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-xs whitespace-nowrap">
+                  <tfoot class="border-t-2 border-slate-500 bg-slate-100">
+                    <tr class="font-black text-slate-950 text-sm" style="border-bottom: 3px double #0f172a;">
+                      <td class="py-3 px-2 text-center border-r border-slate-300 bg-slate-200 font-black">Σ</td>
+                      <td colspan="2" class="py-3 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap">
                         Grand Total รวมทั้งสิ้น (${curGroupList.length} หมวด):
                       </td>
-                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap bg-amber-200">${grandTotals.tot}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-900 text-sm whitespace-nowrap bg-emerald-200">${grandTotals.passed}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-900 text-sm whitespace-nowrap bg-rose-200">${grandTotals.left}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-950 text-sm whitespace-nowrap bg-amber-200">${grandTotals.pending}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-base whitespace-nowrap bg-slate-200">${grandTotals.tot}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-900 text-base whitespace-nowrap bg-emerald-200/80">${grandTotals.passed}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-900 text-base whitespace-nowrap bg-rose-200/80">${grandTotals.left}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-950 text-base whitespace-nowrap bg-amber-200/80">${grandTotals.pending}</td>
                       <td colspan="3" class="py-3 px-2 text-center border-slate-300 font-black text-xs whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-amber-300 text-slate-950 border border-amber-500 shadow-2xs whitespace-nowrap">
+                        <span class="inline-flex items-center px-3.5 py-1 rounded-md text-xs font-black bg-slate-900 text-white shadow-2xs whitespace-nowrap">
                           ผ่านรวม ${grandTotals.percentStr}%
                         </span>
                       </td>
@@ -19620,30 +19618,30 @@
 
               tableContainer.innerHTML = `
                 <div style="overflow: visible; width: 100%;">
-                  <!-- Table Header Ribbon (Paper Mario Vibrant Strip) -->
-                  <div class="px-4 py-2.5 text-xs font-black flex items-center justify-between whitespace-nowrap" style="background: #fef08a; border-bottom: 2.5px solid #0f172a; color: #0f172a;">
-                    <div class="flex items-center gap-2">
-                      <span class="w-3 h-3 rounded-full bg-amber-500 border border-slate-900 inline-block"></span>
-                      <span class="tracking-wide text-sm font-black text-slate-950">${tableTitleText}</span>
+                  <!-- Table Header Ribbon (Formal Executive Strip) -->
+                  <div class="px-4 py-2.5 text-sm font-black flex items-center justify-between whitespace-nowrap" style="background: #1e293b; border-bottom: 2px solid #0f172a; color: #ffffff;">
+                    <div class="flex items-center gap-2.5">
+                      <span class="w-3 h-3 rounded-full bg-blue-400 inline-block"></span>
+                      <span class="tracking-wide text-base font-black text-white">${tableTitleText}</span>
                     </div>
-                    <span class="text-slate-950 font-black text-xs px-3 py-1 rounded-lg border-2 border-slate-900 shadow-2xs whitespace-nowrap" style="background: #ffffff;">
-                      ⭐ ${curGroupList.length} หมวด (${partTot} รายการ)
+                    <span class="text-slate-900 font-black text-xs px-3.5 py-1 rounded-md bg-white border border-slate-300 shadow-2xs whitespace-nowrap">
+                      สรุป ${curGroupList.length} หมวด (${partTot} รายการ)
                     </span>
                   </div>
-                  <!-- Excel Table with Paper Mario Nintendo Themed Headers -->
+                  <!-- Excel Table with Formal Executive Headers (Readable Font Sizes) -->
                   <table class="w-full border-collapse text-left text-xs" style="overflow: visible;">
                     <thead>
-                      <tr class="font-black text-center text-xs" style="border-bottom: 2.5px solid #0f172a;">
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 46px; background: #fef3c7; color: #78350f; border-right: 2px solid #0f172a;">ลำดับ</th>
-                        <th class="py-2.5 px-3 text-left whitespace-nowrap" style="min-width: 320px; background: #fef3c7; color: #78350f; border-right: 2px solid #0f172a;">หมวดพื้นที่และรายการงาน (Area & Defect Items)</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 100px; background: #e0e7ff; color: #312e81; border-right: 2px solid #0f172a;">👤 ผู้รับผิดชอบ</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #fef08a; color: #713f12; border-right: 2px solid #0f172a;">⭐ ทั้งหมด</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #86efac; color: #064e3b; border-right: 2px solid #0f172a;">✔ ผ่าน</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #fca5a5; color: #7f1d1d; border-right: 2px solid #0f172a;">✖ ยังไม่แก้</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #fed7aa; color: #7c2d12; border-right: 2px solid #0f172a;">⏱ รอตรวจ</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 95px; background: #99f6e4; color: #134e4a; border-right: 2px solid #0f172a;">🏁 กำหนดเสร็จ</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 95px; background: #bae6fd; color: #075985; border-right: 2px solid #0f172a;">🔍 กำหนดตรวจ</th>
-                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 110px; background: #e9d5ff; color: #581c87;">🎖️ สถานะ (Status)</th>
+                      <tr class="font-black text-center" style="border-bottom: 2px solid #334155; background: #f1f5f9;">
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 48px; background: #f1f5f9; color: #0f172a; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">ลำดับ</th>
+                        <th class="py-3 px-3.5 text-left whitespace-nowrap" style="min-width: 320px; background: #f1f5f9; color: #0f172a; border-right: 1.5px solid #cbd5e1; font-size: 14px;">หมวดพื้นที่และรายการงาน (Area & Defect Items)</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 110px; background: #f1f5f9; color: #0f172a; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">ผู้รับผิดชอบ</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 65px; background: #f1f5f9; color: #0f172a; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">ทั้งหมด</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 65px; background: #f0fdf4; color: #166534; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">ผ่าน</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 65px; background: #fef2f2; color: #991b1b; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">ยังไม่แก้</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 65px; background: #fffbeb; color: #92400e; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">รอตรวจ</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 100px; background: #f1f5f9; color: #0f172a; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">กำหนดตรวจ</th>
+                        <th class="py-3 px-2 text-center whitespace-nowrap" style="width: 100px; background: #f1f5f9; color: #0f172a; border-right: 1.5px solid #cbd5e1; font-size: 13.5px;">กำหนดเสร็จ</th>
+                        <th class="py-3 px-2.5 text-center whitespace-nowrap" style="width: 125px; background: #f1f5f9; color: #0f172a; font-size: 13.5px;">สถานะ (Status)</th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-300">
@@ -19662,23 +19660,23 @@
               const signOffDiv = document.createElement("div");
               signOffDiv.className = "mt-2 pt-3 border-t-2 border-slate-400";
               signOffDiv.innerHTML = `
-                <div class="text-xs font-black text-slate-800 uppercase tracking-wider mb-2 flex items-center justify-between">
+                <div class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2 flex items-center justify-between">
                   <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 bg-blue-700 rounded-full inline-block"></span>
+                    <span class="w-2.5 h-2.5 bg-blue-800 rounded-full inline-block"></span>
                     <span>การลงนามตรวจสอบและรับทราบผลการแก้ไข DEFECT (INSPECTION SIGN-OFF & APPROVAL)</span>
                   </div>
-                  <span class="text-[11px] text-slate-500 font-normal">เอกสารมีผลผูกพันการตรวจรับมอบงาน</span>
+                  <span class="text-xs text-slate-600 font-semibold">เอกสารมีผลผูกพันการตรวจรับมอบงาน</span>
                 </div>
                 <div class="grid grid-cols-3 gap-3.5">
                   <!-- Party 1: QC Inspector -->
-                  <div class="border-2 border-slate-400 rounded-lg bg-white p-3 flex flex-col justify-between h-32 shadow-2xs">
-                    <div class="text-center font-black text-xs text-slate-900 border-b border-slate-200 pb-1 bg-slate-100/80 -mx-3 -mt-3 p-1.5 rounded-t-md">
+                  <div class="border-2 border-slate-400 rounded-lg bg-white p-3 flex flex-col justify-between h-34 shadow-2xs">
+                    <div class="text-center font-black text-xs text-slate-900 border-b border-slate-200 pb-1.5 bg-slate-100 -mx-3 -mt-3 p-2 rounded-t-md">
                       ผู้ตรวจสอบคุณภาพงาน (QC Inspector)
                     </div>
-                    <div class="text-center py-1.5 text-slate-400 text-xs">
+                    <div class="text-center py-2 text-slate-400 text-xs">
                       ลายมือชื่อ: ................................................................
                     </div>
-                    <div class="text-[11px] text-slate-700 space-y-0.5 border-t border-slate-100 pt-1">
+                    <div class="text-xs text-slate-700 space-y-0.5 border-t border-slate-100 pt-1.5 font-medium">
                       <div>ชื่อ: ( ................................................................ )</div>
                       <div>ตำแหน่ง: เจ้าหน้าที่ตรวจสอบคุณภาพ (QC Engineer)</div>
                       <div>วันที่: .......... / .......... / 2568</div>
@@ -19686,14 +19684,14 @@
                   </div>
 
                   <!-- Party 2: Site Engineer / Main Contractor -->
-                  <div class="border-2 border-slate-400 rounded-lg bg-white p-3 flex flex-col justify-between h-32 shadow-2xs">
-                    <div class="text-center font-black text-xs text-slate-900 border-b border-slate-200 pb-1 bg-slate-100/80 -mx-3 -mt-3 p-1.5 rounded-t-md">
+                  <div class="border-2 border-slate-400 rounded-lg bg-white p-3 flex flex-col justify-between h-34 shadow-2xs">
+                    <div class="text-center font-black text-xs text-slate-900 border-b border-slate-200 pb-1.5 bg-slate-100 -mx-3 -mt-3 p-2 rounded-t-md">
                       วิศวกรผู้ควบคุมงาน (Site Engineer)
                     </div>
-                    <div class="text-center py-1.5 text-slate-400 text-xs">
+                    <div class="text-center py-2 text-slate-400 text-xs">
                       ลายมือชื่อ: ................................................................
                     </div>
-                    <div class="text-[11px] text-slate-700 space-y-0.5 border-t border-slate-100 pt-1">
+                    <div class="text-xs text-slate-700 space-y-0.5 border-t border-slate-100 pt-1.5 font-medium">
                       <div>ชื่อ: ( ................................................................ )</div>
                       <div>ตำแหน่ง: วิศวกรโครงการ / ตัวแทนผู้รับเหมา</div>
                       <div>วันที่: .......... / .......... / 2568</div>
@@ -19701,14 +19699,14 @@
                   </div>
 
                   <!-- Party 3: Project Manager / Handover Manager -->
-                  <div class="border-2 border-slate-400 rounded-lg bg-white p-3 flex flex-col justify-between h-32 shadow-2xs">
-                    <div class="text-center font-black text-xs text-slate-900 border-b border-slate-200 pb-1 bg-slate-100/80 -mx-3 -mt-3 p-1.5 rounded-t-md">
+                  <div class="border-2 border-slate-400 rounded-lg bg-white p-3 flex flex-col justify-between h-34 shadow-2xs">
+                    <div class="text-center font-black text-xs text-slate-900 border-b border-slate-200 pb-1.5 bg-slate-100 -mx-3 -mt-3 p-2 rounded-t-md">
                       ตัวแทนโครงการ / ผู้จัดการ (Project Manager)
                     </div>
-                    <div class="text-center py-1.5 text-slate-400 text-xs">
+                    <div class="text-center py-2 text-slate-400 text-xs">
                       ลายมือชื่อ: ................................................................
                     </div>
-                    <div class="text-[11px] text-slate-700 space-y-0.5 border-t border-slate-100 pt-1">
+                    <div class="text-xs text-slate-700 space-y-0.5 border-t border-slate-100 pt-1.5 font-medium">
                       <div>ชื่อ: ( ................................................................ )</div>
                       <div>ตำแหน่ง: ผู้จัดการฝ่ายตรวจรับมอบ (Handover Manager)</div>
                       <div>วันที่: .......... / .......... / 2568</div>
@@ -19721,14 +19719,14 @@
 
             // 6. Formal Document Footer Note
             const footerNote = document.createElement("div");
-            footerNote.className = "flex items-center justify-between pt-2 mt-auto border-t border-slate-300 text-slate-500 text-xs font-semibold";
+            footerNote.className = "flex items-center justify-between pt-2.5 mt-auto border-t border-slate-300 text-slate-600 text-xs font-semibold";
             footerNote.innerHTML = `
               <div class="flex items-center gap-2">
-                <span class="font-black text-slate-800">PYNN NGAMWONGWAN 54</span>
+                <span class="font-black text-slate-900">PYNN NGAMWONGWAN 54</span>
                 <span>·</span>
                 <span>รายงานผลการตรวจสอบ DEFECT พื้นที่ส่วนกลาง</span>
               </div>
-              <div class="font-bold text-slate-700">
+              <div class="font-bold text-slate-800">
                 ${isSplitMode ? `เอกสารส่วนที่ ${partIndex} จาก ${totalParts} · ${partIndex === 1 ? 'มีต่อหน้า 2 ➡' : 'จบบริบูรณ์ (Complete)'}` : 'รายงานฉบับสมบูรณ์ (Complete)'}
               </div>
             `;
@@ -19889,71 +19887,71 @@
             splitColumnsDiv.style.cssText = "display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; overflow: visible; align-items: start;";
 
             const leftCard = document.createElement("div");
-            leftCard.style.cssText = "overflow: visible; width: 100%; border: 2.5px solid #cbd5e1; border-radius: 18px; box-shadow: 0 4px 18px rgba(0,0,0,0.05);";
+            leftCard.style.cssText = "overflow: visible; width: 100%; border: 2px solid #334155; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.04);";
             leftCard.innerHTML = `
-              <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 text-white px-5 py-3 text-sm font-black flex items-center justify-between border-b-2 border-blue-700 whitespace-nowrap">
+              <div class="bg-slate-800 text-white px-5 py-3 text-sm font-black flex items-center justify-between border-b-2 border-slate-900 whitespace-nowrap">
                 <span class="flex items-center gap-2.5 whitespace-nowrap">
-                  <span class="w-3 h-3 rounded-full bg-amber-400 inline-block shadow-2xs shrink-0"></span>
+                  <span class="w-3 h-3 rounded-full bg-blue-400 inline-block shadow-2xs shrink-0"></span>
                   <span class="text-sm font-black tracking-wide text-white whitespace-nowrap">ตารางสรุปส่วนที่ 1 (Part 1 · ${leftGroups.length} หมวด)</span>
                 </span>
-                <span class="text-slate-950 font-black text-xs bg-amber-400 px-3.5 py-1 rounded-full border border-amber-500 shadow-2xs whitespace-nowrap shrink-0">รวม ${leftTot} ข้อ</span>
+                <span class="text-slate-900 font-black text-xs bg-white px-3.5 py-1 rounded-md border border-slate-300 shadow-2xs whitespace-nowrap shrink-0">รวม ${leftTot} ข้อ</span>
               </div>
               <table class="w-full border-collapse text-left text-sm" style="overflow: visible;">
                 <thead>
-                  <tr class="bg-slate-100 text-slate-800 font-black text-center text-sm border-b-2 border-slate-300">
-                    <th class="py-3 px-3 text-left border-r border-slate-300 min-w-[260px] font-black text-sm text-slate-800 whitespace-nowrap">Category / Location</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-slate-800 whitespace-nowrap">ทั้งหมด</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-emerald-700 whitespace-nowrap">ผ่าน</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-rose-700 whitespace-nowrap">ยังไม่แก้</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-amber-800 whitespace-nowrap">รอตรวจ</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-26 font-black text-sm text-slate-700 whitespace-nowrap">Target</th>
-                    <th class="py-3 px-2 text-center border-slate-300 w-32 font-black text-sm text-slate-700 whitespace-nowrap">Status</th>
+                  <tr class="bg-slate-100 text-slate-900 font-black text-center text-sm border-b-2 border-slate-300">
+                    <th class="py-3 px-3.5 text-left border-r border-slate-300 min-w-[260px] font-black text-sm text-slate-900 whitespace-nowrap">Category / Location</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-slate-900 whitespace-nowrap">ทั้งหมด</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-emerald-800 whitespace-nowrap bg-emerald-50/50">ผ่าน</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-rose-800 whitespace-nowrap bg-rose-50/50">ยังไม่แก้</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-amber-900 whitespace-nowrap bg-amber-50/50">รอตรวจ</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-26 font-black text-sm text-slate-800 whitespace-nowrap">Target</th>
+                    <th class="py-3 px-2 text-center border-slate-300 w-32 font-black text-sm text-slate-800 whitespace-nowrap">Status</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">${buildGroupRowsHTML(leftGroups)}</tbody>
                 <tfoot class="border-t-2 border-slate-400">
                   <tr class="bg-slate-100 text-slate-900 font-black text-sm">
-                    <td class="py-3 px-4 pl-4 text-left border-r border-slate-300 font-black text-slate-900 text-sm whitespace-nowrap">รวมส่วนที่ 1 (Subtotal):</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-900 text-sm whitespace-nowrap">${leftTot}</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-700 text-sm whitespace-nowrap">${leftPassed}</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-700 text-sm whitespace-nowrap">${leftLeft}</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-800 text-sm whitespace-nowrap">${leftPending}</td>
-                    <td colspan="2" class="py-3 px-2 text-center border-slate-300 text-indigo-700 font-bold text-xs whitespace-nowrap">(ต่อขวามือ ➡)</td>
+                    <td class="py-3 px-4 pl-4 text-left border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap">รวมส่วนที่ 1 (Subtotal):</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-base whitespace-nowrap">${leftTot}</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-base whitespace-nowrap bg-emerald-50/60">${leftPassed}</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-base whitespace-nowrap bg-rose-50/60">${leftLeft}</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-base whitespace-nowrap bg-amber-50/60">${leftPending}</td>
+                    <td colspan="2" class="py-3 px-2 text-center border-slate-300 text-blue-900 font-bold text-xs whitespace-nowrap">(ต่อขวามือ ➡)</td>
                   </tr>
                 </tfoot>
               </table>
             `;
 
             const rightCard = document.createElement("div");
-            rightCard.style.cssText = "overflow: visible; width: 100%; border: 2.5px solid #cbd5e1; border-radius: 18px; box-shadow: 0 4px 18px rgba(0,0,0,0.05);";
+            rightCard.style.cssText = "overflow: visible; width: 100%; border: 2px solid #334155; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.04);";
             rightCard.innerHTML = `
-              <div class="bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white px-5 py-3 text-sm font-black flex items-center justify-between border-b-2 border-blue-700 whitespace-nowrap">
+              <div class="bg-slate-800 text-white px-5 py-3 text-sm font-black flex items-center justify-between border-b-2 border-slate-900 whitespace-nowrap">
                 <span class="flex items-center gap-2.5 whitespace-nowrap">
-                  <span class="w-3 h-3 rounded-full bg-amber-400 inline-block shadow-2xs shrink-0"></span>
+                  <span class="w-3 h-3 rounded-full bg-blue-400 inline-block shadow-2xs shrink-0"></span>
                   <span class="text-sm font-black tracking-wide text-white whitespace-nowrap">ตารางสรุปส่วนที่ 2 (Part 2 · ${rightGroups.length} หมวด)</span>
                 </span>
-                <span class="text-slate-950 font-black text-xs bg-amber-400 px-3.5 py-1 rounded-full border border-amber-500 shadow-2xs whitespace-nowrap shrink-0">รวม ${rightTot} ข้อ</span>
+                <span class="text-slate-900 font-black text-xs bg-white px-3.5 py-1 rounded-md border border-slate-300 shadow-2xs whitespace-nowrap shrink-0">รวม ${rightTot} ข้อ</span>
               </div>
               <table class="w-full border-collapse text-left text-sm" style="overflow: visible;">
                 <thead>
-                  <tr class="bg-slate-100 text-slate-800 font-black text-center text-sm border-b-2 border-slate-300">
-                    <th class="py-3 px-3 text-left border-r border-slate-300 min-w-[260px] font-black text-sm text-slate-800 whitespace-nowrap">Category / Location</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-slate-800 whitespace-nowrap">ทั้งหมด</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-emerald-700 whitespace-nowrap">ผ่าน</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-rose-700 whitespace-nowrap">ยังไม่แก้</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-amber-800 whitespace-nowrap">รอตรวจ</th>
-                    <th class="py-3 px-2 text-center border-r border-slate-300 w-26 font-black text-sm text-slate-700 whitespace-nowrap">Target</th>
-                    <th class="py-3 px-2 text-center border-slate-300 w-32 font-black text-sm text-slate-700 whitespace-nowrap">Status</th>
+                  <tr class="bg-slate-100 text-slate-900 font-black text-center text-sm border-b-2 border-slate-300">
+                    <th class="py-3 px-3.5 text-left border-r border-slate-300 min-w-[260px] font-black text-sm text-slate-900 whitespace-nowrap">Category / Location</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-slate-900 whitespace-nowrap">ทั้งหมด</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-emerald-800 whitespace-nowrap bg-emerald-50/50">ผ่าน</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-rose-800 whitespace-nowrap bg-rose-50/50">ยังไม่แก้</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-20 font-black text-sm text-amber-900 whitespace-nowrap bg-amber-50/50">รอตรวจ</th>
+                    <th class="py-3 px-2 text-center border-r border-slate-300 w-26 font-black text-sm text-slate-800 whitespace-nowrap">Target</th>
+                    <th class="py-3 px-2 text-center border-slate-300 w-32 font-black text-sm text-slate-800 whitespace-nowrap">Status</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">${buildGroupRowsHTML(rightGroups)}</tbody>
                 <tfoot class="border-t-2 border-slate-400">
                   <tr class="bg-slate-100 text-slate-900 font-black text-sm">
-                    <td class="py-3 px-4 pl-4 text-left border-r border-slate-300 font-black text-slate-900 text-sm whitespace-nowrap">รวมส่วนที่ 2 (Subtotal):</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-900 text-sm whitespace-nowrap">${rightTot}</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-700 text-sm whitespace-nowrap">${rightPassed}</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-700 text-sm whitespace-nowrap">${rightLeft}</td>
-                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-800 text-sm whitespace-nowrap">${rightPending}</td>
+                    <td class="py-3 px-4 pl-4 text-left border-r border-slate-300 font-black text-slate-950 text-sm whitespace-nowrap">รวมส่วนที่ 2 (Subtotal):</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-slate-950 text-base whitespace-nowrap">${rightTot}</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-base whitespace-nowrap bg-emerald-50/60">${rightPassed}</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-base whitespace-nowrap bg-rose-50/60">${rightLeft}</td>
+                    <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-base whitespace-nowrap bg-amber-50/60">${rightPending}</td>
                     <td colspan="2" class="py-3 px-2 text-center border-slate-300 text-slate-600 font-bold text-xs whitespace-nowrap">(จบคอลัมน์)</td>
                   </tr>
                 </tfoot>
@@ -19966,36 +19964,36 @@
 
             if (includeTotal) {
               const grandTotalBanner = document.createElement("div");
-              grandTotalBanner.className = "bg-gradient-to-r from-amber-50 via-white to-amber-50/70 text-slate-900 p-5 rounded-2xl shadow-sm border-2 border-amber-400 flex items-center justify-between gap-6 whitespace-nowrap";
-              grandTotalBanner.style.cssText = "border: 2.5px solid #f59e0b; border-radius: 16px; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);";
+              grandTotalBanner.className = "bg-slate-100 text-slate-900 p-4 rounded-xl shadow-xs border-2 border-slate-400 flex items-center justify-between gap-6 whitespace-nowrap";
+              grandTotalBanner.style.cssText = "border: 2px solid #64748b; border-radius: 12px;";
               grandTotalBanner.innerHTML = `
                 <div class="flex items-center gap-3.5 whitespace-nowrap shrink-0">
-                  <div class="w-12 h-12 bg-amber-400 text-slate-950 rounded-xl flex items-center justify-center font-black text-2xl border-2 border-amber-500 shadow-2xs shrink-0">⭐</div>
+                  <div class="w-11 h-11 bg-slate-900 text-amber-400 rounded-lg flex items-center justify-center font-black text-xl border border-slate-700 shadow-2xs shrink-0">Σ</div>
                   <div class="whitespace-nowrap">
-                    <div class="text-xs font-black uppercase text-amber-700 tracking-wider whitespace-nowrap">PYNN NGAMWONGWAN 54 · GRAND SUMMARY</div>
-                    <div class="text-base font-black text-slate-900 whitespace-nowrap">รวมทั้งสิ้น GRAND TOTAL DEFECT ส่วนกลาง (${selectedGroups.length} หมวดพื้นที่)</div>
+                    <div class="text-xs font-black uppercase text-slate-600 tracking-wider whitespace-nowrap">PYNN NGAMWONGWAN 54 · EXECUTIVE GRAND SUMMARY</div>
+                    <div class="text-base font-black text-slate-950 whitespace-nowrap">รวมทั้งสิ้น GRAND TOTAL DEFECT ส่วนกลาง (${selectedGroups.length} หมวดพื้นที่)</div>
                   </div>
                 </div>
                 <div class="flex items-center gap-3 text-xs whitespace-nowrap shrink-0">
-                  <div class="bg-white border-2 border-slate-300 px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
-                    <span class="text-slate-500 font-bold text-xs whitespace-nowrap">DEFECT ทั้งหมด:</span>
-                    <strong class="text-slate-900 text-base font-black whitespace-nowrap">${grandTotals.tot} ข้อ</strong>
+                  <div class="bg-white border-2 border-slate-300 px-3.5 py-2 rounded-lg flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
+                    <span class="text-slate-600 font-bold text-xs whitespace-nowrap">DEFECT ทั้งหมด:</span>
+                    <strong class="text-slate-950 text-base font-black whitespace-nowrap">${grandTotals.tot} ข้อ</strong>
                   </div>
-                  <div class="bg-emerald-50 border-2 border-emerald-300 px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
-                    <span class="text-emerald-700 font-bold text-xs whitespace-nowrap">ผ่านตรวจ:</span>
-                    <strong class="text-emerald-700 text-base font-black whitespace-nowrap">${grandTotals.passed} ข้อ</strong>
+                  <div class="bg-emerald-50 border-2 border-emerald-300 px-3.5 py-2 rounded-lg flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
+                    <span class="text-emerald-800 font-bold text-xs whitespace-nowrap">ผ่านตรวจ:</span>
+                    <strong class="text-emerald-800 text-base font-black whitespace-nowrap">${grandTotals.passed} ข้อ</strong>
                   </div>
-                  <div class="bg-rose-50 border-2 border-rose-300 px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
-                    <span class="text-rose-700 font-bold text-xs whitespace-nowrap">คงเหลือยังไม่แก้ไข:</span>
-                    <strong class="text-rose-700 text-base font-black whitespace-nowrap">${grandTotals.left} ข้อ</strong>
+                  <div class="bg-rose-50 border-2 border-rose-300 px-3.5 py-2 rounded-lg flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
+                    <span class="text-rose-800 font-bold text-xs whitespace-nowrap">คงเหลือยังไม่แก้ไข:</span>
+                    <strong class="text-rose-800 text-base font-black whitespace-nowrap">${grandTotals.left} ข้อ</strong>
                   </div>
-                  <div class="bg-amber-50 border-2 border-amber-300 px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
-                    <span class="text-amber-800 font-bold text-xs whitespace-nowrap">แก้ไขแล้วรอตรวจ:</span>
-                    <strong class="text-amber-800 text-base font-black whitespace-nowrap">${grandTotals.pending} ข้อ</strong>
+                  <div class="bg-amber-50 border-2 border-amber-300 px-3.5 py-2 rounded-lg flex items-center gap-2 shadow-2xs whitespace-nowrap shrink-0">
+                    <span class="text-amber-900 font-bold text-xs whitespace-nowrap">แก้ไขแล้วรอตรวจ:</span>
+                    <strong class="text-amber-900 text-base font-black whitespace-nowrap">${grandTotals.pending} ข้อ</strong>
                   </div>
-                  <div class="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 px-4 py-2 rounded-xl font-black text-xs border-2 border-amber-500 shadow-2xs flex items-center gap-2 whitespace-nowrap shrink-0">
-                    <span class="text-slate-900 font-bold text-xs whitespace-nowrap">อัตราผ่านตรวจ:</span>
-                    <span class="text-slate-950 text-base font-black whitespace-nowrap">${grandTotals.percentStr}%</span>
+                  <div class="bg-slate-900 text-white px-4 py-2 rounded-lg font-black text-xs border border-slate-800 shadow-2xs flex items-center gap-2 whitespace-nowrap shrink-0">
+                    <span class="text-slate-200 font-bold text-xs whitespace-nowrap">อัตราผ่านตรวจ:</span>
+                    <span class="text-amber-400 text-base font-black whitespace-nowrap">${grandTotals.percentStr}%</span>
                   </div>
                 </div>
               `;
