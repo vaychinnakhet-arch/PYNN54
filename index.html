@@ -3488,13 +3488,23 @@
             <span id="edit-defect-rem-val" class="font-black text-lg text-rose-600">0</span>
           </div>
 
-          <div>
-            <label class="block text-sm font-bold text-slate-700 mb-1">กำหนดเสร็จ / ตรวจสอบ (TARGET)</label>
-            <input
-              type="date"
-              id="edit-defect-target-date"
-              class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
-            />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-1">🏁 กำหนดเสร็จ (TARGET)</label>
+              <input
+                type="date"
+                id="edit-defect-target-date"
+                class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-xs sm:text-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-1">🔍 กำหนดตรวจ (INSPECT)</label>
+              <input
+                type="date"
+                id="edit-defect-inspect-date"
+                class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none font-medium text-xs sm:text-sm"
+              />
+            </div>
           </div>
 
           <div>
@@ -3640,7 +3650,10 @@
                   แคปเจอร์ภาพ DEFECT ส่วนกลาง
                 </h3>
               </div>
-              <p class="text-sm text-slate-700 font-semibold">เลือกรูปแบบภาพที่ต้องการส่งออก</p>
+              <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                <span id="common-cap-current-tab-badge" class="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">📍 โหมดหน้าปัจจุบัน</span>
+                <p class="text-xs text-slate-600 font-semibold">เลือกรูปแบบภาพและตั้งค่าการจัดหน้า</p>
+              </div>
             </div>
           </div>
           <button
@@ -3666,53 +3679,53 @@
               </svg>
               <span>เลือกรูปแบบภาพที่ต้องการ (Quick Presets)</span>
             </label>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              <!-- Preset 1: PDF A4 (Split 2 Pages) ⭐ -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <!-- Preset 1: Table Full (Single Page) ⭐ -->
               <button
                 type="button"
-                id="preset-btn-pdf_a4"
-                onclick="setCommonDefectCapturePreset('pdf_a4')"
+                id="preset-btn-table_full"
+                onclick="setCommonDefectCapturePreset('table_full')"
                 class="capture-preset-btn p-3 bg-blue-50/90 border-2 border-blue-500 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between scale-[1.02] shadow-xs"
               >
-                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white border border-blue-700 flex items-center justify-center mb-1.5 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 border-2 border-slate-900 flex items-center justify-center mb-1.5 shadow-2xs">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5M3.75 5.25v13.5m16.5-13.5v13.5M9 5.25v13.5m6-13.5v13.5"/>
                   </svg>
                 </div>
-                <div class="font-black text-sm text-blue-950 leading-tight">PDF A4 (2 หน้า) ⭐</div>
-                <div class="text-[11px] text-blue-700 font-bold mt-1">ฟอร์มทางการ สไตล์ Excel</div>
+                <div class="font-black text-sm text-slate-900 leading-tight">ตารางเต็มๆ (หน้าเดียว) ⭐</div>
+                <div class="text-[11px] text-amber-900 font-bold mt-1">2D Paper Mario ครบทุกข้อ</div>
               </button>
 
-              <!-- Preset 2: Split 2 Files (Original Style, Large & Crisp) -->
+              <!-- Preset 2: Split 2 Files / Pages -->
               <button
                 type="button"
                 id="preset-btn-split_files"
                 onclick="setCommonDefectCapturePreset('split_files')"
                 class="capture-preset-btn p-3 bg-white border-2 border-slate-200 hover:border-amber-400 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between hover:scale-[1.02] shadow-2xs"
               >
-                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 border border-amber-300 flex items-center justify-center mb-1.5 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-800 border border-blue-300 flex items-center justify-center mb-1.5 shadow-2xs">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
                   </svg>
                 </div>
-                <div class="font-black text-sm text-slate-900 leading-tight">รูปภาพ 2 ไฟล์</div>
-                <div class="text-[11px] text-amber-800 font-bold mt-1">ชัดเต็มช่อง ส่ง LINE</div>
+                <div class="font-black text-sm text-slate-900 leading-tight">ตารางแบ่ง 2 หน้า</div>
+                <div class="text-[11px] text-blue-700 font-bold mt-1">A4 PDF / 2 ภาพ สำหรับพิมพ์</div>
               </button>
 
-              <!-- Preset 3: Table Portrait -->
+              <!-- Preset 3: Tree only -->
               <button
                 type="button"
-                id="preset-btn-table_portrait"
-                onclick="setCommonDefectCapturePreset('table_portrait')"
-                class="capture-preset-btn p-3 bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between hover:scale-[1.02] shadow-2xs"
+                id="preset-btn-tree"
+                onclick="setCommonDefectCapturePreset('tree')"
+                class="capture-preset-btn p-3 bg-white border-2 border-slate-200 hover:border-amber-400 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between hover:scale-[1.02] shadow-2xs"
               >
-                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center justify-center mb-1.5 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 border border-amber-300 flex items-center justify-center mb-1.5 shadow-2xs">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z"/>
                   </svg>
                 </div>
-                <div class="font-black text-sm text-slate-900 leading-tight">ตารางแนวตั้ง</div>
-                <div class="text-[11px] text-slate-500 font-bold mt-1">1 ไฟล์ยาว</div>
+                <div class="font-black text-sm text-slate-900 leading-tight">แผนผังภาพรวม ⭐</div>
+                <div class="text-[11px] text-amber-800 font-bold mt-1">เฉพาะแผนผัง & สถิติอาคาร</div>
               </button>
 
               <!-- Preset 4: Full Landscape -->
@@ -3729,22 +3742,6 @@
                 </div>
                 <div class="font-black text-sm text-slate-900 leading-tight">แนวนอน 2 ฝั่ง</div>
                 <div class="text-[11px] text-slate-500 font-bold mt-1">แผนผัง + ตาราง</div>
-              </button>
-
-              <!-- Preset 5: Tree only -->
-              <button
-                type="button"
-                id="preset-btn-tree"
-                onclick="setCommonDefectCapturePreset('tree')"
-                class="capture-preset-btn p-3 bg-white border-2 border-slate-200 hover:border-rose-400 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between hover:scale-[1.02] shadow-2xs"
-              >
-                <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-800 border border-rose-300 flex items-center justify-center mb-1.5 shadow-2xs">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z"/>
-                  </svg>
-                </div>
-                <div class="font-black text-sm text-slate-900 leading-tight">แผนผัง</div>
-                <div class="text-[11px] text-slate-500 font-bold mt-1">เฉพาะแผนผัง</div>
               </button>
             </div>
           </div>
@@ -3791,29 +3788,29 @@
             <!-- Orientation options clean radio pills -->
             <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-sm">
               <span class="font-bold text-slate-700 text-xs">การจัดหน้าตาราง:</span>
-              <div class="flex items-center gap-3 flex-wrap">
-                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800">
-                  <input
-                    type="radio"
-                    name="commonCapOrientation"
-                    id="common-cap-orient-split-files"
-                    value="landscape_split_files"
-                    class="w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                    checked
-                  />
-                  <span class="font-bold text-slate-900">แบ่งเป็น 2 หน้า / 2 ไฟล์ (สไตล์ Excel + Paper Mario ชัดเต็มช่อง)</span>
-                </label>
-                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800 bg-white px-3 py-1.5 rounded-xl border border-slate-200 hover:border-blue-300 transition-colors">
                   <input
                     type="radio"
                     name="commonCapOrientation"
                     id="common-cap-orient-portrait"
                     value="portrait"
                     class="w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    checked
                   />
-                  <span>แนวตั้ง 1 ไฟล์ยาว</span>
+                  <span class="font-bold text-slate-900">หน้าเดียวเต็มๆ (ตารางยาวครบทุกข้อ)</span>
                 </label>
-                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800 bg-white px-3 py-1.5 rounded-xl border border-slate-200 hover:border-blue-300 transition-colors">
+                  <input
+                    type="radio"
+                    name="commonCapOrientation"
+                    id="common-cap-orient-split-files"
+                    value="landscape_split_files"
+                    class="w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                  <span class="font-bold text-slate-900">แบ่งเป็น 2 หน้า (แยก 2 ไฟล์ / A4)</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800 bg-white px-3 py-1.5 rounded-xl border border-slate-200 hover:border-blue-300 transition-colors">
                   <input
                     type="radio"
                     name="commonCapOrientation"
@@ -3864,29 +3861,35 @@
           </div>
 
           <!-- Step 4: Simple Extra Options with Larger Text -->
-          <div class="flex items-center justify-between flex-wrap gap-2 px-1 text-sm text-slate-800">
-            <label class="flex items-center gap-2.5 cursor-pointer bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs hover:border-slate-300">
-              <input
-                type="checkbox"
-                id="common-cap-include-total"
-                class="w-4 h-4 text-amber-500 rounded border-slate-300 focus:ring-amber-400 cursor-pointer"
-                checked
-              />
-              <div class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <span class="font-bold text-sm text-slate-800">แสดงยอดรวมท้ายตาราง</span>
-              </div>
-            </label>
-            <label class="flex items-center gap-2.5 cursor-pointer bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs hover:border-slate-300">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 px-1 text-sm text-slate-800">
+            <label class="flex items-start gap-3 cursor-pointer bg-white px-3.5 py-2.5 rounded-xl border-2 border-blue-200 shadow-2xs hover:border-blue-400 transition-all">
               <input
                 type="checkbox"
                 id="common-cap-include-header"
-                class="w-4 h-4 text-blue-500 rounded border-slate-300 focus:ring-blue-400 cursor-pointer"
+                class="w-4 h-4 mt-0.5 text-blue-600 rounded border-slate-300 focus:ring-blue-400 cursor-pointer"
                 checked
               />
-              <div class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z"/></svg>
-                <span class="font-bold text-sm text-slate-800">ใส่หัวกระดาษโครงการ</span>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z"/></svg>
+                  <span class="font-black text-sm text-slate-900">เปิด / ปิด หัวกระดาษโครงการ</span>
+                </div>
+                <p class="text-[11px] text-slate-500 font-semibold mt-0.5">ใส่ชื่อโครงการ วันที่ และเลขที่เอกสาร (ปลดออกเพื่อเอาเฉพาะเนื้อหาเพียวๆ)</p>
+              </div>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer bg-white px-3.5 py-2.5 rounded-xl border-2 border-amber-200 shadow-2xs hover:border-amber-400 transition-all">
+              <input
+                type="checkbox"
+                id="common-cap-include-total"
+                class="w-4 h-4 mt-0.5 text-amber-500 rounded border-slate-300 focus:ring-amber-400 cursor-pointer"
+                checked
+              />
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <span class="font-black text-sm text-slate-900">แสดงยอดรวมท้ายตาราง</span>
+                </div>
+                <p class="text-[11px] text-slate-500 font-semibold mt-0.5">แสดงแถบสรุป Grand Total และอัตราผ่านงานท้ายเอกสาร</p>
               </div>
             </label>
           </div>
@@ -10359,6 +10362,7 @@
           return initialItems.map(item => ({
             id: idCounter++,
             ...item,
+            inspectDate: item.inspectDate || "",
             rem: (Number(item.tot) || 0) - (Number(item.fix) || 0)
           }));
         };
@@ -11195,6 +11199,7 @@
             left: true,
             pending: true,
             date: true,
+            inspectDate: true,
             status: true
           };
           try {
@@ -11515,7 +11520,7 @@
 
           // Column visibility configuration
           const visibleCols = typeof window.getCommonDefectVisibleCols === "function" ? window.getCommonDefectVisibleCols() : {
-            location: true, assignee: true, total: true, passed: true, left: true, pending: true, date: true, status: true
+            location: true, assignee: true, total: true, passed: true, left: true, pending: true, date: true, inspectDate: true, status: true
           };
           const isCol = (key) => visibleCols[key] !== false;
           const colClass = (key, extra = "") => `${key ? 'col-' + key : ''} ${isCol(key) ? '' : 'hidden'} ${extra}`.trim();
@@ -11573,6 +11578,10 @@
                           <span class="text-slate-700">กำหนดเสร็จ</span>
                         </label>
                         <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
+                          <input type="checkbox" ${isCol('inspectDate') ? 'checked' : ''} onchange="toggleCommonDefectCol('inspectDate')" class="rounded text-teal-600 focus:ring-0">
+                          <span class="text-teal-800 font-bold">กำหนดตรวจ</span>
+                        </label>
+                        <label class="flex items-center gap-2 px-1.5 py-1 hover:bg-slate-50 rounded cursor-pointer select-none">
                           <input type="checkbox" ${isCol('status') ? 'checked' : ''} onchange="toggleCommonDefectCol('status')" class="rounded text-indigo-600 focus:ring-0">
                           <span class="text-slate-700">STATUS</span>
                         </label>
@@ -11590,39 +11599,45 @@
                 </div>
               </div>
 
-              <!-- Quick Column Toggle Bar on Table Header -->
-              <div class="px-3.5 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2 flex-wrap text-xs capture-hide select-none">
+              <!-- Quick Column Toggle Bar on Table Header (2D Layer Paper Mario Nintendo Style) -->
+              <div class="px-3.5 py-2 bg-[#fdfbf7] border-b-2 border-slate-800 flex items-center justify-between gap-2 flex-wrap text-xs capture-hide select-none shadow-[inset_0_-2px_0_rgba(0,0,0,0.03)]">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="text-slate-500 font-bold text-[11px] mr-1 flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h17.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z"/></svg>
-                    แสดงคอลัมน์:
-                  </span>
-                  <button type="button" onclick="toggleCommonDefectCol('location')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('location') ? 'bg-white text-slate-800 border-slate-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 text-slate-900 border-2 border-slate-800 rounded-lg font-black text-[11px] sm:text-xs shadow-[2px_2px_0px_#1e293b] mr-1">
+                    <span class="text-xs leading-none">📜</span>
+                    <span class="tracking-tight">แสดงคอลัมน์:</span>
+                  </div>
+                  <button type="button" onclick="toggleCommonDefectCol('location')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('location') ? 'bg-white text-slate-900 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('location') ? '✓ ' : '+ '}พื้นที่/รายการ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('assignee')" class="px-2 py-0.5 rounded-md text-[11px] font-bold border transition-all cursor-pointer ${isCol('assignee') ? 'bg-indigo-50 text-indigo-800 border-indigo-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('assignee')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('assignee') ? 'bg-indigo-100 text-indigo-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('assignee') ? '✓ ' : '+ '}ผู้รับผิดชอบ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('total')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('total') ? 'bg-white text-slate-800 border-slate-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('total')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('total') ? 'bg-amber-100 text-amber-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('total') ? '✓ ' : '+ '}ทั้งหมด
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('passed')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('passed') ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('passed')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('passed') ? 'bg-emerald-100 text-emerald-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('passed') ? '✓ ' : '+ '}ผ่าน
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('left')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('left') ? 'bg-rose-50 text-rose-700 border-rose-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('left')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('left') ? 'bg-rose-100 text-rose-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('left') ? '✓ ' : '+ '}ยังไม่แก้
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('pending')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('pending') ? 'bg-amber-50 text-amber-800 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('pending')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('pending') ? 'bg-amber-200 text-amber-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('pending') ? '✓ ' : '+ '}รอตรวจ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('date')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('date') ? 'bg-white text-slate-800 border-slate-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('date')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('date') ? 'bg-sky-100 text-sky-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('date') ? '✓ ' : '+ '}กำหนดเสร็จ
                   </button>
-                  <button type="button" onclick="toggleCommonDefectCol('status')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${isCol('status') ? 'bg-white text-slate-800 border-slate-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-dashed border-slate-300 opacity-60'}">
+                  <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('inspectDate') ? 'bg-teal-100 text-teal-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
+                    ${isCol('inspectDate') ? '✓ ' : '+ '}กำหนดตรวจ
+                  </button>
+                  <button type="button" onclick="toggleCommonDefectCol('status')" class="px-2.5 py-1 rounded-lg text-xs font-black border-2 transition-all cursor-pointer ${isCol('status') ? 'bg-violet-100 text-violet-950 border-slate-900 shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none' : 'bg-[#f1ede4] text-slate-400 border-dashed border-slate-400 opacity-70 hover:opacity-100 hover:bg-white'}">
                     ${isCol('status') ? '✓ ' : '+ '}สถานะ
                   </button>
                 </div>
-                <button type="button" onclick="resetCommonDefectCols()" class="text-[10px] text-slate-500 hover:text-indigo-600 hover:underline cursor-pointer">เปิดทั้งหมด</button>
+                <button type="button" onclick="resetCommonDefectCols()" class="px-3 py-1 bg-white hover:bg-amber-50 text-slate-900 border-2 border-slate-900 rounded-lg text-xs font-black shadow-[2px_2px_0px_#1e293b] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1e293b] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1.5" title="เปิดแสดงคอลัมน์ทั้งหมด">
+                  <span>✨</span>
+                  <span>เปิดทั้งหมด</span>
+                </button>
               </div>
 
               <div class="common-defect-excel-scroll">
@@ -11631,49 +11646,55 @@
                     <tr>
                       <th class="${colClass('location', 'is-location')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>พื้นที่ / รายการ</span>
+                          <span class="flex items-center gap-1 font-black text-amber-950"><span class="text-xs">📋</span> พื้นที่ / รายการ</span>
                         </div>
                       </th>
                       <th class="${colClass('assignee')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>ผู้รับผิดชอบ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('assignee')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์ผู้รับผิดชอบ">✕</button>
+                          <span class="flex items-center gap-1 font-black text-indigo-950"><span class="text-xs">👤</span> ผู้รับผิดชอบ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('assignee')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผู้รับผิดชอบ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('total')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>DEFECT<br>ทั้งหมด</span>
-                          <button type="button" onclick="toggleCommonDefectCol('total')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์ทั้งหมด">✕</button>
+                          <span class="flex items-center gap-1 font-black text-amber-950"><span class="text-xs">⭐</span> DEFECT<br>ทั้งหมด</span>
+                          <button type="button" onclick="toggleCommonDefectCol('total')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ทั้งหมด">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('passed', 'is-passed')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>ผ่าน<br>ตรวจสอบ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('passed')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์ผ่านตรวจสอบ">✕</button>
+                          <span class="flex items-center gap-1 font-black text-emerald-950"><span class="text-xs">✔</span> ผ่าน<br>ตรวจสอบ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('passed')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ผ่านตรวจสอบ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('left', 'is-left')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>ยังไม่<br>แก้ไข</span>
-                          <button type="button" onclick="toggleCommonDefectCol('left')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์ยังไม่แก้ไข">✕</button>
+                          <span class="flex items-center gap-1 font-black text-rose-950"><span class="text-xs">✖</span> ยังไม่<br>แก้ไข</span>
+                          <button type="button" onclick="toggleCommonDefectCol('left')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์ยังไม่แก้ไข">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('pending', 'is-pending')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>แก้ไขแล้ว<br>รอตรวจ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('pending')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์รอตรวจ">✕</button>
+                          <span class="flex items-center gap-1 font-black text-amber-950"><span class="text-xs">⏱</span> แก้ไขแล้ว<br>รอตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('pending')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์รอตรวจ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('date')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>กำหนดเสร็จ</span>
-                          <button type="button" onclick="toggleCommonDefectCol('date')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์กำหนดเสร็จ">✕</button>
+                          <span class="flex items-center gap-1 font-black text-teal-950"><span class="text-xs">🏁</span> กำหนดเสร็จ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('date')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดเสร็จ">✕</button>
+                        </div>
+                      </th>
+                      <th class="${colClass('inspectDate')}">
+                        <div class="flex items-center justify-between gap-1">
+                          <span class="flex items-center gap-1 font-black text-sky-950"><span class="text-xs">🔍</span> กำหนดตรวจ</span>
+                          <button type="button" onclick="toggleCommonDefectCol('inspectDate')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์กำหนดตรวจ">✕</button>
                         </div>
                       </th>
                       <th class="${colClass('status')}">
                         <div class="flex items-center justify-between gap-1">
-                          <span>STATUS</span>
-                          <button type="button" onclick="toggleCommonDefectCol('status')" class="text-[10px] text-slate-400 hover:text-rose-600 p-0.5 rounded cursor-pointer leading-none" title="ซ่อนคอลัมน์สถานะ">✕</button>
+                          <span class="flex items-center gap-1 font-black text-purple-950"><span class="text-xs">🎖️</span> STATUS</span>
+                          <button type="button" onclick="toggleCommonDefectCol('status')" class="w-4 h-4 rounded bg-black/10 hover:bg-rose-500 hover:text-white text-slate-800 text-[10px] font-black inline-flex items-center justify-center transition-all cursor-pointer leading-none shrink-0" title="ซ่อนคอลัมน์สถานะ">✕</button>
                         </div>
                       </th>
                     </tr>
@@ -11749,6 +11770,7 @@
                 <td class="${colClass('left', 'cell-left')}">${groupRem}</td>
                 <td class="${colClass('pending', 'cell-pending')}">${groupPending || "—"}</td>
                 <td class="${colClass('date')}"></td>
+                <td class="${colClass('inspectDate')}"></td>
                 <td class="${colClass('status')}"></td>
               </tr>
             `;
@@ -11763,12 +11785,25 @@
               const rowOverview = getCommonDefectOverview([item]);
               const statusMeta = getCommonDefectStatusMeta(item.status);
 
-              // Date display
+              // Date display (กำหนดเสร็จ)
               let dateDisplay = "";
               if (item.target) {
                 const d = new Date(item.target);
                 if (!isNaN(d.getTime())) {
                   dateDisplay = d.toLocaleDateString("th-TH", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                  });
+                }
+              }
+
+              // Inspection date display (กำหนดตรวจ)
+              let inspectDateDisplay = "";
+              if (item.inspectDate) {
+                const d = new Date(item.inspectDate);
+                if (!isNaN(d.getTime())) {
+                  inspectDateDisplay = d.toLocaleDateString("th-TH", {
                     day: "numeric",
                     month: "short",
                     year: "numeric"
@@ -11791,7 +11826,8 @@
                   <td class="${colClass('passed', 'defect-editable-cell cell-passed')}" onclick="openCommonDefectCellEditor(${item.id}, 'fixed')">${rowOverview.passed || "—"}</td>
                   <td class="${colClass('left', 'defect-editable-cell cell-left')}" onclick="openCommonDefectCellEditor(${item.id}, 'left')">${rowOverview.left > 0 ? `<span class="font-black text-rose-600">${rowOverview.left}</span>` : (rowOverview.passed > 0 ? "—" : "0")}</td>
                   <td class="${colClass('pending', 'defect-editable-cell cell-pending')}" onclick="openCommonDefectCellEditor(${item.id}, 'pending')">${rowOverview.pending || "—"}</td>
-                  <td class="${colClass('date', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')">${dateDisplay || "—"}</td>
+                  <td class="${colClass('date', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
+                  <td class="${colClass('inspectDate', 'defect-editable-cell cell-date')}" onclick="openCommonDefectCellEditor(${item.id}, 'inspectDate')" title="คลิกเพื่อกำหนดวันตรวจ">${inspectDateDisplay || "—"}</td>
                   <td class="${colClass('status', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
                     <span class="paper-status-badge ${statusMeta.className}">
                       <b>${statusMeta.icon}</b>${statusMeta.label}
@@ -11814,6 +11850,7 @@
                       <td class="${colClass('left', 'cell-left')}">${grandLeft}</td>
                       <td class="${colClass('pending', 'cell-pending')}">${grandPending}</td>
                       <td class="${colClass('date')}"></td>
+                      <td class="${colClass('inspectDate')}"></td>
                       <td class="${colClass('status')}"><span class="excel-total-rate">ผ่านตรวจ ${grandPercentStr}%</span></td>
                     </tr>
                   </tfoot>
@@ -11879,6 +11916,8 @@
           document.getElementById("edit-defect-fix").value = defect.fix;
           document.getElementById("edit-defect-rem-val").textContent = (Number(defect.tot) || 0) - (Number(defect.fix) || 0);
           document.getElementById("edit-defect-target-date").value = defect.target || "";
+          const inspectDateEl = document.getElementById("edit-defect-inspect-date");
+          if (inspectDateEl) inspectDateEl.value = defect.inspectDate || "";
           document.getElementById("edit-defect-status").value = normalizeCommonDefectStatus(defect.status);
 
           // Set up group selector
@@ -11963,7 +12002,8 @@
             fixed: { title: "กรอกจำนวนผ่านตรวจ", icon: "★", label: "จำนวนที่ผ่านการตรวจสอบ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น ผ่านการตรวจสอบ" },
             left: { title: "กรอกจำนวนยังไม่แก้ไข", icon: "×", label: "จำนวนที่ยังไม่แก้ไข", hint: "ส่วนที่ดำเนินการแล้วจะย้ายไป แก้ไขแล้วรอตรวจ โดยอัตโนมัติ" },
             pending: { title: "กรอกจำนวนรอตรวจ", icon: "⏱", label: "จำนวนที่แก้ไขแล้วรอตรวจ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น แก้ไขแล้วรอตรวจ" },
-            date: { title: "กำหนดวันที่", icon: "▣", label: "กำหนดเสร็จ / วันตรวจ", hint: "เลือกวันที่สำหรับรายการนี้" },
+            date: { title: "กำหนดวันเสร็จ", icon: "🏁", label: "กำหนดเสร็จ (Target Date)", hint: "เลือกวันที่กำหนดเสร็จสำหรับรายการนี้" },
+            inspectDate: { title: "กำหนดวันตรวจ", icon: "🔍", label: "กำหนดตรวจ (Inspect Date)", hint: "เลือกวันที่กำหนดตรวจ / ตรวจสอบสำหรับรายการนี้" },
             status: { title: "เปลี่ยนสถานะ", icon: "旗", label: "สถานะปัจจุบัน", hint: "จำนวนจะถูกจัดเข้าช่องสีตามสถานะที่เลือก" }
           };
           const selected = config[field] || config.name;
@@ -11981,6 +12021,8 @@
             controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input" type="text" value="${escapeCommonDefectText(defect.assignee || "")}" placeholder="ระบุชื่อผู้รับผิดชอบ หรือทีมงาน">`;
           } else if (field === "date") {
             controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input is-date" type="date" value="${defect.target || ""}">`;
+          } else if (field === "inspectDate") {
+            controlHTML = `<label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label><input id="common-defect-quick-input" class="paper-quick-input is-date" type="date" value="${defect.inspectDate || ""}">`;
           } else if (field === "status") {
             controlHTML = `
               <label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label>
@@ -12045,6 +12087,8 @@
             defect.assignee = input.value.trim();
           } else if (editing.field === "date") {
             defect.target = input.value;
+          } else if (editing.field === "inspectDate") {
+            defect.inspectDate = input.value;
           } else if (editing.field === "status") {
             defect.status = input.value;
           } else {
@@ -12101,6 +12145,8 @@
           document.getElementById("edit-defect-fix").value = 0;
           document.getElementById("edit-defect-rem-val").textContent = 0;
           document.getElementById("edit-defect-target-date").value = "";
+          const addInspectEl1 = document.getElementById("edit-defect-inspect-date");
+          if (addInspectEl1) addInspectEl1.value = "";
           document.getElementById("edit-defect-status").value = "รอดำเนินการ";
 
           const select = document.getElementById("edit-defect-group-select");
@@ -12125,6 +12171,8 @@
           document.getElementById("edit-defect-fix").value = 0;
           document.getElementById("edit-defect-rem-val").textContent = 0;
           document.getElementById("edit-defect-target-date").value = "";
+          const addInspectEl2 = document.getElementById("edit-defect-inspect-date");
+          if (addInspectEl2) addInspectEl2.value = "";
           document.getElementById("edit-defect-status").value = "รอดำเนินการ";
 
           const select = document.getElementById("edit-defect-group-select");
@@ -12293,6 +12341,8 @@
 
           const rem = tot - fix;
           const target = document.getElementById("edit-defect-target-date").value;
+          const inspectDateEl = document.getElementById("edit-defect-inspect-date");
+          const inspectDate = inspectDateEl ? inspectDateEl.value : "";
           let status = document.getElementById("edit-defect-status").value;
           if (tot > 0 && (status === "ยังไม่ตรวจ" || status === "ไม่มี Defect" || !status)) {
             status = "รอดำเนินการ";
@@ -12313,6 +12363,7 @@
               fix: fix,
               rem: rem,
               target: target,
+              inspectDate: inspectDate,
               status: status
             };
             projectData.commonDefects.push(newDefect);
@@ -12328,6 +12379,7 @@
               projectData.commonDefects[index].fix = fix;
               projectData.commonDefects[index].rem = rem;
               projectData.commonDefects[index].target = target;
+              projectData.commonDefects[index].inspectDate = inspectDate;
               projectData.commonDefects[index].status = status;
             }
             showToast("บันทึกข้อมูลเรียบร้อย!");
@@ -16635,37 +16687,41 @@
           if (window.lucide) lucide.createIcons();
         }
 
-        window.showMultiImagePreview = function(filesList) {
+        window.showMultiImagePreview = function(filesList, skipAutoDownload = false) {
           if (!filesList || filesList.length === 0) return;
           activeMultiPreviewList = filesList;
           activeMultiPreviewIndex = 0;
 
-          // Auto download both files sequentially
-          if (filesList[0] && filesList[0].file) {
-            downloadPreviewFile(filesList[0].file);
-          }
-          setTimeout(() => {
-            if (filesList[1] && filesList[1].file) {
-              downloadPreviewFile(filesList[1].file);
+          if (!skipAutoDownload) {
+            // Auto download both files sequentially
+            if (filesList[0] && filesList[0].file) {
+              downloadPreviewFile(filesList[0].file);
             }
-          }, 450);
+            setTimeout(() => {
+              if (filesList[1] && filesList[1].file) {
+                downloadPreviewFile(filesList[1].file);
+              }
+            }, 450);
+          }
 
           const multiBar = document.getElementById("multi-preview-file-bar");
           if (multiBar) multiBar.classList.remove("hidden");
 
           window.switchMultiPreviewFile(0);
 
-          showToast(
-            `<div class="flex items-center justify-between gap-3 text-left">
-               <div class="flex items-center gap-2">
-                 <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                 <span class="text-xs font-semibold text-white">ดาวน์โหลดครบ 2 ไฟล์แล้ว: ส่วนที่ 1 และ ส่วนที่ 2</span>
-               </div>
-               <button type="button" onclick="openModal('imagePreviewModal')" class="text-[11px] font-bold px-2.5 py-1 bg-indigo-500 hover:bg-indigo-400 text-white rounded-md cursor-pointer transition-colors shrink-0 shadow-xs">ดูภาพ / แชร์</button>
-             </div>`,
-            6000,
-            true
-          );
+          if (!skipAutoDownload) {
+            showToast(
+              `<div class="flex items-center justify-between gap-3 text-left">
+                 <div class="flex items-center gap-2">
+                   <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                   <span class="text-xs font-semibold text-white">ดาวน์โหลดครบ 2 ไฟล์แล้ว: หน้าที่ 1 และ หน้าที่ 2</span>
+                 </div>
+                 <button type="button" onclick="openModal('imagePreviewModal')" class="text-[11px] font-bold px-2.5 py-1 bg-indigo-500 hover:bg-indigo-400 text-white rounded-md cursor-pointer transition-colors shrink-0 shadow-xs">ดูภาพ / แชร์</button>
+               </div>`,
+              6000,
+              true
+            );
+          }
 
           openModal("imagePreviewModal");
         };
@@ -16736,7 +16792,30 @@
               if (item && item.file) {
                 if (i > 0) pdf.addPage();
                 const dataUrl = await fileToDataUrl(item.file);
-                pdf.addImage(dataUrl, "JPEG", 0, 0, 210, 297, undefined, "FAST");
+                
+                // Load image dimensions to scale proportionally onto A4
+                await new Promise((resolve) => {
+                  const img = new Image();
+                  img.onload = () => {
+                    const imgWidth = 210;
+                    const imgHeight = (img.naturalHeight / img.naturalWidth) * imgWidth;
+                    if (imgHeight <= 297) {
+                      const yOffset = Math.max(0, (297 - imgHeight) / 2);
+                      pdf.addImage(dataUrl, "JPEG", 0, yOffset, imgWidth, imgHeight, undefined, "FAST");
+                    } else {
+                      const scaledWidth = (img.naturalWidth / img.naturalHeight) * 297;
+                      const xOffset = Math.max(0, (210 - scaledWidth) / 2);
+                      pdf.addImage(dataUrl, "JPEG", xOffset, 0, scaledWidth, 297, undefined, "FAST");
+                    }
+                    resolve();
+                  };
+                  img.onerror = () => {
+                    // Fallback to full page
+                    pdf.addImage(dataUrl, "JPEG", 0, 0, 210, 297, undefined, "FAST");
+                    resolve();
+                  };
+                  img.src = dataUrl;
+                });
               }
             }
             const pdfFilename = `PYNN NGAMWONGWAN 54 DEFECT รายงาน A4 (${getThaiDateForFilename()}).pdf`;
@@ -18866,13 +18945,22 @@
             toggleTableCheckboxInModal(true);
             const portraitRadio = document.getElementById("common-cap-orient-portrait");
             if (portraitRadio) portraitRadio.checked = true;
-            setActivePresetButton(null);
+            setActivePresetButton("table_full");
           } else {
-            // Set default preset based on current view tab
+            // Update context badge & set default preset strictly based on current sub-tab
+            const tabBadge = document.getElementById("common-cap-current-tab-badge");
             if (window.currentCommonDefectSubTab === "tree") {
+              if (tabBadge) {
+                tabBadge.innerHTML = "📍 กำลังอยู่หน้า: แผนผังภาพรวม (Tree Diagram)";
+                tabBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300";
+              }
               setCommonDefectCapturePreset("tree");
             } else {
-              setCommonDefectCapturePreset("pdf_a4");
+              if (tabBadge) {
+                tabBadge.innerHTML = "📋 กำลังอยู่หน้า: ตารางรายการ Defect (Unified Table)";
+                tabBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-black bg-sky-100 text-sky-900 border border-sky-300";
+              }
+              setCommonDefectCapturePreset("table_full");
             }
           }
 
@@ -18901,14 +18989,15 @@
         };
 
         window.setActivePresetButton = function(activePreset) {
-          const presets = ["pdf_a4", "split_files", "all_landscape", "table_landscape", "table_portrait", "tree"];
+          const presets = ["table_full", "split_files", "tree", "all_landscape", "pdf_a4", "table_portrait"];
           presets.forEach(p => {
             const btn = document.getElementById(`preset-btn-${p}`);
             if (btn) {
-              if (p === activePreset) {
-                btn.className = "capture-preset-btn p-2.5 bg-blue-50 border-2 border-blue-500 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between scale-[1.02] shadow-xs";
+              const isSelected = (p === activePreset) || (p === "split_files" && activePreset === "pdf_a4") || (p === "table_full" && activePreset === "table_portrait");
+              if (isSelected) {
+                btn.className = "capture-preset-btn p-3 bg-amber-50/80 border-2 border-amber-500 ring-2 ring-amber-400 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between shadow-xs";
               } else {
-                btn.className = "capture-preset-btn p-2.5 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between shadow-2xs opacity-90 hover:opacity-100";
+                btn.className = "capture-preset-btn p-3 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between shadow-2xs opacity-90 hover:opacity-100";
               }
             }
           });
@@ -18948,32 +19037,18 @@
           const portraitRadio = document.getElementById("common-cap-orient-portrait");
           const splitRadio = document.getElementById("common-cap-orient-split-files");
 
-          if (preset === "pdf_a4" || preset === "split_files") {
-            if (treeCheckbox) treeCheckbox.checked = false;
-            if (tableCheckbox) tableCheckbox.checked = true;
-            if (totalCheckbox) totalCheckbox.checked = true;
-            if (splitRadio) splitRadio.checked = true;
-            groupCheckboxes.forEach(cb => cb.checked = true);
-            toggleTableCheckboxInModal(true);
-          } else if (preset === "all_landscape") {
-            if (treeCheckbox) treeCheckbox.checked = true;
-            if (tableCheckbox) tableCheckbox.checked = true;
-            if (totalCheckbox) totalCheckbox.checked = true;
-            if (landscapeRadio) landscapeRadio.checked = true;
-            groupCheckboxes.forEach(cb => cb.checked = true);
-            toggleTableCheckboxInModal(true);
-          } else if (preset === "table_landscape") {
-            if (treeCheckbox) treeCheckbox.checked = false;
-            if (tableCheckbox) tableCheckbox.checked = true;
-            if (totalCheckbox) totalCheckbox.checked = true;
-            if (landscapeRadio) landscapeRadio.checked = true;
-            groupCheckboxes.forEach(cb => cb.checked = true);
-            toggleTableCheckboxInModal(true);
-          } else if (preset === "table_portrait") {
+          if (preset === "table_full" || preset === "table_portrait") {
             if (treeCheckbox) treeCheckbox.checked = false;
             if (tableCheckbox) tableCheckbox.checked = true;
             if (totalCheckbox) totalCheckbox.checked = true;
             if (portraitRadio) portraitRadio.checked = true;
+            groupCheckboxes.forEach(cb => cb.checked = true);
+            toggleTableCheckboxInModal(true);
+          } else if (preset === "split_files" || preset === "pdf_a4") {
+            if (treeCheckbox) treeCheckbox.checked = false;
+            if (tableCheckbox) tableCheckbox.checked = true;
+            if (totalCheckbox) totalCheckbox.checked = true;
+            if (splitRadio) splitRadio.checked = true;
             groupCheckboxes.forEach(cb => cb.checked = true);
             toggleTableCheckboxInModal(true);
           } else if (preset === "tree") {
@@ -18983,18 +19058,29 @@
             if (portraitRadio) portraitRadio.checked = true;
             groupCheckboxes.forEach(cb => cb.checked = false);
             toggleTableCheckboxInModal(false);
+          } else if (preset === "all_landscape") {
+            if (treeCheckbox) treeCheckbox.checked = true;
+            if (tableCheckbox) tableCheckbox.checked = true;
+            if (totalCheckbox) totalCheckbox.checked = true;
+            if (landscapeRadio) landscapeRadio.checked = true;
+            groupCheckboxes.forEach(cb => cb.checked = true);
+            toggleTableCheckboxInModal(true);
           }
           updateCommonDefectCaptureGroupsCount();
         };
 
-        window.executeCommonDefectCustomCapture = async function() {
+        window.executeCommonDefectCustomCapture = async function(requestedMode = "image") {
+          const isPdfExport = requestedMode === "pdf";
           const includeTree = document.getElementById("common-cap-include-tree")?.checked ?? true;
           const includeTable = document.getElementById("common-cap-include-table")?.checked ?? true;
           const includeTotal = document.getElementById("common-cap-include-total")?.checked ?? true;
           const includeHeader = document.getElementById("common-cap-include-header")?.checked ?? true;
 
           const orientationRadio = document.querySelector('input[name="commonCapOrientation"]:checked');
-          const orientation = orientationRadio ? orientationRadio.value : "landscape_split_files";
+          let orientation = orientationRadio ? orientationRadio.value : "landscape_split_files";
+          if (isPdfExport) {
+            orientation = "landscape_split_files";
+          }
 
           const groupCheckboxes = document.querySelectorAll(".common-cap-group-checkbox");
           const selectedGroups = [];
@@ -19008,7 +19094,7 @@
           }
 
           closeModal("commonDefectCaptureModal");
-          showToast(orientation === "landscape_split_files" ? "กำลังเตรียมแคปเจอร์แบ่ง 2 ไฟล์ สไตล์ต้นฉบับ ชัดเต็มช่อง..." : "กำลังเตรียมรูปภาพสรุป DEFECT ตามหัวข้อที่เลือก...");
+          showToast(isPdfExport ? "กำลังเตรียมเอกสาร PDF ขนาด A4 (แบ่ง 2 หน้า)..." : (orientation === "landscape_split_files" ? "กำลังเตรียมแคปเจอร์แบ่ง 2 ไฟล์ สไตล์ต้นฉบับ ชัดเต็มช่อง..." : "กำลังเตรียมรูปภาพสรุป DEFECT ตามหัวข้อที่เลือก..."));
 
           const allDefects = projectData.commonDefects || [];
           const filteredDefects = allDefects.filter(item => selectedGroups.includes(item.group));
@@ -19132,6 +19218,7 @@
                     ${groupPending > 0 ? `<span class="font-black text-amber-900">${groupPending}</span>` : `<span class="text-slate-300">-</span>`}
                   </td>
                   <td class="py-2.5 px-2 text-center border-r border-slate-300 text-slate-400 font-bold text-xs whitespace-nowrap bg-amber-50/50">-</td>
+                  <td class="py-2.5 px-2 text-center border-r border-slate-300 text-slate-400 font-bold text-xs whitespace-nowrap bg-amber-50/50">-</td>
                   <td class="py-2.5 px-2 text-center border-slate-300 font-black text-xs text-slate-900 whitespace-nowrap bg-amber-50/50">
                     ${groupTot > 0 ? `<span class="text-blue-900 font-black text-xs bg-blue-100 px-2.5 py-0.5 rounded-md border border-blue-300 whitespace-nowrap">ผ่าน ${groupPercentStr}%</span>` : `<span class="text-slate-400 font-bold text-xs whitespace-nowrap">-</span>`}
                   </td>
@@ -19159,6 +19246,13 @@
                   const d = new Date(item.target);
                   if (!isNaN(d.getTime())) {
                     dateDisplay = d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
+                  }
+                }
+                let inspectDateDisplay = "";
+                if (item.inspectDate) {
+                  const d = new Date(item.inspectDate);
+                  if (!isNaN(d.getTime())) {
+                    inspectDateDisplay = d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
                   }
                 }
 
@@ -19190,7 +19284,8 @@
                     <td class="py-2 px-2 text-center border-r border-slate-300 text-amber-800 font-bold text-xs whitespace-nowrap bg-amber-50/30">
                       ${bd.pending > 0 ? `<span class="font-black text-amber-800">${bd.pending}</span>` : `<span class="text-slate-300">-</span>`}
                     </td>
-                    <td class="py-2 px-2 text-center border-r border-slate-300 text-slate-600 font-medium text-xs whitespace-nowrap">${dateDisplay || "-"}</td>
+                    <td class="py-2 px-2 text-center border-r border-slate-300 text-slate-700 font-medium text-xs whitespace-nowrap">${dateDisplay || "-"}</td>
+                    <td class="py-2 px-2 text-center border-r border-slate-300 text-slate-700 font-medium text-xs whitespace-nowrap">${inspectDateDisplay || "-"}</td>
                     <td class="py-2 px-2 text-center border-slate-300 whitespace-nowrap">
                       ${statusBadge}
                     </td>
@@ -19288,9 +19383,9 @@
           function buildOriginalDocumentStage({ partIndex, totalParts, curGroupList, startingItemIndex = 1 }) {
             const isSplitMode = totalParts === 2;
             const stage = document.createElement("div");
-            stage.className = "p-7 bg-white flex flex-col gap-4 text-slate-800";
-            // 1240px width fits perfectly at 150 DPI for A4 PDF conversion
-            stage.style.cssText = `position: relative; left: 0px; top: 0px; width: 1240px; min-width: 1240px; max-width: 1240px; box-sizing: border-box; background-color: #ffffff; margin: 0; transform: none; overflow: visible; font-family: 'Prompt', 'Montserrat', -apple-system, sans-serif;`;
+            stage.className = "p-6 bg-white flex flex-col gap-4 text-slate-800";
+            // 1360px width fits all 10 Paper Mario columns with comfortable breathing room
+            stage.style.cssText = `position: relative; left: 0px; top: 0px; width: 1360px; min-width: 1360px; max-width: 1360px; box-sizing: border-box; background-color: #ffffff; margin: 0; transform: none; overflow: visible; font-family: 'Prompt', 'Montserrat', -apple-system, sans-serif;`;
 
             // Calculate subtotal for this part's groups
             let partTot = 0, partPassed = 0, partLeft = 0, partPending = 0;
@@ -19381,34 +19476,46 @@
               stage.appendChild(headerDiv);
             }
 
-            // 2. Summary KPI Grid (Formal Excel-like summary cards with Paper Mario flair)
-            const kpiRow = document.createElement("div");
-            kpiRow.className = "grid grid-cols-5 gap-2.5";
-            const passPctThisPart = partTot > 0 ? ((partPassed / partTot) * 100).toFixed(0) : "0";
+            // 2. Formal Excel Summary Grid (เปลี่ยนจากการ์ดลอยสไตล์ AI เป็นตารางเซลล์ Excel แท้)
+            if (includeTable) {
+              const kpiRow = document.createElement("div");
+              kpiRow.className = "bg-white border-2 border-slate-600 rounded-lg overflow-hidden shadow-2xs";
+              const passPctThisPart = partTot > 0 ? ((partPassed / partTot) * 100).toFixed(1) : "0.0";
 
-            kpiRow.innerHTML = `
-              <div class="bg-white border-2 border-slate-300 rounded-lg p-2.5 text-center shadow-2xs">
-                <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">DEFECT ในหน้านี้</div>
-                <div class="text-xl font-black text-slate-900 mt-0.5">${partTot} <span class="text-xs font-bold text-slate-500">ข้อ</span></div>
-              </div>
-              <div class="bg-emerald-50/90 border-2 border-emerald-300 rounded-lg p-2.5 text-center shadow-2xs">
-                <div class="text-[10px] font-black text-emerald-800 uppercase tracking-wider">ผ่านการตรวจสอบ</div>
-                <div class="text-xl font-black text-emerald-700 mt-0.5">${partPassed} <span class="text-xs font-bold text-emerald-600">ข้อ</span></div>
-              </div>
-              <div class="bg-rose-50/90 border-2 border-rose-300 rounded-lg p-2.5 text-center shadow-2xs">
-                <div class="text-[10px] font-black text-rose-800 uppercase tracking-wider">คงเหลือยังไม่แก้ไข</div>
-                <div class="text-xl font-black text-rose-700 mt-0.5">${partLeft} <span class="text-xs font-bold text-rose-600">ข้อ</span></div>
-              </div>
-              <div class="bg-amber-50/90 border-2 border-amber-300 rounded-lg p-2.5 text-center shadow-2xs">
-                <div class="text-[10px] font-black text-amber-900 uppercase tracking-wider">แก้ไขแล้วรอตรวจ</div>
-                <div class="text-xl font-black text-amber-800 mt-0.5">${partPending} <span class="text-xs font-bold text-amber-700">ข้อ</span></div>
-              </div>
-              <div class="bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 border-2 border-amber-500 rounded-lg p-2.5 text-center shadow-2xs text-slate-950">
-                <div class="text-[10px] font-black text-slate-900 uppercase tracking-wider">อัตราผ่านตรวจ (หน้านี้)</div>
-                <div class="text-xl font-black text-slate-950 mt-0.5">${passPctThisPart}% ⭐</div>
-              </div>
-            `;
-            stage.appendChild(kpiRow);
+              kpiRow.innerHTML = `
+                <table class="w-full border-collapse text-center text-xs">
+                  <thead>
+                    <tr class="bg-slate-100 border-b border-slate-400 divide-x divide-slate-300 text-slate-800">
+                      <th class="py-2 px-3 font-bold text-[11px]">DEFECT ในหน้านี้ทั้งหมด</th>
+                      <th class="py-2 px-3 font-bold text-[11px] text-emerald-900 bg-emerald-50/50">ผ่านการตรวจสอบ (Passed)</th>
+                      <th class="py-2 px-3 font-bold text-[11px] text-rose-900 bg-rose-50/50">คงเหลือยังไม่แก้ไข (Remaining)</th>
+                      <th class="py-2 px-3 font-bold text-[11px] text-amber-900 bg-amber-50/50">แก้ไขแล้วรอนัดตรวจ (Pending)</th>
+                      <th class="py-2 px-3 font-bold text-[11px] text-slate-900 bg-slate-200/80">อัตราผ่านการตรวจหน้านี้ (Pass Rate)</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-x divide-slate-300 font-mono">
+                    <tr class="bg-white">
+                      <td class="py-2.5 px-3 font-black text-slate-900 text-base">
+                        ${partTot} <span class="text-xs font-normal text-slate-500 font-sans">รายการ</span>
+                      </td>
+                      <td class="py-2.5 px-3 font-black text-emerald-700 text-base bg-emerald-50/20">
+                        ${partPassed} <span class="text-xs font-normal text-emerald-600 font-sans">รายการ</span>
+                      </td>
+                      <td class="py-2.5 px-3 font-black text-rose-700 text-base bg-rose-50/20">
+                        ${partLeft} <span class="text-xs font-normal text-rose-600 font-sans">รายการ</span>
+                      </td>
+                      <td class="py-2.5 px-3 font-black text-amber-800 text-base bg-amber-50/20">
+                        ${partPending} <span class="text-xs font-normal text-amber-700 font-sans">รายการ</span>
+                      </td>
+                      <td class="py-2.5 px-3 font-black text-slate-950 text-base bg-slate-100/70">
+                        ${passPctThisPart}%
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              `;
+              stage.appendChild(kpiRow);
+            }
 
             // 3. Tree Board (Optional, only in Part 1 or single mode)
             if (includeTree && (!isSplitMode || partIndex === 1)) {
@@ -19419,6 +19526,8 @@
               if (boardEl) {
                 boardEl.removeAttribute("id");
                 boardEl.style.marginBottom = "0";
+                const introActions = boardEl.querySelector(".common-defect-intro-actions");
+                if (introActions) introActions.remove();
                 stage.appendChild(boardEl);
               }
             }
@@ -19426,8 +19535,8 @@
             // 4. Defect Table (Formal Excel Gridlines with Paper Mario styling)
             if (includeTable && curGroupList.length > 0) {
               const tableContainer = document.createElement("div");
-              tableContainer.className = "bg-white border-2 border-slate-400 rounded-xl shadow-xs overflow-hidden";
-              tableContainer.style.cssText = "overflow: visible; width: 100%; border: 2px solid #64748b;";
+              tableContainer.className = "bg-white border-2 border-slate-900 rounded-xl shadow-xs overflow-hidden";
+              tableContainer.style.cssText = "overflow: visible; width: 100%; border: 2.5px solid #0f172a;";
 
               let tfootHTML = "";
               if (isSplitMode && partIndex === 1) {
@@ -19442,7 +19551,7 @@
                       <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-xs whitespace-nowrap bg-emerald-100/70">${partPassed}</td>
                       <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-xs whitespace-nowrap bg-rose-100/70">${partLeft}</td>
                       <td class="py-2.5 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-xs whitespace-nowrap bg-amber-100/70">${partPending}</td>
-                      <td colspan="2" class="py-2.5 px-2 text-center border-slate-300 text-blue-900 font-black text-xs whitespace-nowrap bg-blue-50">
+                      <td colspan="3" class="py-2.5 px-2 text-center border-slate-300 text-blue-900 font-black text-xs whitespace-nowrap bg-blue-50">
                         (มีต่อในเอกสารหน้า 2 ➡)
                       </td>
                     </tr>
@@ -19460,23 +19569,23 @@
                       <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-emerald-800 text-xs whitespace-nowrap bg-emerald-100/70">${partPassed}</td>
                       <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-rose-800 text-xs whitespace-nowrap bg-rose-100/70">${partLeft}</td>
                       <td class="py-2 px-2 text-center border-r border-slate-300 font-black text-amber-900 text-xs whitespace-nowrap bg-amber-100/70">${partPending}</td>
-                      <td colspan="2" class="py-2 px-2 text-center border-slate-300 text-slate-600 font-bold text-xs whitespace-nowrap">
+                      <td colspan="3" class="py-2 px-2 text-center border-slate-300 text-slate-600 font-bold text-xs whitespace-nowrap">
                         จบส่วนที่ 2
                       </td>
                     </tr>
                     ${includeTotal ? `
-                    <tr class="bg-amber-200/90 text-slate-950 font-black text-xs border-t-2 border-slate-900" style="border-bottom: 3px double #0f172a;">
-                      <td class="py-3 px-2 text-center border-r border-slate-400 bg-amber-300 font-black">⭐</td>
+                    <tr class="bg-amber-100/90 text-slate-950 font-black text-xs border-t-2 border-slate-800" style="border-bottom: 3px double #0f172a;">
+                      <td class="py-3 px-2 text-center border-r border-slate-400 bg-amber-200 font-black">Σ</td>
                       <td colspan="2" class="py-3 px-3 text-left border-r border-slate-400 font-black text-slate-950 text-xs whitespace-nowrap">
                         Grand Total สรุปรวมทั้งสิ้นทั้งโครงการ (${selectedGroups.length} หมวด):
                       </td>
-                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-slate-950 text-sm whitespace-nowrap bg-amber-300/80">${grandTotals.tot}</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-slate-950 text-sm whitespace-nowrap bg-amber-200/80">${grandTotals.tot}</td>
                       <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-emerald-900 text-sm whitespace-nowrap bg-emerald-200/80">${grandTotals.passed}</td>
                       <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-rose-900 text-sm whitespace-nowrap bg-rose-200/80">${grandTotals.left}</td>
-                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-amber-950 text-sm whitespace-nowrap bg-amber-300/80">${grandTotals.pending}</td>
-                      <td colspan="2" class="py-3 px-2 text-center border-slate-400 font-black text-xs whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-amber-400 text-slate-950 border border-amber-600 shadow-2xs whitespace-nowrap">
-                          ผ่านรวม ${grandTotals.percentStr}% ⭐
+                      <td class="py-3 px-2 text-center border-r border-slate-400 font-black text-amber-950 text-sm whitespace-nowrap bg-amber-200/80">${grandTotals.pending}</td>
+                      <td colspan="3" class="py-3 px-2 text-center border-slate-400 font-black text-xs whitespace-nowrap">
+                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-amber-300 text-slate-950 border border-amber-500 shadow-2xs whitespace-nowrap">
+                          ผ่านรวม ${grandTotals.percentStr}%
                         </span>
                       </td>
                     </tr>
@@ -19487,7 +19596,7 @@
                 tfootHTML = `
                   <tfoot class="border-t-2 border-slate-500 bg-amber-100/90">
                     <tr class="font-black text-slate-950 text-xs" style="border-bottom: 3px double #0f172a;">
-                      <td class="py-3 px-2 text-center border-r border-slate-300 bg-amber-200">⭐</td>
+                      <td class="py-3 px-2 text-center border-r border-slate-300 bg-amber-200">Σ</td>
                       <td colspan="2" class="py-3 px-3 text-left border-r border-slate-300 font-black text-slate-950 text-xs whitespace-nowrap">
                         Grand Total รวมทั้งสิ้น (${curGroupList.length} หมวด):
                       </td>
@@ -19495,9 +19604,9 @@
                       <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-emerald-900 text-sm whitespace-nowrap bg-emerald-200">${grandTotals.passed}</td>
                       <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-rose-900 text-sm whitespace-nowrap bg-rose-200">${grandTotals.left}</td>
                       <td class="py-3 px-2 text-center border-r border-slate-300 font-black text-amber-950 text-sm whitespace-nowrap bg-amber-200">${grandTotals.pending}</td>
-                      <td colspan="2" class="py-3 px-2 text-center border-slate-300 font-black text-xs whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-amber-400 text-slate-950 border border-amber-600 shadow-2xs whitespace-nowrap">
-                          ผ่านรวม ${grandTotals.percentStr}% ⭐
+                      <td colspan="3" class="py-3 px-2 text-center border-slate-300 font-black text-xs whitespace-nowrap">
+                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-black bg-amber-300 text-slate-950 border border-amber-500 shadow-2xs whitespace-nowrap">
+                          ผ่านรวม ${grandTotals.percentStr}%
                         </span>
                       </td>
                     </tr>
@@ -19511,29 +19620,30 @@
 
               tableContainer.innerHTML = `
                 <div style="overflow: visible; width: 100%;">
-                  <!-- Table Header Ribbon -->
-                  <div class="bg-slate-800 text-white px-4 py-2 text-xs font-black flex items-center justify-between border-b border-slate-700 whitespace-nowrap">
+                  <!-- Table Header Ribbon (Paper Mario Vibrant Strip) -->
+                  <div class="px-4 py-2.5 text-xs font-black flex items-center justify-between whitespace-nowrap" style="background: #fef08a; border-bottom: 2.5px solid #0f172a; color: #0f172a;">
                     <div class="flex items-center gap-2">
-                      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
-                      <span class="tracking-wide">${tableTitleText}</span>
+                      <span class="w-3 h-3 rounded-full bg-amber-500 border border-slate-900 inline-block"></span>
+                      <span class="tracking-wide text-sm font-black text-slate-950">${tableTitleText}</span>
                     </div>
-                    <span class="text-slate-950 font-black text-[11px] bg-amber-400 px-3 py-0.5 rounded-md border border-amber-500 shadow-2xs whitespace-nowrap">
-                      ${curGroupList.length} หมวด (${partTot} รายการ)
+                    <span class="text-slate-950 font-black text-xs px-3 py-1 rounded-lg border-2 border-slate-900 shadow-2xs whitespace-nowrap" style="background: #ffffff;">
+                      ⭐ ${curGroupList.length} หมวด (${partTot} รายการ)
                     </span>
                   </div>
-                  <!-- Excel Table -->
+                  <!-- Excel Table with Paper Mario Nintendo Themed Headers -->
                   <table class="w-full border-collapse text-left text-xs" style="overflow: visible;">
                     <thead>
-                      <tr class="bg-slate-900 text-white font-black text-center text-xs border-b border-slate-700">
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-11 font-black text-xs whitespace-nowrap">ลำดับ</th>
-                        <th class="py-2.5 px-3 text-left border-r border-slate-700 min-w-[340px] font-black text-xs whitespace-nowrap">หมวดพื้นที่และรายการงาน (Area & Defect Items)</th>
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-28 font-black text-xs whitespace-nowrap">ผู้รับผิดชอบ</th>
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-16 font-black text-xs whitespace-nowrap">ทั้งหมด</th>
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-16 font-black text-xs text-emerald-300 whitespace-nowrap bg-emerald-950/40">ผ่าน</th>
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-16 font-black text-xs text-rose-300 whitespace-nowrap bg-rose-950/40">ยังไม่แก้</th>
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-16 font-black text-xs text-amber-300 whitespace-nowrap bg-amber-950/40">รอตรวจ</th>
-                        <th class="py-2.5 px-2 text-center border-r border-slate-700 w-24 font-black text-xs whitespace-nowrap">กำหนดเสร็จ</th>
-                        <th class="py-2.5 px-2 text-center border-slate-700 w-28 font-black text-xs whitespace-nowrap">สถานะ (Status)</th>
+                      <tr class="font-black text-center text-xs" style="border-bottom: 2.5px solid #0f172a;">
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 46px; background: #fef3c7; color: #78350f; border-right: 2px solid #0f172a;">ลำดับ</th>
+                        <th class="py-2.5 px-3 text-left whitespace-nowrap" style="min-width: 320px; background: #fef3c7; color: #78350f; border-right: 2px solid #0f172a;">หมวดพื้นที่และรายการงาน (Area & Defect Items)</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 100px; background: #e0e7ff; color: #312e81; border-right: 2px solid #0f172a;">👤 ผู้รับผิดชอบ</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #fef08a; color: #713f12; border-right: 2px solid #0f172a;">⭐ ทั้งหมด</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #86efac; color: #064e3b; border-right: 2px solid #0f172a;">✔ ผ่าน</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #fca5a5; color: #7f1d1d; border-right: 2px solid #0f172a;">✖ ยังไม่แก้</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 60px; background: #fed7aa; color: #7c2d12; border-right: 2px solid #0f172a;">⏱ รอตรวจ</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 95px; background: #99f6e4; color: #134e4a; border-right: 2px solid #0f172a;">🏁 กำหนดเสร็จ</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 95px; background: #bae6fd; color: #075985; border-right: 2px solid #0f172a;">🔍 กำหนดตรวจ</th>
+                        <th class="py-2.5 px-2 text-center whitespace-nowrap" style="width: 110px; background: #e9d5ff; color: #581c87;">🎖️ สถานะ (Status)</th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-300">
@@ -19547,8 +19657,8 @@
               stage.appendChild(tableContainer);
             }
 
-            // 5. Formal 3-Party Sign-Off Block (Included in Part 2 of split mode, or single document)
-            if (!isSplitMode || partIndex === 2) {
+            // 5. Formal 3-Party Sign-Off Block (Included in Part 2 of split mode, or single document when table is included)
+            if (includeTable && (!isSplitMode || partIndex === 2)) {
               const signOffDiv = document.createElement("div");
               signOffDiv.className = "mt-2 pt-3 border-t-2 border-slate-400";
               signOffDiv.innerHTML = `
@@ -19657,7 +19767,7 @@
 
             const wrapper = document.createElement("div");
             wrapper.id = "common-defect-capture-wrapper";
-            wrapper.style.cssText = `position: fixed; left: 0px; top: 0px; width: 1240px; min-width: 1240px; max-width: 1240px; z-index: -99999; opacity: 1; pointer-events: none; overflow: visible; background-color: #ffffff; font-family: 'Prompt', 'Montserrat', -apple-system, sans-serif;`;
+            wrapper.style.cssText = `position: fixed; left: 0px; top: 0px; width: 1360px; min-width: 1360px; max-width: 1360px; z-index: -99999; opacity: 1; pointer-events: none; overflow: visible; background-color: #ffffff; font-family: 'Prompt', 'Montserrat', -apple-system, sans-serif;`;
             document.body.appendChild(wrapper);
 
             try {
@@ -19665,14 +19775,14 @@
               const stage1 = buildOriginalDocumentStage({ partIndex: 1, totalParts: 2, curGroupList: leftGroups, startingItemIndex: 1 });
               wrapper.appendChild(stage1);
               const filename1 = `PYNN NGAMWONGWAN 54 DEFECT หน้าที่ 1 (${getThaiDateForFilename()}).jpg`;
-              const file1 = await captureStageElementToFile(stage1, 1240, filename1);
+              const file1 = await captureStageElementToFile(stage1, 1360, filename1);
               wrapper.removeChild(stage1);
 
               // 2. Build & capture Part 2
               const stage2 = buildOriginalDocumentStage({ partIndex: 2, totalParts: 2, curGroupList: rightGroups, startingItemIndex: leftItemsCount + 1 });
               wrapper.appendChild(stage2);
               const filename2 = `PYNN NGAMWONGWAN 54 DEFECT หน้าที่ 2 (${getThaiDateForFilename()}).jpg`;
-              const file2 = await captureStageElementToFile(stage2, 1240, filename2);
+              const file2 = await captureStageElementToFile(stage2, 1360, filename2);
               wrapper.removeChild(stage2);
 
               wrapper.remove();
@@ -19681,7 +19791,7 @@
               window.showMultiImagePreview([
                 { file: file1, label: `หน้าที่ 1 (${leftGroups.length} หมวด)` },
                 { file: file2, label: `หน้าที่ 2 (${rightGroups.length} หมวด)` }
-              ]);
+              ], isPdfExport);
 
               if (isPdfExport) {
                 setTimeout(() => {
@@ -19904,17 +20014,17 @@
               showToast("เกิดข้อผิดพลาดในการบันทึกภาพ กรุณาลองใหม่อีกครั้ง", 4000);
             }
           } else {
-            // Portrait layout: 1 single file (1440px)
+            // Portrait layout: 1 single file (1360px)
             const wrapper = document.createElement("div");
             wrapper.id = "common-defect-capture-wrapper";
-            wrapper.style.cssText = `position: fixed; left: 0px; top: 0px; width: 1440px; min-width: 1440px; max-width: 1440px; z-index: -99999; opacity: 1; pointer-events: none; overflow: visible; background-color: #ffffff; font-family: 'Prompt', 'Montserrat', -apple-system, sans-serif;`;
+            wrapper.style.cssText = `position: fixed; left: 0px; top: 0px; width: 1360px; min-width: 1360px; max-width: 1360px; z-index: -99999; opacity: 1; pointer-events: none; overflow: visible; background-color: #ffffff; font-family: 'Prompt', 'Montserrat', -apple-system, sans-serif;`;
             document.body.appendChild(wrapper);
 
             try {
               const stage = buildOriginalDocumentStage({ partIndex: null, totalParts: 1, curGroupList: groupKeys });
               wrapper.appendChild(stage);
-              const filename = `PYNN NGAMWONGWAN 54 DEFECT แนวตั้ง (${getThaiDateForFilename()}).jpg`;
-              const file = await captureStageElementToFile(stage, 1440, filename);
+              const filename = `PYNN NGAMWONGWAN 54 DEFECT (${getThaiDateForFilename()}).jpg`;
+              const file = await captureStageElementToFile(stage, 1360, filename);
               wrapper.remove();
               showImagePreviewFile(file);
             } catch (err) {

@@ -2351,10 +2351,10 @@ th.qc-current-week {
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  border: 2px solid #0f172a;
-  border-radius: 0.65rem;
+  border: 3px solid #0f172a;
+  border-radius: 1rem;
   background: #ffffff;
-  box-shadow: 0 4px 0 #0f172a;
+  box-shadow: 0 6px 0 #0f172a, 0 10px 16px rgba(15, 23, 42, 0.12);
 }
 
 .common-defect-add-btn {
@@ -2384,9 +2384,9 @@ th.qc-current-week {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.7rem 0.85rem;
-  border-bottom: 2px solid #0f172a;
-  background: #e8eef7;
+  padding: 0.75rem 1rem;
+  border-bottom: 3px solid #0f172a;
+  background: #fffbeb;
 }
 
 .common-defect-excel-titlebar > div:first-child {
@@ -2402,24 +2402,24 @@ th.qc-current-week {
 
 .common-defect-excel-titlebar strong {
   color: #0f172a;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 900;
 }
 
 .common-defect-excel-titlebar small {
   margin-top: 0.08rem;
   color: #64748b;
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 700;
 }
 
 .common-defect-excel-icon {
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.1rem;
+  height: 2.1rem;
   border: 2px solid #0f172a;
-  border-radius: 0.4rem;
+  border-radius: 0.5rem;
   background: #22c55e;
   color: #ffffff;
   box-shadow: 2px 2px 0 #0f172a;
@@ -2444,10 +2444,10 @@ th.qc-current-week {
 
 .common-defect-excel-table th,
 .common-defect-excel-table td {
-  height: 2.3rem;
+  height: 2.35rem;
   padding: 0.42rem 0.55rem;
-  border-right: 1px solid #64748b;
-  border-bottom: 1px solid #94a3b8;
+  border-right: 1.5px solid #cbd5e1;
+  border-bottom: 1.5px solid #e2e8f0;
   text-align: center;
   vertical-align: middle;
 }
@@ -2461,34 +2461,83 @@ th.qc-current-week {
   position: sticky;
   top: 0;
   z-index: 2;
-  height: 3rem;
-  background: #26344b;
-  color: #ffffff;
+  height: 3.25rem;
+  background: #fef08a; /* Nintendo Star Coin Paper */
+  color: #0f172a;
   font-weight: 900;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: 0.01em;
+  border-bottom: 3.5px solid #0f172a;
+  border-right: 2px solid #0f172a;
+  box-shadow: inset 0 -2px 0 rgba(15, 23, 42, 0.08);
 }
 
-.common-defect-excel-table thead th.is-passed { background: #087f5b; }
-.common-defect-excel-table thead th.is-left { background: #c92a2a; }
-.common-defect-excel-table thead th.is-pending { background: #d97706; }
+.common-defect-excel-table thead th.col-location,
+.common-defect-excel-table thead th.is-location {
+  background: #fef3c7; /* Manila Warm Cream Cardstock */
+  color: #78350f;
+}
+
+.common-defect-excel-table thead th.col-assignee {
+  background: #e0e7ff; /* Lavender Cardstock */
+  color: #312e81;
+}
+
+.common-defect-excel-table thead th.col-total {
+  background: #fef08a; /* Star Coin Yellow */
+  color: #713f12;
+}
+
+.common-defect-excel-table thead th.is-passed,
+.common-defect-excel-table thead th.col-passed {
+  background: #86efac; /* Yoshi Green Paper */
+  color: #064e3b;
+}
+
+.common-defect-excel-table thead th.is-left,
+.common-defect-excel-table thead th.col-left {
+  background: #fca5a5; /* Mario Red Paper */
+  color: #7f1d1d;
+}
+
+.common-defect-excel-table thead th.is-pending,
+.common-defect-excel-table thead th.col-pending {
+  background: #fed7aa; /* Koopa Peach Orange Paper */
+  color: #7c2d12;
+}
+
+.common-defect-excel-table thead th.col-date {
+  background: #99f6e4; /* Mint / Cyan Paper */
+  color: #134e4a;
+}
+
+.common-defect-excel-table thead th.col-inspectDate {
+  background: #bae6fd; /* Sky Blue Paper */
+  color: #075985;
+}
+
+.common-defect-excel-table thead th.col-status {
+  background: #e9d5ff; /* Princess Peach Lilac */
+  color: #581c87;
+}
 
 .common-defect-excel-table .col-location {
-  width: 28%;
+  width: 25%;
   text-align: left;
 }
 
 .common-defect-excel-table .col-assignee {
-  width: 14%;
+  width: 12%;
   text-align: left;
 }
 
-.common-defect-excel-table .col-total { width: 8.5%; }
-.common-defect-excel-table .col-passed { width: 9%; }
-.common-defect-excel-table .col-left { width: 9%; }
-.common-defect-excel-table .col-pending { width: 9.5%; }
+.common-defect-excel-table .col-total { width: 7.5%; }
+.common-defect-excel-table .col-passed { width: 8%; }
+.common-defect-excel-table .col-left { width: 8%; }
+.common-defect-excel-table .col-pending { width: 8.5%; }
 .common-defect-excel-table .col-date { width: 10%; }
-.common-defect-excel-table .col-status { width: 12%; }
+.common-defect-excel-table .col-inspectDate { width: 10%; }
+.common-defect-excel-table .col-status { width: 11%; }
 
 .common-defect-excel-table th.hidden,
 .common-defect-excel-table td.hidden {
@@ -2496,30 +2545,31 @@ th.qc-current-week {
 }
 
 .common-defect-excel-table .group-header-row td {
-  background: #dbe4ef;
+  background: #f1f5f9;
   color: #0f172a;
   font-weight: 900;
-  border-top: 2px solid #64748b;
+  border-top: 2px solid #0f172a;
+  border-bottom: 2px solid #cbd5e1;
 }
 
 .common-defect-excel-table .common-defect-data-row:nth-child(even) td {
-  background: #f8fafc;
+  background: #fafaf9;
 }
 
 .common-defect-excel-table .cell-passed { color: #047857; font-weight: 900; }
 .common-defect-excel-table .cell-left { color: #dc2626; font-weight: 900; }
 .common-defect-excel-table .cell-pending { color: #b45309; font-weight: 900; }
-.common-defect-excel-table .cell-date { color: #475569; white-space: nowrap; }
+.common-defect-excel-table .cell-date { color: #334155; white-space: nowrap; font-weight: 700; }
 
 .defect-editable-cell {
   position: relative;
   cursor: pointer;
-  transition: background 0.1s ease, box-shadow 0.1s ease;
+  transition: background 0.12s ease, box-shadow 0.12s ease;
 }
 
 .common-defect-excel-table .defect-editable-cell:hover {
-  background: #fff2a8 !important;
-  box-shadow: inset 0 0 0 2px #2563eb;
+  background: #fef08a !important;
+  box-shadow: inset 0 0 0 2px #0f172a;
 }
 
 .excel-row-arrow {
