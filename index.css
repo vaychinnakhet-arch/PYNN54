@@ -3903,11 +3903,17 @@ html {
   padding: 0 !important;
 }
 
-.nintendo-work-svg {
+.nintendo-work-svg,
+.pynn-icon-img {
   width: 100% !important;
   height: 100% !important;
+  object-fit: contain !important;
   display: block;
   transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pynn-icon-img {
+  filter: drop-shadow(0 3px 5px rgba(15, 23, 42, 0.08));
 }
 
 .splash-nav-card:hover .work-pictogram,
@@ -3915,8 +3921,13 @@ html {
   transform: translateY(-2px) scale(1.08) !important;
 }
 
-.splash-nav-card:hover .nintendo-work-svg {
-  transform: scale(1.08) rotate(1deg);
+.splash-nav-card:hover .nintendo-work-svg,
+.splash-nav-card:hover .pynn-icon-img {
+  transform: scale(1.10) translateY(-2px);
+}
+
+.splash-nav-card:hover .pynn-icon-img {
+  filter: drop-shadow(0 8px 14px rgba(15, 23, 42, 0.14));
 }
 
 .task-category-button:hover .category-pictogram {

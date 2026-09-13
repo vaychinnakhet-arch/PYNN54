@@ -19370,10 +19370,7 @@
                 <!-- Top Row: Logo, Title, Document Control Box (Formal Executive Header) -->
                 <div class="flex items-stretch border-b border-slate-400 bg-white">
                   <!-- Brand / Logo (Formal Executive Badge) -->
-                  <div class="w-80 p-3.5 border-r border-slate-400 flex items-center gap-3.5 bg-slate-50">
-                    <div class="w-14 h-14 rounded-xl bg-slate-900 text-amber-400 font-black text-2xl flex items-center justify-center border border-slate-700 shadow-xs shrink-0">
-                      P
-                    </div>
+                  <div class="w-80 p-3.5 border-r border-slate-400 flex items-center bg-slate-50">
                     <div>
                       <div class="text-xs font-black text-blue-900 tracking-wider">PYNN CONDOMINIUM</div>
                       <div class="text-lg font-black text-slate-950 leading-tight">PYNN NGAMWONGWAN 54</div>
@@ -19389,22 +19386,18 @@
                   </div>
 
                   <!-- Right: Excel Document Control Grid (ตารางควบคุมเอกสาร) -->
-                  <div class="w-72 text-xs divide-y divide-slate-300">
+                  <div class="w-72 text-xs divide-y divide-slate-300 flex flex-col justify-center">
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">เลขที่เอกสาร:</div>
-                      <div class="flex-1 py-1.5 px-3 font-black text-slate-900 text-xs">QC-PYNN54-COM</div>
+                      <div class="w-28 py-2 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">เลขที่เอกสาร:</div>
+                      <div class="flex-1 py-2 px-3 font-black text-slate-900 text-xs">QC-PYNN54-COM</div>
                     </div>
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">วันที่รายงาน:</div>
-                      <div class="flex-1 py-1.5 px-3 font-black text-slate-900 text-xs">${escapeCommonDefectText(reportDate)}</div>
+                      <div class="w-28 py-2 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">วันที่รายงาน:</div>
+                      <div class="flex-1 py-2 px-3 font-black text-slate-900 text-xs">${escapeCommonDefectText(reportDate)}</div>
                     </div>
                     <div class="flex">
-                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">รอบการตรวจ:</div>
-                      <div class="flex-1 py-1.5 px-3 font-black text-slate-900 text-xs">รอบที่ 2 (Final QC)</div>
-                    </div>
-                    <div class="flex">
-                      <div class="w-28 py-1.5 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">หน้าเอกสาร:</div>
-                      <div class="flex-1 py-1.5 px-3 font-black text-blue-900 text-xs">
+                      <div class="w-28 py-2 px-3 bg-slate-100 font-bold text-slate-700 border-r border-slate-300 text-xs">หน้าเอกสาร:</div>
+                      <div class="flex-1 py-2 px-3 font-black text-blue-900 text-xs">
                         ${partBadgeText}
                       </div>
                     </div>
