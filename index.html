@@ -10079,16 +10079,26 @@
         }
 
         function openQCHandoverPopover(floorId, weekIndex, isPlan) {
-          if (weekIndex !== getCurrentQCHandoverWeekIndex()) {
-            showToast("แก้ไขได้เฉพาะช่องของสัปดาห์ปัจจุบัน", 2600);
-            return;
-          }
           currentQCHandoverContext = { floorId, weekIndex, isPlan };
           const popover = document.getElementById("qc-handover-popover");
           const title = document.getElementById("qc-popover-title");
           const input = document.getElementById("qc-popover-input");
 
-          title.innerText = `บันทึก ${isPlan ? "แผนงาน" : "ผลงานจริง"} (ชั้น ${floorId})`;
+          const weekInfo = (typeof QC_HANDOVER_WEEKS !== "undefined" && QC_HANDOVER_WEEKS)
+            ? QC_HANDOVER_WEEKS[weekIndex]
+            : null;
+          const weekDatesStr = weekInfo ? `${weekInfo.dates} ${weekInfo.month}` : `สัปดาห์ที่ ${weekIndex + 1}`;
+          const isCurrentWeek = weekIndex === getCurrentQCHandoverWeekIndex();
+
+          title.innerHTML = `
+            <div class="text-sm sm:text-base font-black text-slate-800">
+              บันทึก${isPlan ? "แผนงาน (Plan)" : "ผลงานจริง (Actual)"} ชั้น ${floorId}
+            </div>
+            <div class="text-xs font-semibold text-slate-500 mt-1 flex items-center gap-1.5 flex-wrap">
+              <span>📅 สัปดาห์: <strong class="text-slate-800">${weekDatesStr}</strong></span>
+              ${isCurrentWeek ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-300">สัปดาห์นี้</span>' : ''}
+            </div>
+          `;
 
           // Pre-fill if exists
           if (!projectData.qcHandover)
@@ -10099,13 +10109,23 @@
 
           input.value = "";
           if (cellData) {
-            if (isPlan && cellData.plan) {
+            if (isPlan && cellData.plan && cellData.plan.value > 0) {
               input.value = cellData.plan.value;
+            } else if (!isPlan && cellData.actual) {
+              const activeTypeKey = Object.keys(cellData.actual).find(k => cellData.actual[k] > 0);
+              if (activeTypeKey) {
+                input.value = cellData.actual[activeTypeKey];
+              }
             }
           }
 
           popover.classList.remove("hidden");
-          input.focus();
+          setTimeout(() => {
+            if (input) {
+              input.focus();
+              input.select();
+            }
+          }, 50);
         }
         window.openQCHandoverPopover = openQCHandoverPopover;
 
@@ -10162,6 +10182,9 @@
           saveProjectDataToDB();
           renderQCHandoverTable();
           closeQCHandoverPopover();
+          if (typeof showToast === "function") {
+            showToast("✓ บันทึกข้อมูลสำเร็จ");
+          }
         }
         window.saveQCHandoverData = saveQCHandoverData;
 
@@ -10180,6 +10203,9 @@
             }
             saveProjectDataToDB();
             renderQCHandoverTable();
+            if (typeof showToast === "function") {
+              showToast("ล้างข้อมูลสำเร็จ");
+            }
           }
           closeQCHandoverPopover();
         }
@@ -10306,7 +10332,7 @@
             // Plan Row
             const planRow = document.createElement("tr");
             let planCells = "";
-            visibleWeekEntries.forEach(({ index: weekIndex }, visibleIndex) => {
+            visibleWeekEntries.forEach(({ week, index: weekIndex }, visibleIndex) => {
               const weekKey = `week_${weekIndex}`;
               const cellData =
                 projectData.qcHandover.data[floorKey]?.[weekKey]?.plan;
@@ -10321,10 +10347,12 @@
               const currentWeekClass =
                 getQCHandoverWeekHighlightClass(weekIndex);
               const isCurrentWeek = weekIndex === currentWeekIndex;
+              const weekLabel = week ? `${week.dates} ${week.month}` : `สัปดาห์ที่ ${weekIndex + 1}`;
+              const planCellTitle = `คลิกเพื่อแก้ไขแผนงาน ชั้น ${floorId} (${weekLabel})`;
               const planCellBody = isCurrentWeek
-                ? `<button type="button" class="qc-current-week-edit-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, true)" aria-label="เปิดหรือปิดการกรอกแผนงาน ชั้น ${floorId} สัปดาห์ปัจจุบัน">${cellContent}</button>`
-                : cellContent;
-              planCells += `<td class="qc-handover-week-cell border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium ${isCurrentWeek ? "is-editable" : `is-readonly ${cellClass}`} ${currentWeekClass}" style="height: 40px;" ${isCurrentWeek ? 'title="คลิกเพื่อกรอกข้อมูลสัปดาห์ปัจจุบัน"' : 'title="อ่านอย่างเดียว"'}>${planCellBody}</td>`;
+                ? `<button type="button" class="qc-current-week-edit-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, true)" aria-label="${planCellTitle}">${cellContent}</button>`
+                : `<button type="button" class="qc-week-cell-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, true)" aria-label="${planCellTitle}" title="${planCellTitle}">${cellContent}</button>`;
+              planCells += `<td class="qc-handover-week-cell border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium is-editable ${currentWeekClass}" style="height: 40px;" title="${planCellTitle}" onclick="toggleQCHandoverPopover(${floorId}, ${weekIndex}, true)">${planCellBody}</td>`;
             });
 
             planRow.innerHTML = `
@@ -10343,7 +10371,7 @@
             // Actual Row
             const actualRow = document.createElement("tr");
             let actualCells = "";
-            visibleWeekEntries.forEach(({ index: weekIndex }, visibleIndex) => {
+            visibleWeekEntries.forEach(({ week, index: weekIndex }, visibleIndex) => {
               const weekKey = `week_${weekIndex}`;
               const actuals =
                 projectData.qcHandover.data[floorKey]?.[weekKey]?.actual || {};
@@ -10375,10 +10403,12 @@
               const currentWeekClass =
                 getQCHandoverWeekHighlightClass(weekIndex);
               const isCurrentWeek = weekIndex === currentWeekIndex;
+              const weekLabel = week ? `${week.dates} ${week.month}` : `สัปดาห์ที่ ${weekIndex + 1}`;
+              const actualCellTitle = `คลิกเพื่อแก้ไขผลงานจริง ชั้น ${floorId} (${weekLabel})`;
               const actualCellBody = isCurrentWeek
-                ? `<button type="button" class="qc-current-week-edit-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, false)" aria-label="เปิดหรือปิดการกรอกผลงานจริง ชั้น ${floorId} สัปดาห์ปัจจุบัน">${cellContent}</button>`
-                : cellContent;
-              actualCells += `<td class="qc-handover-week-cell border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium ${isCurrentWeek ? "is-editable" : `is-readonly ${cellClass}`} ${currentWeekClass}" style="height: 40px;" ${isCurrentWeek ? 'title="คลิกเพื่อกรอกข้อมูลสัปดาห์ปัจจุบัน"' : 'title="อ่านอย่างเดียว"'}>${actualCellBody}</td>`;
+                ? `<button type="button" class="qc-current-week-edit-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, false)" aria-label="${actualCellTitle}">${cellContent}</button>`
+                : `<button type="button" class="qc-week-cell-btn ${cellContent ? "has-value" : "is-empty"} ${cellClass}" onclick="event.stopPropagation(); toggleQCHandoverPopover(${floorId}, ${weekIndex}, false)" aria-label="${actualCellTitle}" title="${actualCellTitle}">${cellContent}</button>`;
+              actualCells += `<td class="qc-handover-week-cell border-l border-b ${visibleIndex === visibleWeekEntries.length - 1 ? "border-r" : ""} border-black p-0 text-center text-sm font-medium is-editable ${currentWeekClass}" style="height: 40px;" title="${actualCellTitle}" onclick="toggleQCHandoverPopover(${floorId}, ${weekIndex}, false)">${actualCellBody}</td>`;
             });
 
             actualRow.innerHTML = `
