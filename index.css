@@ -2530,13 +2530,27 @@ th.qc-current-week {
 }
 
 .common-defect-excel-table .col-location {
-  width: 32%;
+  width: 35%;
   text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+}
+
+.common-defect-excel-table.no-assignee .col-location {
+  width: 43%;
+}
+
+.common-defect-excel-table .col-location * {
+  white-space: normal;
+  word-break: break-word;
 }
 
 .common-defect-excel-table .col-assignee {
   width: 10.5%;
   text-align: left;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .common-defect-excel-table .col-total { width: 6.5%; }
