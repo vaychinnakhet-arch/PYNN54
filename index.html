@@ -1563,7 +1563,7 @@
             </div>
             <span class="text-xs font-bold text-slate-400 hidden sm:inline">เลือกโหมดที่ต้องการทำงาน</span>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
             <!-- Step 1: ห้องพัก -->
             <div onclick="enterAppView('residential')" class="workflow-card cursor-pointer p-4 rounded-2xl bg-white border-2 border-[#253047] shadow-[0_4px_0_#253047] hover:shadow-[0_2px_0_#253047] hover:translate-y-0.5 transition-all flex items-start gap-3 group relative overflow-hidden" title="เข้าสู่ตารางตรวจงานห้องพัก">
               <div class="w-10 h-10 rounded-xl bg-red-100 border-2 border-[#E96861] flex items-center justify-center text-[#E96861] font-black text-base shrink-0 shadow-sm">
@@ -1607,6 +1607,20 @@
                 <p class="text-xs text-slate-500 font-medium mt-1 line-clamp-2">แผนส่งห้อง QC, Timeline และงานเก็บสี</p>
               </div>
             </div>
+            <!-- Step 5: โมเดล 3D โครงสร้าง -->
+            <a href="3d.html" target="_blank" class="workflow-card cursor-pointer p-4 rounded-2xl bg-white border-2 border-[#253047] shadow-[0_4px_0_#253047] hover:shadow-[0_2px_0_#253047] hover:translate-y-0.5 transition-all flex items-start gap-3 group relative overflow-hidden" title="เปิดดูแบบจำลอง 3D โครงสร้างและงานเข็ม">
+              <div class="w-10 h-10 rounded-xl bg-cyan-100 border-2 border-[#06B6D4] flex items-center justify-center text-[#0891B2] font-black text-sm shrink-0 shadow-sm">
+                3D
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-sm font-black text-slate-800 group-hover:text-[#0891B2] transition-colors truncate">โมเดล 3D</h3>
+                  <span class="text-[10px] bg-[#06B6D4] text-white font-black px-1.5 py-0.5 rounded-md leading-none">สด</span>
+                </div>
+                <p class="text-xs text-slate-500 font-medium mt-1 line-clamp-2">ดูโมเดล 3D โครงสร้าง &amp; X-Ray</p>
+              </div>
+            </a>
+          </div>
           </div>
         </div>
 
@@ -1789,6 +1803,15 @@
                 />
               </svg>
             </button>
+            <a
+              href="3d.html"
+              target="_blank"
+              class="px-2.5 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-white border border-cyan-400/40 text-xs font-bold flex items-center gap-1.5 shadow-sm transition"
+              title="เปิดดูโมเดล 3D โครงสร้าง"
+            >
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              <span>3D</span>
+            </a>
             <h1
               class="font-mono text-[32px] font-black tracking-tighter text-white"
             >
