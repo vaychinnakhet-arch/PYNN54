@@ -1713,26 +1713,30 @@ th.qc-current-week {
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  min-height: 2.65rem;
+  min-height: 2.5rem;
   padding: 0.45rem 1rem;
   border: 2px solid #0f172a;
   border-radius: 0.75rem;
-  background: #059669;
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
   color: #ffffff;
-  box-shadow: 2px 2px 0 #0f172a;
-  font-size: 0.8rem;
+  box-shadow: 0 3px 0 #065f46, 0 4px 0 #0f172a;
+  font-size: 0.82rem;
   font-weight: 900;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.1s ease, background 0.1s ease, box-shadow 0.1s ease;
 }
 
 .common-defect-capture-btn:hover {
-  transform: translateY(-1px);
-  background: #047857;
-  box-shadow: 3px 3px 0 #0f172a;
+  transform: translateY(1px);
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 2px 0 #065f46, 0 3px 0 #0f172a;
 }
 
-.common-defect-capture-btn:active,
+.common-defect-capture-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #065f46, 0 1px 0 #0f172a;
+}
+
 .common-defect-view-btn:active {
   transform: translateY(1px);
   box-shadow: 1px 1px 0 #0f172a;
@@ -3961,17 +3965,11 @@ html {
   padding: 0 !important;
 }
 
-.nintendo-work-svg,
-.pynn-icon-img {
+.nintendo-work-svg {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
   display: block;
   transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.pynn-icon-img {
-  filter: drop-shadow(0 3px 5px rgba(15, 23, 42, 0.08));
 }
 
 .splash-nav-card:hover .work-pictogram,
@@ -3979,13 +3977,8 @@ html {
   transform: translateY(-2px) scale(1.08) !important;
 }
 
-.splash-nav-card:hover .nintendo-work-svg,
-.splash-nav-card:hover .pynn-icon-img {
-  transform: scale(1.10) translateY(-2px);
-}
-
-.splash-nav-card:hover .pynn-icon-img {
-  filter: drop-shadow(0 8px 14px rgba(15, 23, 42, 0.14));
+.splash-nav-card:hover .nintendo-work-svg {
+  transform: scale(1.08) rotate(1deg);
 }
 
 .task-category-button:hover .category-pictogram {
@@ -5412,4 +5405,155 @@ body:not(.is-line-capturing) .modal .modal-content {
 #updateModal #modal-task-buttons button:active {
   transform: translateY(1px);
 }
+
+/* =========================================================
+   COMMON DEFECT CAPTURE MODAL - 2D LAYER PAPER MARIO STYLE
+   "ปรับปรุงหน้าเเคปเจอร์ defect ส่วนกลางให้ดูง่าย คุม style 2d layer paper mario nintendo ทั้งเมนูนี้"
+   ========================================================= */
+#commonDefectCaptureModal .paper-mario-modal-box {
+  background-color: #faf8f2 !important;
+  border: 3px solid #0f172a !important;
+  box-shadow: 8px 8px 0 #0f172a !important;
+  border-radius: 1.75rem !important;
+}
+
+.paper-mario-stitch-top {
+  position: relative;
+  background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #f59e0b 100%) !important;
+  border-bottom: 3px solid #0f172a !important;
+}
+
+.paper-mario-card-layer {
+  background: #ffffff;
+  border: 2px solid #0f172a !important;
+  box-shadow: 3.5px 3.5px 0 #0f172a !important;
+  border-radius: 1.25rem !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.paper-mario-card-parchment {
+  background: #fffdf5 !important;
+  border: 2px solid #0f172a !important;
+  box-shadow: 3.5px 3.5px 0 #0f172a !important;
+  border-radius: 1.25rem !important;
+}
+
+.paper-mario-tip-banner {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border: 2px solid #0f172a !important;
+  box-shadow: 2.5px 2.5px 0 #0f172a !important;
+  border-radius: 1rem !important;
+}
+
+/* Paper Mario Checkbox & Group Item Cards */
+.paper-mario-cap-card {
+  background: #ffffff;
+  border: 2px solid #0f172a !important;
+  box-shadow: 2.5px 2.5px 0 #0f172a !important;
+  border-radius: 0.85rem !important;
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.paper-mario-cap-card:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1.5px 1.5px 0 #0f172a !important;
+  background: #fffbeb !important;
+}
+.paper-mario-cap-card:has(input:checked) {
+  background: #fffdf2 !important;
+  border-color: #0f172a !important;
+  box-shadow: 3.5px 3.5px 0 #b45309 !important;
+}
+
+/* Custom Checkbox inside Paper Mario Cards */
+.paper-mario-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #0f172a !important;
+  border-radius: 0.4rem;
+  background-color: #ffffff;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  box-shadow: 1.5px 1.5px 0 #0f172a;
+  transition: all 0.1s ease;
+}
+.paper-mario-checkbox:checked {
+  background-color: #f59e0b;
+}
+.paper-mario-checkbox:checked::before {
+  content: "";
+  width: 0.65rem;
+  height: 0.4rem;
+  border-left: 2.5px solid #0f172a;
+  border-bottom: 2.5px solid #0f172a;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+/* Solid Directional 2D Nintendo Buttons */
+.paper-mario-btn-primary {
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 60%, #d97706 100%) !important;
+  border: 2.5px solid #0f172a !important;
+  box-shadow: 0 4px 0 #78350f, 0 5px 0 #0f172a !important;
+  color: #0f172a !important;
+  font-weight: 900 !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.paper-mario-btn-primary:hover {
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 #78350f, 0 4px 0 #0f172a !important;
+}
+.paper-mario-btn-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #78350f, 0 1px 0 #0f172a !important;
+}
+
+.paper-mario-btn-secondary {
+  background: #ffffff !important;
+  border: 2.5px solid #0f172a !important;
+  box-shadow: 3px 3px 0 #0f172a !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.paper-mario-btn-secondary:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #0f172a !important;
+  background: #f8fafc !important;
+}
+.paper-mario-btn-secondary:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 #0f172a !important;
+}
+
+.paper-mario-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border: 1.5px solid #0f172a;
+  box-shadow: 1.5px 1.5px 0 #0f172a;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+/* Custom Clean Scrollbar for Paper Mario Modal */
+#common-cap-groups-list::-webkit-scrollbar {
+  width: 6px;
+}
+#common-cap-groups-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+#common-cap-groups-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  border: 1px solid #94a3b8;
+}
+#common-cap-groups-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 
