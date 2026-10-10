@@ -10814,28 +10814,46 @@
         }
 
         function normalizeCommonDefectStatus(status) {
-          if (status === "แก้ไขเรียบร้อย" || status === "ผ่านการตรวจสอบ" || status === "ผ่านตรวจ") return "ผ่านการตรวจสอบ";
+          if (status === "แก้ไขเรียบร้อย" || status === "ผ่านการตรวจสอบ" || status === "ผ่านตรวจ" || (typeof status === "string" && status.startsWith("ผ่าน "))) return "ผ่านการตรวจสอบ";
           if (status === "รอคะแนน" || status === "รอนัดตรวจ" || status === "แก้ไขแล้วรอตรวจ" || status === "รอตรวจ") return "รอนัดตรวจ";
           if (status === "ไม่มี Defect" || status === "ไม่มี defect") return "ไม่มี Defect";
           if (status === "ยังไม่ตรวจ" || status === "รอเริ่มตรวจ" || status === "ยังไม่ตรวจ defect") return "ยังไม่ตรวจ";
           return status || "ยังไม่แก้ไข";
         }
 
-        function getCommonDefectStatusMeta(status) {
-          const normalized = normalizeCommonDefectStatus(status);
-          if (normalized === "ผ่านการตรวจสอบ") {
-            return { normalized, label: "ผ่านการตรวจสอบ", className: "is-passed", icon: "★" };
+        function getCommonDefectStatusMeta(status, item, rowOverview) {
+          let normalized = normalizeCommonDefectStatus(status);
+
+          const tot = item ? Math.max(0, Number(item.tot) || 0) : 0;
+          const fix = item ? Math.max(0, Number(item.fix) || 0) : 0;
+          const passed = rowOverview && rowOverview.passed !== undefined
+            ? rowOverview.passed
+            : (normalized === "ผ่านการตรวจสอบ" ? (fix > 0 ? fix : tot) : fix);
+
+          if (normalized === "ผ่านการตรวจสอบ" || (passed > 0 && tot > 0)) {
+            let label = "ผ่านการตรวจสอบ";
+            if (item) {
+              if (tot > 0) {
+                const pct = (passed >= tot)
+                  ? 100
+                  : Math.min(99, Math.max(1, Math.round((passed / tot) * 100)));
+                label = `ผ่าน ${pct}%`;
+              } else {
+                label = "ผ่าน 100%";
+              }
+            }
+            return { normalized: "ผ่านการตรวจสอบ", label, className: "is-passed", icon: "" };
           }
           if (normalized === "รอนัดตรวจ") {
-            return { normalized, label: "แก้ไขแล้วรอตรวจ", className: "is-pending", icon: "⏱" };
+            return { normalized, label: "แก้ไขแล้วรอตรวจ", className: "is-pending", icon: "" };
           }
           if (normalized === "ไม่มี Defect") {
-            return { normalized, label: "ไม่มี Defect", className: "is-clear", icon: "—" };
+            return { normalized, label: "ไม่มี Defect", className: "is-clear", icon: "" };
           }
           if (normalized === "ยังไม่ตรวจ") {
-            return { normalized, label: "ยังไม่ตรวจ", className: "is-unchecked", icon: "?" };
+            return { normalized, label: "ยังไม่ตรวจ", className: "is-unchecked", icon: "" };
           }
-          return { normalized, label: "ยังไม่แก้ไข", className: "is-left", icon: "×" };
+          return { normalized, label: "ยังไม่แก้ไข", className: "is-left", icon: "" };
         }
 
         function getCommonDefectOverview(items) {
@@ -12046,7 +12064,7 @@
                 item.status = "รอดำเนินการ";
               }
               const rowOverview = getCommonDefectOverview([item]);
-              const statusMeta = getCommonDefectStatusMeta(item.status);
+              const statusMeta = getCommonDefectStatusMeta(item.status, item, rowOverview);
 
               // Date display (กำหนดเสร็จ)
               let dateDisplay = "";
@@ -12108,7 +12126,7 @@
                   <td class="${colClass('date', 'defect-editable-cell cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
                   <td class="${colClass('status', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
                     <span class="paper-status-badge ${statusMeta.className}">
-                      <b>${statusMeta.icon}</b>${statusMeta.label}
+                      ${statusMeta.label}
                     </span>
                   </td>
                 </tr>
@@ -12297,12 +12315,12 @@
           const fieldWrap = document.getElementById("common-defect-quick-field");
           const hint = document.getElementById("common-defect-quick-hint");
           const overview = getCommonDefectOverview([defect]);
-          const statusMeta = getCommonDefectStatusMeta(defect.status);
+          const statusMeta = getCommonDefectStatusMeta(defect.status, defect, overview);
           const config = {
             name: { title: "แก้ไขชื่อรายการ", icon: "✎", label: "สถานที่ / รายการ", hint: "แก้เฉพาะชื่อของแถวนี้" },
             assignee: { title: "ระบุผู้รับผิดชอบ", icon: "👤", label: "ผู้รับผิดชอบ", hint: "เช่น ช่างสี, ผู้รับเหมา A, ทีมระบบ" },
             total: { title: "กรอกจำนวน DEFECT", icon: "#", label: "จำนวน DEFECT ทั้งหมด", hint: "จำนวนรวมต้องไม่น้อยกว่าจำนวนที่ดำเนินการแล้ว" },
-            fixed: { title: "กรอกจำนวนผ่านตรวจ", icon: "★", label: "จำนวนที่ผ่านการตรวจสอบ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น ผ่านการตรวจสอบ" },
+            fixed: { title: "กรอกจำนวนผ่านตรวจ", icon: "★", label: "จำนวนที่ผ่านการตรวจสอบ", hint: "บันทึกแล้วระบบจะคำนวณ % ที่ผ่านและแสดงในช่อง STATUS โดยอัตโนมัติ" },
             left: { title: "กรอกจำนวนยังไม่แก้ไข", icon: "×", label: "จำนวนที่ยังไม่แก้ไข", hint: "ส่วนที่ดำเนินการแล้วจะย้ายไป แก้ไขแล้วรอตรวจ โดยอัตโนมัติ" },
             pending: { title: "กรอกจำนวนรอตรวจ", icon: "⏱", label: "จำนวนที่แก้ไขแล้วรอตรวจ", hint: "บันทึกแล้วสถานะของแถวนี้จะเป็น แก้ไขแล้วรอตรวจ" },
             date: { title: "กำหนดวันเสร็จ", icon: "🏁", label: "กำหนดเสร็จ (Target Date)", hint: "เลือกวันที่กำหนดเสร็จสำหรับรายการนี้" },
@@ -12330,11 +12348,11 @@
             controlHTML = `
               <label class="paper-quick-label" for="common-defect-quick-input">${selected.label}</label>
               <select id="common-defect-quick-input" class="paper-quick-input paper-quick-select">
-                <option value="รอดำเนินการ" ${statusMeta.normalized === "รอดำเนินการ" ? "selected" : ""}>× ยังไม่แก้ไข</option>
-                <option value="รอนัดตรวจ" ${statusMeta.normalized === "รอนัดตรวจ" ? "selected" : ""}>⏱ แก้ไขแล้วรอตรวจ</option>
-                <option value="ผ่านการตรวจสอบ" ${statusMeta.normalized === "ผ่านการตรวจสอบ" ? "selected" : ""}>✓ ผ่านการตรวจสอบ</option>
-                <option value="ไม่มี Defect" ${statusMeta.normalized === "ไม่มี Defect" ? "selected" : ""}>— ไม่มี Defect</option>
-                <option value="ยังไม่ตรวจ" ${statusMeta.normalized === "ยังไม่ตรวจ" ? "selected" : ""}>○ ยังไม่ตรวจ</option>
+                <option value="รอดำเนินการ" ${statusMeta.normalized === "รอดำเนินการ" ? "selected" : ""}>ยังไม่แก้ไข</option>
+                <option value="รอนัดตรวจ" ${statusMeta.normalized === "รอนัดตรวจ" ? "selected" : ""}>แก้ไขแล้วรอตรวจ</option>
+                <option value="ผ่านการตรวจสอบ" ${statusMeta.normalized === "ผ่านการตรวจสอบ" ? "selected" : ""}>ผ่านการตรวจสอบ</option>
+                <option value="ไม่มี Defect" ${statusMeta.normalized === "ไม่มี Defect" ? "selected" : ""}>ไม่มี Defect</option>
+                <option value="ยังไม่ตรวจ" ${statusMeta.normalized === "ยังไม่ตรวจ" ? "selected" : ""}>ยังไม่ตรวจ</option>
               </select>`;
           } else {
             const numericValue = field === "total"
@@ -19509,7 +19527,7 @@
             if (expandSubrows) {
               items.forEach((item) => {
                 const rowOverview = getCommonDefectOverview([item]);
-                const statusMeta = getCommonDefectStatusMeta(item.status);
+                const statusMeta = getCommonDefectStatusMeta(item.status, item, rowOverview);
 
                 let dateDisplay = "";
                 if (item.target) {
@@ -19550,7 +19568,7 @@
                     <td class="${colClass('date', 'cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}">${dateDisplay || "—"}</td>
                     <td class="${colClass('status')}">
                       <span class="paper-status-badge ${statusMeta.className}">
-                        <b>${statusMeta.icon}</b>${statusMeta.label}
+                        ${statusMeta.label}
                       </span>
                     </td>
                   </tr>
@@ -21114,7 +21132,7 @@
                 fix: passed,
                 rem,
                 target: item.target || "",
-                status: getCommonDefectStatusMeta(normalizedStatus).label
+                status: getCommonDefectStatusMeta(normalizedStatus, item).label
               });
             });
 
