@@ -10832,28 +10832,46 @@
 
           if (normalized === "ผ่านการตรวจสอบ" || (passed > 0 && tot > 0)) {
             let label = "ผ่านการตรวจสอบ";
+            let pct = 0;
             if (item) {
               if (tot > 0) {
-                const pct = (passed >= tot)
+                pct = (passed >= tot)
                   ? 100
                   : Math.min(99, Math.max(1, Math.round((passed / tot) * 100)));
                 label = `ผ่าน ${pct}%`;
               } else {
+                pct = 100;
                 label = "ผ่าน 100%";
               }
+            } else {
+              pct = 100;
             }
-            return { normalized: "ผ่านการตรวจสอบ", label, className: "is-passed", icon: "" };
+
+            // Fill partially according to pct:
+            // e.g. 72% -> green up to 72%, subtle background for remaining 28%
+            const style = pct < 100
+              ? `background: linear-gradient(to right, #86efac 0%, #86efac ${pct}%, #e2e8f0 ${pct}%, #e2e8f0 100%); color: #065f46;`
+              : `background: #86efac; color: #065f46;`;
+
+            return {
+              normalized: "ผ่านการตรวจสอบ",
+              label,
+              className: "is-passed is-progress-badge",
+              icon: "",
+              pct,
+              style
+            };
           }
           if (normalized === "รอนัดตรวจ") {
-            return { normalized, label: "แก้ไขแล้วรอตรวจ", className: "is-pending", icon: "" };
+            return { normalized, label: "แก้ไขแล้วรอตรวจ", className: "is-pending", icon: "", style: "" };
           }
           if (normalized === "ไม่มี Defect") {
-            return { normalized, label: "ไม่มี Defect", className: "is-clear", icon: "" };
+            return { normalized, label: "ไม่มี Defect", className: "is-clear", icon: "", style: "" };
           }
           if (normalized === "ยังไม่ตรวจ") {
-            return { normalized, label: "ยังไม่ตรวจ", className: "is-unchecked", icon: "" };
+            return { normalized, label: "ยังไม่ตรวจ", className: "is-unchecked", icon: "", style: "" };
           }
-          return { normalized, label: "ยังไม่แก้ไข", className: "is-left", icon: "" };
+          return { normalized, label: "ยังไม่แก้ไข", className: "is-left", icon: "", style: "" };
         }
 
         function getCommonDefectOverview(items) {
@@ -12125,7 +12143,7 @@
                   <td class="${colClass('inspectDate', 'defect-editable-cell cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}" onclick="openCommonDefectCellEditor(${item.id}, 'inspectDate')" title="คลิกเพื่อกำหนดวันตรวจ">${inspectDateDisplay || "—"}</td>
                   <td class="${colClass('date', 'defect-editable-cell cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}" onclick="openCommonDefectCellEditor(${item.id}, 'date')" title="คลิกเพื่อกำหนดวันเสร็จ">${dateDisplay || "—"}</td>
                   <td class="${colClass('status', 'defect-editable-cell')}" onclick="openCommonDefectCellEditor(${item.id}, 'status')">
-                    <span class="paper-status-badge ${statusMeta.className}">
+                    <span class="paper-status-badge ${statusMeta.className}" style="${statusMeta.style || ''}">
                       ${statusMeta.label}
                     </span>
                   </td>
@@ -19567,7 +19585,7 @@
                     <td class="${colClass('inspectDate', 'cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}">${inspectDateDisplay || "—"}</td>
                     <td class="${colClass('date', 'cell-date text-xs sm:text-sm font-bold font-mono text-slate-700')}">${dateDisplay || "—"}</td>
                     <td class="${colClass('status')}">
-                      <span class="paper-status-badge ${statusMeta.className}">
+                      <span class="paper-status-badge ${statusMeta.className}" style="${statusMeta.style || ''}">
                         ${statusMeta.label}
                       </span>
                     </td>
