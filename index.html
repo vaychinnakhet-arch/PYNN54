@@ -5657,16 +5657,11 @@
                   if (applicableTaskCount > 0) {
                       actualTotalMaxPoints += 100;
                   }
-                } else if (catDef.type === "inspection" || catDef.type === "qc_defect" || catKey === "endProduct") {
-                  let score = 0;
-                  // For endProduct specifically
-                  if (catKey === "endProduct") {
-                     score = unitData.qcScore >= 85 ? 100 : (unitData.qcScore > 0 ? unitData.qcScore : 0);
-                  } else {
-                     score = unitData.qcScore > 0
-                      ? unitData.qcScore
-                      : unitData.cmScore || 0;
-                  }
+                } else if (catDef.type === "inspection" || catDef.type === "qc_defect" || catKey === "endProduct" || catKey === "wetWork") {
+                  const qcScore = unitData.qcScore || 0;
+                  const cmScore = unitData.cmScore || 0;
+                  const effective = qcScore > 0 ? qcScore : cmScore;
+                  const score = effective >= 85 ? 100 : effective;
                   actualTotalProgressPoints += score;
                   actualTotalMaxPoints += 100;
                 }
@@ -5855,11 +5850,13 @@
               } else if (catDef.type === "inspection") {
                 const cmScore = unitData.cmScore || 0;
                 const qcScore = unitData.qcScore || 0;
-                progress = Math.max(qcScore, cmScore);
-                const isPassed = progress >= 85;
-                const isInProgress = (progress > 0 && progress < 85) || !!unitData.inInspection;
+                const effectiveScore = qcScore > 0 ? qcScore : cmScore;
+                const isPassed = effectiveScore >= 85;
+                const isInProgress = (effectiveScore > 0 && !isPassed) || !!unitData.inInspection;
 
-                // For inspection, score >= 85 means inspected and passed (completed)
+                // When score >= 85, inspection has passed and is 100% completed
+                progress = isPassed ? 100 : effectiveScore;
+
                 catDef.tasks.forEach((t) => {
                   subTaskStats[t.key || t.name].total++;
                   floorTaskStatus[floor][t.key || t.name].total++;
@@ -6910,10 +6907,11 @@
                       : 0;
                   catTotalMaxPoints += 100;
                 } else if (catDef.type === "inspection") {
-                  const score =
+                  const effective =
                     unitData.qcScore > 0
                       ? unitData.qcScore
                       : unitData.cmScore || 0;
+                  const score = effective >= 85 ? 100 : effective;
                   catTotalProgressPoints += score;
                   catTotalMaxPoints += 100;
                 }
